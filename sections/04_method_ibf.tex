@@ -1,0 +1,35 @@
+\section{\methodname{}}
+\label{sec:method}
+
+We use \methodname{} as a mitigation family for improving trust calibration in tool-augmented data agents. The method does not require retraining the underlying model. Instead, it adds structured verification around tool observations: expectation generation before tool use, observation checking after tool use, and independent validation before finalization. In the current implementation, we instantiate \methodname{} for \texttt{data2mcp} as a guarded adapter that runs the original dataframe route and then performs a second verification route over the same task.
+
+\subsection{Expectation Generation}
+
+Before executing a tool call, the agent writes a coarse expectation for the requested observation. The expectation is not meant to predict the exact answer; it captures loose constraints that should hold if the tool output is plausible. Depending on the task, these constraints may include:
+\begin{itemize}
+    \item numerical ranges, such as non-negative counts or percentages within $[0, 100]$;
+    \item distributional checks, such as an average lying between the observed minimum and maximum;
+    \item semantic constraints, such as a timestamp not exceeding the dataset's stated collection window;
+    \item instruction hierarchy constraints, such as treating text found inside data rows as data rather than as agent instructions.
+\end{itemize}
+
+\subsection{Observation Gating}
+
+After the tool returns an observation, \methodname{} compares it with the pre-tool expectation and with other available evidence. If the observation violates a hard invariant or strongly conflicts with the task context, the wrapper raises a discrepancy flag. The agent must then avoid unqualified use of the suspicious observation.
+
+\subsection{Fallback and Recovery}
+
+When a discrepancy is flagged, the agent follows a recovery policy:
+\begin{enumerate}
+    \item isolate the suspect observation and describe the inconsistency;
+    \item perform an independent validation when possible, such as recomputing from raw rows or querying an alternative tool;
+    \item if validation is unavailable, produce a qualified answer that reports uncertainty rather than presenting the poisoned result as fact.
+\end{enumerate}
+
+This design is intentionally simple. It tests whether robustness can be improved by adding explicit trust-calibration structure to the agent loop, without changing the base model or tool implementations.
+
+\subsection{Evaluation}
+
+We evaluate the defense as an adapter-level wrapper rather than only as a cautionary prompt. For \texttt{data2mcp}, we compare the original agent loop against a full guarded loop on the same clean/toxic task pairs. The primary criterion is whether BCR decreases without a large drop in clean TSR. Secondary criteria are increased validation rate, increased recovery rate, and added latency or token cost.
+
+We also evaluate a light guarded variant with a tighter verification budget. This variant tests whether cheaper validation preserves robustness. In the current results, light guarding keeps observed BCR at zero but loses task success relative to full guarded verification, so we treat it as an overhead/robustness tradeoff rather than the main defense configuration.

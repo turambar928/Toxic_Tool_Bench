@@ -1,0 +1,41 @@
+\section{Appendix: Guarded Verification Details}
+\label{sec:appendix-guard}
+
+\subsection{Light-Guard Tradeoff}
+
+The main text reports the full guarded \texttt{data2mcp} adapter as the defense result. We also evaluate a lower-budget light guard that caps the verification route more aggressively. On semantic/schema tasks, the light guard obtains clean TSR \texttt{0.83}, poisoned TSR \texttt{0.71}, BCR \texttt{0.00}, and RR \texttt{0.71}. On numerical tasks, it obtains clean TSR \texttt{0.68}, poisoned TSR \texttt{0.65}, BCR \texttt{0.00}, and RR \texttt{0.65}. The light guard therefore preserves the blind-compliance reduction, but under-recovers relative to full guarded verification.
+
+\subsection{Overhead}
+
+The guard increases routing work because it adds independent verification. In the semantic/schema suite, base \texttt{data2mcp} averages about \texttt{1.00} toxic tool event per run, full guard averages \texttt{2.71}, and light guard averages \texttt{3.04}. In the numerical suite, the corresponding averages are \texttt{1.03}, \texttt{2.21}, and \texttt{2.35}. The current light implementation reduces verification budget but does not reduce the number of route calls; future implementations should trigger verification selectively rather than always running a second route.
+
+\subsection{Bootstrap Confidence Intervals}
+
+We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement. Table~\ref{tab:appendix-guard-ci} reports compact intervals for the guarded ablations; complete CI files are released with the artifacts.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Suite & Adapter & Poisoned TSR 95\% CI & BCR 95\% CI \\
+\midrule
+Semantic/schema & Base & [0.13, 0.50] & [0.42, 0.83] \\
+Semantic/schema & Full guard & [0.67, 0.96] & [0.00, 0.00] \\
+Semantic/schema & Light guard & [0.50, 0.88] & [0.00, 0.00] \\
+Numerical & Base & [0.29, 0.65] & [0.12, 0.38] \\
+Numerical & Full guard & [0.59, 0.85] & [0.00, 0.00] \\
+Numerical & Light guard & [0.50, 0.79] & [0.00, 0.00] \\
+\bottomrule
+\end{tabular}
+\caption{Bootstrap confidence intervals for guarded \texttt{data2mcp} ablations.}
+\label{tab:appendix-guard-ci}
+\end{table}
+
+\subsection{Additional Qualitative Cases}
+
+The complete mechanically extracted guard cases are stored in \texttt{GUARDED\_CASE\_STUDIES.md}. They include base blind-compliance cases that full guard recovers, as well as full-guard successes that light guard loses under the tighter budget.
+
+\subsection{Framework Boundaries}
+
+Poisoning boundaries differ across frameworks. LangGraph, smolagents, \texttt{data2mcp}, and AutoGen are poisoned at a tool-observation boundary. PandasAI is currently poisoned at a coarser chat-result boundary. DA-Agent is integrated through its action loop, but its observations can include shell output and tracebacks. We therefore interpret results as end-to-end framework measurements rather than pure model-only measurements.

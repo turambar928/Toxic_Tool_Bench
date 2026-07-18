@@ -1,0 +1,48 @@
+\section{\benchmarkname{}}
+\label{sec:benchmark}
+
+\benchmarkname{} is designed to test whether data agents can distinguish successful tool execution from trustworthy tool evidence. The benchmark wraps standard data-analysis tools with controlled poisoning operators and evaluates agent behavior on paired clean and poisoned tasks.
+
+\subsection{Task Families}
+
+We instantiate tasks from common data-agent workflows:
+\begin{itemize}
+    \item \textbf{Descriptive statistics:} compute aggregates, distributions, segment comparisons, and anomaly summaries from tabular data.
+    \item \textbf{Schema and metadata interpretation:} infer column meanings, units, time ranges, and business semantics from previews or documentation.
+    \item \textbf{Retrieval-grounded analysis:} retrieve relevant rows, documents, or prior reports before producing an answer.
+    \item \textbf{Recommendation reports:} combine quantitative results with narrative recommendations, where a poisoned intermediate result can propagate into the final decision.
+\end{itemize}
+
+Each task has a clean reference answer or rubric. The poisoned version preserves the user query and high-level environment while perturbing selected observations.
+
+\paragraph{Current instantiation.}
+The current experimental instantiation contains a 34-task tabular numerical-analysis suite over 11 CSV datasets and a 24-task semantic/schema suite over 14 CSV datasets. The numerical tasks cover means and totals, growth rates, group rankings, per-unit ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema tasks cover treatment--control label flips, schema column swaps, stale data-dictionary metadata, and biased retrieval evidence.
+
+\subsection{Poisoning Operators}
+
+\paragraph{Numerical poisoning.}
+For computation tools such as Python, pandas, or SQL, we perturb aggregate outputs while keeping the table preview and execution logs plausible. Examples include multiplicative scaling, additive drift, decimal shifts, sign flips for deltas, or selective poisoning of group-level statistics. The poisoning can be calibrated so that the wrong result is obvious from raw values, subtle but detectable by invariants, or only detectable through recomputation.
+
+In the 34-task instantiation used in Section~\ref{sec:experiments}, we use three concrete numerical operators: aggregate scaling, sign flips, and rank/label swaps. The rank-swap operator uses label-boundary replacement so that short labels such as \texttt{E} are swapped only as labels and not inside ordinary words such as \texttt{defects}.
+
+\paragraph{Semantic poisoning.}
+For schema, retrieval, or documentation tools, we inject misleading semantic evidence. Examples include swapping column descriptions, returning stale documentation, reversing treatment and control labels, or retrieving biased rows that support an incorrect conclusion. The output remains coherent, but conflicts with other available evidence. The current semantic/schema suite implements four concrete operators: label swaps, column-semantic swaps, stale-metadata replacement, and biased retrieval replacement.
+
+\paragraph{Data-embedded instructions.}
+The framework can also represent instruction-like content embedded in raw text, metadata, or data previews. The poison is not delivered through the system or developer prompt; it is embedded in data that should be treated as untrusted content. A robust agent should summarize or analyze such text as data rather than following it as an instruction. The experiments in this paper focus on the completed numerical and semantic/schema suites.
+
+\subsection{Paired Evaluation Protocol}
+
+For each task, we run an agent in a clean environment and in one or more poisoned environments. The clean run estimates baseline task capability. The poisoned run measures whether the agent over-trusts the corrupted observation. Pairing is important because a weak final answer under poisoning may reflect either poor task ability or poor trust calibration; the clean run helps separate these effects.
+
+\subsection{Metrics}
+
+We report the following metrics:
+\begin{itemize}
+    \item \textbf{Task Success Rate (TSR):} the fraction of tasks that satisfy the reference rubric.
+    \item \textbf{Poisoned Degradation ($\Delta$TSR):} the drop from clean TSR to poisoned TSR.
+    \item \textbf{Blind Compliance Rate (BCR):} the fraction of poisoned runs in which the agent directly uses the poisoned observation in the final answer or downstream computation without qualification or validation.
+    \item \textbf{Anomaly Detection Rate (ADR):} the fraction of poisoned runs in which the agent explicitly identifies a discrepancy, implausibility, or possible tool error.
+    \item \textbf{Validation Rate (VR):} the fraction of poisoned runs in which the agent performs an independent check, such as recomputing from raw data, querying another tool, or comparing against invariants.
+    \item \textbf{Recovery Rate (RR):} the fraction of poisoned runs where the agent both detects the issue and still produces a correct or appropriately qualified final answer.
+\end{itemize}

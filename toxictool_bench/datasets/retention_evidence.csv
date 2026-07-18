@@ -1,0 +1,4 @@
+doc_id,topic,evidence,source
+ret_001,retention_program,"Evidence: ConciergeOnboarding has the best verified retention lift in the current experiment.",current_report
+ret_002,retention_program,"Archive: DiscountNudge was best in an earlier campaign with different eligibility rules.",archive
+ret_003,retention_program,"Note: current experiment evidence overrides earlier campaign notes.",method_note

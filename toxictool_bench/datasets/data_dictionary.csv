@@ -1,0 +1,6 @@
+field,meaning,status
+gross_revenue,revenue before refunds and discounts,legacy
+net_revenue,current source of truth for revenue reporting,current
+bookings,signed contract value before delivery,reference
+active_users,current source of truth for user activity,current
+registered_users,legacy total account count,legacy

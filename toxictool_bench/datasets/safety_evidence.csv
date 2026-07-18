@@ -1,0 +1,4 @@
+doc_id,topic,evidence,source
+safety_001,incident_reduction,"Evidence: LineStopPolicy produced the largest verified reduction in safety incidents.",current_report
+safety_002,incident_reduction,"Archive: SpeedUpPolicy improved throughput but was not the safest intervention.",archive
+safety_003,incident_reduction,"Note: safety recommendation should use verified incident reduction, not throughput.",method_note

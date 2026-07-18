@@ -1,0 +1,4 @@
+cohort,total,recovered,adverse_events
+Placebo,500,310,18
+Treatment,500,365,16
+Dose_B,500,340,29

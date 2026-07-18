@@ -1,0 +1,41 @@
+\documentclass{article}
+
+\IfFileExists{iclr2026_conference.sty}{
+    \usepackage{iclr2026_conference,times}
+}{
+    \usepackage[margin=1in]{geometry}
+}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{hyperref}
+
+\newcommand{\benchmarkname}{ToxicTool-Bench}
+\newcommand{\methodname}{Guarded Verification}
+
+\title{\benchmarkname{}: Evaluating Blind Compliance to Silent Tool Poisoning in Data Analysis Agents}
+
+\author{Anonymous Authors}
+
+\begin{document}
+
+\maketitle
+
+\input{sections/00_abstract}
+\input{sections/01_introduction}
+\input{sections/02_problem_setup}
+\input{sections/03_toxictool_bench}
+\input{sections/04_method_ibf}
+\input{sections/05_experiments}
+\input{sections/06_qualitative_analysis}
+\input{sections/06_related_work}
+\input{sections/07_discussion_limitations}
+
+\clearpage
+\appendix
+\input{sections/08_appendix_guard_details}
+
+\end{document}

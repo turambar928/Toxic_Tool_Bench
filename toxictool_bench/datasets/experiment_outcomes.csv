@@ -1,0 +1,4 @@
+group,users,conversions,revenue
+Control,1000,110,22000
+Treatment,1000,145,29000
+Variant_A,1000,125,25000

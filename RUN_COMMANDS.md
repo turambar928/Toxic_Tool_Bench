@@ -1,0 +1,438 @@
+# ToxicTool-Bench Run Commands
+
+All commands are intended to be run from the repository root:
+
+```bash
+cd /home/taozifu2025/data2mcpv2
+```
+
+## 1. Local smoke test
+
+No API call:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile heuristic_naive \
+  --env both \
+  --limit 2
+```
+
+IBF-style local smoke test:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile heuristic_ibf \
+  --env both \
+  --limit 2
+```
+
+## 2. Check available models
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py --list-models
+```
+
+Recommended first models:
+
+```text
+gpt-5.4-mini
+claude-sonnet-4-6
+Qwen3.6-35B-A3B-no-thinking
+```
+
+## 3. Pilot experiment
+
+Vanilla ReAct:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile react \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+Caution prompt:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile caution \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+IBF defense:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile ibf \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+data2mcp prompt-style adapter:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile data2mcp_prompt \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+DA-Agent prompt-style adapter:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile da_agent_prompt \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+OpenHands/CodeAct-style profile:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile openhands_codeact \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+Plan-and-execute profile:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile plan_execute \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+Reflexion-style profile:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_bench.py \
+  --agent-profile reflexion \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+## 4. Cross-model experiment
+
+```bash
+for model in gpt-5.4-mini claude-sonnet-4-6 Qwen3.6-35B-A3B-no-thinking; do
+  for profile in react caution ibf openhands_codeact plan_execute reflexion data2mcp_prompt da_agent_prompt; do
+    python3 paper/iclr/toxictool_bench/run_bench.py \
+      --agent-profile "$profile" \
+      --model "$model" \
+      --env both
+  done
+done
+```
+
+## 5. Outputs
+
+Results are written to:
+
+```text
+paper/iclr/toxictool_bench/results/*.jsonl
+paper/iclr/toxictool_bench/results/*.summary.json
+```
+
+Each JSONL row contains:
+
+```text
+task_id
+agent_profile
+model
+environment
+tool_events
+final_answer
+metrics
+```
+
+The API key is read from `paper/iclr/api` at runtime and is not written to output files.
+
+## 6. Full Framework Adapters
+
+LangGraph ReAct full adapter:
+
+```bash
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/langgraph/libs/langgraph:baseline_agent/langgraph/libs/prebuilt \
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --adapter langgraph_react_full \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+smolagents ToolCallingAgent full adapter:
+
+```bash
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/smolagents/src \
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --adapter smolagents_toolcalling \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+AutoGen AssistantAgent full adapter:
+
+```bash
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/autogen/python/packages/autogen-core/src:baseline_agent/autogen/python/packages/autogen-agentchat/src:baseline_agent/autogen/python/packages/autogen-ext/src \
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --adapter autogen_tool_agent \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+data2mcp DataFrame full adapter:
+
+```bash
+PYTHONPATH=paper/iclr/toxictool_bench:src \
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --adapter data2mcp_dataframe \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+PandasAI DataFrame full adapter:
+
+```bash
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/pandas-ai:baseline_agent/pandas-ai/extensions/llms/litellm \
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --adapter pandasai_dataframe \
+  --model gpt-5.4-mini \
+  --env both
+```
+
+DA-Agent full adapter:
+
+```bash
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/da-agent \
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --adapter da_agent_full \
+  --model gpt-5.4-mini \
+  --env both \
+  --max-steps 10
+```
+
+## 7. Expanded Full-Adapter Pilot
+
+Use the 34-task expanded set:
+
+```bash
+TASKS=paper/iclr/toxictool_bench/tasks/numerical_expanded.jsonl
+```
+
+Run each completed full adapter:
+
+```bash
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/langgraph/libs/langgraph:baseline_agent/langgraph/libs/prebuilt \
+python3 paper/iclr/toxictool_bench/run_full_bench.py --tasks "$TASKS" \
+  --adapter langgraph_react_full --model gpt-5.4-mini --env both --max-steps 8
+
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/smolagents/src \
+python3 paper/iclr/toxictool_bench/run_full_bench.py --tasks "$TASKS" \
+  --adapter smolagents_toolcalling --model gpt-5.4-mini --env both --max-steps 8
+
+PYTHONPATH=paper/iclr/toxictool_bench:src \
+python3 paper/iclr/toxictool_bench/run_full_bench.py --tasks "$TASKS" \
+  --adapter data2mcp_dataframe --model gpt-5.4-mini --env both --max-steps 8
+
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/pandas-ai:baseline_agent/pandas-ai/extensions/llms/litellm \
+python3 paper/iclr/toxictool_bench/run_full_bench.py --tasks "$TASKS" \
+  --adapter pandasai_dataframe --model gpt-5.4-mini --env both --max-steps 8
+
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/autogen/python/packages/autogen-core/src:baseline_agent/autogen/python/packages/autogen-agentchat/src:baseline_agent/autogen/python/packages/autogen-ext/src \
+python3 paper/iclr/toxictool_bench/run_full_bench.py --tasks "$TASKS" \
+  --adapter autogen_tool_agent --model gpt-5.4-mini --env both --max-steps 8
+
+PYTHONPATH=paper/iclr/toxictool_bench:baseline_agent/da-agent \
+python3 paper/iclr/toxictool_bench/run_full_bench.py --tasks "$TASKS" \
+  --adapter da_agent_full --model gpt-5.4-mini --env both --max-steps 10
+```
+
+Equivalent scripted run:
+
+```bash
+MODEL=gpt-5.4-mini \
+bash paper/iclr/toxictool_bench/run_expanded_full_adapters.sh
+```
+
+Rescore an expanded result file:
+
+```bash
+python3 paper/iclr/toxictool_bench/rescore_results.py \
+  --tasks paper/iclr/toxictool_bench/tasks/numerical_expanded.jsonl \
+  paper/iclr/toxictool_bench/results/RESULT.jsonl
+```
+
+Generate overall and poison-type CSV summaries from rescored JSONL files:
+
+```bash
+python3 paper/iclr/toxictool_bench/summarize_results.py \
+  paper/iclr/toxictool_bench/results/EXPANDED_RESULT_1.rescored.jsonl \
+  paper/iclr/toxictool_bench/results/EXPANDED_RESULT_2.rescored.jsonl \
+  --overall-output paper/iclr/toxictool_bench/results/cross_model_summary.csv \
+  --poison-output paper/iclr/toxictool_bench/results/poison_type_summary.csv
+```
+
+## 8. Cross-Model Full-Adapter Experiment
+
+Recommended model set:
+
+```text
+gpt-5.4-mini
+claude-sonnet-4-6
+Qwen3.6-35B-A3B-no-thinking
+```
+
+Run the same expanded commands above while changing `--model`. For cost control, run one model at a time and rescore before starting the next model.
+
+Scripted cross-model loop:
+
+```bash
+for model in gpt-5.4-mini claude-sonnet-4-6 Qwen3.6-35B-A3B-no-thinking; do
+  MODEL="$model" bash paper/iclr/toxictool_bench/run_expanded_full_adapters.sh
+done
+```
+
+## 9. Semantic/Schema Expansion
+
+Use the 24-task semantic/schema set:
+
+```bash
+TASKS=paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl
+```
+
+Single-adapter run:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --tasks "$TASKS" \
+  --adapter langgraph_react_full \
+  --model gpt-5.4-mini \
+  --env both \
+  --max-steps 8
+```
+
+Scripted run over practical-speed adapters:
+
+```bash
+bash paper/iclr/toxictool_bench/run_semantic_schema_full_adapters.sh gpt-5.4-mini
+```
+
+## 10. data2mcp Guarded Ablation
+
+Run base vs guarded on the semantic/schema suite:
+
+```bash
+bash paper/iclr/toxictool_bench/run_data2mcp_guard_ablation.sh \
+  gpt-5.4-mini \
+  paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl
+```
+
+Run guarded only on semantic/schema:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --tasks paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl \
+  --api-file paper/iclr/api \
+  --adapter data2mcp_dataframe_guarded \
+  --model gpt-5.4-mini \
+  --env both \
+  --max-steps 10 \
+  --max-tokens 3072
+```
+
+Run guarded only on the numerical suite:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --tasks paper/iclr/toxictool_bench/tasks/numerical_expanded.jsonl \
+  --api-file paper/iclr/api \
+  --adapter data2mcp_dataframe_guarded \
+  --model gpt-5.4-mini \
+  --env both \
+  --max-steps 10 \
+  --max-tokens 3072
+```
+
+Run the light guarded variant:
+
+```bash
+python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  --tasks paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl \
+  --api-file paper/iclr/api \
+  --adapter data2mcp_dataframe_guarded_light \
+  --model gpt-5.4-mini \
+  --env both \
+  --max-steps 10 \
+  --max-tokens 3072
+```
+
+Summarize against the existing base run:
+
+```bash
+python3 paper/iclr/toxictool_bench/rescore_results.py \
+  --tasks paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl \
+  paper/iclr/toxictool_bench/results/RESULT_data2mcp_dataframe_guarded.jsonl
+
+python3 paper/iclr/toxictool_bench/summarize_results.py \
+  paper/iclr/toxictool_bench/results/20260717-152700_data2mcp_dataframe_gpt-5.4-mini_both.rescored.jsonl \
+  paper/iclr/toxictool_bench/results/RESULT_data2mcp_dataframe_guarded.rescored.jsonl \
+  --overall-output paper/iclr/toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv \
+  --poison-output paper/iclr/toxictool_bench/results/data2mcp_guarded_semantic_ablation_poison_summary.csv
+```
+
+Current completed guarded result:
+
+```text
+paper/iclr/toxictool_bench/results/20260717-214348_data2mcp_dataframe_guarded_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260718-153208_data2mcp_dataframe_guarded_light_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv
+paper/iclr/toxictool_bench/results/data2mcp_guarded_semantic_ablation_poison_summary.csv
+paper/iclr/toxictool_bench/results/20260718-003358_data2mcp_dataframe_guarded_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260718-160351_data2mcp_dataframe_guarded_light_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/data2mcp_guarded_numerical_ablation_summary.csv
+paper/iclr/toxictool_bench/results/data2mcp_guarded_numerical_ablation_poison_summary.csv
+```
+
+Guard overhead and case-study extraction:
+
+```bash
+python3 paper/iclr/toxictool_bench/analyze_guard_ablation.py \
+  --output-csv paper/iclr/toxictool_bench/results/data2mcp_guarded_overhead_summary.csv \
+  --output-md paper/iclr/GUARDED_CASE_STUDIES.md \
+  --semantic-base paper/iclr/toxictool_bench/results/20260717-152700_data2mcp_dataframe_gpt-5.4-mini_both.rescored.jsonl \
+  --semantic-full paper/iclr/toxictool_bench/results/20260717-214348_data2mcp_dataframe_guarded_gpt-5.4-mini_both.rescored.jsonl \
+  --semantic-light paper/iclr/toxictool_bench/results/20260718-153208_data2mcp_dataframe_guarded_light_gpt-5.4-mini_both.rescored.jsonl \
+  --numerical-base paper/iclr/toxictool_bench/results/20260707-122940_data2mcp_dataframe_gpt-5.4-mini_both.rescored.jsonl \
+  --numerical-full paper/iclr/toxictool_bench/results/20260718-003358_data2mcp_dataframe_guarded_gpt-5.4-mini_both.rescored.jsonl \
+  --numerical-light paper/iclr/toxictool_bench/results/20260718-160351_data2mcp_dataframe_guarded_light_gpt-5.4-mini_both.rescored.jsonl
+```
+
+Bootstrap confidence intervals:
+
+```bash
+python3 paper/iclr/toxictool_bench/bootstrap_ci.py \
+  RESULT_1.rescored.jsonl RESULT_2.rescored.jsonl \
+  --output paper/iclr/toxictool_bench/results/BOOTSTRAP_OUTPUT.csv \
+  --iterations 2000 \
+  --seed 13
+```
+
+Current generated CI files:
+
+```text
+paper/iclr/toxictool_bench/results/numerical_gpt_bootstrap_ci.csv
+paper/iclr/toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv
+paper/iclr/toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
+paper/iclr/toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv
+```
+
+The semantic/schema suite currently includes:
+
+```text
+label_swap / treatment_control_flip
+column_semantic_swap
+stale_metadata
+biased_retrieval
+```

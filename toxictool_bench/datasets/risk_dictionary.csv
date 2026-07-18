@@ -1,0 +1,5 @@
+field,meaning,status
+risk_score,current default-risk score; higher means riskier,current
+credit_score,legacy bureau score; higher means safer,legacy
+income_verified,whether income documents were verified,current
+manual_review,whether an analyst reviewed the application,current

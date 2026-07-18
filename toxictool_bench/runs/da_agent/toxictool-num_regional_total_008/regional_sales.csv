@@ -1,0 +1,13 @@
+month,region,sales,orders
+Jan,North,1200,60
+Feb,North,1500,75
+Mar,North,1800,90
+Jan,South,900,45
+Feb,South,1000,50
+Mar,South,1100,55
+Jan,East,1300,65
+Feb,East,1600,80
+Mar,East,1700,85
+Jan,West,800,50
+Feb,West,950,50
+Mar,West,1000,50

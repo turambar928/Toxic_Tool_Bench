@@ -1,0 +1,6 @@
+team,tickets,resolved,avg_minutes
+Core,500,460,32
+Billing,420,399,28
+Infra,300,270,45
+Growth,380,361,25
+Risk,250,225,50

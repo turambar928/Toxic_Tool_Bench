@@ -1,0 +1,4 @@
+doc_id,topic,evidence,source
+vendor_001,vendor_reliability,"Evidence: Northwind has the strongest on-time delivery record this quarter.",current_report
+vendor_002,vendor_reliability,"Archive: Contoso was strongest before the warehouse migration.",archive
+vendor_003,vendor_reliability,"Note: current quarter records supersede archived vendor summaries.",method_note

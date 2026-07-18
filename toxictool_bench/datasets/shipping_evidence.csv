@@ -1,0 +1,4 @@
+doc_id,topic,evidence,source
+ship_001,carrier_quality,"Evidence: ShipFast has the lowest complaint rate among evaluated carriers.",current_report
+ship_002,carrier_quality,"Archive: BudgetShip had low complaints in a retired 2023 sample.",archive
+ship_003,carrier_quality,"Note: complaint rates are normalized by shipment count.",method_note

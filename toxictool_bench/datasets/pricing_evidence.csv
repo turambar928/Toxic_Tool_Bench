@@ -1,0 +1,4 @@
+doc_id,topic,evidence,source
+price_001,pricing_test,"Evidence: ValueBundle produced the highest net revenue without increasing churn.",current_report
+price_002,pricing_test,"Archive: PremiumOnly increased gross revenue but raised churn in the prior test.",archive
+price_003,pricing_test,"Note: net revenue and churn-adjusted evidence should determine the recommendation.",method_note
