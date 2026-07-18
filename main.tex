@@ -10,6 +10,7 @@
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{microtype}
+\usepackage{natbib}
 \usepackage{url}
 \usepackage{hyperref}
 
@@ -37,5 +38,12 @@
 \clearpage
 \appendix
 \input{sections/08_appendix_guard_details}
+
+\IfFileExists{iclr2026_conference.bst}{
+    \bibliographystyle{iclr2026_conference}
+}{
+    \bibliographystyle{plainnat}
+}
+\bibliography{references}
 
 \end{document}

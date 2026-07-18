@@ -42,17 +42,17 @@ Implemented coverage:
 Expected files:
 
 ```text
-paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl
-paper/iclr/toxictool_bench/datasets/*.csv
-paper/iclr/toxictool_bench/poisoners.py
-paper/iclr/toxictool_bench/tests/test_poisoners.py
+toxictool_bench/tasks/semantic_schema.jsonl
+toxictool_bench/datasets/*.csv
+toxictool_bench/poisoners.py
+toxictool_bench/tests/test_poisoners.py
 ```
 
 Acceptance checks:
 
 ```bash
-python3 -m pytest paper/iclr/toxictool_bench/tests -q
-python3 -m compileall -q paper/iclr/toxictool_bench
+python3 -m pytest toxictool_bench/tests -q
+python3 -m compileall -q toxictool_bench
 ```
 
 ## Phase 2: Run Expanded Semantic/Schema Experiments
@@ -76,7 +76,7 @@ autogen_tool_agent
 Command:
 
 ```bash
-bash paper/iclr/toxictool_bench/run_semantic_schema_full_adapters.sh gpt-5.4-mini
+bash toxictool_bench/run_semantic_schema_full_adapters.sh gpt-5.4-mini
 ```
 
 Status: complete for `gpt-5.4-mini`.
@@ -84,21 +84,21 @@ Status: complete for `gpt-5.4-mini`.
 Current summary files:
 
 ```text
-paper/iclr/toxictool_bench/results/semantic_schema_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_poison_summary.csv
+toxictool_bench/results/semantic_schema_summary.csv
+toxictool_bench/results/semantic_schema_poison_summary.csv
 ```
 
 For reruns, rescore and summarize the exact result files:
 
 ```bash
-python3 paper/iclr/toxictool_bench/rescore_results.py \
-  --tasks paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl \
+python3 toxictool_bench/rescore_results.py \
+  --tasks toxictool_bench/tasks/semantic_schema.jsonl \
   RESULT_1.jsonl RESULT_2.jsonl RESULT_3.jsonl RESULT_4.jsonl RESULT_5.jsonl
 
-python3 paper/iclr/toxictool_bench/summarize_results.py \
+python3 toxictool_bench/summarize_results.py \
   RESULT_1.rescored.jsonl RESULT_2.rescored.jsonl RESULT_3.rescored.jsonl RESULT_4.rescored.jsonl RESULT_5.rescored.jsonl \
-  --overall-output paper/iclr/toxictool_bench/results/semantic_schema_summary.csv \
-  --poison-output paper/iclr/toxictool_bench/results/semantic_schema_poison_summary.csv
+  --overall-output toxictool_bench/results/semantic_schema_summary.csv \
+  --poison-output toxictool_bench/results/semantic_schema_poison_summary.csv
 ```
 
 Do not use wildcard result selection because failed or old runs may exist in the results directory.
@@ -130,8 +130,8 @@ DA-Agent remains GPT-only unless a timeout/resume mechanism is added.
 Output files:
 
 ```text
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
 ```
 
 ## Phase 4: Defense Ablation
@@ -183,10 +183,10 @@ Current result on the 34-task numerical suite with `gpt-5.4-mini`:
 Output files:
 
 ```text
-paper/iclr/toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_semantic_ablation_poison_summary.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_numerical_ablation_summary.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_numerical_ablation_poison_summary.csv
+toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv
+toxictool_bench/results/data2mcp_guarded_semantic_ablation_poison_summary.csv
+toxictool_bench/results/data2mcp_guarded_numerical_ablation_summary.csv
+toxictool_bench/results/data2mcp_guarded_numerical_ablation_poison_summary.csv
 ```
 
 ## Phase 5: Paper Integration
@@ -194,11 +194,11 @@ paper/iclr/toxictool_bench/results/data2mcp_guarded_numerical_ablation_poison_su
 Update:
 
 ```text
-paper/iclr/EXPERIMENT_RESULTS.md
-paper/iclr/sections/03_toxictool_bench.tex
-paper/iclr/sections/05_experiments.tex
-paper/iclr/sections/06_qualitative_analysis.tex
-paper/iclr/sections/07_discussion_limitations.tex
+EXPERIMENT_RESULTS.md
+sections/03_toxictool_bench.tex
+sections/05_experiments.tex
+sections/06_qualitative_analysis.tex
+sections/07_discussion_limitations.tex
 ```
 
 Add:
@@ -215,12 +215,12 @@ Status: qualitative evidence and overhead summary generated for the current guar
 Generated files:
 
 ```text
-paper/iclr/toxictool_bench/results/data2mcp_guarded_overhead_summary.csv
-paper/iclr/GUARDED_CASE_STUDIES.md
-paper/iclr/toxictool_bench/results/numerical_gpt_bootstrap_ci.csv
-paper/iclr/toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv
+toxictool_bench/results/data2mcp_guarded_overhead_summary.csv
+GUARDED_CASE_STUDIES.md
+toxictool_bench/results/numerical_gpt_bootstrap_ci.csv
+toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv
+toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
+toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv
 ```
 
 Next actions:

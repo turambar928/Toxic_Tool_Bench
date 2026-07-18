@@ -25,7 +25,7 @@ Date: 2026-07-19
 
 - All section files referenced by `main.tex` exist.
 - All current `\ref{...}` targets have matching `\label{...}` definitions.
-- No `\cite{...}` commands are currently present, so no bibliography file is required for the current skeleton.
+- Related-work citations are present and `main.tex` includes `references.bib`.
 - Main numerical cross-model table matches `toxictool_bench/results/cross_model_summary.csv`.
 - Main semantic/schema table matches `toxictool_bench/results/semantic_schema_cross_model_summary.csv`.
 - Guarded ablation table matches:
@@ -43,7 +43,6 @@ Date: 2026-07-19
 ## Remaining Before Submission
 
 - Add the official ICLR style file for the target year or replace the fallback with the final conference package.
-- Add related-work citations and a bibliography once the literature list is finalized.
 - Run a full LaTeX build after TeX is installed in the environment.
 - Check page budget after the official style is applied; the current skeleton is content-complete but not page-budget validated.
 - Decide whether to include compact bootstrap CI tables beyond the guarded CI table already in the appendix.
@@ -53,3 +52,4 @@ Date: 2026-07-19
 - `pdflatex` is not installed in the current environment.
 - `latexmk` is not installed in the current environment.
 - Static LaTeX checks passed for includes and labels.
+- Attempted to download the official ICLR 2026 template from the ICLR Master-Template GitHub repository, but the network transfer stalled and the direct raw path returned an invalid 14-byte file. The invalid partial file was removed. `main.tex` still supports the official style if `iclr2026_conference.sty` and `iclr2026_conference.bst` are added later.

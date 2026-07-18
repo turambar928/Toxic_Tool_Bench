@@ -17,6 +17,8 @@ Last updated: 2026-07-19
 - `data2mcp_dataframe_guarded` 和 `data2mcp_dataframe_guarded_light` 已经完成 semantic/schema 与 numerical ablation。
 - guarded overhead/case-study artifacts 和 bootstrap confidence intervals 已经生成。
 - abstract / introduction / method / experiments 已经统一成 “ToxicTool-Bench 暴露 blind compliance + guarded verification 降低 BCR” 的论文主线。
+- `main.tex`、`README.md`、`references.bib` 和 GitHub release-facing 文档已经补齐。
+- 当前重点已经从继续跑实验转为最终 PDF 编译、页数控制、citation polish 和 release package verification。
 
 ## 已经完成的搭建内容
 
@@ -25,7 +27,7 @@ Last updated: 2026-07-19
 目录：
 
 ```text
-paper/iclr/toxictool_bench/
+toxictool_bench/
 ```
 
 已完成：
@@ -65,7 +67,7 @@ paper/iclr/toxictool_bench/
 当前正式 expanded task file：
 
 ```text
-paper/iclr/toxictool_bench/tasks/numerical_expanded.jsonl
+toxictool_bench/tasks/numerical_expanded.jsonl
 ```
 
 规模：
@@ -87,7 +89,7 @@ paper/iclr/toxictool_bench/tasks/numerical_expanded.jsonl
 当前 semantic/schema expansion：
 
 ```text
-paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl
+toxictool_bench/tasks/semantic_schema.jsonl
 ```
 
 规模：
@@ -210,9 +212,9 @@ paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl
 结果入口：
 
 ```text
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
+toxictool_bench/results/semantic_schema_cross_model_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
 ```
 
 摘要：
@@ -240,55 +242,55 @@ paper/iclr/toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
 核心结果：
 
 ```text
-paper/iclr/EXPERIMENT_RESULTS.md
-paper/iclr/PILOT_RESULTS.md
-paper/iclr/NEXT_EXPERIMENT_PLAN.md
-paper/iclr/toxictool_bench/results/cross_model_summary.csv
-paper/iclr/toxictool_bench/results/poison_type_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_poison_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_numerical_ablation_summary.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_overhead_summary.csv
-paper/iclr/toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv
+EXPERIMENT_RESULTS.md
+PILOT_RESULTS.md
+NEXT_EXPERIMENT_PLAN.md
+toxictool_bench/results/cross_model_summary.csv
+toxictool_bench/results/poison_type_summary.csv
+toxictool_bench/results/semantic_schema_summary.csv
+toxictool_bench/results/semantic_schema_poison_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
+toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv
+toxictool_bench/results/data2mcp_guarded_numerical_ablation_summary.csv
+toxictool_bench/results/data2mcp_guarded_overhead_summary.csv
+toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv
+toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
+toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv
 ```
 
 论文 section：
 
 ```text
-paper/iclr/sections/03_toxictool_bench.tex
-paper/iclr/sections/04_method_ibf.tex
-paper/iclr/sections/05_experiments.tex
-paper/iclr/sections/06_qualitative_analysis.tex
-paper/iclr/sections/07_discussion_limitations.tex
-paper/iclr/sections/08_appendix_guard_details.tex
+sections/03_toxictool_bench.tex
+sections/04_method_ibf.tex
+sections/05_experiments.tex
+sections/06_qualitative_analysis.tex
+sections/07_discussion_limitations.tex
+sections/08_appendix_guard_details.tex
 ```
 
 运行说明：
 
 ```text
-paper/iclr/RUN_COMMANDS.md
+RUN_COMMANDS.md
 ```
 
 当前状态：
 
 ```text
-paper/iclr/CURRENT_STATUS.md
-paper/iclr/PROGRESS_REPORT.md
+CURRENT_STATUS.md
+PROGRESS_REPORT.md
 ```
 
 Case studies：
 
 ```text
-paper/iclr/CASE_STUDIES.md
-paper/iclr/GUARDED_CASE_STUDIES.md
-paper/iclr/toxictool_bench/extract_case_studies.py
-paper/iclr/toxictool_bench/analyze_guard_ablation.py
-paper/iclr/sections/06_qualitative_analysis.tex
+CASE_STUDIES.md
+GUARDED_CASE_STUDIES.md
+toxictool_bench/extract_case_studies.py
+toxictool_bench/analyze_guard_ablation.py
+sections/06_qualitative_analysis.tex
 ```
 
 ## 验证状态
@@ -296,8 +298,8 @@ paper/iclr/sections/06_qualitative_analysis.tex
 已运行：
 
 ```bash
-python3 -m pytest paper/iclr/toxictool_bench/tests -q
-python3 -m compileall -q paper/iclr/toxictool_bench
+python3 -m pytest toxictool_bench/tests -q
+python3 -m compileall -q toxictool_bench
 ```
 
 结果：
@@ -320,13 +322,13 @@ compileall passed
   - semantic/schema: clean 0.83, toxic 0.71, BCR 0.00, RR 0.71
   - numerical: clean 0.68, toxic 0.65, BCR 0.00, RR 0.65
 - 已经生成 guarded overhead 统计和 case studies：
-  - `paper/iclr/toxictool_bench/results/data2mcp_guarded_overhead_summary.csv`
-  - `paper/iclr/GUARDED_CASE_STUDIES.md`
+  - `toxictool_bench/results/data2mcp_guarded_overhead_summary.csv`
+  - `GUARDED_CASE_STUDIES.md`
 - 已经生成 bootstrap CI：
-  - `paper/iclr/toxictool_bench/results/numerical_gpt_bootstrap_ci.csv`
-  - `paper/iclr/toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
-  - `paper/iclr/toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv`
-  - `paper/iclr/toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv`
+  - `toxictool_bench/results/numerical_gpt_bootstrap_ci.csv`
+  - `toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
+  - `toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv`
+  - `toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv`
 - qualitative examples 已经压缩为主文版本，light-guard failure、overhead 和 framework-boundary 细节已放入 `sections/08_appendix_guard_details.tex`。
 - DA-Agent 当前策略：保留 GPT 主表，跨模型遗漏作为 throughput limitation 报告。
 - bootstrap CI 已完成；只有在最终关键 claim 的 CI 仍显得过宽时，才需要 optional rerun。
@@ -361,11 +363,12 @@ compileall passed
 
 ## 建议的下一步
 
-当前下一步是 **submission package 前的全文一致性检查**，不是继续跑主实验。
+当前下一步是 **最终 submission/release package 检查**，不是继续跑主实验。
 
 具体顺序：
 
-1. 检查 `main.tex` 或最终论文入口是否按正确顺序 include：
+1. 用完整 TeX 环境编译 `main.tex`，检查 ICLR style、bibliography、浮动表格和页数。
+2. 检查 `main.tex` 或最终论文入口是否按正确顺序 include：
    - `00_abstract.tex`
    - `01_introduction.tex`
    - `02_problem_setup.tex`
@@ -376,19 +379,19 @@ compileall passed
    - `06_related_work.tex`
    - `07_discussion_limitations.tex`
    - appendix 中 include `08_appendix_guard_details.tex`
-2. 检查符号一致性：
+3. 检查符号一致性：
    - `\benchmarkname{}`
    - `\methodname{}`
    - TSR / BCR / ADR / VR / RR
-3. 检查表格引用和 artifact 对应关系：
+4. 检查表格引用和 artifact 对应关系：
    - numerical cross-model
    - semantic/schema cross-model
    - guarded full ablation
    - light guard appendix
    - bootstrap CI appendix
-4. 检查是否需要 optional rerun：
+5. 检查是否需要 optional rerun：
    - 只在某个关键 claim 的 bootstrap CI 太宽时才补跑。
-5. 准备最终 ICLR submission package：
+6. 准备最终 ICLR submission package：
    - 主 tex
    - sections
    - appendix
@@ -397,7 +400,7 @@ compileall passed
 
 优先顺序：
 
-1. 全文一致性检查。
+1. PDF 编译和页数检查。
 2. 主文篇幅压缩。
 3. appendix include / artifact list。
 4. optional rerun 判断。

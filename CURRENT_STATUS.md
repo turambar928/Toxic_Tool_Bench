@@ -1,12 +1,12 @@
 # ICLR Project Current Status
 
-Last updated: 2026-07-17
+Last updated: 2026-07-19
 
 ## Current Stage
 
-The project is now at the post-experiment audit and paper-integration stage.
+The project is now at the submission-package and release-cleanup stage.
 
-The benchmark, full-agent adapters, numerical expanded experiments, semantic/schema cross-model experiments, rescoring pipeline, and paper result tables are in place. The next work should focus on defense ablations, semantic/retrieval case studies, and paper narrative tightening.
+The benchmark, full-agent adapters, numerical expanded experiments, semantic/schema cross-model experiments, rescoring pipeline, guarded data2mcp defense ablations, bootstrap confidence intervals, case studies, paper skeleton, and GitHub README are in place. The next work should focus on final PDF compilation, page-budget control, citation polish, and release-package verification.
 
 ## Built Components
 
@@ -15,7 +15,7 @@ The benchmark, full-agent adapters, numerical expanded experiments, semantic/sch
 Location:
 
 ```text
-paper/iclr/toxictool_bench/
+toxictool_bench/
 ```
 
 Implemented components:
@@ -50,13 +50,13 @@ Implemented components:
 Pilot task file:
 
 ```text
-paper/iclr/toxictool_bench/tasks/numerical.jsonl
+toxictool_bench/tasks/numerical.jsonl
 ```
 
 Expanded task file:
 
 ```text
-paper/iclr/toxictool_bench/tasks/numerical_expanded.jsonl
+toxictool_bench/tasks/numerical_expanded.jsonl
 ```
 
 Current expanded suite:
@@ -75,7 +75,7 @@ Current expanded suite:
 Semantic/schema expansion:
 
 ```text
-paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl
+toxictool_bench/tasks/semantic_schema.jsonl
 ```
 
 Current semantic/schema suite:
@@ -123,8 +123,8 @@ Fix:
 Regression tests:
 
 ```text
-paper/iclr/toxictool_bench/tests/test_evaluator.py
-paper/iclr/toxictool_bench/tests/test_poisoners.py
+toxictool_bench/tests/test_evaluator.py
+toxictool_bench/tests/test_poisoners.py
 ```
 
 Current test result:
@@ -154,8 +154,8 @@ Completed on all 6 full adapters:
 Main expanded result table is in:
 
 ```text
-paper/iclr/EXPERIMENT_RESULTS.md
-paper/iclr/sections/05_experiments.tex
+EXPERIMENT_RESULTS.md
+sections/05_experiments.tex
 ```
 
 Semantic/schema 24-task suite is also complete on the five practical-speed adapters.
@@ -212,56 +212,56 @@ Notes:
 Overall cross-model summary:
 
 ```text
-paper/iclr/toxictool_bench/results/cross_model_summary.csv
+toxictool_bench/results/cross_model_summary.csv
 ```
 
 Poison-type breakdown:
 
 ```text
-paper/iclr/toxictool_bench/results/poison_type_summary.csv
+toxictool_bench/results/poison_type_summary.csv
 ```
 
 Semantic/schema summary:
 
 ```text
-paper/iclr/toxictool_bench/results/semantic_schema_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_poison_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
+toxictool_bench/results/semantic_schema_summary.csv
+toxictool_bench/results/semantic_schema_poison_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
 ```
 
 Detailed Markdown report:
 
 ```text
-paper/iclr/EXPERIMENT_RESULTS.md
-paper/iclr/PILOT_RESULTS.md
+EXPERIMENT_RESULTS.md
+PILOT_RESULTS.md
 ```
 
 LaTeX experiment section:
 
 ```text
-paper/iclr/sections/05_experiments.tex
+sections/05_experiments.tex
 ```
 
 Benchmark section:
 
 ```text
-paper/iclr/sections/03_toxictool_bench.tex
+sections/03_toxictool_bench.tex
 ```
 
 Case-study extraction:
 
 ```text
-paper/iclr/toxictool_bench/extract_case_studies.py
-paper/iclr/CASE_STUDIES.md
-paper/iclr/sections/06_qualitative_analysis.tex
+toxictool_bench/extract_case_studies.py
+CASE_STUDIES.md
+sections/06_qualitative_analysis.tex
 ```
 
 Progress report:
 
 ```text
-paper/iclr/PROGRESS_REPORT.md
-paper/iclr/NEXT_EXPERIMENT_PLAN.md
+PROGRESS_REPORT.md
+NEXT_EXPERIMENT_PLAN.md
 ```
 
 ## Verification
@@ -269,8 +269,8 @@ paper/iclr/NEXT_EXPERIMENT_PLAN.md
 Latest checks:
 
 ```text
-python3 -m pytest paper/iclr/toxictool_bench/tests -q
-python3 -m compileall -q paper/iclr/toxictool_bench
+python3 -m pytest toxictool_bench/tests -q
+python3 -m compileall -q toxictool_bench
 ```
 
 Result:
@@ -297,13 +297,13 @@ High-level findings from completed runs:
 - The guarded `data2mcp` numerical ablation reduces BCR from 0.24 to 0.00, raises clean TSR from 0.65 to 0.79, and raises poisoned TSR from 0.47 to 0.74.
 - The light guarded numerical ablation also keeps BCR at 0.00, but clean/toxic TSR are lower at 0.68/0.65.
 - Guarded overhead and case-study artifacts have been generated:
-  - `paper/iclr/toxictool_bench/results/data2mcp_guarded_overhead_summary.csv`
-  - `paper/iclr/GUARDED_CASE_STUDIES.md`
+  - `toxictool_bench/results/data2mcp_guarded_overhead_summary.csv`
+  - `GUARDED_CASE_STUDIES.md`
 - Bootstrap CI artifacts have been generated:
-  - `paper/iclr/toxictool_bench/results/numerical_gpt_bootstrap_ci.csv`
-  - `paper/iclr/toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
-  - `paper/iclr/toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv`
-  - `paper/iclr/toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv`
+  - `toxictool_bench/results/numerical_gpt_bootstrap_ci.csv`
+  - `toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
+  - `toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv`
+  - `toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv`
 
 Poison-type averages across completed cross-model runs:
 
@@ -317,12 +317,12 @@ sign_flip:      average BCR 0.11
 
 ### Paper analysis
 
-- Case-study extraction is implemented and `CASE_STUDIES.md` has been generated from final rescored expanded results.
-- Representative cases have been converted into a first qualitative-analysis draft in `sections/06_qualitative_analysis.tex`.
-- `EXPERIMENT_RESULTS.md` now contains only formal expanded/cross-model results; early 4-task pilot results are archived in `PILOT_RESULTS.md`.
-- Next paper task is to compress those examples for the final main text and move excess detail to appendix.
-- Tighten introduction around the central claim:
-  - successful tool execution is not equivalent to trustworthy tool evidence.
+- Case-study extraction is implemented and `CASE_STUDIES.md` / `GUARDED_CASE_STUDIES.md` have been generated.
+- Representative cases have been compressed into `sections/06_qualitative_analysis.tex`.
+- Light-guard, overhead, bootstrap CI, and framework-boundary details are in `sections/08_appendix_guard_details.tex`.
+- `main.tex` now provides the paper entry point and includes all sections.
+- Related-work citations and `references.bib` are present.
+- Remaining paper task: run the final LaTeX build with TeX installed and check ICLR page budget.
 
 ### Benchmark expansion
 
@@ -333,7 +333,7 @@ The benchmark now has a 24-task semantic/schema expansion in addition to the num
 
 Next experimental step:
 
-- Review final narrative and optional reruns; abstract/introduction/method now frame the paper as benchmark evidence plus guarded-verification defense.
+- Do not run more large experiments by default. Only rerun if final CI/page-review exposes a specific weak claim.
 
 ### DA-Agent cross-model
 
@@ -353,3 +353,4 @@ If needed later:
 - Add per-adapter timeout control.
 - Add automatic rescore and summary generation after each full run.
 - Optionally suppress AutoGen model-mismatch warnings in batch logs.
+- Update external adapter setup instructions if publishing a fully reproducible release with third-party framework checkouts.

@@ -2,16 +2,16 @@
 \label{sec:related}
 
 \paragraph{Tool-augmented language agents.}
-Prior work on tool use evaluates whether language models can select tools, construct valid calls, use code execution, and solve multi-step tasks with external environments. \benchmarkname{} studies a complementary dimension: whether an agent can calibrate trust in tool observations after a call succeeds.
+Prior work on tool use evaluates whether language models can select tools, construct valid calls, use code execution, and solve multi-step tasks with external environments \citep{schick2023toolformer,yao2023react,qin2023toolbench,gao2023pal}. \benchmarkname{} studies a complementary dimension: whether an agent can calibrate trust in tool observations after a call succeeds.
 
 \paragraph{Agent reliability and error recovery.}
 Many agent benchmarks include failures caused by invalid actions, execution errors, missing context, or long-horizon planning mistakes. Silent tool poisoning differs because the agent receives a normal-looking observation. The challenge is not syntactic recovery from an error signal, but semantic skepticism toward a plausible signal.
 
 \paragraph{Prompt injection and data poisoning.}
-Instruction poisoning in \benchmarkname{} is related to prompt injection, but the attack surface is specifically data-agent observations: rows, metadata, retrieval chunks, or previews. The desired behavior is not merely refusal; the agent should continue the task while treating embedded instructions as untrusted data.
+Data-embedded instruction risks in \benchmarkname{} are related to indirect prompt injection, where untrusted retrieved or tool-provided content can influence downstream model behavior \citep{greshake2023indirect}. Our attack surface is specifically data-agent observations: rows, metadata, retrieval chunks, or previews. The desired behavior is not merely refusal; the agent should continue the task while treating embedded instructions as untrusted data.
 
 \paragraph{Data quality and schema reliability.}
 Data-analysis agents depend on schemas, data dictionaries, and documentation to decide which columns and rows are relevant. Traditional data-quality checks often focus on missing values, type errors, and constraint violations. \benchmarkname{} instead evaluates whether an agent over-trusts plausible but wrong metadata, such as swapped column semantics, stale source-of-truth fields, or inverted treatment labels.
 
 \paragraph{Uncertainty and self-verification.}
-Self-checking and verification methods ask models to critique or validate their own outputs. \methodname{} applies this idea at the tool-observation boundary, where the agent must decide whether an external result deserves to become evidence for the final answer.
+Self-checking and verification methods ask models to critique or validate their own outputs \citep{shinn2023reflexion,madaan2023selfrefine}. \methodname{} applies this idea at the tool-observation boundary, where the agent must decide whether an external result deserves to become evidence for the final answer.
