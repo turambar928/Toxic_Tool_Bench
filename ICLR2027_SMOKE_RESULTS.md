@@ -95,6 +95,18 @@ Summary artifacts:
 toxictool_bench/results/iclr2027_data2mcp_ablation_semantic_10task_summary.csv
 toxictool_bench/results/iclr2027_data2mcp_ablation_numerical_10task_summary.csv
 toxictool_bench/results/iclr2027_data2mcp_ablation_combined_20task_summary.csv
+toxictool_bench/results/iclr2027_data2mcp_ablation_auto_manifest.csv
+```
+
+These can now be regenerated from completed chunks with:
+
+```bash
+python3 toxictool_bench/summarize_chunked_matrix.py \
+  --tasks toxictool_bench/tasks/semantic_schema_iclr2027.jsonl toxictool_bench/tasks/numerical_iclr2027.jsonl \
+  --adapters data2mcp_dataframe data2mcp_dataframe_caution data2mcp_dataframe_expectation_only data2mcp_dataframe_verification_only data2mcp_dataframe_guarded data2mcp_dataframe_guarded_light \
+  --starts 0 5 \
+  --limit 5 \
+  --output-prefix toxictool_bench/results/iclr2027_data2mcp_ablation_auto
 ```
 
 Semantic/schema 10-task summary:

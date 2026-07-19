@@ -295,6 +295,20 @@ done
 
 Chunked result filenames include `_start<index>_limit<count>` before `.jsonl`.
 
+Summarize completed chunks automatically:
+
+```bash
+python3 toxictool_bench/summarize_chunked_matrix.py \
+  --tasks toxictool_bench/tasks/semantic_schema_iclr2027.jsonl toxictool_bench/tasks/numerical_iclr2027.jsonl \
+  --adapters data2mcp_dataframe data2mcp_dataframe_caution data2mcp_dataframe_expectation_only data2mcp_dataframe_verification_only data2mcp_dataframe_guarded data2mcp_dataframe_guarded_light \
+  --starts 0 5 \
+  --limit 5 \
+  --output-prefix toxictool_bench/results/iclr2027_data2mcp_ablation_auto
+```
+
+The summarizer writes suite-level summaries, a combined summary, and a manifest
+of the exact raw JSONL files selected for each suite/adapter/chunk.
+
 Run the data2mcp guard comparison on the expanded semantic/schema suite. By default this covers six variants:
 
 ```text
