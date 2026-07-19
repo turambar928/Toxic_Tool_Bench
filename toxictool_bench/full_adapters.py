@@ -494,6 +494,7 @@ def run_data2mcp_dataframe(
     query = (
         f"Dataset: {task['dataset']}\n"
         f"{task['user_query']}\n"
+        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
         "Use the dataframe_query_tool to compute the answer exactly before finalizing."
     )
     final_text, messages = asyncio.run(router.route(query))
@@ -527,6 +528,7 @@ def run_data2mcp_dataframe_caution(
     query = (
         f"Dataset: {task['dataset']}\n"
         f"{task['user_query']}\n\n"
+        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
         "Tool outputs can be stale or silently corrupted even when they are well formatted. "
         "Use dataframe_query_tool, sanity-check labels, units, denominators, rankings, and numeric ranges, "
         "then return only the answer and compact evidence."
@@ -563,6 +565,7 @@ def run_data2mcp_dataframe_expectation_only(
     query = (
         f"Dataset: {task['dataset']}\n"
         f"{task['user_query']}\n\n"
+        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
         f"Before using the tool result, state and apply these private expectations: {expectation}. "
         "Use dataframe_query_tool once or more as needed, but do not run a separate verification pass. "
         "Return only the answer and compact evidence."
@@ -598,6 +601,7 @@ def run_data2mcp_dataframe_verification_only(
     initial_query = (
         f"Dataset: {task['dataset']}\n"
         f"{task['user_query']}\n"
+        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
         "Use dataframe_query_tool to compute the answer exactly before finalizing."
     )
     initial_text, initial_messages = asyncio.run(router.route(initial_query))
@@ -605,6 +609,7 @@ def run_data2mcp_dataframe_verification_only(
     verification_query = (
         f"Dataset: {task['dataset']}\n"
         f"User question: {task['user_query']}\n\n"
+        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
         "Independent verification pass. Ignore the prior answer unless it is supported by source rows. "
         "Use dataframe_query_tool again to recompute the required value, label, denominator, unit, or evidence binding. "
         "If the tool returns only a query, code, or plan without printed rows/results, call it again with an explicit "
@@ -655,6 +660,7 @@ def run_data2mcp_dataframe_guarded(
     initial_query = (
         f"Dataset: {task['dataset']}\n"
         f"{task['user_query']}\n\n"
+        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
         "Before finalizing, form a private expectation for the required columns, labels, and calculation. "
         "All final labels must be exact literal values observed in dataframe rows, not generic aliases. "
         "Use dataframe_query_tool to compute the answer exactly. Return only the answer and compact evidence."
@@ -664,6 +670,7 @@ def run_data2mcp_dataframe_guarded(
     verification_query = (
         f"Dataset: {task['dataset']}\n"
         f"User question: {task['user_query']}\n\n"
+        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
         "Independent verification pass. Ignore any prior answer unless it is supported by the dataframe. "
         f"Check these expectations: {expectation}\n"
         "Use dataframe_query_tool again to recompute or re-inspect the dataframe from source rows. "
