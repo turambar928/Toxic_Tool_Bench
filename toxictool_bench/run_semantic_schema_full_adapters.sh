@@ -2,8 +2,8 @@
 set -euo pipefail
 
 MODEL="${1:-gpt-5.4-mini}"
-TASKS="paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl"
-API_FILE="paper/iclr/api"
+TASKS="toxictool_bench/tasks/semantic_schema.jsonl"
+API_FILE="api"
 
 ADAPTERS=(
   "langgraph_react_full"
@@ -27,7 +27,7 @@ for adapter in "${ADAPTERS[@]}"; do
       ;;
   esac
 
-  python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  python3 toxictool_bench/run_full_bench.py \
     --tasks "$TASKS" \
     --api-file "$API_FILE" \
     --adapter "$adapter" \

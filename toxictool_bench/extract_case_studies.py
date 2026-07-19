@@ -123,7 +123,7 @@ def main() -> None:
         "--bench-dir",
         type=Path,
         default=Path(__file__).resolve().parent,
-        help="Path to paper/iclr/toxictool_bench.",
+        help="Path to toxictool_bench.",
     )
     parser.add_argument(
         "--results",

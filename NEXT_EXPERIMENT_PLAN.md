@@ -223,6 +223,22 @@ toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
 toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv
 ```
 
+## ICLR 2027 Expansion Track
+
+If targeting ICLR 2027, the next experiments should use the expanded candidate suites:
+
+```text
+toxictool_bench/tasks/numerical_iclr2027.jsonl
+toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
+```
+
+Recommended order:
+
+1. Run partial smoke tests for `data2mcp_dataframe`, `langgraph_react_full`, and `pandasai_dataframe`.
+2. Generate severity summaries with `--severity-output` and check obvious/plausible/subtle trends.
+3. Run full guard and light guard on the expanded candidate suites.
+4. Only then expand to all adapters and cross-model runs.
+
 Next actions:
 
 1. Do a full paper consistency pass: symbols, section order, table references, appendix inclusion.

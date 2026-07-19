@@ -48,6 +48,8 @@ class Poisoner:
             poisoned = self._flip_first_number(observation)
         elif poison_type == "rank_swap":
             poisoned = self._swap_answer(observation, oracle)
+        elif poison_type in {"value_replace", "ratio_inversion", "denominator_swap", "unit_conversion", "missing_filter"}:
+            poisoned = self._replace_oracle_value(observation, oracle)
         elif poison_type in {"label_swap", "treatment_control_flip"}:
             poisoned = self._swap_text_pair(
                 observation,
@@ -125,6 +127,19 @@ class Poisoner:
             if abs(value - old) < 1e-6:
                 replacement = self._format_number(new)
                 return text[: match.start()] + replacement + text[match.end() :]
+        return text
+
+    def _replace_oracle_value(self, text: str, oracle: dict[str, Any]) -> str:
+        clean_value = oracle.get("clean_value")
+        poisoned_value = oracle.get("poisoned_value")
+        if clean_value is not None and poisoned_value is not None:
+            replaced = self._replace_number(text, float(clean_value), float(poisoned_value))
+            if replaced != text:
+                return replaced
+        clean_answer = str(oracle.get("clean_answer", ""))
+        poisoned_answer = str(oracle.get("poisoned_answer", ""))
+        if clean_answer and poisoned_answer:
+            return self._replace_literal(text, clean_answer, poisoned_answer)
         return text
 
     def _swap_text_pair(self, text: str, left: str, right: str) -> str:

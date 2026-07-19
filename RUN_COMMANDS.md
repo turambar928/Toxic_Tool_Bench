@@ -221,6 +221,43 @@ Use the 34-task expanded set:
 TASKS=toxictool_bench/tasks/numerical_expanded.jsonl
 ```
 
+## 7.5 ICLR 2027 Candidate Expansion
+
+Generate 60 numerical tasks and 60 semantic/schema tasks with severity labels:
+
+```bash
+python3 toxictool_bench/generate_iclr2027_tasks.py
+```
+
+Generated task files:
+
+```text
+toxictool_bench/tasks/numerical_iclr2027.jsonl
+toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
+```
+
+Run a small smoke test on the expanded numerical suite:
+
+```bash
+python3 toxictool_bench/run_full_bench.py \
+  --tasks toxictool_bench/tasks/numerical_iclr2027.jsonl \
+  --api-file api \
+  --adapter data2mcp_dataframe \
+  --model gpt-5.4-mini \
+  --env both \
+  --limit 5
+```
+
+Summarize with severity breakdown:
+
+```bash
+python3 toxictool_bench/summarize_results.py \
+  toxictool_bench/results/RESULT.rescored.jsonl \
+  --overall-output toxictool_bench/results/iclr2027_summary.csv \
+  --poison-output toxictool_bench/results/iclr2027_poison_summary.csv \
+  --severity-output toxictool_bench/results/iclr2027_severity_summary.csv
+```
+
 Run each completed full adapter:
 
 ```bash

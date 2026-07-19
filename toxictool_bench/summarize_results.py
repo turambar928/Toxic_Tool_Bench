@@ -14,6 +14,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("result_files", nargs="+", type=Path)
     parser.add_argument("--overall-output", type=Path, required=True)
     parser.add_argument("--poison-output", type=Path, required=True)
+    parser.add_argument("--severity-output", type=Path)
     return parser.parse_args()
 
 
@@ -24,6 +25,8 @@ def main() -> None:
         rows.extend(read_jsonl(path))
     write_overall(rows, args.overall_output)
     write_poison(rows, args.poison_output)
+    if args.severity_output:
+        write_severity(rows, args.severity_output)
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -96,6 +99,41 @@ def write_poison(rows: list[dict[str, Any]], path: Path) -> None:
                     "model": model,
                     "adapter": adapter,
                     "poison_type": poison_type,
+                    "toxic_tsr": fmt(metrics.get("task_success", 0.0)),
+                    "bcr": fmt(metrics.get("blind_compliance", 0.0)),
+                    "adr": fmt(metrics.get("anomaly_detection", 0.0)),
+                    "vr": fmt(metrics.get("validation", 0.0)),
+                    "rr": fmt(metrics.get("recovery", 0.0)),
+                    "n": metrics.get("n", 0),
+                }
+            )
+
+
+def write_severity(rows: list[dict[str, Any]], path: Path) -> None:
+    groups: dict[tuple[str, str, str, str], list[dict[str, Any]]] = {}
+    for row in rows:
+        if row.get("environment") != "toxic":
+            continue
+        poison = row.get("poison", {})
+        poison_type = poison.get("type", "unknown")
+        severity = poison.get("severity", "unspecified")
+        groups.setdefault((row["model"], row["adapter"], poison_type, severity), []).append(row)
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=["model", "adapter", "poison_type", "severity", "toxic_tsr", "bcr", "adr", "vr", "rr", "n"],
+        )
+        writer.writeheader()
+        for (model, adapter, poison_type, severity), group_rows in sorted(groups.items()):
+            metrics = aggregate(group_rows)
+            writer.writerow(
+                {
+                    "model": model,
+                    "adapter": adapter,
+                    "poison_type": poison_type,
+                    "severity": severity,
                     "toxic_tsr": fmt(metrics.get("task_success", 0.0)),
                     "bcr": fmt(metrics.get("blind_compliance", 0.0)),
                     "adr": fmt(metrics.get("anomaly_detection", 0.0)),

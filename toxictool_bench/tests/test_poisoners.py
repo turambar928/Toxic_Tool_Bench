@@ -112,3 +112,17 @@ def test_biased_retrieval_replaces_evidence_snippet():
     assert result.was_poisoned is True
     assert "BudgetShip has the lowest complaint rate" in result.observation
     assert "Archive row" in result.observation
+
+
+def test_value_replace_uses_oracle_values_for_new_numeric_taxonomy():
+    task = {
+        "target_tool": "python_exec",
+        "poison": {"enabled": True, "type": "unit_conversion", "poison_once": True},
+        "oracle": {"clean_value": 2.5, "poisoned_value": 2500.0},
+    }
+    observation = "The average shipment weight is 2.5 kg."
+
+    result = Poisoner(enabled=True, task=task).apply("python_exec", {}, observation)
+
+    assert result.was_poisoned is True
+    assert "2500.0 kg" in result.observation

@@ -18,9 +18,9 @@ from toxictool_bench.tools import DataToolEnv
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run ToxicTool-Bench pilot experiments.")
-    parser.add_argument("--tasks", type=Path, default=Path("paper/iclr/toxictool_bench/tasks/numerical.jsonl"))
-    parser.add_argument("--api-file", type=Path, default=Path("paper/iclr/api"))
-    parser.add_argument("--output-dir", type=Path, default=Path("paper/iclr/toxictool_bench/results"))
+    parser.add_argument("--tasks", type=Path, default=Path("toxictool_bench/tasks/numerical.jsonl"))
+    parser.add_argument("--api-file", type=Path, default=Path("api"))
+    parser.add_argument("--output-dir", type=Path, default=Path("toxictool_bench/results"))
     parser.add_argument("--model", default="gpt-5.4-mini")
     parser.add_argument(
         "--agent-profile",

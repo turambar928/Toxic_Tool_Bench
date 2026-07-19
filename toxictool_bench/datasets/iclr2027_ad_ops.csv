@@ -1,0 +1,7 @@
+channel,region,impressions,clicks,conversions,spend_usd,revenue_usd
+Search,North,10000,500,100,2000,5000
+Search,South,8000,400,80,1600,4000
+Email,North,5000,1000,150,1000,4500
+Email,South,4000,800,120,800,3600
+Social,North,12000,600,90,1800,3600
+Social,South,10000,500,75,1500,3000

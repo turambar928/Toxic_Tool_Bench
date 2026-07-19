@@ -40,6 +40,10 @@ The main behavioral metric is blind compliance: whether an agent copies or relie
 
 - Numerical suite: 34 tasks over 11 CSV datasets.
 - Semantic/schema suite: 24 tasks over 14 CSV datasets.
+- ICLR 2027 expanded candidate suites:
+  - `toxictool_bench/tasks/numerical_iclr2027.jsonl`: 60 numerical tasks.
+  - `toxictool_bench/tasks/semantic_schema_iclr2027.jsonl`: 60 semantic/schema tasks.
+  - These add severity labels and additional poison taxonomy coverage such as ratio inversion, denominator swap, unit conversion, and missing-filter poisoning.
 - Poisoning families: aggregate scaling, sign flips, rank/label swaps, treatment/control flips, column semantic swaps, stale metadata, and biased retrieval evidence.
 - Agent adapters: LangGraph ReAct, smolagents, `data2mcp`, PandasAI, DA-Agent, and AutoGen.
 - Models used where practical: `gpt-5.4-mini`, `claude-sonnet-4-6`, and `Qwen3.6-35B-A3B-no-thinking`.
@@ -105,6 +109,12 @@ See `RUN_COMMANDS.md` for the exact experiment commands. The main scripts are:
 bash toxictool_bench/run_expanded_full_adapters.sh
 bash toxictool_bench/run_semantic_schema_full_adapters.sh
 bash toxictool_bench/run_data2mcp_guard_ablation.sh
+```
+
+To regenerate the ICLR 2027 expanded candidate task files:
+
+```bash
+python3 toxictool_bench/generate_iclr2027_tasks.py
 ```
 
 ## Security Note

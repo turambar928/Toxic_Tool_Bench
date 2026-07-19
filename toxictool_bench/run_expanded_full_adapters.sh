@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TASKS="${TASKS:-paper/iclr/toxictool_bench/tasks/numerical_expanded.jsonl}"
+TASKS="${TASKS:-toxictool_bench/tasks/numerical_expanded.jsonl}"
 MODEL="${MODEL:-gpt-5.4-mini}"
 ENVIRONMENT="${ENVIRONMENT:-both}"
 ADAPTERS="${ADAPTERS:-langgraph_react_full smolagents_toolcalling data2mcp_dataframe pandasai_dataframe autogen_tool_agent da_agent_full}"
@@ -9,7 +9,7 @@ ADAPTERS="${ADAPTERS:-langgraph_react_full smolagents_toolcalling data2mcp_dataf
 run_adapter() {
   local adapter="$1"
   local max_steps=8
-  local py_path="paper/iclr/toxictool_bench"
+  local py_path="toxictool_bench"
 
   case "$adapter" in
     langgraph_react_full)
@@ -38,7 +38,7 @@ run_adapter() {
   esac
 
   echo "==> Running $adapter on $MODEL"
-  PYTHONPATH="$py_path" python3 paper/iclr/toxictool_bench/run_full_bench.py \
+  PYTHONPATH="$py_path" python3 toxictool_bench/run_full_bench.py \
     --tasks "$TASKS" \
     --adapter "$adapter" \
     --model "$MODEL" \
