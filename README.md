@@ -116,6 +116,13 @@ bash toxictool_bench/run_data2mcp_guard_ablation.sh
 bash toxictool_bench/run_iclr2027_experiments.sh
 ```
 
+Long ICLR 2027 runs can be chunked:
+
+```bash
+START_INDEX=0 LIMIT=10 bash toxictool_bench/run_iclr2027_experiments.sh
+START_INDEX=10 LIMIT=10 bash toxictool_bench/run_iclr2027_experiments.sh
+```
+
 Check local full-adapter dependencies before launching expensive runs:
 
 ```bash

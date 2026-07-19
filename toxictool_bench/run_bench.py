@@ -31,6 +31,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-steps", type=int, default=8)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--max-tokens", type=int, default=2048)
+    parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--list-models", action="store_true")
     return parser.parse_args()
@@ -45,13 +46,13 @@ def main() -> None:
 
     bench_dir = Path(__file__).resolve().parent
     tasks = load_tasks(args.tasks)
-    if args.limit:
-        tasks = tasks[: args.limit]
+    tasks = select_tasks(tasks, start_index=args.start_index, limit=args.limit)
 
     envs = ["clean", "toxic"] if args.env == "both" else [args.env]
     args.output_dir.mkdir(parents=True, exist_ok=True)
     stamp = time.strftime("%Y%m%d-%H%M%S")
-    result_path = args.output_dir / f"{stamp}_{args.agent_profile}_{args.model}_{args.env}.jsonl"
+    chunk = chunk_suffix(args.start_index, args.limit)
+    result_path = args.output_dir / f"{stamp}_{args.agent_profile}_{args.model}_{args.env}{chunk}.jsonl"
     summary_path = result_path.with_suffix(".summary.json")
 
     client = None
@@ -117,6 +118,25 @@ def load_tasks(path: Path) -> list[dict[str, Any]]:
         return [json.loads(line) for line in f if line.strip()]
 
 
+def select_tasks(tasks: list[dict[str, Any]], *, start_index: int = 0, limit: int = 0) -> list[dict[str, Any]]:
+    if start_index < 0:
+        raise ValueError("--start-index must be non-negative")
+    if limit < 0:
+        raise ValueError("--limit must be non-negative")
+    selected = tasks[start_index:]
+    if limit:
+        selected = selected[:limit]
+    return selected
+
+
+def chunk_suffix(start_index: int, limit: int) -> str:
+    if start_index == 0 and limit == 0:
+        return ""
+    if limit:
+        return f"_start{start_index}_limit{limit}"
+    return f"_start{start_index}"
+
+
 def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
     by_env: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
@@ -131,4 +151,3 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 if __name__ == "__main__":
     main()
-

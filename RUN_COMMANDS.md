@@ -275,9 +275,25 @@ Useful scoped variants:
 LIMIT=5 ADAPTERS="data2mcp_dataframe data2mcp_dataframe_guarded" \
   bash toxictool_bench/run_iclr2027_experiments.sh
 
+START_INDEX=10 LIMIT=10 ADAPTERS="data2mcp_dataframe_guarded_light" \
+  bash toxictool_bench/run_iclr2027_experiments.sh
+
 MODEL=claude-sonnet-4-6 ADAPTERS="langgraph_react_full smolagents_toolcalling autogen_tool_agent" \
   bash toxictool_bench/run_iclr2027_experiments.sh
 ```
+
+Chunked long-run pattern for the 60-task suites:
+
+```bash
+for start in 0 10 20 30 40 50; do
+  START_INDEX="$start" LIMIT=10 \
+  ADAPTERS="data2mcp_dataframe data2mcp_dataframe_caution data2mcp_dataframe_expectation_only data2mcp_dataframe_verification_only data2mcp_dataframe_guarded data2mcp_dataframe_guarded_light" \
+  TASK_SUITES="toxictool_bench/tasks/semantic_schema_iclr2027.jsonl toxictool_bench/tasks/numerical_iclr2027.jsonl" \
+  bash toxictool_bench/run_iclr2027_experiments.sh
+done
+```
+
+Chunked result filenames include `_start<index>_limit<count>` before `.jsonl`.
 
 Run the data2mcp guard comparison on the expanded semantic/schema suite. By default this covers six variants:
 
@@ -443,7 +459,9 @@ python3 toxictool_bench/run_full_bench.py \
   --model gpt-5.4-mini \
   --env both \
   --max-steps 10 \
-  --max-tokens 3072
+  --max-tokens 3072 \
+  --start-index 10 \
+  --limit 10
 ```
 
 Run guarded only on the numerical suite:

@@ -8,7 +8,7 @@ from typing import Any
 
 from evaluator import aggregate, evaluate_run
 from full_adapters import run_full_adapter
-from run_bench import load_tasks
+from run_bench import chunk_suffix, load_tasks, select_tasks
 from tools import DataToolEnv
 
 
@@ -39,6 +39,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-steps", type=int, default=8)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--max-tokens", type=int, default=2048)
+    parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument("--limit", type=int, default=0)
     return parser.parse_args()
 
@@ -47,13 +48,13 @@ def main() -> None:
     args = parse_args()
     bench_dir = Path(__file__).resolve().parent
     tasks = load_tasks(args.tasks)
-    if args.limit:
-        tasks = tasks[: args.limit]
+    tasks = select_tasks(tasks, start_index=args.start_index, limit=args.limit)
     envs = ["clean", "toxic"] if args.env == "both" else [args.env]
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     stamp = time.strftime("%Y%m%d-%H%M%S")
-    result_path = args.output_dir / f"{stamp}_{args.adapter}_{args.model}_{args.env}.jsonl"
+    chunk = chunk_suffix(args.start_index, args.limit)
+    result_path = args.output_dir / f"{stamp}_{args.adapter}_{args.model}_{args.env}{chunk}.jsonl"
     rows: list[dict[str, Any]] = []
     with result_path.open("w", encoding="utf-8") as f:
         for task in tasks:

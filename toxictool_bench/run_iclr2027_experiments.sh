@@ -5,6 +5,7 @@ MODEL="${MODEL:-gpt-5.4-mini}"
 ENVIRONMENT="${ENVIRONMENT:-both}"
 MAX_STEPS="${MAX_STEPS:-10}"
 MAX_TOKENS="${MAX_TOKENS:-3072}"
+START_INDEX="${START_INDEX:-0}"
 LIMIT="${LIMIT:-0}"
 BASELINE_DIR="${TOXICTOOL_BASELINE_DIR:-baseline_agent}"
 DATA2MCP_SRC="${TOXICTOOL_DATA2MCP_SRC:-src}"
@@ -50,6 +51,7 @@ run_adapter() {
       --env "$ENVIRONMENT" \
       --max-steps "$MAX_STEPS" \
       --max-tokens "$MAX_TOKENS" \
+      --start-index "$START_INDEX" \
       --limit "$LIMIT"
   else
     PYTHONPATH="$py_path" python3 toxictool_bench/run_full_bench.py \
@@ -58,7 +60,8 @@ run_adapter() {
       --model "$MODEL" \
       --env "$ENVIRONMENT" \
       --max-steps "$MAX_STEPS" \
-      --max-tokens "$MAX_TOKENS"
+      --max-tokens "$MAX_TOKENS" \
+      --start-index "$START_INDEX"
   fi
 }
 

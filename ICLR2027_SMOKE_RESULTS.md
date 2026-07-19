@@ -51,3 +51,14 @@ ADAPTERS="data2mcp_dataframe data2mcp_dataframe_caution data2mcp_dataframe_expec
 TASK_SUITES="toxictool_bench/tasks/semantic_schema_iclr2027.jsonl toxictool_bench/tasks/numerical_iclr2027.jsonl" \
 bash toxictool_bench/run_iclr2027_experiments.sh
 ```
+
+For safer long runs, execute the same matrix in 10-task chunks:
+
+```bash
+for start in 0 10 20 30 40 50; do
+  START_INDEX="$start" LIMIT=10 \
+  ADAPTERS="data2mcp_dataframe data2mcp_dataframe_caution data2mcp_dataframe_expectation_only data2mcp_dataframe_verification_only data2mcp_dataframe_guarded data2mcp_dataframe_guarded_light" \
+  TASK_SUITES="toxictool_bench/tasks/semantic_schema_iclr2027.jsonl toxictool_bench/tasks/numerical_iclr2027.jsonl" \
+  bash toxictool_bench/run_iclr2027_experiments.sh
+done
+```

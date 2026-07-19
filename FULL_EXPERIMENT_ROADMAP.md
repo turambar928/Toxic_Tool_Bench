@@ -544,6 +544,7 @@ Concrete tasks:
    LIMIT=5 ADAPTERS="data2mcp_dataframe data2mcp_dataframe_guarded langgraph_react_full autogen_tool_agent" \
      bash toxictool_bench/run_iclr2027_experiments.sh
 4. If smoke passes, run the full 120-task expanded suites for GPT first.
+   Use START_INDEX and LIMIT to run in resumable 10-task chunks.
 5. Summarize overall, poison-type, and severity breakdowns with summarize_results.py.
 6. Run the six-way data2mcp defense ablation on semantic_schema_iclr2027 and numerical_iclr2027:
    base, caution prompt only, expectation only, verification only, full guard, light guard.

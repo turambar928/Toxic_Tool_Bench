@@ -4,6 +4,8 @@ set -euo pipefail
 TASKS="${TASKS:-toxictool_bench/tasks/numerical_iclr2027.jsonl}"
 MODEL="${MODEL:-gpt-5.4-mini}"
 ENVIRONMENT="${ENVIRONMENT:-both}"
+START_INDEX="${START_INDEX:-0}"
+LIMIT="${LIMIT:-0}"
 BASELINE_DIR="${TOXICTOOL_BASELINE_DIR:-baseline_agent}"
 DATA2MCP_SRC="${TOXICTOOL_DATA2MCP_SRC:-src}"
 ADAPTERS="${ADAPTERS:-langgraph_react_full smolagents_toolcalling data2mcp_dataframe pandasai_dataframe autogen_tool_agent}"
@@ -45,7 +47,9 @@ run_adapter() {
     --adapter "$adapter" \
     --model "$MODEL" \
     --env "$ENVIRONMENT" \
-    --max-steps "$max_steps"
+    --max-steps "$max_steps" \
+    --start-index "$START_INDEX" \
+    --limit "$LIMIT"
 }
 
 for adapter in $ADAPTERS; do
