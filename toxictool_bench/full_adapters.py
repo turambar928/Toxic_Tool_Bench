@@ -607,6 +607,11 @@ def run_data2mcp_dataframe_verification_only(
         f"User question: {task['user_query']}\n\n"
         "Independent verification pass. Ignore the prior answer unless it is supported by source rows. "
         "Use dataframe_query_tool again to recompute the required value, label, denominator, unit, or evidence binding. "
+        "If the tool returns only a query, code, or plan without printed rows/results, call it again with an explicit "
+        "request to print the computed table and final selected row. "
+        "When returning a group, cohort, flag, product, policy, or treatment label, copy the exact literal value "
+        "from the dataframe row. Do not rename labels as A/B/C, Cohort A, variant, unknown, or any other alias unless "
+        "that exact alias appears in the dataframe. "
         "Return only the validated answer and minimal evidence."
     )
     verified_text, verified_messages = asyncio.run(router.route(verification_query))
@@ -651,6 +656,7 @@ def run_data2mcp_dataframe_guarded(
         f"Dataset: {task['dataset']}\n"
         f"{task['user_query']}\n\n"
         "Before finalizing, form a private expectation for the required columns, labels, and calculation. "
+        "All final labels must be exact literal values observed in dataframe rows, not generic aliases. "
         "Use dataframe_query_tool to compute the answer exactly. Return only the answer and compact evidence."
     )
     initial_text, initial_messages = asyncio.run(router.route(initial_query))
@@ -661,7 +667,12 @@ def run_data2mcp_dataframe_guarded(
         "Independent verification pass. Ignore any prior answer unless it is supported by the dataframe. "
         f"Check these expectations: {expectation}\n"
         "Use dataframe_query_tool again to recompute or re-inspect the dataframe from source rows. "
+        "If the tool returns only a query, code, or plan without printed rows/results, call it again with an explicit "
+        "request to print the computed table and final selected row. "
         "If metadata, labels, retrieved evidence, or entity bindings conflict with the data, trust the recomputation. "
+        "When returning a group, cohort, flag, product, policy, or treatment label, copy the exact literal value "
+        "from the dataframe row. Do not rename labels as A/B/C, Cohort A, variant, unknown, or any other alias unless "
+        "that exact alias appears in the dataframe. "
         "Return only the validated answer and the minimal evidence."
     )
     verified_text, verified_messages = asyncio.run(router.route(verification_query))
@@ -783,6 +794,7 @@ def _guard_expectation_text(task: dict[str, Any]) -> str:
     pieces = [
         "derive the answer from the loaded dataframe, not from a single unverified textual observation",
         "preserve entity-label bindings when comparing rates, rankings, or evidence rows",
+        "return exact literal labels from dataframe rows; do not invent or normalize labels into A/B/C aliases",
     ]
     if expected:
         pieces.append("expected checks: " + ", ".join(str(item) for item in expected))
