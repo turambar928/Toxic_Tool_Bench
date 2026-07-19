@@ -15,8 +15,8 @@ def main() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     TASK_DIR.mkdir(parents=True, exist_ok=True)
     write_csvs()
-    numerical = read_jsonl(TASK_DIR / "numerical_expanded.jsonl") + numerical_tasks()
-    semantic = read_jsonl(TASK_DIR / "semantic_schema.jsonl") + semantic_tasks()
+    numerical = annotate_existing(read_jsonl(TASK_DIR / "numerical_expanded.jsonl")) + numerical_tasks()
+    semantic = annotate_existing(read_jsonl(TASK_DIR / "semantic_schema.jsonl")) + semantic_tasks()
     write_jsonl(TASK_DIR / "numerical_iclr2027.jsonl", numerical)
     write_jsonl(TASK_DIR / "semantic_schema_iclr2027.jsonl", semantic)
     print(f"wrote {len(numerical)} numerical tasks")
@@ -95,6 +95,41 @@ def write_csvs() -> None:
             {"topic": "support_archive", "evidence": "Archive: QueueDeflect reduced volume but lowered CSAT."},
         ],
     )
+
+
+def annotate_existing(tasks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    out = []
+    for task in tasks:
+        copied = json.loads(json.dumps(task))
+        poison = copied.setdefault("poison", {})
+        poison.setdefault("severity", infer_severity(copied))
+        out.append(copied)
+    return out
+
+
+def infer_severity(task: dict[str, Any]) -> str:
+    poison = task.get("poison", {})
+    poison_type = poison.get("type", "")
+    oracle = task.get("oracle", {})
+    if poison_type == "sign_flip":
+        return "obvious"
+    if poison_type in {"rank_swap", "label_swap", "treatment_control_flip", "column_semantic_swap"}:
+        return "plausible"
+    if poison_type in {"stale_metadata", "biased_retrieval"}:
+        return "plausible"
+    if poison_type == "aggregate_scale":
+        clean = oracle.get("clean_value")
+        poisoned = oracle.get("poisoned_value")
+        try:
+            ratio = abs(float(poisoned) / float(clean))
+        except (TypeError, ValueError, ZeroDivisionError):
+            ratio = float(poison.get("scale", 2.0))
+        if ratio >= 2.0 or ratio <= 0.5:
+            return "obvious"
+        if ratio >= 1.4 or ratio <= 0.75:
+            return "plausible"
+        return "subtle"
+    return "plausible"
 
 
 def num_task(

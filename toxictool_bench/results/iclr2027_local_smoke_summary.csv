@@ -1,0 +1,2 @@
+model,adapter,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr,toxic_adr,toxic_vr,toxic_rr,n
+local-smoke-full-v2,heuristic_naive,0.62,0.49,0.13,0.23,0.09,0.42,0.38,120

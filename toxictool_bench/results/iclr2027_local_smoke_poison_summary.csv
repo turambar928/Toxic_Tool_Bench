@@ -1,0 +1,13 @@
+model,adapter,poison_type,toxic_tsr,bcr,adr,vr,rr,n
+local-smoke-full-v2,heuristic_naive,aggregate_scale,0.08,0.04,0.00,0.00,0.00,26
+local-smoke-full-v2,heuristic_naive,biased_retrieval,0.60,0.00,0.60,1.00,0.60,15
+local-smoke-full-v2,heuristic_naive,column_semantic_swap,1.00,0.00,0.00,1.00,1.00,21
+local-smoke-full-v2,heuristic_naive,denominator_swap,0.33,0.33,0.00,0.00,0.00,3
+local-smoke-full-v2,heuristic_naive,label_swap,1.00,1.00,0.00,0.00,0.00,6
+local-smoke-full-v2,heuristic_naive,missing_filter,0.00,0.00,0.00,0.00,0.00,3
+local-smoke-full-v2,heuristic_naive,rank_swap,0.12,0.94,0.00,0.00,0.00,16
+local-smoke-full-v2,heuristic_naive,ratio_inversion,0.00,0.00,0.00,0.00,0.00,3
+local-smoke-full-v2,heuristic_naive,sign_flip,0.00,0.12,0.00,0.00,0.00,8
+local-smoke-full-v2,heuristic_naive,stale_metadata,1.00,0.00,0.13,1.00,1.00,15
+local-smoke-full-v2,heuristic_naive,treatment_control_flip,1.00,1.00,0.00,0.00,0.00,3
+local-smoke-full-v2,heuristic_naive,unit_conversion,0.00,0.00,0.00,0.00,0.00,1

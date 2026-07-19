@@ -37,7 +37,7 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
 def write_overall(rows: list[dict[str, Any]], path: Path) -> None:
     groups: dict[tuple[str, str], list[dict[str, Any]]] = {}
     for row in rows:
-        groups.setdefault((row["model"], row["adapter"]), []).append(row)
+        groups.setdefault((row["model"], adapter_name(row)), []).append(row)
 
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
@@ -83,7 +83,7 @@ def write_poison(rows: list[dict[str, Any]], path: Path) -> None:
         if row.get("environment") != "toxic":
             continue
         poison_type = row.get("poison", {}).get("type", "unknown")
-        groups.setdefault((row["model"], row["adapter"], poison_type), []).append(row)
+        groups.setdefault((row["model"], adapter_name(row), poison_type), []).append(row)
 
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
@@ -117,7 +117,7 @@ def write_severity(rows: list[dict[str, Any]], path: Path) -> None:
         poison = row.get("poison", {})
         poison_type = poison.get("type", "unknown")
         severity = poison.get("severity", "unspecified")
-        groups.setdefault((row["model"], row["adapter"], poison_type, severity), []).append(row)
+        groups.setdefault((row["model"], adapter_name(row), poison_type, severity), []).append(row)
 
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
@@ -149,6 +149,10 @@ def split_by_env(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     for row in rows:
         by_env.setdefault(row["environment"], []).append(row)
     return by_env
+
+
+def adapter_name(row: dict[str, Any]) -> str:
+    return str(row.get("adapter") or row.get("agent_profile") or "unknown")
 
 
 def fmt(value: float) -> str:
