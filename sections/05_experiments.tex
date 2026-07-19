@@ -3,7 +3,7 @@
 
 \subsection{Research Questions}
 
-Our experiments are organized around four questions:
+Our experiments evaluate four questions:
 \begin{itemize}
     \item \textbf{RQ1:} How often do data agents blindly comply with silently poisoned tool outputs?
     \item \textbf{RQ2:} Which poisoning operators are most damaging within numerical and semantic/schema tasks?
@@ -11,27 +11,23 @@ Our experiments are organized around four questions:
     \item \textbf{RQ4:} Can \methodname{} reduce blind compliance without substantially hurting clean-task performance?
 \end{itemize}
 
-\subsection{Agents and Baselines}
+\subsection{Experimental Setup}
 
-We evaluate complete framework adapters rather than only prompt-style profiles. The current suite includes \texttt{data2mcp}'s DataFrame router, DA-Agent, LangGraph ReAct, Hugging Face smolagents, PandasAI, and AutoGen. Each adapter receives the same user query and has access to benchmark-controlled data tools. The clean run receives unmodified observations; the poisoned run receives the same tool interface with selected observations silently perturbed.
+\paragraph{Tasks.}
+We evaluate two completed task suites. The numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. We report the two suites separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
 
-\paragraph{Implementation note.}
-Most adapters are poisoned at the tool-observation boundary. PandasAI is a coarser integration: it runs the full PandasAI agent and applies poisoning at the chat-result boundary, because its internal code-execution observations are not exposed through the same tool protocol.
+\paragraph{Agents and models.}
+We evaluate complete framework adapters rather than only prompt-style profiles. The adapters are LangGraph ReAct, Hugging Face smolagents, \texttt{data2mcp}'s DataFrame router, PandasAI, DA-Agent, and AutoGen. We run all completed adapters with \texttt{gpt-5.4-mini}. For cross-model experiments, we run the five practical-speed adapters with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking}: LangGraph, smolagents, \texttt{data2mcp}, PandasAI, and AutoGen. DA-Agent is included in the GPT main table but excluded from cross-model tables because the Claude run reached only 5 of 68 clean/poisoned environment instances after more than twenty minutes.
 
-\subsection{Task Suite and Models}
+\paragraph{Poisoning boundaries.}
+LangGraph, smolagents, \texttt{data2mcp}, and AutoGen are poisoned at a tool-observation boundary. PandasAI is a coarser integration: it runs the full PandasAI agent and applies poisoning at the chat-result boundary because its internal code-execution observations are not exposed through the same protocol. We treat these as end-to-end framework measurements rather than pure model-only comparisons.
 
-The expanded numerical suite contains 34 tasks over 11 CSV datasets. We run all completed adapters with \texttt{gpt-5.4-mini}. We additionally run cross-model experiments with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking} for the five adapters that complete at practical speed: LangGraph, smolagents, \texttt{data2mcp}, PandasAI, and AutoGen. DA-Agent completes on \texttt{gpt-5.4-mini}, but the Claude run reached only 5 of 68 clean/poisoned environment instances after more than twenty minutes, so we exclude it from the cross-model table and report it as a scalability limitation.
+\paragraph{Analysis.}
+For each agent, model, and task family, we report clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR where space permits. We also inspect trajectories to identify failure modes such as copying a poisoned value into the final report, rationalizing an impossible result, accepting corrupted metadata, or performing validation but ignoring the validation result. Section~\ref{sec:qualitative} summarizes representative trajectories from the final rescored runs.
 
-We have also prepared and run a 24-task semantic/schema suite covering treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. These tasks are reported separately from the numerical suite because they measure trust in metadata, retrieval evidence, and entity binding rather than arithmetic robustness.
+\subsection{Numerical Results}
 
-\subsection{Analysis Plan}
-
-We report clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR by agent, model, task family, and poisoning type. We also inspect trajectories to identify common failure patterns, such as copying the poisoned value into the final report, rationalizing an impossible result, accepting corrupted metadata, or performing validation but ignoring the validation result.
-Section~\ref{sec:qualitative} summarizes representative trajectories from the final rescored expanded runs.
-
-\subsection{Expanded Results}
-
-Table~\ref{tab:gpt-expanded} reports the expanded results with \texttt{gpt-5.4-mini}. Clean success does not imply poisoned robustness: LangGraph, PandasAI, and AutoGen all exceed 0.94 clean TSR, but their poisoned TSR drops substantially. PandasAI and LangGraph show the highest blind compliance rates, while DA-Agent has lower blind compliance but much higher validation and recovery rates.
+Table~\ref{tab:gpt-expanded} reports the 34-task numerical results with \texttt{gpt-5.4-mini}. Clean success does not imply poisoned robustness. LangGraph, PandasAI, and AutoGen all exceed 0.94 clean TSR, but their poisoned TSR drops substantially. PandasAI and LangGraph show the highest blind compliance rates, while DA-Agent has lower blind compliance and much higher validation and recovery rates.
 
 \begin{table}[t]
 \centering
@@ -48,13 +44,52 @@ DA-Agent & 0.85 & 0.53 & 0.32 & 0.32 & 0.06 & 0.38 & 0.38 \\
 AutoGen & 0.97 & 0.56 & 0.41 & 0.47 & 0.03 & 0.00 & 0.00 \\
 \bottomrule
 \end{tabular}
-\caption{Expanded 34-task results with \texttt{gpt-5.4-mini}.}
+\caption{Expanded 34-task numerical results with \texttt{gpt-5.4-mini}.}
 \label{tab:gpt-expanded}
+\end{table}
+
+\paragraph{Cross-model numerical results.}
+Tables~\ref{tab:claude-expanded} and~\ref{tab:qwen-expanded} show the same numerical suite on Claude and Qwen for the five practical-speed adapters. The qualitative pattern persists: poisoned TSR is consistently below clean TSR, and blind compliance remains nonzero even for agents with high clean TSR. Claude reduces degradation for LangGraph, smolagents, and AutoGen, but PandasAI remains highly vulnerable. Qwen shows strong LangGraph clean performance but large poisoned degradation, and \texttt{data2mcp} has low clean TSR under this model because many runs hit the maximum-turn limit without a final answer.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & ADR & VR & RR \\
+\midrule
+LangGraph ReAct & 0.88 & 0.76 & 0.12 & 0.18 & 0.06 & 0.18 & 0.18 \\
+smolagents & 1.00 & 0.82 & 0.18 & 0.12 & 0.03 & 0.50 & 0.50 \\
+\texttt{data2mcp} & 0.85 & 0.62 & 0.24 & 0.24 & 0.26 & 0.50 & 0.53 \\
+PandasAI & 0.97 & 0.32 & 0.65 & 0.76 & 0.00 & 0.00 & 0.00 \\
+AutoGen & 0.91 & 0.82 & 0.09 & 0.24 & 0.09 & 0.15 & 0.15 \\
+\bottomrule
+\end{tabular}
+\caption{Expanded 34-task numerical results with \texttt{claude-sonnet-4-6}.}
+\label{tab:claude-expanded}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & ADR & VR & RR \\
+\midrule
+LangGraph ReAct & 1.00 & 0.44 & 0.56 & 0.59 & 0.00 & 0.06 & 0.06 \\
+smolagents & 0.82 & 0.65 & 0.18 & 0.18 & 0.03 & 0.18 & 0.18 \\
+\texttt{data2mcp} & 0.32 & 0.24 & 0.09 & 0.06 & 0.03 & 0.35 & 0.09 \\
+PandasAI & 1.00 & 0.26 & 0.74 & 0.76 & 0.00 & 0.00 & 0.00 \\
+AutoGen & 0.94 & 0.76 & 0.18 & 0.29 & 0.03 & 0.32 & 0.29 \\
+\bottomrule
+\end{tabular}
+\caption{Expanded 34-task numerical results with \texttt{Qwen3.6-35B-A3B-no-thinking}.}
+\label{tab:qwen-expanded}
 \end{table}
 
 \subsection{Semantic and Schema Results}
 
-Table~\ref{tab:semantic-schema} reports the 24-task semantic/schema expansion across the three evaluated models. The suite reveals a sharper failure mode than several numerical tasks: agents often preserve clean performance while directly adopting corrupted labels, stale data-dictionary entries, or biased retrieved evidence under poisoning. PandasAI and \texttt{data2mcp} remain strongly affected across models. LangGraph and AutoGen recover on many schema, metadata, and retrieval tasks through additional validation calls, but AutoGen still shows nonzero blind compliance on Claude and Qwen. Label flips remain difficult even for agents that recover from column or metadata corruption.
+Table~\ref{tab:semantic-schema} reports the 24-task semantic/schema suite across the three evaluated models. This suite reveals a sharper failure mode than several numerical tasks: agents often preserve clean performance while directly adopting corrupted labels, stale data-dictionary entries, or biased retrieved evidence under poisoning. PandasAI and \texttt{data2mcp} remain strongly affected across models. LangGraph and AutoGen recover on many schema, metadata, and retrieval tasks through additional validation calls, but AutoGen still shows nonzero blind compliance on Claude and Qwen. Label flips remain difficult even for agents that recover from column or metadata corruption.
 
 \begin{table}[t]
 \centering
@@ -84,11 +119,31 @@ Qwen & AutoGen & 1.00 & 0.75 & 0.25 & 0.25 & 0.54 \\
 \label{tab:semantic-schema}
 \end{table}
 
+\subsection{Poison-Type Breakdown}
+
+The numerical suite lets us compare poisoning operators across completed model--adapter groups. Table~\ref{tab:poison-type-breakdown} shows that rank swaps are the most likely to induce blind compliance, with average BCR 0.52. Aggregate scaling is also damaging, with average BCR 0.41 and average poisoned TSR 0.43. Sign flips are easier for agents to recover from: average poisoned TSR is 0.90, average BCR is 0.11, and average recovery is 0.28. This pattern suggests that entity binding and plausible aggregate values are more dangerous than sign errors that often contradict visible trends.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Poison type & Toxic TSR & BCR & ADR & VR & RR \\
+\midrule
+Aggregate scaling & 0.43 & 0.41 & 0.07 & 0.11 & 0.12 \\
+Rank swap & 0.49 & 0.52 & 0.01 & 0.18 & 0.16 \\
+Sign flip & 0.90 & 0.11 & 0.04 & 0.31 & 0.28 \\
+\bottomrule
+\end{tabular}
+\caption{Average numerical poison-type behavior across completed model--adapter groups. The table aggregates \texttt{poison\_type\_summary.csv}.}
+\label{tab:poison-type-breakdown}
+\end{table}
+
 \subsection{Guarded Verification Ablation}
 
-We next evaluate whether a lightweight guarded policy can reduce blind compliance for \texttt{data2mcp}. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal data-analysis route, and finally performs an independent verification pass before producing the final answer. This design targets silent observation poisoning rather than prompt-level instruction following.
+We next evaluate whether \methodname{} can reduce blind compliance for \texttt{data2mcp}. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal data-analysis route, and finally performs an independent verification pass before producing the final answer. This design targets silent observation poisoning rather than prompt-level instruction following.
 
-Table~\ref{tab:data2mcp-guarded} shows guarded ablations on both the semantic/schema and numerical suites with \texttt{gpt-5.4-mini}. The guard eliminates observed blind compliance in both runs. On semantic/schema tasks, poisoned TSR rises from 0.29 to 0.83, with a clean TSR tradeoff from 0.92 to 0.83. On numerical tasks, both clean and poisoned TSR improve because the verification pass also corrects some ordinary data2mcp tool-use failures. A lower-budget light guard keeps BCR at 0.00 but loses task success; we report it as an appendix tradeoff rather than the main defense result.
+Table~\ref{tab:data2mcp-guarded} shows guarded ablations on both the semantic/schema and numerical suites with \texttt{gpt-5.4-mini}. The full guard eliminates observed blind compliance in both runs. On semantic/schema tasks, poisoned TSR rises from 0.29 to 0.83, with a clean TSR tradeoff from 0.92 to 0.83. On numerical tasks, both clean and poisoned TSR improve because the verification pass also corrects some ordinary \texttt{data2mcp} tool-use failures. A lower-budget light guard keeps BCR at 0.00 but loses task success; we report it as an appendix tradeoff rather than the main defense result.
 
 \begin{table}[t]
 \centering
@@ -107,64 +162,8 @@ Numerical & Guarded & 0.79 & 0.74 & 0.06 & 0.00 & 1.00 & 1.00 & 0.74 \\
 \label{tab:data2mcp-guarded}
 \end{table}
 
-\subsection{Cross-Model Results}
+\subsection{Uncertainty and Experimental Caveats}
 
-Tables~\ref{tab:claude-expanded} and~\ref{tab:qwen-expanded} show the same expanded suite on Claude and Qwen for the five practical-speed adapters. The qualitative pattern persists: poisoned TSR is consistently below clean TSR, and blind compliance remains nonzero even for agents with high clean TSR. The magnitude varies by model and framework. Claude reduces degradation for LangGraph, smolagents, and AutoGen, but PandasAI remains highly vulnerable. Qwen shows strong LangGraph clean performance but large poisoned degradation, and \texttt{data2mcp} has low clean TSR under this model because many runs hit the maximum-turn limit without a final answer.
+We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement and recomputing clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR. The full CI tables are released for the numerical cross-model results, semantic/schema cross-model results, and guarded \texttt{data2mcp} ablations. The guarded ablation CIs are summarized in Appendix~\ref{sec:appendix-guard}.
 
-\paragraph{Poison-type breakdown.}
-Across the completed cross-model runs, rank swaps are the most likely to induce blind compliance, with an average BCR of 0.52 across model--adapter groups. Aggregate scaling is also damaging, with average BCR 0.41 and average poisoned TSR 0.43. Sign flips are easier for agents to recover from: average poisoned TSR is 0.90, average BCR is 0.11, and average recovery is 0.28. Table~\ref{tab:poison-type-breakdown} summarizes the same pattern in compact form.
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{lrrrrr}
-\toprule
-Poison type & Toxic TSR & BCR & ADR & VR & RR \\
-\midrule
-Aggregate scaling & 0.43 & 0.41 & 0.07 & 0.11 & 0.12 \\
-Rank swap & 0.49 & 0.52 & 0.01 & 0.18 & 0.16 \\
-Sign flip & 0.90 & 0.11 & 0.04 & 0.31 & 0.28 \\
-\bottomrule
-\end{tabular}
-\caption{Average numerical poison-type behavior across completed model--adapter groups. The table aggregates \texttt{poison\_type\_summary.csv}.}
-\label{tab:poison-type-breakdown}
-\end{table}
-
-\paragraph{Uncertainty estimates.}
-We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement and recomputing clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR. The full CI tables are stored with the released artifacts for the numerical cross-model results, semantic/schema cross-model results, and guarded \texttt{data2mcp} ablations.
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{lrrrrrrr}
-\toprule
-Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & ADR & VR & RR \\
-\midrule
-LangGraph ReAct & 0.88 & 0.76 & 0.12 & 0.18 & 0.06 & 0.18 & 0.18 \\
-smolagents & 1.00 & 0.82 & 0.18 & 0.12 & 0.03 & 0.50 & 0.50 \\
-\texttt{data2mcp} & 0.85 & 0.62 & 0.24 & 0.24 & 0.26 & 0.50 & 0.53 \\
-PandasAI & 0.97 & 0.32 & 0.65 & 0.76 & 0.00 & 0.00 & 0.00 \\
-AutoGen & 0.91 & 0.82 & 0.09 & 0.24 & 0.09 & 0.15 & 0.15 \\
-\bottomrule
-\end{tabular}
-\caption{Expanded 34-task results with \texttt{claude-sonnet-4-6}.}
-\label{tab:claude-expanded}
-\end{table}
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{lrrrrrrr}
-\toprule
-Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & ADR & VR & RR \\
-\midrule
-LangGraph ReAct & 1.00 & 0.44 & 0.56 & 0.59 & 0.00 & 0.06 & 0.06 \\
-smolagents & 0.82 & 0.65 & 0.18 & 0.18 & 0.03 & 0.18 & 0.18 \\
-\texttt{data2mcp} & 0.32 & 0.24 & 0.09 & 0.06 & 0.03 & 0.35 & 0.09 \\
-PandasAI & 1.00 & 0.26 & 0.74 & 0.76 & 0.00 & 0.00 & 0.00 \\
-AutoGen & 0.94 & 0.76 & 0.18 & 0.29 & 0.03 & 0.32 & 0.29 \\
-\bottomrule
-\end{tabular}
-\caption{Expanded 34-task results with \texttt{Qwen3.6-35B-A3B-no-thinking}.}
-\label{tab:qwen-expanded}
-\end{table}
+The results should be interpreted as end-to-end framework measurements. DA-Agent is excluded from the Claude and Qwen cross-model tables because of runtime, PandasAI uses a coarser poisoning boundary, and Qwen lowers \texttt{data2mcp} clean TSR because many runs hit the maximum-turn limit. These caveats affect fine-grained model comparisons, but not the main finding: successful tool use often coexists with blind compliance under silent observation poisoning, and structured verification can reduce that compliance.
