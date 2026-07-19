@@ -122,6 +122,14 @@ Check local full-adapter dependencies before launching expensive runs:
 python3 toxictool_bench/check_adapter_readiness.py
 ```
 
+Large third-party adapter checkouts do not need to be committed into this repo.
+Use external paths when they already exist locally:
+
+```bash
+export TOXICTOOL_BASELINE_DIR=/home/taozifu2025/data2mcpv2/baseline_agent
+export TOXICTOOL_DATA2MCP_SRC=/home/taozifu2025/data2mcpv2/src
+```
+
 To regenerate the ICLR 2027 expanded candidate task files:
 
 ```bash

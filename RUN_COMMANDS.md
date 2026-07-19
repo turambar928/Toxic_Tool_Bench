@@ -158,6 +158,15 @@ Before running full adapters, check that the local framework checkouts and Pytho
 python3 toxictool_bench/check_adapter_readiness.py
 ```
 
+If the heavyweight adapter checkouts live outside this Git repository, point the
+runner to them without copying them into Git:
+
+```bash
+export TOXICTOOL_BASELINE_DIR=/home/taozifu2025/data2mcpv2/baseline_agent
+export TOXICTOOL_DATA2MCP_SRC=/home/taozifu2025/data2mcpv2/src
+python3 toxictool_bench/check_adapter_readiness.py
+```
+
 LangGraph ReAct full adapter:
 
 ```bash

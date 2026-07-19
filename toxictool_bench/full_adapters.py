@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 import asyncio
@@ -23,12 +24,13 @@ except ImportError:
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-BASELINE_DIR = REPO_ROOT / "baseline_agent"
+BASELINE_DIR = Path(os.environ.get("TOXICTOOL_BASELINE_DIR", REPO_ROOT / "baseline_agent"))
+DATA2MCP_SRC = Path(os.environ.get("TOXICTOOL_DATA2MCP_SRC", REPO_ROOT / "src"))
 
 
 def add_baseline_paths() -> None:
     paths = [
-        REPO_ROOT / "src",
+        DATA2MCP_SRC,
         BASELINE_DIR / "smolagents" / "src",
         BASELINE_DIR / "autogen" / "python" / "packages" / "autogen-core" / "src",
         BASELINE_DIR / "autogen" / "python" / "packages" / "autogen-agentchat" / "src",

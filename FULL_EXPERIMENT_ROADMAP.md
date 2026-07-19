@@ -536,6 +536,8 @@ Concrete tasks:
 1. Restore or install full-adapter dependencies in this clone:
    baseline_agent/langgraph, baseline_agent/smolagents, baseline_agent/pandas-ai,
    baseline_agent/autogen, baseline_agent/da-agent, and src/data2mcp_v2.
+   If they remain outside the repo, export TOXICTOOL_BASELINE_DIR and
+   TOXICTOOL_DATA2MCP_SRC instead of copying the 24GB baseline_agent tree.
 2. Run readiness:
    python3 toxictool_bench/check_adapter_readiness.py
 3. Run 5-task LLM smoke on the ICLR 2027 candidate suites:

@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import argparse
 import importlib
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+BASELINE_DIR = Path(os.environ.get("TOXICTOOL_BASELINE_DIR", REPO_ROOT / "baseline_agent"))
+DATA2MCP_SRC = Path(os.environ.get("TOXICTOOL_DATA2MCP_SRC", REPO_ROOT / "src"))
 
 
 @dataclass(frozen=True)
@@ -22,59 +25,59 @@ CHECKS = (
     AdapterCheck(
         name="langgraph_react_full",
         paths=(
-            REPO_ROOT / "baseline_agent" / "langgraph" / "libs" / "langgraph",
-            REPO_ROOT / "baseline_agent" / "langgraph" / "libs" / "prebuilt",
+            BASELINE_DIR / "langgraph" / "libs" / "langgraph",
+            BASELINE_DIR / "langgraph" / "libs" / "prebuilt",
         ),
         imports=("langgraph.graph",),
         note="LangGraph local checkout.",
     ),
     AdapterCheck(
         name="smolagents_toolcalling",
-        paths=(REPO_ROOT / "baseline_agent" / "smolagents" / "src",),
+        paths=(BASELINE_DIR / "smolagents" / "src",),
         imports=("smolagents",),
         note="smolagents local checkout.",
     ),
     AdapterCheck(
         name="data2mcp_dataframe",
-        paths=(REPO_ROOT / "src",),
+        paths=(DATA2MCP_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
         note="data2mcp_v2 package and FastMCP dependencies.",
     ),
     AdapterCheck(
         name="data2mcp_dataframe_caution",
-        paths=(REPO_ROOT / "src",),
+        paths=(DATA2MCP_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
         note="same dependency surface as base data2mcp.",
     ),
     AdapterCheck(
         name="data2mcp_dataframe_expectation_only",
-        paths=(REPO_ROOT / "src",),
+        paths=(DATA2MCP_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
         note="same dependency surface as base data2mcp.",
     ),
     AdapterCheck(
         name="data2mcp_dataframe_verification_only",
-        paths=(REPO_ROOT / "src",),
+        paths=(DATA2MCP_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
         note="same dependency surface as base data2mcp.",
     ),
     AdapterCheck(
         name="data2mcp_dataframe_guarded",
-        paths=(REPO_ROOT / "src",),
+        paths=(DATA2MCP_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
         note="same dependency surface as base data2mcp.",
     ),
     AdapterCheck(
         name="data2mcp_dataframe_guarded_light",
-        paths=(REPO_ROOT / "src",),
+        paths=(DATA2MCP_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
         note="same dependency surface as base data2mcp.",
     ),
     AdapterCheck(
         name="pandasai_dataframe",
         paths=(
-            REPO_ROOT / "baseline_agent" / "pandas-ai",
-            REPO_ROOT / "baseline_agent" / "pandas-ai" / "extensions" / "llms" / "litellm",
+            BASELINE_DIR / "pandas-ai",
+            BASELINE_DIR / "pandas-ai" / "extensions" / "llms" / "litellm",
         ),
         imports=("pandasai", "pandasai_litellm"),
         note="PandasAI local checkout and LiteLLM extension.",
@@ -82,16 +85,16 @@ CHECKS = (
     AdapterCheck(
         name="autogen_tool_agent",
         paths=(
-            REPO_ROOT / "baseline_agent" / "autogen" / "python" / "packages" / "autogen-core" / "src",
-            REPO_ROOT / "baseline_agent" / "autogen" / "python" / "packages" / "autogen-agentchat" / "src",
-            REPO_ROOT / "baseline_agent" / "autogen" / "python" / "packages" / "autogen-ext" / "src",
+            BASELINE_DIR / "autogen" / "python" / "packages" / "autogen-core" / "src",
+            BASELINE_DIR / "autogen" / "python" / "packages" / "autogen-agentchat" / "src",
+            BASELINE_DIR / "autogen" / "python" / "packages" / "autogen-ext" / "src",
         ),
         imports=("autogen_agentchat.agents", "autogen_ext.models.openai", "autogen_core.models"),
         note="AutoGen local checkout.",
     ),
     AdapterCheck(
         name="da_agent_full",
-        paths=(REPO_ROOT / "baseline_agent" / "da-agent",),
+        paths=(BASELINE_DIR / "da-agent",),
         imports=(),
         note="DA-Agent local checkout; this adapter shells out through the local task runner.",
     ),
@@ -104,8 +107,17 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _display_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
+
+
 def main() -> None:
     args = parse_args()
+    print(f"baseline_dir={BASELINE_DIR}")
+    print(f"data2mcp_src={DATA2MCP_SRC}")
     missing_any = False
     for check in CHECKS:
         missing_paths = [path for path in check.paths if not path.exists()]
@@ -126,7 +138,7 @@ def main() -> None:
         if missing_paths:
             print("  missing paths:")
             for path in missing_paths:
-                print(f"  - {path.relative_to(REPO_ROOT)}")
+                print(f"  - {_display_path(path)}")
         if missing_imports:
             print("  missing imports:")
             for item in missing_imports:
