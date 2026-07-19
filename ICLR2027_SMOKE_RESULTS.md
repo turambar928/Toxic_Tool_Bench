@@ -83,11 +83,11 @@ Interpretation:
 
 ## Next Gate
 
-## data2mcp Defense Ablation, 20-Task/40-Task Expanded Smoke
+## data2mcp Defense Ablation, 50-Task Expanded Smoke
 
-After the 5-task gates, we extended the same six-way ablation to tasks 1--20 in
-both candidate suites using the chunk runner and merged the first three 5-task
-chunks plus the fourth `START_INDEX=15 LIMIT=5` chunk.
+After the 5-task gates, we extended the same six-way ablation to tasks 1--25 in
+both candidate suites using the chunk runner and merged five 5-task chunks:
+`START_INDEX=0,5,10,15,20`.
 
 Summary artifacts:
 
@@ -107,59 +107,59 @@ These can now be regenerated from completed chunks with:
 python3 toxictool_bench/summarize_chunked_matrix.py \
   --tasks toxictool_bench/tasks/semantic_schema_iclr2027.jsonl toxictool_bench/tasks/numerical_iclr2027.jsonl \
   --adapters data2mcp_dataframe data2mcp_dataframe_caution data2mcp_dataframe_expectation_only data2mcp_dataframe_verification_only data2mcp_dataframe_guarded data2mcp_dataframe_guarded_light \
-  --starts 0 5 10 15 \
+  --starts 0 5 10 15 20 \
   --limit 5 \
   --output-prefix toxictool_bench/results/iclr2027_data2mcp_ablation_auto
 ```
 
-The current manifest contains 48 complete chunks:
+The current manifest contains 60 complete chunks:
 
 ```text
-2 suites x 6 adapters x 4 starts = 48 chunks
+2 suites x 6 adapters x 5 starts = 60 chunks
 ```
 
-Semantic/schema 20-task summary:
+Semantic/schema 25-task summary:
 
 | Adapter | Clean TSR | Poisoned TSR | Toxic BCR | Toxic VR | Toxic RR |
 |---|---:|---:|---:|---:|---:|
-| data2mcp_dataframe | 0.90 | 0.10 | 0.80 | 0.00 | 0.00 |
-| data2mcp_dataframe_caution | 0.90 | 0.20 | 0.75 | 0.05 | 0.00 |
-| data2mcp_dataframe_expectation_only | 0.95 | 0.30 | 0.65 | 0.05 | 0.05 |
-| data2mcp_dataframe_verification_only | 0.90 | 1.00 | 0.00 | 0.95 | 1.00 |
-| data2mcp_dataframe_guarded | 0.95 | 0.95 | 0.00 | 1.00 | 0.95 |
-| data2mcp_dataframe_guarded_light | 1.00 | 0.95 | 0.00 | 1.00 | 0.95 |
+| data2mcp_dataframe | 0.92 | 0.20 | 0.68 | 0.08 | 0.08 |
+| data2mcp_dataframe_caution | 0.84 | 0.20 | 0.68 | 0.04 | 0.00 |
+| data2mcp_dataframe_expectation_only | 0.92 | 0.32 | 0.60 | 0.04 | 0.08 |
+| data2mcp_dataframe_verification_only | 0.92 | 1.00 | 0.00 | 0.92 | 1.00 |
+| data2mcp_dataframe_guarded | 0.92 | 0.92 | 0.00 | 1.00 | 0.92 |
+| data2mcp_dataframe_guarded_light | 0.88 | 0.84 | 0.00 | 1.00 | 0.84 |
 
-Numerical 20-task summary:
-
-| Adapter | Clean TSR | Poisoned TSR | Toxic BCR | Toxic VR | Toxic RR |
-|---|---:|---:|---:|---:|---:|
-| data2mcp_dataframe | 0.75 | 0.40 | 0.30 | 0.00 | 0.05 |
-| data2mcp_dataframe_caution | 0.85 | 0.45 | 0.30 | 0.25 | 0.25 |
-| data2mcp_dataframe_expectation_only | 0.70 | 0.55 | 0.30 | 0.00 | 0.05 |
-| data2mcp_dataframe_verification_only | 0.90 | 0.70 | 0.00 | 0.75 | 0.70 |
-| data2mcp_dataframe_guarded | 0.80 | 0.80 | 0.00 | 1.00 | 0.80 |
-| data2mcp_dataframe_guarded_light | 0.85 | 0.85 | 0.00 | 1.00 | 0.85 |
-
-Combined 40-task summary:
+Numerical 25-task summary:
 
 | Adapter | Clean TSR | Poisoned TSR | Toxic BCR | Toxic VR | Toxic RR |
 |---|---:|---:|---:|---:|---:|
-| data2mcp_dataframe | 0.82 | 0.25 | 0.55 | 0.00 | 0.03 |
-| data2mcp_dataframe_caution | 0.88 | 0.33 | 0.53 | 0.15 | 0.12 |
-| data2mcp_dataframe_expectation_only | 0.82 | 0.42 | 0.47 | 0.03 | 0.05 |
-| data2mcp_dataframe_verification_only | 0.90 | 0.85 | 0.00 | 0.85 | 0.85 |
-| data2mcp_dataframe_guarded | 0.88 | 0.88 | 0.00 | 1.00 | 0.88 |
-| data2mcp_dataframe_guarded_light | 0.93 | 0.90 | 0.00 | 1.00 | 0.90 |
+| data2mcp_dataframe | 0.76 | 0.40 | 0.28 | 0.00 | 0.04 |
+| data2mcp_dataframe_caution | 0.84 | 0.44 | 0.28 | 0.28 | 0.28 |
+| data2mcp_dataframe_expectation_only | 0.68 | 0.48 | 0.40 | 0.00 | 0.04 |
+| data2mcp_dataframe_verification_only | 0.88 | 0.68 | 0.00 | 0.80 | 0.68 |
+| data2mcp_dataframe_guarded | 0.80 | 0.84 | 0.00 | 1.00 | 0.84 |
+| data2mcp_dataframe_guarded_light | 0.88 | 0.88 | 0.00 | 1.00 | 0.88 |
+
+Combined 50-task summary:
+
+| Adapter | Clean TSR | Poisoned TSR | Toxic BCR | Toxic VR | Toxic RR |
+|---|---:|---:|---:|---:|---:|
+| data2mcp_dataframe | 0.84 | 0.30 | 0.48 | 0.04 | 0.06 |
+| data2mcp_dataframe_caution | 0.84 | 0.32 | 0.48 | 0.16 | 0.14 |
+| data2mcp_dataframe_expectation_only | 0.80 | 0.40 | 0.50 | 0.02 | 0.06 |
+| data2mcp_dataframe_verification_only | 0.90 | 0.84 | 0.00 | 0.86 | 0.84 |
+| data2mcp_dataframe_guarded | 0.86 | 0.88 | 0.00 | 1.00 | 0.88 |
+| data2mcp_dataframe_guarded_light | 0.88 | 0.86 | 0.00 | 1.00 | 0.86 |
 
 Interpretation:
 
 - The semantic/schema suite shows a clean mechanism split: prompt-only variants
-  remain vulnerable, while verification-based variants recover all poisoned cases
-  or nearly all poisoned cases in the first 20 tasks.
+  remain vulnerable, while verification-based variants recover all or nearly all
+  poisoned cases in the first 25 tasks.
 - The numerical suite is harder: verification removes blind compliance, but some
   ordinary calculation and answer-extraction failures remain.
-- The combined 40-task smoke is strong enough to justify launching the full
-  chunked data2mcp ablation across all 120 candidate tasks.
+- The combined 50-task smoke is strong enough to justify completing the remaining
+  candidate tasks and using the verification ablation as a main defense result.
 
 Run the full six-way data2mcp ablation on both ICLR 2027 candidate suites:
 
