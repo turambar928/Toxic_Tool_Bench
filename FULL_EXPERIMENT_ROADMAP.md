@@ -543,7 +543,8 @@ Concrete tasks:
      bash toxictool_bench/run_iclr2027_experiments.sh
 4. If smoke passes, run the full 120-task expanded suites for GPT first.
 5. Summarize overall, poison-type, and severity breakdowns with summarize_results.py.
-6. Add the full-vs-light guard comparison on semantic_schema_iclr2027 and numerical_iclr2027.
+6. Run the six-way data2mcp defense ablation on semantic_schema_iclr2027 and numerical_iclr2027:
+   base, caution prompt only, expectation only, verification only, full guard, light guard.
 7. Update Section 5 tables around: base vulnerability, poison-type mechanism,
    severity trend, and guarded recovery.
 ```

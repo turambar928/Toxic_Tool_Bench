@@ -270,7 +270,16 @@ MODEL=claude-sonnet-4-6 ADAPTERS="langgraph_react_full smolagents_toolcalling au
   bash toxictool_bench/run_iclr2027_experiments.sh
 ```
 
-Run the data2mcp guard comparison on the expanded semantic/schema suite:
+Run the data2mcp guard comparison on the expanded semantic/schema suite. By default this covers six variants:
+
+```text
+data2mcp_dataframe
+data2mcp_dataframe_caution
+data2mcp_dataframe_expectation_only
+data2mcp_dataframe_verification_only
+data2mcp_dataframe_guarded
+data2mcp_dataframe_guarded_light
+```
 
 ```bash
 bash toxictool_bench/run_data2mcp_guard_ablation.sh gpt-5.4-mini \
@@ -387,19 +396,39 @@ bash toxictool_bench/run_semantic_schema_full_adapters.sh gpt-5.4-mini
 
 ## 10. data2mcp Guarded Ablation
 
-Run base vs guarded on the semantic/schema suite:
+Run the full defense ablation matrix on the semantic/schema suite:
 
 ```bash
 bash toxictool_bench/run_data2mcp_guard_ablation.sh \
   gpt-5.4-mini \
-  toxictool_bench/tasks/semantic_schema.jsonl
+  toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
+```
+
+The default matrix is:
+
+```text
+base:              data2mcp_dataframe
+caution prompt:    data2mcp_dataframe_caution
+expectation only:  data2mcp_dataframe_expectation_only
+verification only: data2mcp_dataframe_verification_only
+full guard:        data2mcp_dataframe_guarded
+light guard:       data2mcp_dataframe_guarded_light
+```
+
+Restrict the matrix with `ADAPTERS`:
+
+```bash
+ADAPTERS="data2mcp_dataframe data2mcp_dataframe_verification_only data2mcp_dataframe_guarded" \
+  bash toxictool_bench/run_data2mcp_guard_ablation.sh \
+    gpt-5.4-mini \
+    toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
 ```
 
 Run guarded only on semantic/schema:
 
 ```bash
 python3 toxictool_bench/run_full_bench.py \
-  --tasks toxictool_bench/tasks/semantic_schema.jsonl \
+  --tasks toxictool_bench/tasks/semantic_schema_iclr2027.jsonl \
   --api-file api \
   --adapter data2mcp_dataframe_guarded \
   --model gpt-5.4-mini \
@@ -412,7 +441,7 @@ Run guarded only on the numerical suite:
 
 ```bash
 python3 toxictool_bench/run_full_bench.py \
-  --tasks toxictool_bench/tasks/numerical_expanded.jsonl \
+  --tasks toxictool_bench/tasks/numerical_iclr2027.jsonl \
   --api-file api \
   --adapter data2mcp_dataframe_guarded \
   --model gpt-5.4-mini \
@@ -425,7 +454,7 @@ Run the light guarded variant:
 
 ```bash
 python3 toxictool_bench/run_full_bench.py \
-  --tasks toxictool_bench/tasks/semantic_schema.jsonl \
+  --tasks toxictool_bench/tasks/semantic_schema_iclr2027.jsonl \
   --api-file api \
   --adapter data2mcp_dataframe_guarded_light \
   --model gpt-5.4-mini \

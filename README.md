@@ -76,6 +76,10 @@ Full guard:       Clean TSR 0.79, Poisoned TSR 0.74, BCR 0.00, RR 0.74
 Light guard:      Clean TSR 0.68, Poisoned TSR 0.65, BCR 0.00, RR 0.65
 ```
 
+For the ICLR 2027 expansion, the data2mcp defense runner now supports a six-way
+ablation matrix: base, caution prompt only, expectation only, verification only,
+full guard, and light guard.
+
 See `EXPERIMENT_RESULTS.md`, `PROGRESS_REPORT.md`, and `CURRENT_STATUS.md` for fuller summaries.
 
 ## Important Artifacts

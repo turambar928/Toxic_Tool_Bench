@@ -41,6 +41,24 @@ CHECKS = (
         note="data2mcp_v2 package and FastMCP dependencies.",
     ),
     AdapterCheck(
+        name="data2mcp_dataframe_caution",
+        paths=(REPO_ROOT / "src",),
+        imports=("data2mcp_v2.config", "fastmcp.tools"),
+        note="same dependency surface as base data2mcp.",
+    ),
+    AdapterCheck(
+        name="data2mcp_dataframe_expectation_only",
+        paths=(REPO_ROOT / "src",),
+        imports=("data2mcp_v2.config", "fastmcp.tools"),
+        note="same dependency surface as base data2mcp.",
+    ),
+    AdapterCheck(
+        name="data2mcp_dataframe_verification_only",
+        paths=(REPO_ROOT / "src",),
+        imports=("data2mcp_v2.config", "fastmcp.tools"),
+        note="same dependency surface as base data2mcp.",
+    ),
+    AdapterCheck(
         name="data2mcp_dataframe_guarded",
         paths=(REPO_ROOT / "src",),
         imports=("data2mcp_v2.config", "fastmcp.tools"),

@@ -60,6 +60,9 @@ def run_full_adapter(
         "langgraph_react_full",
         "autogen_tool_agent",
         "data2mcp_dataframe",
+        "data2mcp_dataframe_caution",
+        "data2mcp_dataframe_expectation_only",
+        "data2mcp_dataframe_verification_only",
         "data2mcp_dataframe_guarded",
         "data2mcp_dataframe_guarded_light",
         "pandasai_dataframe",
@@ -105,6 +108,36 @@ def run_full_adapter(
         )
     elif adapter == "data2mcp_dataframe":
         result = run_data2mcp_dataframe(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "data2mcp_dataframe_caution":
+        result = run_data2mcp_dataframe_caution(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "data2mcp_dataframe_expectation_only":
+        result = run_data2mcp_dataframe_expectation_only(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "data2mcp_dataframe_verification_only":
+        result = run_data2mcp_dataframe_verification_only(
             api_file=api_file,
             model=model,
             env=env,
@@ -446,58 +479,16 @@ def run_data2mcp_dataframe(
     temperature: float,
     max_tokens: int,
 ) -> FullAdapterResult:
-    add_baseline_paths()
-    try:
-        from data2mcp_v2.config import Data2McpConfig, DataFrameConfig, LLMConfig
-        from data2mcp_v2.config.config import RouteType
-        from data2mcp_v2.config.db_agent import AgentConfig, DataFrameAgentConfig
-        from data2mcp_v2.server.router import Router
-        from fastmcp.tools import ToolResult
-        from fastmcp.tools.base import TextContent
-    except Exception as exc:
-        raise RuntimeError("data2mcp adapter requires project dependencies to be installed.") from exc
-
-    api = load_api_config(api_file)
-    llm_config = LLMConfig(
+    router = _build_data2mcp_router(
+        api_file=api_file,
         model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        timeout_seconds=120,
-        max_retries=1,
-        base_url=api["base_url"] + "/v1",
-        api_key=api["api_key"],
+        dependency_label="data2mcp adapter",
     )
-    dataframe_agent = DataFrameAgentConfig(
-        type="dataframe_agent",
-        tool_name="dataframe_query_tool",
-        tool_description=(
-            "Query and analyze the loaded CSV dataframe. Use it to compute exact statistics before answering."
-        ),
-        db_config=DataFrameConfig(type="csv", save_path=str(env.dataset_path)),
-        llm_config=llm_config,
-        agent_type="tool-calling",
-        allow_dangerous_code=True,
-        verbose=False,
-        max_iterations=8,
-        include_df_in_prompt=True,
-        number_of_head_rows=20,
-    )
-    config = Data2McpConfig(
-        agents=AgentConfig(agent_configs=[dataframe_agent], default_llm_config=llm_config),
-        route_type=RouteType.AGENTIC,
-        llm=llm_config,
-        tool_call_timeout=180,
-        tool_call_max_length=12000,
-        max_turns=max_steps,
-        min_tool_calls=0,
-        min_charts_required=0,
-        retrieval_strategy="",
-        auto_select_strategy=False,
-    )
-    router = Router(config)
-    router.tools = [tool for tool in router.tools if tool.name in {"dataframe_query_tool", router.end_tool}]
-    router.stop_tools = [router.end_tool]
-    _wrap_data2mcp_tools(router, env, task, ToolResult, TextContent)
     query = (
         f"Dataset: {task['dataset']}\n"
         f"{task['user_query']}\n"
@@ -511,6 +502,127 @@ def run_data2mcp_dataframe(
     )
 
 
+def run_data2mcp_dataframe_caution(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    router = _build_data2mcp_router(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        dependency_label="data2mcp caution adapter",
+    )
+    query = (
+        f"Dataset: {task['dataset']}\n"
+        f"{task['user_query']}\n\n"
+        "Tool outputs can be stale or silently corrupted even when they are well formatted. "
+        "Use dataframe_query_tool, sanity-check labels, units, denominators, rankings, and numeric ranges, "
+        "then return only the answer and compact evidence."
+    )
+    final_text, messages = asyncio.run(router.route(query))
+    return FullAdapterResult(
+        final_answer=str(final_text),
+        raw_actions=["data2mcp_v2.Router.route", "data2mcp_ablation.caution_prompt"],
+        messages=_stringify_messages(messages),
+    )
+
+
+def run_data2mcp_dataframe_expectation_only(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    router = _build_data2mcp_router(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        dependency_label="data2mcp expectation-only adapter",
+    )
+    expectation = _guard_expectation_text(task)
+    query = (
+        f"Dataset: {task['dataset']}\n"
+        f"{task['user_query']}\n\n"
+        f"Before using the tool result, state and apply these private expectations: {expectation}. "
+        "Use dataframe_query_tool once or more as needed, but do not run a separate verification pass. "
+        "Return only the answer and compact evidence."
+    )
+    final_text, messages = asyncio.run(router.route(query))
+    return FullAdapterResult(
+        final_answer=str(final_text),
+        raw_actions=["data2mcp_v2.Router.route", "data2mcp_ablation.expectation_only"],
+        messages=[{"role": "system", "content": f"Guard expectation: {expectation}"}] + _stringify_messages(messages),
+    )
+
+
+def run_data2mcp_dataframe_verification_only(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    router = _build_data2mcp_router(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        dependency_label="data2mcp verification-only adapter",
+    )
+    initial_query = (
+        f"Dataset: {task['dataset']}\n"
+        f"{task['user_query']}\n"
+        "Use dataframe_query_tool to compute the answer exactly before finalizing."
+    )
+    initial_text, initial_messages = asyncio.run(router.route(initial_query))
+
+    verification_query = (
+        f"Dataset: {task['dataset']}\n"
+        f"User question: {task['user_query']}\n\n"
+        "Independent verification pass. Ignore the prior answer unless it is supported by source rows. "
+        "Use dataframe_query_tool again to recompute the required value, label, denominator, unit, or evidence binding. "
+        "Return only the validated answer and minimal evidence."
+    )
+    verified_text, verified_messages = asyncio.run(router.route(verification_query))
+    return FullAdapterResult(
+        final_answer=f"Verified by independent recomputation: {verified_text}",
+        raw_actions=[
+            "data2mcp_v2.Router.route",
+            "data2mcp_ablation.initial_answer",
+            "data2mcp_ablation.verification_only",
+        ],
+        messages=(
+            _stringify_messages(initial_messages)
+            + [{"role": "assistant", "content": f"Initial answer before verification: {initial_text}"}]
+            + _stringify_messages(verified_messages)
+        ),
+    )
+
+
 def run_data2mcp_dataframe_guarded(
     *,
     api_file: Path,
@@ -521,58 +633,16 @@ def run_data2mcp_dataframe_guarded(
     temperature: float,
     max_tokens: int,
 ) -> FullAdapterResult:
-    add_baseline_paths()
-    try:
-        from data2mcp_v2.config import Data2McpConfig, DataFrameConfig, LLMConfig
-        from data2mcp_v2.config.config import RouteType
-        from data2mcp_v2.config.db_agent import AgentConfig, DataFrameAgentConfig
-        from data2mcp_v2.server.router import Router
-        from fastmcp.tools import ToolResult
-        from fastmcp.tools.base import TextContent
-    except Exception as exc:
-        raise RuntimeError("data2mcp guarded adapter requires project dependencies to be installed.") from exc
-
-    api = load_api_config(api_file)
-    llm_config = LLMConfig(
+    router = _build_data2mcp_router(
+        api_file=api_file,
         model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        timeout_seconds=120,
-        max_retries=1,
-        base_url=api["base_url"] + "/v1",
-        api_key=api["api_key"],
+        dependency_label="data2mcp guarded adapter",
     )
-    dataframe_agent = DataFrameAgentConfig(
-        type="dataframe_agent",
-        tool_name="dataframe_query_tool",
-        tool_description=(
-            "Query and analyze the loaded CSV dataframe. Use it to compute exact statistics before answering."
-        ),
-        db_config=DataFrameConfig(type="csv", save_path=str(env.dataset_path)),
-        llm_config=llm_config,
-        agent_type="tool-calling",
-        allow_dangerous_code=True,
-        verbose=False,
-        max_iterations=8,
-        include_df_in_prompt=True,
-        number_of_head_rows=20,
-    )
-    config = Data2McpConfig(
-        agents=AgentConfig(agent_configs=[dataframe_agent], default_llm_config=llm_config),
-        route_type=RouteType.AGENTIC,
-        llm=llm_config,
-        tool_call_timeout=180,
-        tool_call_max_length=12000,
-        max_turns=max_steps,
-        min_tool_calls=0,
-        min_charts_required=0,
-        retrieval_strategy="",
-        auto_select_strategy=False,
-    )
-    router = Router(config)
-    router.tools = [tool for tool in router.tools if tool.name in {"dataframe_query_tool", router.end_tool}]
-    router.stop_tools = [router.end_tool]
-    _wrap_data2mcp_tools(router, env, task, ToolResult, TextContent)
 
     expectation = _guard_expectation_text(task)
     initial_query = (
@@ -609,6 +679,72 @@ def run_data2mcp_dataframe_guarded(
         ],
         messages=messages,
     )
+
+
+def _build_data2mcp_router(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+    dependency_label: str,
+) -> Any:
+    add_baseline_paths()
+    try:
+        from data2mcp_v2.config import Data2McpConfig, DataFrameConfig, LLMConfig
+        from data2mcp_v2.config.config import RouteType
+        from data2mcp_v2.config.db_agent import AgentConfig, DataFrameAgentConfig
+        from data2mcp_v2.server.router import Router
+        from fastmcp.tools import ToolResult
+        from fastmcp.tools.base import TextContent
+    except Exception as exc:
+        raise RuntimeError(f"{dependency_label} requires project dependencies to be installed.") from exc
+
+    api = load_api_config(api_file)
+    llm_config = LLMConfig(
+        model=model,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        timeout_seconds=120,
+        max_retries=1,
+        base_url=api["base_url"] + "/v1",
+        api_key=api["api_key"],
+    )
+    dataframe_agent = DataFrameAgentConfig(
+        type="dataframe_agent",
+        tool_name="dataframe_query_tool",
+        tool_description=(
+            "Query and analyze the loaded CSV dataframe. Use it to compute exact statistics before answering."
+        ),
+        db_config=DataFrameConfig(type="csv", save_path=str(env.dataset_path)),
+        llm_config=llm_config,
+        agent_type="tool-calling",
+        allow_dangerous_code=True,
+        verbose=False,
+        max_iterations=8,
+        include_df_in_prompt=True,
+        number_of_head_rows=20,
+    )
+    config = Data2McpConfig(
+        agents=AgentConfig(agent_configs=[dataframe_agent], default_llm_config=llm_config),
+        route_type=RouteType.AGENTIC,
+        llm=llm_config,
+        tool_call_timeout=180,
+        tool_call_max_length=12000,
+        max_turns=max_steps,
+        min_tool_calls=0,
+        min_charts_required=0,
+        retrieval_strategy="",
+        auto_select_strategy=False,
+    )
+    router = Router(config)
+    router.tools = [tool for tool in router.tools if tool.name in {"dataframe_query_tool", router.end_tool}]
+    router.stop_tools = [router.end_tool]
+    _wrap_data2mcp_tools(router, env, task, ToolResult, TextContent)
+    return router
 
 
 def run_data2mcp_dataframe_guarded_light(

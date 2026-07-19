@@ -21,7 +21,7 @@ run_adapter() {
     smolagents_toolcalling)
       py_path="$py_path:baseline_agent/smolagents/src"
       ;;
-    data2mcp_dataframe|data2mcp_dataframe_guarded|data2mcp_dataframe_guarded_light)
+    data2mcp_dataframe*)
       py_path="$py_path:src"
       ;;
     pandasai_dataframe)
