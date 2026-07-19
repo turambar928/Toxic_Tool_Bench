@@ -112,7 +112,23 @@ Numerical & Guarded & 0.79 & 0.74 & 0.06 & 0.00 & 1.00 & 1.00 & 0.74 \\
 Tables~\ref{tab:claude-expanded} and~\ref{tab:qwen-expanded} show the same expanded suite on Claude and Qwen for the five practical-speed adapters. The qualitative pattern persists: poisoned TSR is consistently below clean TSR, and blind compliance remains nonzero even for agents with high clean TSR. The magnitude varies by model and framework. Claude reduces degradation for LangGraph, smolagents, and AutoGen, but PandasAI remains highly vulnerable. Qwen shows strong LangGraph clean performance but large poisoned degradation, and \texttt{data2mcp} has low clean TSR under this model because many runs hit the maximum-turn limit without a final answer.
 
 \paragraph{Poison-type breakdown.}
-Across the completed cross-model runs, rank swaps are the most likely to induce blind compliance, with an average BCR of 0.52 across model--adapter groups. Aggregate scaling is also damaging, with average BCR 0.41 and average poisoned TSR 0.43. Sign flips are easier for agents to recover from: average poisoned TSR is 0.90, average BCR is 0.11, and average recovery is 0.28. The full breakdown is stored in \texttt{poison\_type\_summary.csv}.
+Across the completed cross-model runs, rank swaps are the most likely to induce blind compliance, with an average BCR of 0.52 across model--adapter groups. Aggregate scaling is also damaging, with average BCR 0.41 and average poisoned TSR 0.43. Sign flips are easier for agents to recover from: average poisoned TSR is 0.90, average BCR is 0.11, and average recovery is 0.28. Table~\ref{tab:poison-type-breakdown} summarizes the same pattern in compact form.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Poison type & Toxic TSR & BCR & ADR & VR & RR \\
+\midrule
+Aggregate scaling & 0.43 & 0.41 & 0.07 & 0.11 & 0.12 \\
+Rank swap & 0.49 & 0.52 & 0.01 & 0.18 & 0.16 \\
+Sign flip & 0.90 & 0.11 & 0.04 & 0.31 & 0.28 \\
+\bottomrule
+\end{tabular}
+\caption{Average numerical poison-type behavior across completed model--adapter groups. The table aggregates \texttt{poison\_type\_summary.csv}.}
+\label{tab:poison-type-breakdown}
+\end{table}
 
 \paragraph{Uncertainty estimates.}
 We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement and recomputing clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR. The full CI tables are stored with the released artifacts for the numerical cross-model results, semantic/schema cross-model results, and guarded \texttt{data2mcp} ablations.
