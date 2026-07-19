@@ -2,7 +2,7 @@
 set -euo pipefail
 
 MODEL="${1:-gpt-5.4-mini}"
-TASKS="${2:-toxictool_bench/tasks/semantic_schema.jsonl}"
+TASKS="${2:-toxictool_bench/tasks/semantic_schema_iclr2027.jsonl}"
 API_FILE="api"
 
 for adapter in data2mcp_dataframe data2mcp_dataframe_guarded data2mcp_dataframe_guarded_light; do

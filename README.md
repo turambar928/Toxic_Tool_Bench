@@ -109,6 +109,13 @@ See `RUN_COMMANDS.md` for the exact experiment commands. The main scripts are:
 bash toxictool_bench/run_expanded_full_adapters.sh
 bash toxictool_bench/run_semantic_schema_full_adapters.sh
 bash toxictool_bench/run_data2mcp_guard_ablation.sh
+bash toxictool_bench/run_iclr2027_experiments.sh
+```
+
+Check local full-adapter dependencies before launching expensive runs:
+
+```bash
+python3 toxictool_bench/check_adapter_readiness.py
 ```
 
 To regenerate the ICLR 2027 expanded candidate task files:

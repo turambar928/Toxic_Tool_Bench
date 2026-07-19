@@ -38,7 +38,7 @@ oracle
 Required output:
 
 ```text
-paper/iclr/toxictool_bench/tasks/numerical.jsonl
+toxictool_bench/tasks/numerical.jsonl
 ```
 
 Status: mostly done.
@@ -63,8 +63,8 @@ For segment/rank tasks, success requires the correct label, not only the correct
 Required output:
 
 ```text
-paper/iclr/toxictool_bench/evaluator.py
-paper/iclr/toxictool_bench/rescore_results.py
+toxictool_bench/evaluator.py
+toxictool_bench/rescore_results.py
 ```
 
 Status: mostly done, but should add unit tests.
@@ -82,7 +82,7 @@ Create tests for:
 Required output:
 
 ```text
-paper/iclr/toxictool_bench/tests/test_evaluator.py
+toxictool_bench/tests/test_evaluator.py
 ```
 
 Status: done.
@@ -119,7 +119,7 @@ Do not generate charts. Do not write a business report.
 Required output:
 
 ```text
-paper/iclr/toxictool_bench/full_adapters.py
+toxictool_bench/full_adapters.py
 ```
 
 Status: first version done, hardening needed.
@@ -300,11 +300,21 @@ Task groups:
 Required output:
 
 ```text
-paper/iclr/toxictool_bench/tasks/numerical_expanded.jsonl
-paper/iclr/toxictool_bench/datasets/
+toxictool_bench/tasks/numerical_expanded.jsonl
+toxictool_bench/datasets/
 ```
 
 Status: done for the current 34-task numerical suite.
+
+ICLR 2027 candidate status:
+
+```text
+toxictool_bench/tasks/numerical_iclr2027.jsonl
+60 tasks
+severity labels: obvious / plausible / subtle
+additional poison families: value_replace, ratio_inversion, denominator_swap,
+unit_conversion, missing_filter
+```
 
 ### 4.2 Add semantic/schema tasks
 
@@ -320,7 +330,7 @@ Poison types:
 Required output:
 
 ```text
-paper/iclr/toxictool_bench/tasks/semantic_schema.jsonl
+toxictool_bench/tasks/semantic_schema.jsonl
 ```
 
 Status: current version done.
@@ -334,6 +344,16 @@ label_swap / treatment_control_flip
 column_semantic_swap
 stale_metadata
 biased_retrieval
+```
+
+ICLR 2027 candidate status:
+
+```text
+toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
+60 tasks
+severity labels: obvious / plausible / subtle
+additional schema/evidence stressors over clinic, inventory, ad-ops, and
+retrieval-evidence datasets
 ```
 
 Still missing:
@@ -355,19 +375,38 @@ Poison types:
 Required output:
 
 ```text
-paper/iclr/toxictool_bench/tasks/instruction_v1.jsonl
+toxictool_bench/tasks/instruction_v1.jsonl
 ```
+
+Status: not done. This is the next benchmark-family expansion if the ICLR 2027
+story still needs one more axis beyond numerical and semantic/schema poisoning.
 
 ## Phase 5: Run Smoke Tests
 
 For every full adapter:
 
 ```bash
-python3 paper/iclr/toxictool_bench/run_full_bench.py \
+python3 toxictool_bench/run_full_bench.py \
   --adapter <adapter> \
   --model gpt-5.4-mini \
   --env both \
   --limit 1
+```
+
+Current repository command:
+
+```bash
+python3 toxictool_bench/check_adapter_readiness.py
+LIMIT=1 bash toxictool_bench/run_iclr2027_experiments.sh
+```
+
+Current local readiness caveat:
+
+```text
+The GitHub clone currently does not include baseline_agent/ or src/, so true
+framework-adapter runs require syncing those local dependencies into the repo or
+installing them into the active Python environment. The local heuristic smoke
+path is working and has been used to validate the 120-task candidate files.
 ```
 
 Acceptance criteria:
@@ -401,8 +440,8 @@ gpt-5.4-mini
 Output:
 
 ```text
-paper/iclr/toxictool_bench/results/
-paper/iclr/EXPERIMENT_RESULTS.md
+toxictool_bench/results/
+EXPERIMENT_RESULTS.md
 ```
 
 Status: done for the 34-task expanded formal run with `gpt-5.4-mini`.
@@ -410,7 +449,7 @@ Status: done for the 34-task expanded formal run with `gpt-5.4-mini`.
 Final expanded result files are listed in:
 
 ```text
-paper/iclr/EXPERIMENT_RESULTS.md
+EXPERIMENT_RESULTS.md
 ```
 
 ## Phase 7: Formal Experiment
@@ -471,8 +510,8 @@ DA-Agent completed on gpt-5.4-mini, but the Claude run was manually stopped afte
 Semantic/schema cross-model output:
 
 ```text
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_summary.csv
-paper/iclr/toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_summary.csv
+toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
 ```
 
 Primary metrics:
@@ -487,14 +526,24 @@ VR
 RR
 ```
 
-## Immediate Next Step
+## ICLR 2027 Immediate Next Step
 
-Move from baseline evidence to defense and paper-finalization experiments.
+Move from the first paper package to a stronger ICLR 2027 experiment package.
 
 Concrete tasks:
 
 ```text
-1. Do a full paper consistency pass: symbols, section order, table references, appendix inclusion.
-2. Run optional reruns only if final variance looks too wide for a key claim.
-3. Prepare final ICLR submission package.
+1. Restore or install full-adapter dependencies in this clone:
+   baseline_agent/langgraph, baseline_agent/smolagents, baseline_agent/pandas-ai,
+   baseline_agent/autogen, baseline_agent/da-agent, and src/data2mcp_v2.
+2. Run readiness:
+   python3 toxictool_bench/check_adapter_readiness.py
+3. Run 5-task LLM smoke on the ICLR 2027 candidate suites:
+   LIMIT=5 ADAPTERS="data2mcp_dataframe data2mcp_dataframe_guarded langgraph_react_full autogen_tool_agent" \
+     bash toxictool_bench/run_iclr2027_experiments.sh
+4. If smoke passes, run the full 120-task expanded suites for GPT first.
+5. Summarize overall, poison-type, and severity breakdowns with summarize_results.py.
+6. Add the full-vs-light guard comparison on semantic_schema_iclr2027 and numerical_iclr2027.
+7. Update Section 5 tables around: base vulnerability, poison-type mechanism,
+   severity trend, and guarded recovery.
 ```

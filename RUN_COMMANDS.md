@@ -3,7 +3,7 @@
 All commands are intended to be run from the repository root:
 
 ```bash
-cd /home/taozifu2025/data2mcpv2
+cd /home/taozifu2025/toxicbench
 ```
 
 ## 1. Local smoke test
@@ -152,6 +152,12 @@ The API key is read from `api` at runtime and is not written to output files.
 
 ## 6. Full Framework Adapters
 
+Before running full adapters, check that the local framework checkouts and Python imports are available:
+
+```bash
+python3 toxictool_bench/check_adapter_readiness.py
+```
+
 LangGraph ReAct full adapter:
 
 ```bash
@@ -215,10 +221,10 @@ python3 toxictool_bench/run_full_bench.py \
 
 ## 7. Expanded Full-Adapter Pilot
 
-Use the 34-task expanded set:
+Use the ICLR 2027 numerical candidate set by default:
 
 ```bash
-TASKS=toxictool_bench/tasks/numerical_expanded.jsonl
+bash toxictool_bench/run_expanded_full_adapters.sh
 ```
 
 ## 7.5 ICLR 2027 Candidate Expansion
@@ -246,6 +252,29 @@ python3 toxictool_bench/run_full_bench.py \
   --model gpt-5.4-mini \
   --env both \
   --limit 5
+```
+
+Run the standard ICLR 2027 candidate matrix on both 60-task suites:
+
+```bash
+bash toxictool_bench/run_iclr2027_experiments.sh
+```
+
+Useful scoped variants:
+
+```bash
+LIMIT=5 ADAPTERS="data2mcp_dataframe data2mcp_dataframe_guarded" \
+  bash toxictool_bench/run_iclr2027_experiments.sh
+
+MODEL=claude-sonnet-4-6 ADAPTERS="langgraph_react_full smolagents_toolcalling autogen_tool_agent" \
+  bash toxictool_bench/run_iclr2027_experiments.sh
+```
+
+Run the data2mcp guard comparison on the expanded semantic/schema suite:
+
+```bash
+bash toxictool_bench/run_data2mcp_guard_ablation.sh gpt-5.4-mini \
+  toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
 ```
 
 Summarize with severity breakdown:

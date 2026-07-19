@@ -22,7 +22,7 @@ except ImportError:
     from tools import DataToolEnv
 
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[1]
 BASELINE_DIR = REPO_ROOT / "baseline_agent"
 
 
