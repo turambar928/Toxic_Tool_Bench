@@ -1,7 +1,7 @@
 model,adapter,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr,toxic_adr,toxic_vr,toxic_rr,n
-gpt-5.4-mini,data2mcp_dataframe,0.84,0.45,0.39,0.42,0.16,0.07,0.19,100
-gpt-5.4-mini,data2mcp_dataframe_caution,0.81,0.48,0.33,0.36,0.12,0.26,0.25,100
-gpt-5.4-mini,data2mcp_dataframe_expectation_only,0.79,0.46,0.33,0.53,0.10,0.02,0.08,100
-gpt-5.4-mini,data2mcp_dataframe_guarded,0.85,0.85,0.00,0.00,1.00,1.00,0.85,100
-gpt-5.4-mini,data2mcp_dataframe_guarded_light,0.84,0.84,0.00,0.00,1.00,1.00,0.84,100
-gpt-5.4-mini,data2mcp_dataframe_verification_only,0.89,0.83,0.06,0.00,1.00,0.84,0.83,100
+gpt-5.4-mini,data2mcp_dataframe,0.84,0.47,0.36,0.43,0.15,0.07,0.18,110
+gpt-5.4-mini,data2mcp_dataframe_caution,0.81,0.51,0.30,0.36,0.12,0.27,0.26,110
+gpt-5.4-mini,data2mcp_dataframe_expectation_only,0.79,0.48,0.31,0.55,0.09,0.02,0.07,110
+gpt-5.4-mini,data2mcp_dataframe_guarded,0.84,0.85,-0.01,0.00,1.00,1.00,0.85,110
+gpt-5.4-mini,data2mcp_dataframe_guarded_light,0.84,0.84,0.00,0.00,1.00,1.00,0.84,110
+gpt-5.4-mini,data2mcp_dataframe_verification_only,0.88,0.83,0.05,0.00,1.00,0.85,0.83,110
