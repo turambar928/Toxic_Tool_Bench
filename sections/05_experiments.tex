@@ -14,7 +14,7 @@ Our experiments evaluate four questions:
 \subsection{Experimental Setup}
 
 \paragraph{Tasks.}
-We use two scales of task suites. For cross-agent and cross-model experiments, the numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. For the \texttt{data2mcp} defense ablation, we use expanded ICLR 2027 candidate suites with 60 numerical tasks and 60 semantic/schema tasks. We report numerical and semantic/schema results separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
+We use two scales of task suites. For cross-model experiments, the numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. To strengthen cross-agent scale, we additionally run a GPT-only expanded cross-agent pass on ICLR 2027 candidate suites with 60 numerical tasks and 60 semantic/schema tasks. The same 120-task expanded suites are used for the \texttt{data2mcp} defense ablation. We report numerical and semantic/schema results separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
 
 \paragraph{Agents and models.}
 We evaluate complete framework adapters rather than only prompt-style profiles. The adapters are LangGraph ReAct, Hugging Face smolagents, \texttt{data2mcp}'s DataFrame router, PandasAI, DA-Agent, and AutoGen. We run all completed adapters with \texttt{gpt-5.4-mini}. For cross-model experiments, we run the five practical-speed adapters with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking}: LangGraph, smolagents, \texttt{data2mcp}, PandasAI, and AutoGen. DA-Agent is included in the GPT main table but excluded from cross-model tables because the Claude run reached only 5 of 68 clean/poisoned environment instances after more than twenty minutes.
@@ -24,6 +24,27 @@ LangGraph, smolagents, \texttt{data2mcp}, and AutoGen are poisoned at a tool-obs
 
 \paragraph{Analysis.}
 For each agent, model, and task family, we report clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR where space permits. We also inspect trajectories to identify failure modes such as copying a poisoned value into the final report, rationalizing an impossible result, accepting corrupted metadata, or performing validation but ignoring the validation result. Section~\ref{sec:qualitative} summarizes representative trajectories from the final rescored runs.
+
+\subsection{Expanded GPT-Only Cross-Agent Results}
+
+Table~\ref{tab:gpt-expanded-cross-agent-120} reports the 120-task GPT-only cross-agent pass over four practical-speed framework adapters. This run uses the larger ICLR 2027 candidate suites rather than the smaller cross-model suites. The larger evaluation preserves the main finding: all four adapters maintain moderate to high clean TSR, but poisoned TSR drops by 0.27--0.36 and blind compliance remains nonzero. LangGraph and AutoGen recover more often on semantic/schema tasks than on numerical tasks, but the combined results still show substantial poisoned degradation. \texttt{data2mcp} has the lowest clean TSR in this expanded cross-agent run, yet still exhibits BCR 0.37, showing that blind compliance is not just a side effect of high clean capability.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & RR \\
+\midrule
+LangGraph ReAct & 0.93 & 0.60 & 0.33 & 0.33 & 0.44 \\
+smolagents & 0.91 & 0.55 & 0.36 & 0.38 & 0.10 \\
+\texttt{data2mcp} & 0.77 & 0.48 & 0.28 & 0.37 & 0.23 \\
+AutoGen & 0.92 & 0.65 & 0.27 & 0.20 & 0.37 \\
+\bottomrule
+\end{tabular}
+\caption{GPT-only expanded cross-agent results on 120 tasks, combining 60 numerical and 60 semantic/schema ICLR 2027 candidate tasks.}
+\label{tab:gpt-expanded-cross-agent-120}
+\end{table}
 
 \subsection{Numerical Results}
 

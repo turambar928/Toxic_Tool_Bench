@@ -1,0 +1,5 @@
+model,adapter,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr,toxic_adr,toxic_vr,toxic_rr,n
+gpt-5.4-mini,autogen_tool_agent,0.92,0.65,0.27,0.20,0.06,0.45,0.37,120
+gpt-5.4-mini,data2mcp_dataframe,0.77,0.48,0.28,0.37,0.16,0.22,0.23,120
+gpt-5.4-mini,langgraph_react_full,0.93,0.60,0.33,0.33,0.07,0.43,0.44,120
+gpt-5.4-mini,smolagents_toolcalling,0.91,0.55,0.36,0.38,0.00,0.10,0.10,120

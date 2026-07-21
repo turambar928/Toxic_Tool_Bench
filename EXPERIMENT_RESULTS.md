@@ -56,7 +56,46 @@ Metric audit:
 
 - BCR was fixed after cross-model runs so clean-environment BCR cannot be nonzero merely because a wrong clean answer matches a poisoned answer string.
 - `rank_swap` was fixed to use label-boundary replacement, so single-letter labels such as `E` are not rewritten inside words such as `defects`.
-- The tables below use the final `.rescored.jsonl` files.
+- The original cross-model tables below use the final `.rescored.jsonl` files.
+
+## GPT-Only Expanded Cross-Agent Results: 120 Tasks
+
+This pass was added to strengthen the scale of the cross-agent evidence beyond the initial 34-task numerical and 24-task semantic/schema suites. It runs four practical-speed full adapters on the ICLR 2027 candidate suites:
+
+- 60 numerical tasks
+- 60 semantic/schema tasks
+- `gpt-5.4-mini`
+- clean/toxic paired environments
+
+Combined 120-task summary:
+
+| Full adapter | Clean TSR | Poisoned TSR | Delta TSR | Toxic BCR | Toxic ADR | Toxic VR | Toxic RR |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `langgraph_react_full` | 0.93 | 0.60 | 0.33 | 0.33 | 0.07 | 0.43 | 0.44 |
+| `smolagents_toolcalling` | 0.91 | 0.55 | 0.36 | 0.38 | 0.00 | 0.10 | 0.10 |
+| `data2mcp_dataframe` | 0.77 | 0.48 | 0.28 | 0.37 | 0.16 | 0.22 | 0.23 |
+| `autogen_tool_agent` | 0.92 | 0.65 | 0.27 | 0.20 | 0.06 | 0.45 | 0.37 |
+
+Suite-level summaries:
+
+```text
+toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_numerical_summary.csv
+toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_semantic_schema_summary.csv
+toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_summary.csv
+```
+
+Raw result files:
+
+```text
+toxictool_bench/results/20260721-145704_langgraph_react_full_gpt-5.4-mini_both.jsonl
+toxictool_bench/results/20260721-152956_smolagents_toolcalling_gpt-5.4-mini_both.jsonl
+toxictool_bench/results/20260721-155522_data2mcp_dataframe_gpt-5.4-mini_both.jsonl
+toxictool_bench/results/20260721-172417_autogen_tool_agent_gpt-5.4-mini_both.jsonl
+toxictool_bench/results/20260721-182010_langgraph_react_full_gpt-5.4-mini_both.jsonl
+toxictool_bench/results/20260721-184737_smolagents_toolcalling_gpt-5.4-mini_both.jsonl
+toxictool_bench/results/20260721-191227_data2mcp_dataframe_gpt-5.4-mini_both.jsonl
+toxictool_bench/results/20260721-203945_autogen_tool_agent_gpt-5.4-mini_both.jsonl
+```
 
 ## Main Expanded Results: gpt-5.4-mini
 

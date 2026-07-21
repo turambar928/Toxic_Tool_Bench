@@ -1,0 +1,19 @@
+{
+  "clean": {
+    "task_success": 0.8333333333333334,
+    "blind_compliance": 0.0,
+    "anomaly_detection": 0.016666666666666666,
+    "validation": 0.0,
+    "recovery": 0.016666666666666666,
+    "n": 60
+  },
+  "toxic": {
+    "task_success": 0.5833333333333334,
+    "blind_compliance": 0.2833333333333333,
+    "anomaly_detection": 0.0,
+    "validation": 0.05,
+    "recovery": 0.05,
+    "n": 60
+  },
+  "delta_tsr": 0.25
+}

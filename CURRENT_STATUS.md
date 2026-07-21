@@ -6,7 +6,7 @@ Last updated: 2026-07-19
 
 The project is now at the submission-package and release-cleanup stage.
 
-The benchmark, full-agent adapters, numerical expanded experiments, semantic/schema cross-model experiments, rescoring pipeline, guarded data2mcp defense ablations, bootstrap confidence intervals, case studies, paper skeleton, and GitHub README are in place. The next work should focus on final PDF compilation, page-budget control, citation polish, and release-package verification.
+The benchmark, full-agent adapters, numerical expanded experiments, semantic/schema cross-model experiments, GPT-only 120-task expanded cross-agent pass, rescoring pipeline, guarded data2mcp defense ablations, bootstrap confidence intervals, case studies, paper skeleton, and GitHub README are in place. The next work should focus on final PDF compilation, page-budget control, citation polish, and release-package verification.
 
 ## Built Components
 
@@ -159,6 +159,21 @@ sections/05_experiments.tex
 ```
 
 Semantic/schema 24-task suite is also complete on the five practical-speed adapters.
+
+GPT-only expanded cross-agent pass completed on 120 ICLR 2027 candidate tasks:
+
+- 60 numerical tasks
+- 60 semantic/schema tasks
+- LangGraph
+- smolagents
+- data2mcp
+- AutoGen
+
+Combined summary:
+
+```text
+toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_summary.csv
+```
 
 ### claude-sonnet-4-6
 
