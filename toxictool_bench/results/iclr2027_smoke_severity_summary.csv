@@ -1,0 +1,7 @@
+model,adapter,poison_type,severity,toxic_tsr,bcr,adr,vr,rr,n
+local-smoke,heuristic_naive,aggregate_scale,unspecified,0.00,0.50,0.00,0.00,0.00,2
+local-smoke,heuristic_naive,column_semantic_swap,unspecified,1.00,0.00,0.00,1.00,1.00,1
+local-smoke,heuristic_naive,label_swap,unspecified,1.00,1.00,0.00,0.00,0.00,2
+local-smoke,heuristic_naive,rank_swap,unspecified,0.00,1.00,0.00,0.00,0.00,2
+local-smoke,heuristic_naive,sign_flip,unspecified,0.00,1.00,0.00,0.00,0.00,1
+local-smoke,heuristic_naive,treatment_control_flip,unspecified,1.00,1.00,0.00,0.00,0.00,2

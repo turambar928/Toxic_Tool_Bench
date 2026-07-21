@@ -1,0 +1,10 @@
+{
+  "clean": {
+    "task_success": 1.0,
+    "blind_compliance": 0.0,
+    "anomaly_detection": 0.0,
+    "validation": 0.0,
+    "recovery": 0.0,
+    "n": 2
+  }
+}
