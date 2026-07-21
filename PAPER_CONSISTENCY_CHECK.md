@@ -43,6 +43,12 @@ Date: 2026-07-19
   - main text keeps the 120-task cross-agent table and the 120-task `data2mcp` defense table as the primary results;
   - cross-model evidence is compressed into one adapter-mean table;
   - detailed adapter-level cross-model and suite-breakdown tables are released as artifact CSVs and listed in the appendix.
+- Added a review-response pass:
+  - Section 3 now states that ADR/VR/RR/BCR are rule-scored from trajectories rather than free-form human annotation.
+  - Appendix now includes the behavior-metric rubric with borderline cases for rhetorical skepticism, recomputation, recovery, and blind copying.
+  - Section 4 and Section 7 now clarify the independent-verification assumption and the `poison_once` defense setting.
+  - Related work now covers RAG security/poisoning, evidence-integration defenses, and tool-agent calibration.
+  - Limitations now call out missing wall-clock/cost overhead, adaptive poisoning of all routes, stronger defense baselines, and scaling to larger databases/joins/notebook workflows.
 
 ## Remaining Before Submission
 

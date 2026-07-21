@@ -16,7 +16,7 @@ For a user query $q$ and tool environment $\mathcal{T}$, \methodname{} adds four
     \item \textbf{Final answer selection.} The wrapper finalizes from the verified evidence. If primary and verification evidence disagree, the final answer must use the verification result or explicitly qualify uncertainty rather than repeat the suspect observation.
 \end{enumerate}
 
-This loop targets the blind-compliance failure measured by BCR. It does not assume that the guard can identify the exact poisoning operator; it only needs to prevent unqualified reliance on a single unverified observation when independent evidence is available.
+This loop targets the blind-compliance failure measured by BCR. It does not assume that the guard can identify the exact poisoning operator; it only needs to prevent unqualified reliance on a single unverified observation when independent evidence is available. The current implementation is therefore a defense against single-route silent corruption, not against a fully adaptive adversary that can corrupt every independent evidence path.
 
 \subsection{Expectation Generation}
 
@@ -37,6 +37,8 @@ After the primary route returns an observation, the guard compares it with the e
 
 Validation is counted only when the second route is independent of the poisoned observation. Examples include recomputing aggregates from raw rows, re-reading the dataframe instead of copying the primary summary, checking treatment labels against the underlying table, or comparing retrieved evidence against the relevant source rows. This distinction matters because rhetorical skepticism without fresh evidence can reduce blind copying but still fail to recover the correct answer.
 
+In the benchmark implementation, poisoning is applied by a proxy with \texttt{poison\_once} enabled for the defense ablation: the primary matching observation can be corrupted, while later verification calls over raw data or source rows can return clean evidence. This is intentional. It isolates whether the agent loop is capable of using an independent check once such a check exists. It does not model a stronger attacker that controls the underlying data source or all redundant routes.
+
 \subsection{Full and Light Guards}
 
 We evaluate two guarded variants.
@@ -51,4 +53,4 @@ The light guarded adapter uses the same high-level policy but a tighter verifica
 
 \methodname{} is evaluated as an adapter-level wrapper for \texttt{data2mcp}. We do not claim that the current implementation is an optimal or universal defense for all data-agent frameworks. It is a controlled mitigation experiment: if blind compliance is caused by unverified trust in successful observations, then forcing independent verification should reduce BCR and increase recovery.
 
-The guard also has costs. It increases tool events and routing work because it asks for expectations and a second evidence path. It can under-recover when the verification budget is too small, and it may be unnecessary for low-risk observations. Future implementations should learn when to activate verification selectively. In this paper, we use the full guard as the main defense result and the light guard as an overhead/robustness tradeoff.
+The guard also has costs. It increases tool events and routing work because it asks for expectations and a second evidence path. It can under-recover when the verification budget is too small, and it may be unnecessary for low-risk observations. Future implementations should learn when to activate verification selectively, for example using confidence estimates, disagreement between tool routes, or poison-type risk priors. In this paper, we use the full guard as the main defense result and the light guard as an overhead/robustness tradeoff.
