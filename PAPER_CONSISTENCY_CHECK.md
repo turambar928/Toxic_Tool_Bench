@@ -39,6 +39,10 @@ Date: 2026-07-19
 - Updated RQ2 to match the completed numerical and semantic/schema experiments instead of implying a completed instruction-poisoning suite.
 - Reworded the benchmark discussion of data-embedded instructions as framework support rather than a reported main experiment.
 - Reworded the experiment failure-pattern list to avoid implying instruction-poisoning results in the main tables.
+- Reorganized Section 5 after the GPT-only 120-task expanded cross-agent run:
+  - main text keeps the 120-task cross-agent table and the 120-task `data2mcp` defense table as the primary results;
+  - cross-model evidence is compressed into one adapter-mean table;
+  - detailed adapter-level cross-model and suite-breakdown tables are released as artifact CSVs and listed in the appendix.
 
 ## Remaining Before Submission
 
@@ -46,6 +50,7 @@ Date: 2026-07-19
 - Run a full LaTeX build after TeX is installed in the environment.
 - Check page budget after the official style is applied; the current skeleton is content-complete but not page-budget validated.
 - Decide whether to include compact bootstrap CI tables beyond the guarded CI table already in the appendix.
+- After applying the official ICLR style, verify whether the compact cross-model table and defense tables fit without overflow.
 
 ## Build Status
 

@@ -46,98 +46,29 @@ AutoGen & 0.92 & 0.65 & 0.27 & 0.20 & 0.37 \\
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
-\subsection{Numerical Results}
+\subsection{Cross-Model Generalization}
 
-Table~\ref{tab:gpt-expanded} reports the 34-task numerical results with \texttt{gpt-5.4-mini}. Clean success does not imply poisoned robustness. LangGraph, PandasAI, and AutoGen all exceed 0.94 clean TSR, but their poisoned TSR drops substantially. PandasAI and LangGraph show the highest blind compliance rates, while DA-Agent has lower blind compliance and much higher validation and recovery rates.
+We use the smaller 34-task numerical and 24-task semantic/schema suites for cross-model experiments because they are practical to repeat across model families and framework adapters. Table~\ref{tab:cross-model-compact} summarizes results by averaging over completed adapters for each model and suite. The detailed adapter-level tables are released in \texttt{cross\_model\_summary.csv} and \texttt{semantic\_schema\_cross\_model\_summary.csv}.
 
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{lrrrrrrr}
-\toprule
-Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & ADR & VR & RR \\
-\midrule
-LangGraph ReAct & 1.00 & 0.41 & 0.59 & 0.68 & 0.00 & 0.00 & 0.00 \\
-smolagents & 0.97 & 0.62 & 0.35 & 0.32 & 0.00 & 0.15 & 0.15 \\
-\texttt{data2mcp} & 0.65 & 0.47 & 0.18 & 0.24 & 0.12 & 0.03 & 0.09 \\
-PandasAI & 1.00 & 0.47 & 0.53 & 0.65 & 0.00 & 0.00 & 0.00 \\
-DA-Agent & 0.85 & 0.53 & 0.32 & 0.32 & 0.06 & 0.38 & 0.38 \\
-AutoGen & 0.97 & 0.56 & 0.41 & 0.47 & 0.03 & 0.00 & 0.00 \\
-\bottomrule
-\end{tabular}
-\caption{Expanded 34-task numerical results with \texttt{gpt-5.4-mini}.}
-\label{tab:gpt-expanded}
-\end{table}
-
-\paragraph{Cross-model numerical results.}
-Tables~\ref{tab:claude-expanded} and~\ref{tab:qwen-expanded} show the same numerical suite on Claude and Qwen for the five practical-speed adapters. The qualitative pattern persists: poisoned TSR is consistently below clean TSR, and blind compliance remains nonzero even for agents with high clean TSR. Claude reduces degradation for LangGraph, smolagents, and AutoGen, but PandasAI remains highly vulnerable. Qwen shows strong LangGraph clean performance but large poisoned degradation, and \texttt{data2mcp} has low clean TSR under this model because many runs hit the maximum-turn limit without a final answer.
+The cross-model results support the same conclusion as the expanded GPT-only run. Clean TSR remains high on average, but poisoned TSR drops sharply and BCR remains nonzero for every model--suite group. Semantic/schema poisoning is especially diagnostic: GPT and Claude average clean TSR near 1.00 on the 24-task suite, yet their average poisoned TSR falls to 0.50 and 0.68, respectively. This shows that silent poisoning is not merely an arithmetic weakness or a single-model artifact.
 
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{lrrrrrrr}
+\begin{tabular}{llrrrr}
 \toprule
-Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & ADR & VR & RR \\
+Suite & Model & Mean clean TSR & Mean poisoned TSR & Mean $\Delta$TSR & Mean BCR \\
 \midrule
-LangGraph ReAct & 0.88 & 0.76 & 0.12 & 0.18 & 0.06 & 0.18 & 0.18 \\
-smolagents & 1.00 & 0.82 & 0.18 & 0.12 & 0.03 & 0.50 & 0.50 \\
-\texttt{data2mcp} & 0.85 & 0.62 & 0.24 & 0.24 & 0.26 & 0.50 & 0.53 \\
-PandasAI & 0.97 & 0.32 & 0.65 & 0.76 & 0.00 & 0.00 & 0.00 \\
-AutoGen & 0.91 & 0.82 & 0.09 & 0.24 & 0.09 & 0.15 & 0.15 \\
+Numerical & GPT & 0.91 & 0.51 & 0.40 & 0.45 \\
+Numerical & Claude & 0.92 & 0.67 & 0.26 & 0.31 \\
+Numerical & Qwen & 0.82 & 0.47 & 0.35 & 0.38 \\
+Semantic/schema & GPT & 0.98 & 0.50 & 0.48 & 0.46 \\
+Semantic/schema & Claude & 1.00 & 0.68 & 0.32 & 0.38 \\
+Semantic/schema & Qwen & 0.87 & 0.51 & 0.37 & 0.31 \\
 \bottomrule
 \end{tabular}
-\caption{Expanded 34-task numerical results with \texttt{claude-sonnet-4-6}.}
-\label{tab:claude-expanded}
-\end{table}
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{lrrrrrrr}
-\toprule
-Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & ADR & VR & RR \\
-\midrule
-LangGraph ReAct & 1.00 & 0.44 & 0.56 & 0.59 & 0.00 & 0.06 & 0.06 \\
-smolagents & 0.82 & 0.65 & 0.18 & 0.18 & 0.03 & 0.18 & 0.18 \\
-\texttt{data2mcp} & 0.32 & 0.24 & 0.09 & 0.06 & 0.03 & 0.35 & 0.09 \\
-PandasAI & 1.00 & 0.26 & 0.74 & 0.76 & 0.00 & 0.00 & 0.00 \\
-AutoGen & 0.94 & 0.76 & 0.18 & 0.29 & 0.03 & 0.32 & 0.29 \\
-\bottomrule
-\end{tabular}
-\caption{Expanded 34-task numerical results with \texttt{Qwen3.6-35B-A3B-no-thinking}.}
-\label{tab:qwen-expanded}
-\end{table}
-
-\subsection{Semantic and Schema Results}
-
-Table~\ref{tab:semantic-schema} reports the 24-task semantic/schema suite across the three evaluated models. This suite reveals a sharper failure mode than several numerical tasks: agents often preserve clean performance while directly adopting corrupted labels, stale data-dictionary entries, or biased retrieved evidence under poisoning. PandasAI and \texttt{data2mcp} remain strongly affected across models. LangGraph and AutoGen recover on many schema, metadata, and retrieval tasks through additional validation calls, but AutoGen still shows nonzero blind compliance on Claude and Qwen. Label flips remain difficult even for agents that recover from column or metadata corruption.
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{llrrrrr}
-\toprule
-Model & Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & VR \\
-\midrule
-GPT & LangGraph ReAct & 1.00 & 0.79 & 0.21 & 0.21 & 0.75 \\
-GPT & smolagents & 1.00 & 0.46 & 0.54 & 0.50 & 0.04 \\
-GPT & \texttt{data2mcp} & 0.92 & 0.29 & 0.62 & 0.62 & 0.00 \\
-GPT & PandasAI & 1.00 & 0.25 & 0.75 & 0.75 & 0.00 \\
-GPT & AutoGen & 1.00 & 0.71 & 0.29 & 0.21 & 0.75 \\
-Claude & LangGraph ReAct & 1.00 & 0.96 & 0.04 & 0.00 & 0.79 \\
-Claude & smolagents & 1.00 & 0.71 & 0.29 & 0.25 & 0.46 \\
-Claude & \texttt{data2mcp} & 1.00 & 0.46 & 0.54 & 0.54 & 0.25 \\
-Claude & PandasAI & 1.00 & 0.29 & 0.71 & 0.75 & 0.00 \\
-Claude & AutoGen & 1.00 & 0.96 & 0.04 & 0.38 & 0.54 \\
-Qwen & LangGraph ReAct & 1.00 & 0.79 & 0.21 & 0.21 & 0.75 \\
-Qwen & smolagents & 1.00 & 0.46 & 0.54 & 0.38 & 0.21 \\
-Qwen & \texttt{data2mcp} & 0.54 & 0.33 & 0.21 & 0.04 & 0.62 \\
-Qwen & PandasAI & 0.83 & 0.21 & 0.62 & 0.67 & 0.00 \\
-Qwen & AutoGen & 1.00 & 0.75 & 0.25 & 0.25 & 0.54 \\
-\bottomrule
-\end{tabular}
-\caption{Semantic/schema expansion results on 24 tasks. ADR and RR are omitted for space; the full table is stored in \texttt{semantic\_schema\_cross\_model\_summary.csv}.}
-\label{tab:semantic-schema}
+\caption{Compact cross-model summary. Values are adapter means over completed full-framework runs. Numerical uses the 34-task suite; semantic/schema uses the 24-task suite.}
+\label{tab:cross-model-compact}
 \end{table}
 
 \subsection{Poison-Type Breakdown}

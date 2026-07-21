@@ -26,7 +26,7 @@ Each benchmark item defines a user query, one or more datasets, a clean referenc
 The clean run measures whether the agent can solve the underlying data-analysis task. The toxic run measures whether a successful but corrupted observation changes the final answer or the agent's validation behavior. This paired construction is important because a poisoned failure is most informative when the corresponding clean task is solvable.
 
 \paragraph{Current instantiation.}
-The main cross-agent instantiation contains a 34-task tabular numerical-analysis suite over 11 CSV datasets and a 24-task semantic/schema suite over 14 CSV datasets. These suites are intentionally small enough for repeated cross-model framework runs, but broad enough to test arithmetic trust, entity binding, schema interpretation, and retrieval-grounded evidence use. For the \texttt{data2mcp} defense ablation, we additionally use expanded ICLR 2027 candidate suites with 60 numerical tasks and 60 semantic/schema tasks. The expanded suites preserve the same poisoning families while increasing coverage of repeated analytical patterns, severity levels, and decision contexts.
+The cross-model instantiation contains a 34-task tabular numerical-analysis suite over 11 CSV datasets and a 24-task semantic/schema suite over 14 CSV datasets. These suites are intentionally small enough for repeated cross-model framework runs, but broad enough to test arithmetic trust, entity binding, schema interpretation, and retrieval-grounded evidence use. For the larger GPT-only cross-agent run and the \texttt{data2mcp} defense ablation, we additionally use expanded ICLR 2027 candidate suites with 60 numerical tasks and 60 semantic/schema tasks. The expanded suites preserve the same poisoning families while increasing coverage of repeated analytical patterns, severity levels, and decision contexts.
 
 \paragraph{Workflow coverage.}
 The task families are derived from common data-agent workflows: descriptive statistics over tables, schema and metadata interpretation, retrieval-grounded analysis, and decision-oriented recommendations that depend on intermediate analytical evidence. The current main experiments focus on numerical and semantic/schema poisoning; report-style and data-embedded instruction tasks are supported by the framework but treated as future extensions rather than main-table results.
@@ -34,7 +34,7 @@ The task families are derived from common data-agent workflows: descriptive stat
 \subsection{Poisoning Operators}
 
 \paragraph{Numerical poisoning.}
-Numerical operators target computation outputs from Python, pandas, SQL, or dataframe routes. In both the 34-task cross-agent suite and the 60-task expanded defense suite used in Section~\ref{sec:experiments}, we use three implemented operators:
+Numerical operators target computation outputs from Python, pandas, SQL, or dataframe routes. In both the 34-task cross-model suite and the 60-task expanded suite used in Section~\ref{sec:experiments}, we use three implemented operators:
 \begin{itemize}
     \item \textbf{Aggregate scaling:} multiply a requested aggregate such as a mean, sum, rate, or count by a controlled factor while preserving the surrounding output format.
     \item \textbf{Sign flip:} reverse the sign of a change, growth rate, or delta while keeping the magnitude plausible.
@@ -43,7 +43,7 @@ Numerical operators target computation outputs from Python, pandas, SQL, or data
 The rank-swap operator uses label-boundary replacement so that short labels such as \texttt{E} are swapped only as labels and not inside ordinary words such as \texttt{defects}. These operators test whether agents audit arithmetic results and preserve value--entity bindings rather than simply copying a successful computation observation.
 
 \paragraph{Semantic and schema poisoning.}
-Semantic/schema operators target metadata, schema descriptions, treatment labels, or retrieved evidence. Both the 24-task cross-agent suite and the 60-task expanded defense suite implement:
+Semantic/schema operators target metadata, schema descriptions, treatment labels, or retrieved evidence. Both the 24-task cross-model suite and the 60-task expanded suite implement:
 \begin{itemize}
     \item \textbf{Label swap:} replace an entity label associated with an otherwise plausible result.
     \item \textbf{Treatment/control flip:} invert experimental group semantics while preserving outcome values.

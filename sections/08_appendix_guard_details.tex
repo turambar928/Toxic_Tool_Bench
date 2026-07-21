@@ -1,6 +1,16 @@
 \section{Appendix: Guarded Verification Details}
 \label{sec:appendix-guard}
 
+\subsection{Released Detailed Tables}
+
+The main text keeps compact tables for page budget. Detailed adapter-level cross-model tables and the expanded GPT-only cross-agent breakdowns are released as machine-readable artifacts:
+
+\begin{itemize}
+    \item \texttt{cross\_model\_summary.csv} and \texttt{semantic\_schema\_cross\_model\_summary.csv} contain the adapter-level 34-task numerical and 24-task semantic/schema cross-model results.
+    \item \texttt{iclr2027\_gpt\_expanded\_cross\_agent\_numerical\_summary.csv}, \texttt{iclr2027\_gpt\_expanded\_cross\_agent\_semantic\_schema\_summary.csv}, and \texttt{iclr2027\_gpt\_expanded\_cross\_agent\_combined\_summary.csv} contain the 120-task GPT-only cross-agent pass.
+    \item \texttt{iclr2027\_data2mcp\_ablation\_auto\_combined\_summary.csv} contains the 120-task \texttt{data2mcp} defense ablation used in Table~\ref{tab:data2mcp-guarded}.
+\end{itemize}
+
 \subsection{Light-Guard Tradeoff}
 
 The main text reports the full guarded \texttt{data2mcp} adapter as the defense result. We also evaluate a lower-budget light guard that caps the verification route more aggressively. On the expanded semantic/schema suite, the light guard obtains clean TSR \texttt{0.88}, poisoned TSR \texttt{0.88}, BCR \texttt{0.00}, and RR \texttt{0.88}. On the expanded numerical suite, it obtains clean TSR \texttt{0.80}, poisoned TSR \texttt{0.78}, BCR \texttt{0.00}, and RR \texttt{0.78}. Combined over 120 tasks, light guard obtains clean TSR \texttt{0.84}, poisoned TSR \texttt{0.83}, BCR \texttt{0.00}, and RR \texttt{0.83}. The light guard therefore preserves the blind-compliance reduction and is competitive with the full guard, but we keep full guarding as the main result because it allocates a more reliable verification budget.
