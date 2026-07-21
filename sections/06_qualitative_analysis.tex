@@ -17,7 +17,7 @@ This behavior differs from simply adding a caution instruction. The useful signa
 
 \subsection{Budgeted Guards Can Under-Recover}
 
-The light guard is informative as a negative ablation. It also reduces observed BCR to zero, but its five-turn verification budget loses task success relative to the full guard. In a feature-latency label-swap task, full guarded \texttt{data2mcp} recovers \texttt{new\_ui -- 185 ms}, while the light guard returns \texttt{old\_ui, 185}. In a regional-orders task, the light guard produces an incorrect average from an apparent row-count mismatch, while the full guard returns the correct \texttt{62.92}. These cases show that cheap validation can prevent direct copying but still fail to recover.
+The light guard is informative as a budget ablation. It also reduces observed BCR to zero and remains close to the full guard in aggregate, but its tighter verification budget can still under-recover on individual tasks. In a feature-latency label-swap task, full guarded \texttt{data2mcp} recovers \texttt{new\_ui -- 185 ms}, while the light guard returns \texttt{old\_ui, 185}. In a regional-orders task, the light guard produces an incorrect average from an apparent row-count mismatch, while the full guard returns the correct \texttt{62.92}. These cases show that cheap validation can prevent direct copying but still fail to recover.
 
 \subsection{Implications}
 

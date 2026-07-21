@@ -14,7 +14,7 @@ Our experiments evaluate four questions:
 \subsection{Experimental Setup}
 
 \paragraph{Tasks.}
-We evaluate two completed task suites. The numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. We report the two suites separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
+We use two scales of task suites. For cross-agent and cross-model experiments, the numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. For the \texttt{data2mcp} defense ablation, we use expanded ICLR 2027 candidate suites with 60 numerical tasks and 60 semantic/schema tasks. We report numerical and semantic/schema results separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
 
 \paragraph{Agents and models.}
 We evaluate complete framework adapters rather than only prompt-style profiles. The adapters are LangGraph ReAct, Hugging Face smolagents, \texttt{data2mcp}'s DataFrame router, PandasAI, DA-Agent, and AutoGen. We run all completed adapters with \texttt{gpt-5.4-mini}. For cross-model experiments, we run the five practical-speed adapters with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking}: LangGraph, smolagents, \texttt{data2mcp}, PandasAI, and AutoGen. DA-Agent is included in the GPT main table but excluded from cross-model tables because the Claude run reached only 5 of 68 clean/poisoned environment instances after more than twenty minutes.
@@ -143,27 +143,50 @@ Sign flip & 0.90 & 0.11 & 0.04 & 0.31 & 0.28 \\
 
 We next evaluate whether \methodname{} can reduce blind compliance for \texttt{data2mcp}. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal data-analysis route, and finally performs an independent verification pass before producing the final answer. This design targets silent observation poisoning rather than prompt-level instruction following.
 
-Table~\ref{tab:data2mcp-guarded} shows guarded ablations on both the semantic/schema and numerical suites with \texttt{gpt-5.4-mini}. The full guard eliminates observed blind compliance in both runs. On semantic/schema tasks, poisoned TSR rises from 0.29 to 0.83, with a clean TSR tradeoff from 0.92 to 0.83. On numerical tasks, both clean and poisoned TSR improve because the verification pass also corrects some ordinary \texttt{data2mcp} tool-use failures. A lower-budget light guard keeps BCR at 0.00 but loses task success; we report it as an appendix tradeoff rather than the main defense result.
+Table~\ref{tab:data2mcp-guarded} reports the full 120-task ablation across six \texttt{data2mcp} variants. The base adapter has high clean TSR (0.82) but drops to 0.47 poisoned TSR with BCR 0.41. Caution-only prompting and expectation-only prompting do not solve the problem: both leave substantial blind compliance, and expectation-only has the highest BCR in the ablation. In contrast, variants that perform independent verification reduce observed BCR to 0.00. The full guard improves poisoned TSR to 0.84 while preserving clean TSR at 0.84; the light guard obtains a similar BCR reduction with poisoned TSR 0.83. Verification-only performs nearly as well, indicating that independent evidence gathering is the main active ingredient.
 
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{llrrrrrrr}
+\begin{tabular}{lrrrrr}
 \toprule
-Suite & Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & ADR & VR & RR \\
+Adapter & Clean TSR & Poisoned TSR & BCR & VR & RR \\
 \midrule
-Semantic/schema & Base & 0.92 & 0.29 & 0.62 & 0.62 & 0.00 & 0.00 & 0.00 \\
-Semantic/schema & Guarded & 0.83 & 0.83 & 0.00 & 0.00 & 1.00 & 1.00 & 0.83 \\
-Numerical & Base & 0.65 & 0.47 & 0.18 & 0.24 & 0.12 & 0.03 & 0.09 \\
-Numerical & Guarded & 0.79 & 0.74 & 0.06 & 0.00 & 1.00 & 1.00 & 0.74 \\
+Base & 0.82 & 0.47 & 0.41 & 0.09 & 0.18 \\
+Caution only & 0.80 & 0.51 & 0.37 & 0.28 & 0.27 \\
+Expectation only & 0.79 & 0.48 & 0.53 & 0.03 & 0.09 \\
+Verification only & 0.88 & 0.82 & 0.00 & 0.86 & 0.82 \\
+Full guard & 0.84 & 0.84 & 0.00 & 1.00 & 0.84 \\
+Light guard & 0.84 & 0.83 & 0.00 & 1.00 & 0.83 \\
 \bottomrule
 \end{tabular}
-\caption{Guarded \texttt{data2mcp} ablations with \texttt{gpt-5.4-mini}.}
+\caption{Expanded 120-task \texttt{data2mcp} defense ablation with \texttt{gpt-5.4-mini}. The table combines 60 numerical and 60 semantic/schema tasks.}
 \label{tab:data2mcp-guarded}
+\end{table}
+
+Table~\ref{tab:data2mcp-guarded-breakdown} breaks the same ablation down by suite. The semantic/schema suite shows the cleanest trust-calibration split: the base adapter reaches 0.93 clean TSR but has BCR 0.58 under poisoning, while full guard keeps clean and poisoned TSR at 0.93 with BCR 0.00. The numerical suite is harder in absolute task success: verification removes blind compliance, but some ordinary calculation and answer-extraction failures remain. This supports a narrow interpretation of the defense result: \methodname{} primarily fixes unverified trust in successful observations, while residual TSR failures reflect remaining analysis competence and budget limits.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrr}
+\toprule
+Suite & Adapter & Clean TSR & Poisoned TSR & BCR & VR & RR \\
+\midrule
+Semantic/schema & Base & 0.93 & 0.53 & 0.58 & 0.17 & 0.27 \\
+Semantic/schema & Full guard & 0.93 & 0.93 & 0.00 & 1.00 & 0.93 \\
+Semantic/schema & Light guard & 0.88 & 0.88 & 0.00 & 1.00 & 0.88 \\
+Numerical & Base & 0.72 & 0.40 & 0.23 & 0.02 & 0.10 \\
+Numerical & Full guard & 0.75 & 0.75 & 0.00 & 1.00 & 0.75 \\
+Numerical & Light guard & 0.80 & 0.78 & 0.00 & 1.00 & 0.78 \\
+\bottomrule
+\end{tabular}
+\caption{Suite breakdown for the expanded \texttt{data2mcp} defense ablation.}
+\label{tab:data2mcp-guarded-breakdown}
 \end{table}
 
 \subsection{Uncertainty and Experimental Caveats}
 
-We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement and recomputing clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR. The full CI tables are released for the numerical cross-model results, semantic/schema cross-model results, and guarded \texttt{data2mcp} ablations. The guarded ablation CIs are summarized in Appendix~\ref{sec:appendix-guard}.
+We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement and recomputing clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR. The full CI tables are released for the numerical cross-model results, semantic/schema cross-model results, and the expanded guarded \texttt{data2mcp} ablation. The guarded ablation CIs are summarized in Appendix~\ref{sec:appendix-guard}.
 
 The results should be interpreted as end-to-end framework measurements. DA-Agent is excluded from the Claude and Qwen cross-model tables because of runtime, PandasAI uses a coarser poisoning boundary, and Qwen lowers \texttt{data2mcp} clean TSR because many runs hit the maximum-turn limit. These caveats affect fine-grained model comparisons, but not the main finding: successful tool use often coexists with blind compliance under silent observation poisoning, and structured verification can reduce that compliance.

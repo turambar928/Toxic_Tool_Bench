@@ -45,7 +45,7 @@ We evaluate two guarded variants.
 The full guarded adapter is the main defense configuration. It allocates enough budget for expectation generation, the ordinary dataframe route, and an independent verification route. In the final answer, verified evidence has priority over the primary route when the two disagree. This variant is designed to measure whether structured verification can reduce blind compliance under realistic additional tool-use cost.
 
 \paragraph{Light guard.}
-The light guarded adapter uses the same high-level policy but a tighter verification budget. It tests whether cheaper verification preserves robustness. In our results, the light guard keeps observed BCR at zero but loses task success relative to the full guard, especially when the verification route needs more turns to resolve row counts, labels, or averages. We therefore report light guarding as an appendix tradeoff rather than the main defense result.
+The light guarded adapter uses the same high-level policy but a tighter verification budget. It tests whether cheaper verification preserves robustness. In our expanded ablation, the light guard keeps observed BCR at zero and remains close to the full guard in poisoned TSR, but it is more sensitive to tasks that need extra turns to resolve row counts, labels, or averages. We therefore report light guarding as an appendix tradeoff rather than the main defense result.
 
 \subsection{Scope and Limitations}
 
