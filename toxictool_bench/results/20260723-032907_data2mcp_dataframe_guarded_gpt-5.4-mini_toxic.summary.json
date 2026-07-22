@@ -1,0 +1,10 @@
+{
+  "toxic": {
+    "task_success": 0.1,
+    "blind_compliance": 0.0,
+    "anomaly_detection": 1.0,
+    "validation": 1.0,
+    "recovery": 0.1,
+    "n": 10
+  }
+}

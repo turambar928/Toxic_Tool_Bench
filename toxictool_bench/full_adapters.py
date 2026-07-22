@@ -13,11 +13,13 @@ from typing import Any, Literal
 
 try:
     from .agents import AgentRun, parse_action
+    from .evaluator import _contains_answer, _contains_number
     from .llm_client import ChatClient, load_api_config
     from .poisoners import Poisoner
     from .tools import DataToolEnv
 except ImportError:
     from agents import AgentRun, parse_action
+    from evaluator import _contains_answer, _contains_number
     from llm_client import ChatClient, load_api_config
     from poisoners import Poisoner
     from tools import DataToolEnv

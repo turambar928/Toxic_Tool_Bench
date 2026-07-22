@@ -43,6 +43,9 @@ The main text keeps compact tables for page budget. Detailed adapter-level cross
     \item \texttt{iclr2027\_data2mcp\_ablation\_auto\_combined\_summary.csv} contains the 120-task \texttt{data2mcp} defense ablation used in Table~\ref{tab:data2mcp-guarded}.
     \item \texttt{realistic\_extension\_iclr2027.jsonl} contains the 13-task multi-table join extension described in Section~\ref{sec:experiments}.
     \item \texttt{iclr2027\_realistic\_extension\_summary.csv}, \texttt{iclr2027\_realistic\_extension\_poison\_summary.csv}, and \texttt{iclr2027\_realistic\_extension\_severity\_summary.csv} summarize the multi-table extension runs and representative verification-baseline smoke runs.
+    \item \texttt{numerical\_iclr2027\_stratified20.jsonl}, \texttt{semantic\_schema\_iclr2027\_stratified10.jsonl}, \texttt{iclr2027\_stronger\_baseline\_numerical\_strat20\_summary.csv}, and \texttt{iclr2027\_stronger\_baseline\_semantic\_strat10\_summary.csv} contain the supplementary stronger-baseline stress tests.
+    \item \texttt{iclr2027\_semantic\_guard\_multiroute\_stress\_strat10\_summary.csv} contains the repeated-probabilistic poisoning stress test.
+    \item \texttt{iclr2027\_manual\_audit\_sheet\_stratified80.csv} contains the released 80-run scorer-audit sheet with deterministic labels and empty human-label columns.
 \end{itemize}
 
 \subsection{Guard Tie-Breaking and False Overrides}
@@ -53,11 +56,51 @@ We estimate false-override risk through clean TSR. If the guard frequently overr
 
 \subsection{Alternative Verification Baselines}
 
-We include three additional adapter-level baselines for future controlled comparisons. \texttt{data2mcp\_dataframe\_abstain} runs a primary route and a verification route, then abstains when the two disagree. \texttt{data2mcp\_dataframe\_randomized} triggers independent recomputation according to a deterministic task-level random gate. \texttt{data2mcp\_dataframe\_selective} triggers verification for high-risk query patterns such as rankings, ratios, denominators, schema lookup, evidence retrieval, and source-of-truth metadata. These baselines distinguish always-on guarding from cheaper policies that verify selectively or refuse to answer under disagreement.
+We include three additional adapter-level baselines. \texttt{data2mcp\_dataframe\_abstain} runs a primary route and a verification route, then abstains when the two disagree. \texttt{data2mcp\_dataframe\_randomized} triggers independent recomputation according to a deterministic task-level random gate. \texttt{data2mcp\_dataframe\_selective} triggers verification for high-risk query patterns such as rankings, ratios, denominators, schema lookup, evidence retrieval, and source-of-truth metadata. These baselines distinguish always-on guarding from cheaper policies that verify selectively or refuse to answer under disagreement.
+
+Table~\ref{tab:appendix-stronger-baselines} reports the fixed-subset results. The numerical subset is difficult for all three alternatives under a six-step cap; this reflects ordinary analysis failures and failed answer extraction rather than blind compliance alone. On the semantic subset, randomized verification has high clean TSR but misses several toxic label/stale cases, while selective verification preserves the no-BCR behavior of full guarding on this subset.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llrrrrrr}
+\toprule
+Suite & Adapter & Clean TSR & Toxic TSR & BCR & ADR & VR & RR \\
+\midrule
+Numerical-20 & Abstain & 0.50 & 0.30 & 0.00 & 1.00 & 0.85 & 0.30 \\
+Numerical-20 & Randomized & 0.35 & 0.25 & 0.05 & 0.65 & 0.55 & 0.15 \\
+Numerical-20 & Selective & 0.30 & 0.25 & 0.05 & 0.55 & 0.55 & 0.25 \\
+Semantic-10 & Abstain & 0.60 & 0.50 & 0.00 & 1.00 & 0.80 & 0.50 \\
+Semantic-10 & Randomized & 0.90 & 0.10 & 0.30 & 0.60 & 0.60 & 0.00 \\
+Semantic-10 & Selective & 0.70 & 0.80 & 0.00 & 1.00 & 1.00 & 0.80 \\
+\bottomrule
+\end{tabular}
+\caption{Supplementary stronger verification baselines on fixed stratified subsets.}
+\label{tab:appendix-stronger-baselines}
+\end{table}
 
 \subsection{Multi-Route Poisoning Stress Protocol}
 
 The default defense ablation uses \texttt{poison\_once}, which creates a clean independent verification path after the first poisoned observation. To stress this assumption, the benchmark runner now supports repeated and probabilistic poisoning. Setting \texttt{--poison-repeat} disables the one-shot constraint, and \texttt{--poison-probability p} corrupts each eligible observation with deterministic probability \(p\). We recommend reporting \(p \in \{0, 0.25, 0.5, 1.0\}\), where \(p=1.0\) approximates a shared corrupted source whenever the poisoning operator can match the verification output.
+
+Table~\ref{tab:appendix-multiroute-stress} reports this stress test on the semantic stratified subset with toxic-only evaluation. Recovery degrades sharply as repeated poisoning becomes stronger, confirming that \methodname{} should not be read as robust to a fully compromised evidence substrate. The important distinction is behavioral: even at \(p=1.0\), the guard avoids blind copying and instead produces contested or under-recovered answers.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{rrrrrr}
+\toprule
+Poison probability & Toxic TSR & BCR & ADR & VR & RR \\
+\midrule
+0.00 & 0.80 & 0.00 & 1.00 & 1.00 & 0.80 \\
+0.25 & 0.60 & 0.00 & 1.00 & 1.00 & 0.60 \\
+0.50 & 0.70 & 0.00 & 1.00 & 1.00 & 0.70 \\
+1.00 & 0.10 & 0.00 & 1.00 & 1.00 & 0.10 \\
+\bottomrule
+\end{tabular}
+\caption{Repeated-probabilistic poisoning stress for full guard on the 10-task semantic stratified subset.}
+\label{tab:appendix-multiroute-stress}
+\end{table}
 
 The command template is:
 \begin{verbatim}

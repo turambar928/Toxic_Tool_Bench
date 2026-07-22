@@ -137,6 +137,31 @@ Numerical & Light guard & 0.80 & 0.78 & 0.00 & 1.00 & 0.78 \\
 \label{tab:data2mcp-guarded-breakdown}
 \end{table}
 
+\subsection{Supplementary Defense Stress Tests}
+
+Reviewer-style stress tests probe two stronger settings: cheaper verification policies and repeated poisoning of verification routes. Table~\ref{tab:defense-stress-main} summarizes a fixed stratified subset covering numerical aggregate/rank/sign/ratio corruptions and semantic label/schema/stale/retrieval corruptions. The abstain policy eliminates blind compliance but loses task success, especially on numerical tasks. Randomized verification is cheaper, but it misses high-risk semantic cases and leaves BCR at 0.30 on the semantic subset. Selective verification performs best among the cheaper policies on the semantic subset, matching the full guard's qualitative behavior on these cases, but still leaves residual BCR on the harder numerical subset.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Suite & Adapter & Clean TSR & Poisoned TSR & BCR & RR \\
+\midrule
+Numerical-20 & Abstain & 0.50 & 0.30 & 0.00 & 0.30 \\
+Numerical-20 & Randomized & 0.35 & 0.25 & 0.05 & 0.15 \\
+Numerical-20 & Selective & 0.30 & 0.25 & 0.05 & 0.25 \\
+Semantic-10 & Abstain & 0.60 & 0.50 & 0.00 & 0.50 \\
+Semantic-10 & Randomized & 0.90 & 0.10 & 0.30 & 0.00 \\
+Semantic-10 & Selective & 0.70 & 0.80 & 0.00 & 0.80 \\
+\bottomrule
+\end{tabular}
+\caption{Supplementary stronger-baseline stress tests on fixed stratified subsets. Full-suite defense results remain in Table~\ref{tab:data2mcp-guarded}; these runs isolate cost--robustness tradeoffs for alternative verification policies.}
+\label{tab:defense-stress-main}
+\end{table}
+
+We also stress the \texttt{poison\_once} assumption by allowing repeated probabilistic poisoning on the semantic subset. With \texttt{--poison-repeat}, increasing the probability that each eligible verification observation is also corrupted reduces recovery: toxic TSR/RR falls from 0.80 at \(p=0\) to 0.10 at \(p=1.0\). BCR remains 0.00 across this stress test because the guard continues to mark the evidence as contested rather than silently adopting the poisoned result. Thus, under stronger adversaries, the guarantee should be interpreted as reducing blind compliance, not guaranteeing recovery when every evidence route can be corrupted.
+
 \subsection{Multi-Table Join Extension}
 
 To address the criticism that earlier suites were still dominated by single-table CSV analysis, we add a realistic extension suite with 13 tasks over four joined table pairs. The tasks require notebook-style reasoning: discover the correct table pair, inspect both tables, and compute the answer through an exact join or cross-table validation. The suite is released as \texttt{realistic\_extension\_iclr2027.jsonl} together with the auxiliary tables used by the execution tools.

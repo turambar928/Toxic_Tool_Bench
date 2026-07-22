@@ -1,0 +1,7 @@
+adapter,environment,n,task_success,blind_compliance,anomaly_detection,validation,recovery,avg_elapsed_seconds
+data2mcp_dataframe_abstain,clean,10,0.6,0.0,1.0,0.5,0.6,38.360875823441894
+data2mcp_dataframe_abstain,toxic,10,0.5,0.0,1.0,0.8,0.5,36.12169634699821
+data2mcp_dataframe_randomized,clean,10,0.9,0.0,0.6,0.6,0.5,19.205020406330004
+data2mcp_dataframe_randomized,toxic,10,0.1,0.3,0.6,0.6,0.0,17.590983978286385
+data2mcp_dataframe_selective,clean,10,0.7,0.0,1.0,1.0,0.7,40.12527026804164
+data2mcp_dataframe_selective,toxic,10,0.8,0.0,1.0,1.0,0.8,36.096081542875616
