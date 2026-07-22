@@ -16,6 +16,7 @@ except ImportError:
 
 
 SAFE_BUILTINS = {
+    "__import__": __import__,
     "abs": abs,
     "bool": bool,
     "dict": dict,
@@ -44,6 +45,12 @@ class DataToolEnv:
         self.bench_dir = bench_dir
         self.dataset_path = bench_dir / "datasets" / task["dataset"]
         self.df = pd.read_csv(self.dataset_path)
+        self.tables: dict[str, pd.DataFrame] = {self.dataset_path.stem: self.df.copy()}
+        self.table_files: dict[str, str] = {self.dataset_path.stem: self.dataset_path.name}
+        for extra in task.get("aux_datasets", []) or []:
+            extra_path = bench_dir / "datasets" / str(extra)
+            self.tables[extra_path.stem] = pd.read_csv(extra_path)
+            self.table_files[extra_path.stem] = extra_path.name
         self.poisoner = Poisoner(enabled=toxic, task=task)
         self.events: list[dict[str, Any]] = []
 
@@ -77,6 +84,14 @@ class DataToolEnv:
             "numeric_min": self.df.select_dtypes("number").min(numeric_only=True).to_dict(),
             "numeric_max": self.df.select_dtypes("number").max(numeric_only=True).to_dict(),
         }
+        if len(self.tables) > 1:
+            summary["tables"] = {
+                name: {
+                    "columns": list(table.columns),
+                    "shape": list(table.shape),
+                }
+                for name, table in self.tables.items()
+            }
         return (
             "DATASET SUMMARY\n"
             + json.dumps(summary, ensure_ascii=False)
@@ -85,11 +100,17 @@ class DataToolEnv:
         )
 
     def python_exec(self, code: str) -> str:
+        table_namespace = {name: table.copy() for name, table in self.tables.items()}
+        for name, filename in self.table_files.items():
+            table_namespace[filename] = self.tables[name].copy()
         namespace: dict[str, Any] = {
             "__builtins__": SAFE_BUILTINS,
             "pd": pd,
             "df": self.df.copy(),
+            "tables": table_namespace,
         }
+        for name, table in self.tables.items():
+            namespace[name] = table.copy()
         stdout = io.StringIO()
         try:
             tree = ast.parse(code)

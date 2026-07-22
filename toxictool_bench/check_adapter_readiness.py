@@ -74,6 +74,24 @@ CHECKS = (
         note="same dependency surface as base data2mcp.",
     ),
     AdapterCheck(
+        name="data2mcp_dataframe_abstain",
+        paths=(DATA2MCP_SRC,),
+        imports=("data2mcp_v2.config", "fastmcp.tools"),
+        note="same dependency surface as base data2mcp.",
+    ),
+    AdapterCheck(
+        name="data2mcp_dataframe_randomized",
+        paths=(DATA2MCP_SRC,),
+        imports=("data2mcp_v2.config", "fastmcp.tools"),
+        note="same dependency surface as base data2mcp.",
+    ),
+    AdapterCheck(
+        name="data2mcp_dataframe_selective",
+        paths=(DATA2MCP_SRC,),
+        imports=("data2mcp_v2.config", "fastmcp.tools"),
+        note="same dependency surface as base data2mcp.",
+    ),
+    AdapterCheck(
         name="pandasai_dataframe",
         paths=(
             BASELINE_DIR / "pandas-ai",

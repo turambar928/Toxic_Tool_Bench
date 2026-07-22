@@ -1,0 +1,4 @@
+clinic_id,patients,recovered,adverse_events
+CL1,200,180,4
+CL2,150,140,5
+CL3,220,160,10

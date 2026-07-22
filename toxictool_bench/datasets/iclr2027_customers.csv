@@ -1,0 +1,6 @@
+customer_id,customer_name,segment,region
+C01,Northwind,Enterprise,West
+C02,Contoso,SMB,East
+C03,Fabrikam,Enterprise,East
+C04,AdventureWorks,SMB,West
+C05,Globex,Midmarket,North

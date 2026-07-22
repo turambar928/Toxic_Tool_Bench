@@ -1,0 +1,11 @@
+order_id,customer_id,order_value_usd,month
+O001,C01,1200,Jan
+O002,C01,900,Feb
+O003,C02,300,Jan
+O004,C02,500,Feb
+O005,C03,1800,Jan
+O006,C03,1500,Feb
+O007,C04,700,Jan
+O008,C04,600,Feb
+O009,C05,400,Jan
+O010,C05,500,Feb

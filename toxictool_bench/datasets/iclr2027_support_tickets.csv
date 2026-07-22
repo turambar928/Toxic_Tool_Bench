@@ -1,0 +1,10 @@
+ticket_id,team_id,minutes_to_first_response,resolved
+K1,T1,24,1
+K2,T1,30,1
+K3,T1,28,1
+K4,T2,18,1
+K5,T2,22,1
+K6,T2,20,0
+K7,T3,45,1
+K8,T3,50,0
+K9,T3,55,1

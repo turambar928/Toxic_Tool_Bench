@@ -137,6 +137,26 @@ Numerical & Light guard & 0.80 & 0.78 & 0.00 & 1.00 & 0.78 \\
 \label{tab:data2mcp-guarded-breakdown}
 \end{table}
 
+\subsection{Multi-Table Join Extension}
+
+To address the criticism that earlier suites were still dominated by single-table CSV analysis, we add a realistic extension suite with 13 tasks over four joined table pairs. The tasks require notebook-style reasoning: discover the correct table pair, inspect both tables, and compute the answer through an exact join or cross-table validation. The suite is released as \texttt{realistic\_extension\_iclr2027.jsonl} together with the auxiliary tables used by the execution tools.
+
+On this extension, the base \texttt{data2mcp} adapter obtains clean TSR 0.85 and poisoned TSR 0.23 with BCR 0.46. This shows that the silent-poisoning failure mode persists once the task moves beyond a single flat table and into more realistic join-style analysis. We also verified the new multi-table execution path on representative guarded and randomized smoke runs that recover the correct join answer on the same task family.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Adapter & Clean TSR & Poisoned TSR & BCR & RR \\
+\midrule
+\texttt{data2mcp} base & 0.85 & 0.23 & 0.46 & 0.08 \\
+\bottomrule
+\end{tabular}
+\caption{Base \texttt{data2mcp} on the 13-task multi-table join extension.}
+\label{tab:multi-table-extension-base}
+\end{table}
+
 \subsection{Uncertainty and Experimental Caveats}
 
 We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement and recomputing clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR. The full CI tables are released for the numerical cross-model results, semantic/schema cross-model results, and the expanded guarded \texttt{data2mcp} ablation. The guarded ablation CIs are summarized in Appendix~\ref{sec:appendix-guard}.

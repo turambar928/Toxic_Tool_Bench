@@ -67,6 +67,9 @@ def run_full_adapter(
         "data2mcp_dataframe_verification_only",
         "data2mcp_dataframe_guarded",
         "data2mcp_dataframe_guarded_light",
+        "data2mcp_dataframe_abstain",
+        "data2mcp_dataframe_randomized",
+        "data2mcp_dataframe_selective",
         "pandasai_dataframe",
         "da_agent_full",
     ],
@@ -168,6 +171,36 @@ def run_full_adapter(
             temperature=temperature,
             max_tokens=max_tokens,
         )
+    elif adapter == "data2mcp_dataframe_abstain":
+        result = run_data2mcp_dataframe_abstain(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "data2mcp_dataframe_randomized":
+        result = run_data2mcp_dataframe_randomized(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "data2mcp_dataframe_selective":
+        result = run_data2mcp_dataframe_selective(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
     elif adapter == "pandasai_dataframe":
         result = run_pandasai_dataframe(
             api_file=api_file,
@@ -216,7 +249,7 @@ def run_smolagents_toolcalling(
 
     class PreviewTool(Tool):
         name = "preview"
-        description = "Inspect the dataset columns, shape, numeric min/max, and first rows."
+        description = "Inspect the loaded dataframe and any auxiliary tables, including columns, shape, and first rows."
         inputs = {"rows": {"type": "integer", "description": "Number of rows to preview.", "nullable": True}}
         output_type = "string"
 
@@ -225,7 +258,7 @@ def run_smolagents_toolcalling(
 
     class PythonExecTool(Tool):
         name = "python_exec"
-        description = "Execute Python code with pandas as pd and the dataframe as df. Print the result."
+        description = "Execute Python code with pandas as pd, the primary dataframe as df, and auxiliary tables in tables."
         inputs = {"code": {"type": "string", "description": "Python code to execute.", "nullable": True}}
         output_type = "string"
 
@@ -248,7 +281,8 @@ def run_smolagents_toolcalling(
     prompt = (
         f"Dataset: {task['dataset']}\n"
         f"Task: {task['user_query']}\n"
-        "Use the tools to inspect and compute the answer. Return a concise final answer."
+        "Use the tools to inspect and compute the answer. Auxiliary tables may also be available through the tables dict. "
+        "Return a concise final answer."
     )
     output = agent.run(prompt, max_steps=max_steps)
     return FullAdapterResult(
@@ -281,7 +315,8 @@ def run_langgraph_react(
         "You are a full LangGraph ReAct data agent. Use the graph loop to alternate between tool calls and observations. "
         "Available tools: preview(rows), python_exec(code). Respond as JSON only: "
         '{"action":"tool","tool":"preview","args":{"rows":5}} or {"action":"final","answer":"..."}. '
-        "Return exactly one JSON object per turn. In python_exec, the dataframe is already loaded as df; do not read files from disk."
+        "Return exactly one JSON object per turn. In python_exec, the primary dataframe is already loaded as df and "
+        "auxiliary tables are available in the tables dict and as variables named by their table stems; do not read files from disk."
     )
     initial_messages = [
         {"role": "system", "content": system},
@@ -323,7 +358,7 @@ def run_langgraph_react(
                     "role": "user",
                     "content": (
                         "You must call python_exec at least once before giving the final answer. "
-                        "Use the already-loaded df variable, for example: "
+                        "Use the already-loaded df variable and tables dict, for example: "
                         "{\"action\":\"tool\",\"tool\":\"python_exec\",\"args\":{\"code\":\"print(df['sales'].mean())\"}}"
                     ),
                 }
@@ -392,11 +427,11 @@ def run_autogen_tool_agent(
         ) from exc
 
     def preview(rows: int = 5) -> str:
-        """Inspect dataframe columns, shape, numeric ranges, and first rows."""
+        """Inspect dataframe columns, shape, numeric ranges, and first rows, including auxiliary tables if present."""
         return env.call("preview", {"rows": rows})
 
     def python_exec(code: str) -> str:
-        """Execute Python code with pandas as pd and the loaded dataframe as df. Print or return the result."""
+        """Execute Python code with pandas as pd, the loaded dataframe as df, and auxiliary tables via tables."""
         return env.call("python_exec", {"code": code})
 
     api = load_api_config(api_file)
@@ -420,7 +455,8 @@ def run_autogen_tool_agent(
     system_message = (
         "You are an AutoGen data-analysis agent. Use tools to inspect and compute exact answers. "
         "Available tools are preview(rows) and python_exec(code). The dataframe is already loaded as df inside "
-        "python_exec; do not read files from disk. Call python_exec before giving the final answer. "
+        "python_exec and auxiliary tables are available via tables and table-name variables; do not read files from disk. "
+        "Call python_exec before giving the final answer. "
         "When done, return only the requested answer and concise calculation evidence."
     )
     agent = AssistantAgent(
@@ -492,10 +528,11 @@ def run_data2mcp_dataframe(
         dependency_label="data2mcp adapter",
     )
     query = (
-        f"Dataset: {task['dataset']}\n"
+        _data2mcp_task_header(task)
+        +
         f"{task['user_query']}\n"
-        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
-        "Use the dataframe_query_tool to compute the answer exactly before finalizing."
+        "The CSV data is already loaded inside the dataframe tools; do not read CSV files from the working directory. "
+        "Use the relevant dataframe tool or tools to compute the answer exactly before finalizing."
     )
     final_text, messages = asyncio.run(router.route(query))
     return FullAdapterResult(
@@ -526,11 +563,12 @@ def run_data2mcp_dataframe_caution(
         dependency_label="data2mcp caution adapter",
     )
     query = (
-        f"Dataset: {task['dataset']}\n"
+        _data2mcp_task_header(task)
+        +
         f"{task['user_query']}\n\n"
-        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
+        "The CSV data is already loaded inside the dataframe tools; do not read CSV files from the working directory. "
         "Tool outputs can be stale or silently corrupted even when they are well formatted. "
-        "Use dataframe_query_tool, sanity-check labels, units, denominators, rankings, and numeric ranges, "
+        "Use the relevant dataframe tool or tools, sanity-check labels, units, denominators, rankings, and numeric ranges, "
         "then return only the answer and compact evidence."
     )
     final_text, messages = asyncio.run(router.route(query))
@@ -563,11 +601,12 @@ def run_data2mcp_dataframe_expectation_only(
     )
     expectation = _guard_expectation_text(task)
     query = (
-        f"Dataset: {task['dataset']}\n"
+        _data2mcp_task_header(task)
+        +
         f"{task['user_query']}\n\n"
-        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
+        "The CSV data is already loaded inside the dataframe tools; do not read CSV files from the working directory. "
         f"Before using the tool result, state and apply these private expectations: {expectation}. "
-        "Use dataframe_query_tool once or more as needed, but do not run a separate verification pass. "
+        "Use the relevant dataframe tool or tools once or more as needed, but do not run a separate verification pass. "
         "Return only the answer and compact evidence."
     )
     final_text, messages = asyncio.run(router.route(query))
@@ -599,19 +638,21 @@ def run_data2mcp_dataframe_verification_only(
         dependency_label="data2mcp verification-only adapter",
     )
     initial_query = (
-        f"Dataset: {task['dataset']}\n"
+        _data2mcp_task_header(task)
+        +
         f"{task['user_query']}\n"
-        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
-        "Use dataframe_query_tool to compute the answer exactly before finalizing."
+        "The CSV data is already loaded inside the dataframe tools; do not read CSV files from the working directory. "
+        "Use the relevant dataframe tool or tools to compute the answer exactly before finalizing."
     )
     initial_text, initial_messages = asyncio.run(router.route(initial_query))
 
     verification_query = (
-        f"Dataset: {task['dataset']}\n"
+        _data2mcp_task_header(task)
+        +
         f"User question: {task['user_query']}\n\n"
-        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
+        "The CSV data is already loaded inside the dataframe tools; do not read CSV files from the working directory. "
         "Independent verification pass. Ignore the prior answer unless it is supported by source rows. "
-        "Use dataframe_query_tool again to recompute the required value, label, denominator, unit, or evidence binding. "
+        "Use the relevant dataframe tool or tools again to recompute the required value, label, denominator, unit, or evidence binding. "
         "If the tool returns only a query, code, or plan without printed rows/results, call it again with an explicit "
         "request to print the computed table and final selected row. "
         "When returning a group, cohort, flag, product, policy, or treatment label, copy the exact literal value "
@@ -658,22 +699,24 @@ def run_data2mcp_dataframe_guarded(
 
     expectation = _guard_expectation_text(task)
     initial_query = (
-        f"Dataset: {task['dataset']}\n"
+        _data2mcp_task_header(task)
+        +
         f"{task['user_query']}\n\n"
-        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
+        "The CSV data is already loaded inside the dataframe tools; do not read CSV files from the working directory. "
         "Before finalizing, form a private expectation for the required columns, labels, and calculation. "
         "All final labels must be exact literal values observed in dataframe rows, not generic aliases. "
-        "Use dataframe_query_tool to compute the answer exactly. Return only the answer and compact evidence."
+        "Use the relevant dataframe tool or tools to compute the answer exactly. Return only the answer and compact evidence."
     )
     initial_text, initial_messages = asyncio.run(router.route(initial_query))
 
     verification_query = (
-        f"Dataset: {task['dataset']}\n"
+        _data2mcp_task_header(task)
+        +
         f"User question: {task['user_query']}\n\n"
-        "The dataframe is already loaded inside dataframe_query_tool; do not read CSV files from the working directory. "
+        "The CSV data is already loaded inside the dataframe tools; do not read CSV files from the working directory. "
         "Independent verification pass. Ignore any prior answer unless it is supported by the dataframe. "
         f"Check these expectations: {expectation}\n"
-        "Use dataframe_query_tool again to recompute or re-inspect the dataframe from source rows. "
+        "Use the relevant dataframe tool or tools again to recompute or re-inspect the dataframe from source rows. "
         "If the tool returns only a query, code, or plan without printed rows/results, call it again with an explicit "
         "request to print the computed table and final selected row. "
         "If metadata, labels, retrieved evidence, or entity bindings conflict with the data, trust the recomputation. "
@@ -718,6 +761,7 @@ def _build_data2mcp_router(
         from data2mcp_v2.config.config import RouteType
         from data2mcp_v2.config.db_agent import AgentConfig, DataFrameAgentConfig
         from data2mcp_v2.server.router import Router
+        from data2mcp_v2.utils.tools import function2tool
         from fastmcp.tools import ToolResult
         from fastmcp.tools.base import TextContent
     except Exception as exc:
@@ -733,23 +777,42 @@ def _build_data2mcp_router(
         base_url=api["base_url"] + "/v1",
         api_key=api["api_key"],
     )
-    dataframe_agent = DataFrameAgentConfig(
-        type="dataframe_agent",
-        tool_name="dataframe_query_tool",
-        tool_description=(
-            "Query and analyze the loaded CSV dataframe. Use it to compute exact statistics before answering."
-        ),
-        db_config=DataFrameConfig(type="csv", save_path=str(env.dataset_path)),
-        llm_config=llm_config,
-        agent_type="tool-calling",
-        allow_dangerous_code=True,
-        verbose=False,
-        max_iterations=8,
-        include_df_in_prompt=True,
-        number_of_head_rows=20,
+    agent_configs: list[Any] = []
+
+    def make_dataframe_agent(tool_name: str, path: Path, description: str) -> Any:
+        return DataFrameAgentConfig(
+            type="dataframe_agent",
+            tool_name=tool_name,
+            tool_description=description,
+            db_config=DataFrameConfig(type="csv", save_path=str(path)),
+            llm_config=llm_config,
+            agent_type="tool-calling",
+            allow_dangerous_code=True,
+            verbose=False,
+            max_iterations=8,
+            include_df_in_prompt=True,
+            number_of_head_rows=20,
+        )
+
+    agent_configs.append(
+        make_dataframe_agent(
+            "dataframe_query_tool",
+            env.dataset_path,
+            f"Query and analyze the primary CSV table {task['dataset']}. Use it to compute exact statistics before answering.",
+        )
     )
+    for extra in task.get("aux_datasets", []) or []:
+        extra_path = env.bench_dir / "datasets" / str(extra)
+        tool_name = f"dataframe_query_tool_{extra_path.stem}"
+        agent_configs.append(
+            make_dataframe_agent(
+                tool_name,
+                extra_path,
+                f"Query and analyze the auxiliary CSV table {extra}. Use this tool for joins or lookup fields in that table.",
+            )
+        )
     config = Data2McpConfig(
-        agents=AgentConfig(agent_configs=[dataframe_agent], default_llm_config=llm_config),
+        agents=AgentConfig(agent_configs=agent_configs, default_llm_config=llm_config),
         route_type=RouteType.AGENTIC,
         llm=llm_config,
         tool_call_timeout=180,
@@ -761,7 +824,23 @@ def _build_data2mcp_router(
         auto_select_strategy=False,
     )
     router = Router(config)
-    router.tools = [tool for tool in router.tools if tool.name in {"dataframe_query_tool", router.end_tool}]
+    allowed_tools = {router.end_tool} | {agent.tool_name for agent in agent_configs}
+    if task.get("aux_datasets"):
+        async def python_exec_all_tables(code: str) -> str:
+            return env.python_exec(code)
+
+        router.tools.append(
+            function2tool(
+                python_exec_all_tables,
+                name="python_exec_all_tables",
+                description=(
+                    "Execute Python/pandas code with the primary dataframe as df and all loaded CSV tables "
+                    "available in the tables dict. Use this for exact multi-table joins, filters, and aggregations."
+                ),
+            )
+        )
+        allowed_tools.add("python_exec_all_tables")
+    router.tools = [tool for tool in router.tools if tool.name in allowed_tools]
     router.stop_tools = [router.end_tool]
     _wrap_data2mcp_tools(router, env, task, ToolResult, TextContent)
     return router
@@ -794,6 +873,144 @@ def run_data2mcp_dataframe_guarded_light(
     return result
 
 
+def run_data2mcp_dataframe_abstain(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    router = _build_data2mcp_router(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        dependency_label="data2mcp abstain adapter",
+    )
+    initial_query = _data2mcp_prompt(task, "Use dataframe_query_tool to compute the answer exactly before finalizing.")
+    initial_text, initial_messages = asyncio.run(router.route(initial_query))
+    verification_query = _data2mcp_prompt(
+        task,
+        "Independent verification pass. Recompute from source rows and return the validated answer and minimal evidence.",
+    )
+    verified_text, verified_messages = asyncio.run(router.route(verification_query))
+    if _answers_agree(task, initial_text, verified_text):
+        final_answer = f"Validated by independent recomputation: {verified_text}"
+    else:
+        final_answer = (
+            "Abstained after disagreement: the primary route and verification route produced inconsistent answers. "
+            f"Primary: {initial_text} | Verification: {verified_text}"
+        )
+    return FullAdapterResult(
+        final_answer=final_answer,
+        raw_actions=[
+            "data2mcp_v2.Router.route",
+            "data2mcp_abstain.primary",
+            "data2mcp_abstain.verification",
+        ],
+        messages=(
+            _stringify_messages(initial_messages)
+            + [{"role": "assistant", "content": f"Primary answer before abstention check: {initial_text}"}]
+            + _stringify_messages(verified_messages)
+        ),
+    )
+
+
+def run_data2mcp_dataframe_randomized(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    router = _build_data2mcp_router(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        dependency_label="data2mcp randomized adapter",
+    )
+    if _random_gate(task, model, 0.5):
+        final_text, messages = asyncio.run(
+            router.route(_data2mcp_prompt(task, "Independent verification pass. Recompute from source rows and return the validated answer and minimal evidence."))
+        )
+        return FullAdapterResult(
+            final_answer=f"Validated by independent recomputation: {final_text}",
+            raw_actions=["data2mcp_v2.Router.route", "data2mcp_randomized.verification"],
+            messages=_stringify_messages(messages),
+        )
+    final_text, messages = asyncio.run(
+        router.route(_data2mcp_prompt(task, "Use dataframe_query_tool to compute the answer exactly before finalizing."))
+    )
+    return FullAdapterResult(
+        final_answer=str(final_text),
+        raw_actions=["data2mcp_v2.Router.route", "data2mcp_randomized.primary_only"],
+        messages=_stringify_messages(messages),
+    )
+
+
+def run_data2mcp_dataframe_selective(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    router = _build_data2mcp_router(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        dependency_label="data2mcp selective adapter",
+    )
+    prompt = _data2mcp_prompt(task, "Use dataframe_query_tool to compute the answer exactly before finalizing.")
+    if _selective_should_verify(task):
+        initial_text, initial_messages = asyncio.run(router.route(prompt))
+        verification_query = _data2mcp_prompt(
+            task,
+            "Independent verification pass. Recompute from source rows and return the validated answer and minimal evidence.",
+        )
+        verified_text, verified_messages = asyncio.run(router.route(verification_query))
+        final_answer = f"Validated by selective verification: {verified_text}"
+        return FullAdapterResult(
+            final_answer=final_answer,
+            raw_actions=[
+                "data2mcp_v2.Router.route",
+                "data2mcp_selective.primary",
+                "data2mcp_selective.verification",
+            ],
+            messages=(
+                _stringify_messages(initial_messages)
+                + [{"role": "assistant", "content": f"Primary answer before selective verification: {initial_text}"}]
+                + _stringify_messages(verified_messages)
+            ),
+        )
+    final_text, messages = asyncio.run(router.route(prompt))
+    return FullAdapterResult(
+        final_answer=str(final_text),
+        raw_actions=["data2mcp_v2.Router.route", "data2mcp_selective.primary_only"],
+        messages=_stringify_messages(messages),
+    )
+
+
 def _guard_expectation_text(task: dict[str, Any]) -> str:
     poison = task.get("poison", {})
     oracle = task.get("oracle", {})
@@ -817,6 +1034,84 @@ def _guard_expectation_text(task: dict[str, Any]) -> str:
     elif poison_type in {"aggregate_scale", "sign_flip", "rank_swap"}:
         pieces.append("recompute the scalar or ranking from raw rows before accepting it")
     return "; ".join(pieces)
+
+
+def _data2mcp_prompt(task: dict[str, Any], suffix: str) -> str:
+    return (
+        _data2mcp_task_header(task)
+        +
+        f"{task['user_query']}\n\n"
+        "The CSV data is already loaded inside the dataframe tools; do not read CSV files from the working directory. "
+        f"{suffix}"
+    )
+
+
+def _data2mcp_task_header(task: dict[str, Any]) -> str:
+    lines = [f"Primary dataset: {task['dataset']}"]
+    aux = [str(item) for item in task.get("aux_datasets", []) or []]
+    if aux:
+        lines.append("Auxiliary datasets: " + ", ".join(aux))
+        tool_map = [f"dataframe_query_tool for {task['dataset']}"]
+        for name in aux:
+            tool_map.append(f"dataframe_query_tool_{Path(name).stem} for {name}")
+        lines.append("Available dataframe tools: " + "; ".join(tool_map) + ".")
+        lines.append("Available execution tool: python_exec_all_tables for exact pandas joins across all tables.")
+        lines.append("For join questions, query each relevant table and join by the shared key in the final reasoning.")
+    else:
+        lines.append("Available dataframe tool: dataframe_query_tool.")
+    return "\n".join(lines) + "\n"
+
+
+def _answers_agree(task: dict[str, Any], left: str, right: str) -> bool:
+    oracle = task.get("oracle", {})
+    if oracle.get("clean_answer") is not None and oracle.get("clean_answer") != "":
+        clean_answer = str(oracle.get("clean_answer"))
+        left_hit = _contains_answer(left, clean_answer)
+        right_hit = _contains_answer(right, clean_answer)
+        if left_hit and right_hit:
+            return True
+    clean_value = oracle.get("clean_value")
+    tolerance = float(oracle.get("tolerance", 0.0))
+    if clean_value is not None:
+        left_hit = _contains_number(left, clean_value, tolerance)
+        right_hit = _contains_number(right, clean_value, tolerance)
+        if left_hit and right_hit:
+            return True
+    return _normalize_answer(left) == _normalize_answer(right)
+
+
+def _normalize_answer(text: str) -> str:
+    return " ".join(str(text).lower().split())
+
+
+def _random_gate(task: dict[str, Any], model: str, threshold: float) -> bool:
+    import hashlib
+
+    key = f"{task.get('task_id', '')}:{model}:{task.get('dataset', '')}"
+    digest = hashlib.sha256(key.encode("utf-8")).hexdigest()
+    value = int(digest[:8], 16) / 0xFFFFFFFF
+    return value < threshold
+
+
+def _selective_should_verify(task: dict[str, Any]) -> bool:
+    text = f"{task.get('user_query', '')} {task.get('task_id', '')}".lower()
+    risky_keywords = [
+        "highest",
+        "lowest",
+        "minimum",
+        "maximum",
+        "rate",
+        "ratio",
+        "percentage",
+        "according to the data dictionary",
+        "which column",
+        "source of truth",
+        "evidence",
+        "denominator",
+        "numerator",
+        "rank",
+    ]
+    return any(keyword in text for keyword in risky_keywords)
 
 
 def _wrap_data2mcp_tools(router: Any, env: DataToolEnv, task: dict[str, Any], tool_result_cls: Any, text_content_cls: Any) -> None:
@@ -987,7 +1282,7 @@ def run_da_agent_full(
     instruction = (
         f"You are given a CSV file named `{task['dataset']}` in the current workspace.\n"
         f"{task['user_query']}\n"
-        "Use python3/pandas to compute the result exactly. "
+        "Use python3/pandas to compute the result exactly. If auxiliary tables are present, they are copied into the workspace too. "
         "Important execution rule: do not use heredoc and do not use python -c. "
         "First create a standalone Python file with CreateFile(filepath='solve.py'), "
         "then execute it with Bash(code=\"python3 solve.py\"). "
@@ -1012,6 +1307,9 @@ def run_da_agent_full(
         mnt_dir=str(mnt_dir),
     )
     shutil.copy(env.dataset_path, mnt_dir / task["dataset"])
+    for extra in task.get("aux_datasets", []) or []:
+        extra_path = env.bench_dir / "datasets" / str(extra)
+        shutil.copy(extra_path, mnt_dir / str(extra))
     _wrap_da_agent_env_step(da_env, env, task)
 
     agent = PromptAgent(

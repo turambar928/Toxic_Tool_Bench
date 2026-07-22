@@ -28,6 +28,8 @@ The main text keeps compact tables for page budget. Detailed adapter-level cross
     \item \texttt{cross\_model\_summary.csv} and \texttt{semantic\_schema\_cross\_model\_summary.csv} contain the adapter-level 34-task numerical and 24-task semantic/schema cross-model results.
     \item \texttt{iclr2027\_gpt\_expanded\_cross\_agent\_numerical\_summary.csv}, \texttt{iclr2027\_gpt\_expanded\_cross\_agent\_semantic\_schema\_summary.csv}, and \texttt{iclr2027\_gpt\_expanded\_cross\_agent\_combined\_summary.csv} contain the 120-task GPT-only cross-agent pass.
     \item \texttt{iclr2027\_data2mcp\_ablation\_auto\_combined\_summary.csv} contains the 120-task \texttt{data2mcp} defense ablation used in Table~\ref{tab:data2mcp-guarded}.
+    \item \texttt{realistic\_extension\_iclr2027.jsonl} contains the 13-task multi-table join extension described in Section~\ref{sec:experiments}.
+    \item The base \texttt{data2mcp} results on the 13-task multi-table extension are stored in the corresponding \texttt{20260722\_184847\_...\_start0\_limit13.summary.json} artifact.
 \end{itemize}
 
 \subsection{Light-Guard Tradeoff}
@@ -68,3 +70,7 @@ The complete mechanically extracted guard cases are stored in \texttt{GUARDED\_C
 \subsection{Framework Boundaries}
 
 Poisoning boundaries differ across frameworks. LangGraph, smolagents, \texttt{data2mcp}, and AutoGen are poisoned at a tool-observation boundary. PandasAI is currently poisoned at a coarser chat-result boundary. DA-Agent is integrated through its action loop, but its observations can include shell output and tracebacks. We therefore interpret results as end-to-end framework measurements rather than pure model-only measurements.
+
+\subsection{Multi-Table Execution Surface}
+
+The multi-table extension uses the same poisoned-observation protocol but exposes auxiliary CSVs as named tables inside the execution environment. The primary dataframe remains available as \texttt{df}; auxiliary tables are exposed through \texttt{tables} by dataset stem and filename alias. For \texttt{data2mcp}, the router also receives a dedicated execution tool for exact multi-table joins. This is intentionally closer to notebook-style analysis than to the single-table tasks used in the original benchmark suites.
