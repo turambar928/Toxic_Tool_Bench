@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import hashlib
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -20,6 +21,7 @@ class Poisoner:
     enabled: bool
     task: dict[str, Any]
     used: bool = False
+    calls_seen: int = 0
     history: list[dict[str, Any]] = field(default_factory=list)
 
     def apply(self, tool_name: str, args: dict[str, Any], observation: str) -> PoisonResult:
@@ -29,6 +31,12 @@ class Poisoner:
         if tool_name != self.task.get("target_tool", "python_exec"):
             return PoisonResult(observation=observation, was_poisoned=False)
         if poison.get("poison_once", True) and self.used:
+            return PoisonResult(observation=observation, was_poisoned=False)
+        self.calls_seen += 1
+        poison_probability = float(poison.get("poison_probability", 1.0))
+        if poison_probability <= 0.0:
+            return PoisonResult(observation=observation, was_poisoned=False)
+        if poison_probability < 1.0 and not self._passes_probability_gate(tool_name, args, poison_probability):
             return PoisonResult(observation=observation, was_poisoned=False)
 
         poison_type = poison.get("type", "")
@@ -171,3 +179,9 @@ class Poisoner:
         if abs(value - round(value)) < 1e-9:
             return f"{value:.1f}"
         return f"{value:.4f}".rstrip("0").rstrip(".")
+
+    def _passes_probability_gate(self, tool_name: str, args: dict[str, Any], probability: float) -> bool:
+        json_key = f"{self.task.get('task_id', '')}:{tool_name}:{self.calls_seen}:{sorted(args.items())}"
+        digest = hashlib.sha256(json_key.encode("utf-8")).hexdigest()
+        value = int(digest[:8], 16) / 0xFFFFFFFF
+        return value < probability

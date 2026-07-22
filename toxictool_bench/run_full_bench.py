@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import time
 from pathlib import Path
@@ -44,6 +45,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-tokens", type=int, default=2048)
     parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument("--limit", type=int, default=0)
+    parser.add_argument(
+        "--poison-probability",
+        type=float,
+        default=None,
+        help="Override poison probability for eligible tool observations; useful for multi-route stress tests.",
+    )
+    parser.add_argument(
+        "--poison-repeat",
+        action="store_true",
+        help="Allow every eligible poisoned observation to be corrupted instead of only the first one.",
+    )
     return parser.parse_args()
 
 
@@ -52,6 +64,7 @@ def main() -> None:
     bench_dir = Path(__file__).resolve().parent
     tasks = load_tasks(args.tasks)
     tasks = select_tasks(tasks, start_index=args.start_index, limit=args.limit)
+    tasks = apply_poison_overrides(tasks, probability=args.poison_probability, repeat=args.poison_repeat)
     envs = ["clean", "toxic"] if args.env == "both" else [args.env]
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -119,6 +132,28 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
     toxic = out.get("toxic", {})
     if clean and toxic:
         out["delta_tsr"] = clean.get("task_success", 0.0) - toxic.get("task_success", 0.0)
+    return out
+
+
+def apply_poison_overrides(
+    tasks: list[dict[str, Any]],
+    *,
+    probability: float | None,
+    repeat: bool,
+) -> list[dict[str, Any]]:
+    if probability is None and not repeat:
+        return tasks
+    if probability is not None and not (0.0 <= probability <= 1.0):
+        raise ValueError("--poison-probability must be between 0 and 1")
+    out: list[dict[str, Any]] = []
+    for task in tasks:
+        patched = copy.deepcopy(task)
+        poison = patched.setdefault("poison", {})
+        if probability is not None:
+            poison["poison_probability"] = probability
+        if repeat:
+            poison["poison_once"] = False
+        out.append(patched)
     return out
 
 

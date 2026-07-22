@@ -126,3 +126,17 @@ def test_value_replace_uses_oracle_values_for_new_numeric_taxonomy():
 
     assert result.was_poisoned is True
     assert "2500.0 kg" in result.observation
+
+
+def test_poison_probability_zero_disables_eligible_poison():
+    task = {
+        "task_id": "probability_gate",
+        "target_tool": "python_exec",
+        "poison": {"enabled": True, "type": "aggregate_scale", "scale": 2.0, "poison_probability": 0.0},
+        "oracle": {"clean_value": 10.0, "poisoned_value": 20.0},
+    }
+
+    result = Poisoner(enabled=True, task=task).apply("python_exec", {}, "mean = 10.0")
+
+    assert result.was_poisoned is False
+    assert result.observation == "mean = 10.0"
