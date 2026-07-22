@@ -53,6 +53,8 @@ def write_overall(rows: list[dict[str, Any]], path: Path) -> None:
                 "toxic_adr",
                 "toxic_vr",
                 "toxic_rr",
+                "avg_elapsed_clean",
+                "avg_elapsed_toxic",
                 "n",
             ],
         )
@@ -72,6 +74,8 @@ def write_overall(rows: list[dict[str, Any]], path: Path) -> None:
                     "toxic_adr": fmt(toxic.get("anomaly_detection", 0.0)),
                     "toxic_vr": fmt(toxic.get("validation", 0.0)),
                     "toxic_rr": fmt(toxic.get("recovery", 0.0)),
+                    "avg_elapsed_clean": fmt(avg_elapsed(by_env.get("clean", []))),
+                    "avg_elapsed_toxic": fmt(avg_elapsed(by_env.get("toxic", []))),
                     "n": toxic.get("n", 0),
                 }
             )
@@ -153,6 +157,11 @@ def split_by_env(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
 
 def adapter_name(row: dict[str, Any]) -> str:
     return str(row.get("adapter") or row.get("agent_profile") or "unknown")
+
+
+def avg_elapsed(rows: list[dict[str, Any]]) -> float:
+    values = [float(row.get("elapsed_seconds", 0.0) or 0.0) for row in rows]
+    return sum(values) / len(values) if values else 0.0
 
 
 def fmt(value: float) -> str:

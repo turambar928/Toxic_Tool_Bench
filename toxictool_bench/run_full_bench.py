@@ -60,6 +60,7 @@ def main() -> None:
         for task in tasks:
             for env_name in envs:
                 env = DataToolEnv(task=task, bench_dir=bench_dir, toxic=(env_name == "toxic"))
+                run_started = time.perf_counter()
                 run = run_full_adapter(
                     adapter=args.adapter,
                     api_file=args.api_file,
@@ -70,6 +71,7 @@ def main() -> None:
                     temperature=args.temperature,
                     max_tokens=args.max_tokens,
                 )
+                elapsed_seconds = time.perf_counter() - run_started
                 metrics = evaluate_run(task, run.final_answer, env.events)
                 row = {
                     "task_id": task["task_id"],
@@ -83,6 +85,7 @@ def main() -> None:
                     "final_answer": run.final_answer,
                     "raw_actions": run.raw_actions,
                     "parse_errors": run.parse_errors,
+                    "elapsed_seconds": elapsed_seconds,
                     "metrics": metrics,
                 }
                 rows.append(row)
