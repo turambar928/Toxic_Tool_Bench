@@ -1,0 +1,37 @@
+{
+  "annotator_a_prefix": "human_a_",
+  "annotator_b_prefix": "human_b_",
+  "audit_csv": "toxictool_bench/results/iclr2027_manual_audit_two_annotator_template_stratified80.csv",
+  "labels": {
+    "adr": {
+      "cohen_kappa": null,
+      "n": 0,
+      "percent_agreement": null,
+      "positive_rate_a": null,
+      "positive_rate_b": null
+    },
+    "bcr": {
+      "cohen_kappa": null,
+      "n": 0,
+      "percent_agreement": null,
+      "positive_rate_a": null,
+      "positive_rate_b": null
+    },
+    "rr": {
+      "cohen_kappa": null,
+      "n": 0,
+      "percent_agreement": null,
+      "positive_rate_a": null,
+      "positive_rate_b": null
+    },
+    "vr": {
+      "cohen_kappa": null,
+      "n": 0,
+      "percent_agreement": null,
+      "positive_rate_a": null,
+      "positive_rate_b": null
+    }
+  },
+  "macro_cohen_kappa": null,
+  "macro_percent_agreement": null
+}
