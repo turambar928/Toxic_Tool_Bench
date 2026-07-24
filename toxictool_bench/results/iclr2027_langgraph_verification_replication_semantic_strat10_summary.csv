@@ -1,0 +1,3 @@
+adapter,model,suite,environment,n,task_success,blind_compliance,anomaly_detection,validation,recovery
+langgraph_react_verification_only,gpt-5.4-mini,semantic_schema_stratified10,clean,10,1.0,0.0,1.0,0.0,1.0
+langgraph_react_verification_only,gpt-5.4-mini,semantic_schema_stratified10,toxic,10,0.9,0.0,1.0,1.0,0.9
