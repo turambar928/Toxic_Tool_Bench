@@ -1,7 +1,7 @@
-\section{Guarded Verification Details}
+\section{Behavior-Metric Scoring and Audit Protocol}
 \label{sec:appendix-guard}
 
-\subsection{Behavior-Metric Scoring Protocol}
+\subsection{Deterministic Scoring Rules}
 \label{sec:appendix-metric-protocol}
 
 The aggregate behavior metrics are produced by a deterministic trajectory scorer, not by unconstrained human annotation. For each toxic run, the scorer first checks whether the poisoning proxy actually returned a poisoned observation. It then scores the final answer against both the clean oracle and the poisoned oracle, using exact string matching for categorical labels and task-specific numeric tolerances for quantitative answers. Finally, it applies the following operational rules to the logged trajectory.
@@ -33,7 +33,7 @@ For human validation of the deterministic scorer, we use the same unit of analys
 
 Ambiguous cases are adjudicated against over-crediting the agent. A statement such as ``this should be verified'' without a follow-up tool call is ADR at most, not VR. Repeating the same poisoned observation through the same route is not VR. A correct final answer with no post-poison validation is task success but not RR.
 
-\subsection{Released Detailed Tables}
+\section{Released Detailed Tables}
 
 The main text keeps compact tables for page budget. Detailed adapter-level cross-model tables and the expanded GPT-only cross-agent breakdowns are released as machine-readable artifacts:
 
@@ -47,6 +47,8 @@ The main text keeps compact tables for page budget. Detailed adapter-level cross
     \item Multi-route stress: semantic guard stress summary CSV.
     \item Manual audit: the scorer sheet, two-annotator template, pending IAA JSON, and \path{audit_agreement.py}.
 \end{itemize}
+
+\section{Guarded Verification Details}
 
 \subsection{Guard Tie-Breaking and False Overrides}
 
@@ -79,7 +81,7 @@ Semantic-10 & Selective & 0.70 & 0.80 & 0.00 & 1.00 & 1.00 & 0.80 \\
 \label{tab:appendix-stronger-baselines}
 \end{table}
 
-\subsection{LangGraph Verification Replication}
+\section{Second-Framework Replication}
 \label{sec:appendix-langgraph-replication}
 
 We add \path{langgraph_react_verification_only} to test whether the independent-verification mechanism can be implemented outside \texttt{data2mcp}. The adapter first runs the ordinary LangGraph ReAct route, then starts a second LangGraph route whose prompt treats the primary answer as an untrusted claim and asks for recomputation from the loaded dataframe or auxiliary tables. The final answer is taken from the verification route. This mirrors the evidence-selection idea used by Guarded Verification, but it does not include the full expectation-generation and tie-breaking policy of the \texttt{data2mcp} guard.
@@ -97,7 +99,7 @@ python3 toxictool_bench/run_full_bench.py \
   --max-steps 6
 \end{verbatim}
 
-\subsection{Multi-Route Poisoning Stress Protocol}
+\section{Multi-Route Poisoning Stress Protocol}
 
 The default defense ablation uses \path{poison_once}, which creates a clean independent verification path after the first poisoned observation. To stress this assumption, the benchmark runner now supports repeated and probabilistic poisoning. The \path{--poison-repeat} flag disables the one-shot constraint, and the probability flag corrupts each eligible observation with deterministic probability \(p\). We recommend reporting \(p \in \{0, 0.25, 0.5, 1.0\}\), where \(p=1.0\) approximates a shared corrupted source whenever the poisoning operator can match the verification output.
 
@@ -131,11 +133,13 @@ python3 toxictool_bench/run_full_bench.py \
   --poison-probability 0.50
 \end{verbatim}
 
-\subsection{Light-Guard Tradeoff}
+\section{Light-Guard Tradeoff}
 
 The main text reports the full guarded \texttt{data2mcp} adapter as the defense result. We also evaluate a lower-budget light guard that caps the verification route more aggressively. On the expanded semantic/schema suite, the light guard obtains clean TSR \texttt{0.88}, poisoned TSR \texttt{0.88}, BCR \texttt{0.00}, and RR \texttt{0.88}. On the expanded numerical suite, it obtains clean TSR \texttt{0.80}, poisoned TSR \texttt{0.78}, BCR \texttt{0.00}, and RR \texttt{0.78}. Combined over 120 tasks, light guard obtains clean TSR \texttt{0.84}, poisoned TSR \texttt{0.83}, BCR \texttt{0.00}, and RR \texttt{0.83}. The light guard therefore preserves the blind-compliance reduction and is competitive with the full guard, but we keep full guarding as the main result because it allocates a more reliable verification budget.
 
-\subsection{Overhead}
+\section{Overhead and Confidence Intervals}
+
+\subsection{Tool-Event Overhead}
 
 The guard increases routing work because it adds independent verification. Table~\ref{tab:appendix-cost-robustness} summarizes the robustness--cost tradeoff for the expanded 120-task \texttt{data2mcp} ablation. The base adapter averages \texttt{1.28} toxic tool events on semantic/schema tasks and \texttt{1.22} on numerical tasks. Full guard increases these to \texttt{3.18} and \texttt{2.97}, respectively, while reducing BCR from \texttt{0.41} to \texttt{0.00} and improving poisoned TSR from \texttt{0.47} to \texttt{0.84}. Verification-only and light guard show that most of the robustness gain comes from the independent evidence route; caution and expectation prompts add smaller routing overhead but leave substantial BCR.
 
@@ -183,19 +187,21 @@ Numerical & Light guard & [0.67, 0.88] & [0.00, 0.00] \\
 \label{tab:appendix-guard-ci}
 \end{table}
 
-\subsection{Additional Qualitative Cases}
+\section{Additional Qualitative Cases}
 
 The complete mechanically extracted guard cases are stored in \texttt{GUARDED\_CASE\_STUDIES.md}. They include base blind-compliance cases that full guard recovers, as well as full-guard successes that light guard loses under the tighter budget.
 
-\subsection{Framework Boundaries}
+\section{Framework Boundaries}
 
 Poisoning boundaries differ across frameworks. LangGraph, smolagents, \texttt{data2mcp}, and AutoGen are poisoned at a tool-observation boundary. PandasAI is currently poisoned at a coarser chat-result boundary. DA-Agent is integrated through its action loop, but its observations can include shell output and tracebacks. We therefore interpret results as end-to-end framework measurements rather than pure model-only measurements.
 
-\subsection{Multi-Table Execution Surface}
+\section{Multi-Table Extension}
+
+\subsection{Execution Surface}
 
 The multi-table extension uses the same poisoned-observation protocol but exposes auxiliary CSVs as named tables inside the execution environment. The primary dataframe remains available as \texttt{df}; auxiliary tables are exposed through \texttt{tables} by dataset stem and filename alias. For \texttt{data2mcp}, the router also receives a dedicated execution tool for exact multi-table joins. This is intentionally closer to notebook-style analysis than to the single-table tasks used in the original benchmark suites.
 
-\subsection{Multi-Table Extension Task Inventory}
+\subsection{Task Inventory}
 
 The extension contains table-discovery, customer/order, support/team, clinic/region, and product/category joins. Table~\ref{tab:appendix-multitable-tasks} lists the released task families and poisoning operators.
 
