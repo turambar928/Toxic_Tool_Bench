@@ -1,23 +1,23 @@
 \section{Qualitative Analysis}
 \label{sec:qualitative}
 
-The aggregate metrics show that silent tool poisoning is a recurring failure mode. We inspect representative trajectories to clarify what the metrics capture. The examples below are selected from rescored result files and are intended to characterize mechanisms rather than replace the aggregate tables.
+The aggregate metrics show that silent tool poisoning is a recurring failure mode. We inspect representative trajectories to clarify what the metrics capture. The examples below are selected from rescored result files and illustrate mechanisms behind the aggregate trends.
 
 \subsection{Blind Compliance Looks Like Successful Analysis}
 
-The most direct failure mode is copying a poisoned observation into the final answer without further checks. In a daily-sales mean task, the clean dataframe supports an average of \texttt{16.0}, but the poisoned observation reports \texttt{32.0}. The base \texttt{data2mcp} adapter returns \texttt{32.0} and even restates a plausible calculation. Nothing in the final answer indicates that the agent recognized the observation as untrustworthy. This is the core BCR failure: the tool call succeeds syntactically, the output looks analytical, and the agent treats that successful observation as reliable evidence.
+The most direct failure mode is copying a poisoned observation into the final answer without further checks. In a daily-sales mean task, the clean dataframe supports an average of \texttt{16.0}, but the poisoned observation reports \texttt{32.0}. The base \texttt{data2mcp} adapter returns \texttt{32.0} and restates a plausible calculation. Nothing in the final answer indicates that the agent recognized the observation as untrustworthy. This is the core BCR failure: the tool call succeeds, the output looks analytical, and the agent treats that successful observation as reliable evidence.
 
 The same pattern appears in semantic tasks. In a treatment/control label-flip case, the poisoned observation states that \texttt{Control} has the highest conversion rate while preserving the clean rate \texttt{0.145}. The base adapter returns \texttt{Control -- 0.145}. The number is plausible, but the entity binding is wrong. This illustrates why \benchmarkname{} evaluates more than arithmetic error: a data agent must preserve the link between values, labels, rows, and evidence sources.
 
 \subsection{Validation Must Recompute Evidence}
 
-Successful recovery is evidence-seeking rather than rhetorical. In the same daily-sales task, the guarded \texttt{data2mcp} adapter performs an independent verification pass, recomputes the sum and row count, and returns \texttt{16.0}. In the treatment/control task, it re-inspects the dataframe and returns \texttt{Treatment -- 0.145}. These trajectories explain why the full guard drives BCR to zero in both the numerical and semantic/schema ablations: the final answer is grounded in a second observation after the first corrupted observation.
+Successful recovery requires evidence, not just cautionary language. In the same daily-sales task, the guarded \texttt{data2mcp} adapter performs an independent verification pass, recomputes the sum and row count, and returns \texttt{16.0}. In the treatment/control task, it re-inspects the dataframe and returns \texttt{Treatment -- 0.145}. These trajectories explain why the full guard drives BCR to zero in both the numerical and semantic/schema ablations: the final answer is grounded in a second observation after the first corrupted observation.
 
-This behavior differs from simply adding a caution instruction. The useful signal is not that the agent says tool outputs may be unreliable; it is that the agent obtains fresh evidence and bases the final answer on the recomputation. This motivates reporting VR and RR separately from ADR. Detection without a successful correction is not enough for data-analysis workflows.
+This behavior differs from simply adding a caution instruction. The useful signal is not that the agent says tool outputs may be unreliable; it is that the agent obtains fresh evidence and bases the final answer on the recomputation. This motivates reporting VR and RR separately from ADR. Detection without correction is not enough for data-analysis workflows.
 
 \subsection{Budgeted Guards Can Under-Recover}
 
-The light guard is informative as a budget ablation. It also reduces observed BCR to zero and remains close to the full guard in aggregate, but its tighter verification budget can still under-recover on individual tasks. In a feature-latency label-swap task, full guarded \texttt{data2mcp} recovers \texttt{new\_ui -- 185 ms}, while the light guard returns \texttt{old\_ui, 185}. In a regional-orders task, the light guard produces an incorrect average from an apparent row-count mismatch, while the full guard returns the correct \texttt{62.92}. These cases show that cheap validation can prevent direct copying but still fail to recover.
+The light guard is informative as a budget ablation. It also reduces observed BCR to zero and remains close to the full guard in aggregate, but its tighter verification budget can still under-recover on individual tasks. In a feature-latency label-swap task, full guarded \texttt{data2mcp} recovers \texttt{new\_ui -- 185 ms}, while the light guard returns \texttt{old\_ui, 185}. In a regional-orders task, the light guard produces an incorrect average after an apparent row-count mismatch, while the full guard returns the correct \texttt{62.92}. These cases show that cheaper validation can prevent direct copying while still failing to recover the correct answer.
 
 \subsection{Implications}
 

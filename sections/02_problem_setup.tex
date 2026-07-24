@@ -3,7 +3,7 @@
 
 \subsection{Tool-Augmented Data Agents}
 
-We consider an agent that receives a user query $q$ and interacts with a set of tools $\mathcal{T}$. At each step, the agent emits an action $a_t$, receives an observation $o_t$ from a tool, updates its internal state, and eventually produces a final answer $y$. In a clean environment, tool observations are assumed to reflect the requested computation or retrieval result. In a poisoned environment, one or more observations are modified by a poisoning function while preserving the tool's normal return format.
+We consider an agent that receives a user query $q$ and interacts with a set of tools $\mathcal{T}$. At each step, the agent emits an action $a_t$, receives an observation $o_t$ from a tool, updates its state, and eventually produces a final answer $y$. In a clean environment, tool observations reflect the requested computation or retrieval result. In a poisoned environment, one or more observations are modified while preserving the tool's normal return format.
 
 \subsection{Silent Tool Poisoning}
 
@@ -18,16 +18,16 @@ where $P$ is a poisoning operator with parameters $\theta$. The poisoned observa
     \item \textbf{Task relevance:} $\tilde{o}$ appears relevant enough that a naive agent could use it in downstream reasoning.
 \end{enumerate}
 
-This definition excludes ordinary tool crashes and parsing failures. It also differs from standard hallucination: the false information originates from a tool observation, not only from the model's generated text.
+This definition excludes ordinary tool crashes and parsing failures. It also differs from standard hallucination: the false information enters through a tool observation, not only through the model's generated text.
 
 \paragraph{Paired clean/toxic evaluation.}
 For each task, we evaluate the same agent twice: once with clean observations and once with the poisoning operator enabled. This paired protocol separates task competence from trust calibration. A failed poisoned run is most informative when the corresponding clean run succeeds, because the degradation is then attributable to the corrupted observation rather than to inability to solve the underlying data-analysis task.
 
 \paragraph{Poisoning targets.}
-In the current benchmark, poisoning can target numerical results, entity labels, schema metadata, or data-dictionary entries. Numerical poisoning tests arithmetic trust, such as whether an agent copies a scaled aggregate. Label and schema poisoning test evidence binding, such as whether the agent preserves the correct association between a treatment arm and its outcome or between a column name and its semantics.
+In the current benchmark, poisoning can target numerical results, entity labels, schema metadata, data-dictionary entries, or retrieved evidence. Numerical poisoning tests whether an agent audits computed values, such as a scaled aggregate. Label and schema poisoning test evidence binding, such as whether the agent preserves the correct association between a treatment arm and its outcome or between a column name and its meaning.
 
 \subsection{Trust Calibration Objective}
 
-An ideal data agent should use tools when they provide reliable evidence, but should not treat every successful observation as ground truth. We therefore evaluate \emph{trust calibration}: whether the agent's reliance on an observation matches the observation's reliability. Under silent poisoning, a robust agent should detect inconsistencies, seek independent validation, downgrade confidence, or avoid committing to the poisoned result.
+An ideal data agent should use tools when they provide reliable evidence, but should not treat every successful observation as ground truth. We therefore evaluate \emph{trust calibration}: whether the agent's reliance on an observation matches the observation's reliability. Under silent poisoning, a robust agent should detect inconsistencies, seek independent validation, lower its confidence, or avoid committing to the poisoned result.
 
 We operationalize this objective with behavioral metrics: poisoned-task degradation measures loss of final accuracy, blind compliance measures unqualified use of poisoned evidence, anomaly detection measures explicit skepticism, validation measures independent follow-up checks, and recovery measures whether the agent still returns the clean answer after encountering poisoned evidence.

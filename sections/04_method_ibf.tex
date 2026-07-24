@@ -1,9 +1,9 @@
 \section{\methodname{}}
 \label{sec:method}
 
-\methodname{} is a mitigation wrapper for improving trust calibration in tool-augmented data agents. The goal is not to make the base model more cautious in general, but to change how tool observations enter the final answer. A successful tool return is treated as evidence that must be checked, rather than as a fact that can be copied.
+\methodname{} is a mitigation wrapper for improving trust calibration in tool-augmented data agents. Its goal is not to make the base model broadly more cautious, but to change how tool observations are used in the final answer. A successful tool return is treated as evidence to check, rather than as a fact to copy.
 
-The method does not require retraining the underlying model or changing the benchmark tools. In the current implementation, we instantiate it for \texttt{data2mcp} as an adapter-level wrapper around the dataframe route. The guarded adapter runs the original route, performs an independent verification route over the same task, and selects the final answer from the verified evidence. This makes the defense stronger than a cautionary prompt: robustness depends on obtaining fresh evidence, not merely on saying that tools may be unreliable.
+The method does not require retraining the underlying model or changing the benchmark tools. In the current implementation, we instantiate it for \texttt{data2mcp} as an adapter-level wrapper around the dataframe route. The guarded adapter runs the original route, performs an independent verification route over the same task, and selects the final answer from the verified evidence. The key intervention is structural: the agent must obtain fresh evidence before adopting a potentially corrupted observation.
 
 \subsection{Guarded Agent Loop}
 
@@ -16,11 +16,11 @@ For a user query $q$ and tool environment $\mathcal{T}$, \methodname{} adds four
     \item \textbf{Final answer selection.} The wrapper finalizes from the verified evidence. If primary and verification evidence disagree, the final answer must use the verification result or explicitly qualify uncertainty rather than repeat the suspect observation.
 \end{enumerate}
 
-This loop targets the blind-compliance failure measured by BCR. It does not assume that the guard can identify the exact poisoning operator; it only needs to prevent unqualified reliance on a single unverified observation when independent evidence is available. The current implementation is therefore a defense against single-route silent corruption, not against a fully adaptive adversary that can corrupt every independent evidence path.
+This loop targets the blind-compliance failure measured by BCR. It does not assume that the guard can identify the exact poisoning operator. Instead, it prevents unqualified reliance on a single unverified observation when independent evidence is available. The current implementation is therefore a defense against single-route silent corruption, not against a fully adaptive adversary that can corrupt every evidence path.
 
 \subsection{Expectation Generation}
 
-The expectation is intentionally coarse. It is not meant to predict the exact answer before computation. Instead, it records constraints that should hold if the returned observation is plausible. Depending on the task, these constraints may include:
+The expectation is intentionally coarse. It is not meant to predict the exact answer before computation. Instead, it records constraints that should hold for a plausible observation. Depending on the task, these constraints may include:
 \begin{itemize}
     \item numerical invariants, such as non-negative counts, percentages within $[0, 100]$, or an average lying between the observed minimum and maximum;
     \item entity-binding expectations, such as preserving the association between a group label and its statistic;
@@ -29,13 +29,13 @@ The expectation is intentionally coarse. It is not meant to predict the exact an
     \item instruction-hierarchy constraints, such as treating text found inside data rows as data rather than as agent instructions.
 \end{itemize}
 
-These expectations are useful even when they are loose. A poisoned value may pass a broad numeric range check, but still conflict with entity bindings, raw rows, or metadata inspected during verification.
+These expectations can be useful even when they are loose. A poisoned value may pass a broad numeric range check but still conflict with entity bindings, raw rows, or metadata inspected during verification.
 
 \subsection{Observation Gating and Verification}
 
 After the primary route returns an observation, the guard compares it with the expectation and with independently obtained evidence. A discrepancy flag is raised when the primary observation violates a hard invariant, conflicts with schema or retrieval evidence, or disagrees with a recomputation from raw data.
 
-Validation is counted only when the second route is independent of the poisoned observation. Examples include recomputing aggregates from raw rows, re-reading the dataframe instead of copying the primary summary, checking treatment labels against the underlying table, or comparing retrieved evidence against the relevant source rows. This distinction matters because rhetorical skepticism without fresh evidence can reduce blind copying but still fail to recover the correct answer.
+Validation is counted only when the second route is independent of the poisoned observation. Examples include recomputing aggregates from raw rows, re-reading the dataframe instead of copying the primary summary, checking treatment labels against the underlying table, or comparing retrieved evidence against the relevant source rows. This distinction matters because skepticism without fresh evidence can reduce blind copying but still fail to recover the correct answer.
 
 In the benchmark implementation, poisoning is applied by a proxy with \texttt{poison\_once} enabled for the defense ablation: the primary matching observation can be corrupted, while later verification calls over raw data or source rows can return clean evidence. This is intentional. It isolates whether the agent loop is capable of using an independent check once such a check exists. It does not model a stronger attacker that controls the underlying data source or all redundant routes.
 
@@ -44,13 +44,13 @@ In the benchmark implementation, poisoning is applied by a proxy with \texttt{po
 We evaluate two guarded variants.
 
 \paragraph{Full guard.}
-The full guarded adapter is the main defense configuration. It allocates enough budget for expectation generation, the ordinary dataframe route, and an independent verification route. In the final answer, verified evidence has priority over the primary route when the two disagree. This variant is designed to measure whether structured verification can reduce blind compliance under realistic additional tool-use cost.
+The full guarded adapter is the main defense configuration. It allocates enough budget for expectation generation, the ordinary dataframe route, and an independent verification route. In the final answer, verified evidence has priority over the primary route when the two disagree. This variant measures whether structured verification can reduce blind compliance under additional tool-use cost.
 
 \paragraph{Light guard.}
 The light guarded adapter uses the same high-level policy but a tighter verification budget. It tests whether cheaper verification preserves robustness. In our expanded ablation, the light guard keeps observed BCR at zero and remains close to the full guard in poisoned TSR, but it is more sensitive to tasks that need extra turns to resolve row counts, labels, or averages. We therefore report light guarding as an appendix tradeoff rather than the main defense result.
 
 \subsection{Scope and Limitations}
 
-\methodname{} is evaluated as an adapter-level wrapper for \texttt{data2mcp}. We do not claim that the current implementation is an optimal or universal defense for all data-agent frameworks. It is a controlled mitigation experiment: if blind compliance is caused by unverified trust in successful observations, then forcing independent verification should reduce BCR and increase recovery.
+\methodname{} is evaluated as an adapter-level wrapper for \texttt{data2mcp}. We do not claim that the current implementation is an optimal or universal defense for all data-agent frameworks. It is a controlled mitigation experiment: if blind compliance is driven by unverified trust in successful observations, then forcing independent verification should reduce BCR and improve recovery.
 
 The guard also has costs. It increases tool events and routing work because it asks for expectations and a second evidence path. It can under-recover when the verification budget is too small, and it may be unnecessary for low-risk observations. Future implementations should learn when to activate verification selectively, for example using confidence estimates, disagreement between tool routes, or poison-type risk priors. In this paper, we use the full guard as the main defense result and the light guard as an overhead/robustness tradeoff.

@@ -1,17 +1,17 @@
 \section{\benchmarkname{}}
 \label{sec:benchmark}
 
-\benchmarkname{} is designed to test whether data agents can distinguish successful tool execution from trustworthy tool evidence. The benchmark wraps standard data-analysis tools with controlled poisoning operators and evaluates agent behavior on paired clean and poisoned tasks. The central design choice is to make the poisoned observation look operationally normal: the tool call succeeds, the return type is valid, and the observation remains relevant to the user's question.
+\benchmarkname{} tests whether data agents can distinguish successful tool execution from trustworthy tool evidence. It wraps standard data-analysis tools with controlled poisoning operators and evaluates agent behavior on paired clean and poisoned tasks. The central design choice is that the poisoned observation remains operationally normal: the tool call succeeds, the return type is valid, and the observation appears relevant to the user's question.
 
 \subsection{Design Goals}
 
-Silent tool poisoning is useful as an evaluation setting only if the corrupted observation is neither an ordinary tool failure nor an arbitrary adversarial string. We therefore use four design goals.
+Silent tool poisoning is useful as an evaluation setting only if the corrupted observation is neither an ordinary tool failure nor an arbitrary adversarial string. We therefore follow four design goals.
 
 \paragraph{Interface preservation.}
-The poisoned tool output must preserve the expected schema, type, and formatting of the clean output. A dataframe summary still looks like a dataframe summary; a metadata lookup still returns metadata; a retrieved evidence snippet still looks like retrieved evidence. This prevents the benchmark from reducing to parsing-error recovery.
+The poisoned tool output must preserve the expected schema, type, and formatting of the clean output. A dataframe summary still looks like a dataframe summary; a metadata lookup still returns metadata; a retrieved evidence snippet still looks like retrieved evidence. This prevents the benchmark from reducing to recovery from parsing errors.
 
 \paragraph{Execution-success preservation.}
-The tool call must report normal completion. Agents do not receive an exception, timeout, traceback, or explicit warning that the observation is unreliable. This isolates trust calibration after successful tool use.
+The tool call must report normal completion. Agents do not receive an exception, timeout, traceback, or explicit warning. This isolates trust calibration after successful tool use.
 
 \paragraph{Task relevance.}
 The poisoned observation must remain relevant enough that a naive agent could plausibly use it in downstream reasoning. For example, a poisoned aggregate should answer the requested statistic, but with a corrupted value or entity binding.
@@ -23,13 +23,13 @@ Each task must retain a clean oracle or rubric, and the corrupted observation mu
 
 Each benchmark item defines a user query, one or more datasets, a clean reference answer or rubric, and a poisoning specification. We evaluate the same agent on a clean environment and a toxic environment. The user query, dataset, adapter, and model are held fixed; only selected tool observations are changed by the poisoning proxy.
 
-The clean run measures whether the agent can solve the underlying data-analysis task. The toxic run measures whether a successful but corrupted observation changes the final answer or the agent's validation behavior. This paired construction is important because a poisoned failure is most informative when the corresponding clean task is solvable.
+The clean run measures whether the agent can solve the underlying data-analysis task. The toxic run measures whether a successful but corrupted observation changes the final answer or the agent's validation behavior. This pairing is important because a poisoned failure is most informative when the corresponding clean task is solvable.
 
 \paragraph{Current instantiation.}
 The cross-model instantiation contains a 34-task tabular numerical-analysis suite over 11 CSV datasets and a 24-task semantic/schema suite over 14 CSV datasets. These suites are intentionally small enough for repeated cross-model framework runs, but broad enough to test arithmetic trust, entity binding, schema interpretation, and retrieval-grounded evidence use. For the larger GPT-only cross-agent run and the \texttt{data2mcp} defense ablation, we additionally use expanded release suites with 60 numerical tasks and 60 semantic/schema tasks. The expanded suites preserve the same poisoning families while increasing coverage of repeated analytical patterns, severity levels, and decision contexts.
 
 \paragraph{Workflow coverage.}
-The task families are derived from common data-agent workflows: descriptive statistics over tables, schema and metadata interpretation, retrieval-grounded analysis, and decision-oriented recommendations that depend on intermediate analytical evidence. The current main experiments focus on numerical and semantic/schema poisoning; report-style and data-embedded instruction tasks are supported by the framework but treated as future extensions rather than main-table results.
+The task families are derived from common data-agent workflows: descriptive statistics over tables, schema and metadata interpretation, retrieval-grounded analysis, and decision-oriented recommendations that depend on intermediate analytical evidence. The main experiments focus on numerical and semantic/schema poisoning; report-style and data-embedded instruction tasks are supported by the framework and left for broader evaluation.
 
 \subsection{Poisoning Operators}
 
@@ -51,14 +51,14 @@ Semantic/schema operators target metadata, schema descriptions, treatment labels
     \item \textbf{Stale metadata:} return outdated data-dictionary or source-of-truth metadata.
     \item \textbf{Biased retrieval:} return evidence rows or snippets that support the wrong conclusion while appearing relevant.
 \end{itemize}
-These operators are designed to test evidence binding rather than numeric tolerance alone. A robust agent should preserve the association between values, labels, columns, rows, and evidence sources.
+These operators test evidence binding rather than numeric tolerance alone. A robust agent should preserve the association between values, labels, columns, rows, and evidence sources.
 
 \paragraph{Data-embedded instructions.}
-The framework can also represent instruction-like content embedded in raw text, metadata, or data previews. The poison is not delivered through the system or developer prompt; it is embedded in data that should be treated as untrusted content. A robust agent should analyze such text as data rather than follow it as an instruction. The experiments in this paper focus on numerical and semantic/schema poisoning, so data-embedded instruction results are not included in the main tables.
+The framework can also represent instruction-like content embedded in raw text, metadata, or data previews. The poison is not delivered through the system or developer prompt; it appears inside data that should be treated as untrusted content. A robust agent should analyze such text as data rather than follow it as an instruction. The experiments in this paper focus on numerical and semantic/schema poisoning, so data-embedded instruction results are not included in the main tables.
 
 \subsection{Evaluation Protocol}
 
-For each task, the benchmark records both the clean observation and the returned observation, but the agent only receives the returned observation. In the clean environment these are identical. In the toxic environment, the poisoning proxy edits selected observations after the real tool executes. The final trajectory therefore supports both answer-level scoring and behavior-level scoring.
+For each task, the benchmark records both the clean observation and the returned observation, but the agent only receives the returned observation. In the clean environment these are identical. In the toxic environment, the poisoning proxy edits selected observations after the real tool executes. The logged trajectory supports both answer-level and behavior-level scoring.
 
 We score final answers against the clean oracle or task rubric. Behavior metrics are computed by a deterministic trajectory scorer rather than by free-form human annotation. The scorer records whether a poisoned observation was actually returned, checks final answers against clean and poisoned oracle strings or numeric tolerances, and then applies operational rules for anomaly detection, validation, and recovery. We manually inspect representative trajectories for qualitative analysis, but the aggregate tables are generated by the released scorer. Appendix~\ref{sec:appendix-metric-protocol} gives the exact rubric and borderline examples.
 
