@@ -65,16 +65,19 @@ Table~\ref{tab:appendix-stronger-baselines} reports the fixed-subset results. Th
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{llrrrrrr}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}llrrrrrr@{}}
 \toprule
 Suite & Adapter & Clean TSR & Toxic TSR & BCR & ADR & VR & RR \\
 \midrule
 Numerical-20 & Abstain & 0.50 & 0.30 & 0.00 & 1.00 & 0.85 & 0.30 \\
 Numerical-20 & Randomized & 0.35 & 0.25 & 0.05 & 0.65 & 0.55 & 0.15 \\
 Numerical-20 & Selective & 0.30 & 0.25 & 0.05 & 0.55 & 0.55 & 0.25 \\
+\addlinespace[2pt]
+\midrule
 Semantic-10 & Abstain & 0.60 & 0.50 & 0.00 & 1.00 & 0.80 & 0.50 \\
 Semantic-10 & Randomized & 0.90 & 0.10 & 0.30 & 0.60 & 0.60 & 0.00 \\
-Semantic-10 & Selective & 0.70 & 0.80 & 0.00 & 1.00 & 1.00 & 0.80 \\
+Semantic-10 & Selective & 0.70 & \textbf{0.80} & \textbf{0.00} & \textbf{1.00} & \textbf{1.00} & \textbf{0.80} \\
 \bottomrule
 \end{tabular}
 \caption{Supplementary stronger verification baselines on fixed stratified subsets.}
@@ -108,14 +111,15 @@ Table~\ref{tab:appendix-multiroute-stress} reports this stress test on the seman
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{rrrrrr}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{@{}rrrrrr@{}}
 \toprule
 Poison probability & Toxic TSR & BCR & ADR & VR & RR \\
 \midrule
 0.00 & 0.80 & 0.00 & 1.00 & 1.00 & 0.80 \\
 0.25 & 0.60 & 0.00 & 1.00 & 1.00 & 0.60 \\
 0.50 & 0.70 & 0.00 & 1.00 & 1.00 & 0.70 \\
-1.00 & 0.10 & 0.00 & 1.00 & 1.00 & 0.10 \\
+1.00 & \textbf{0.10} & \textbf{0.00} & 1.00 & 1.00 & \textbf{0.10} \\
 \bottomrule
 \end{tabular}
 \caption{Repeated-probabilistic poisoning stress for full guard on the 10-task semantic stratified subset.}
@@ -146,15 +150,20 @@ The guard increases routing work because it adds independent verification. Table
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lrrrr}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrr@{}}
 \toprule
 Adapter & Toxic TSR & BCR & Sem. toxic events & Num. toxic events \\
 \midrule
+\multicolumn{5}{@{}l}{\textit{Base and prompt-only variants}} \\
 Base & 0.47 & 0.41 & 1.28 & 1.22 \\
 Caution only & 0.51 & 0.37 & 1.62 & 1.52 \\
 Expectation only & 0.48 & 0.53 & 1.03 & 1.07 \\
+\addlinespace[2pt]
+\midrule
+\multicolumn{5}{@{}l}{\textit{Independent-verification variants}} \\
 Verification only & 0.82 & 0.00 & 2.73 & 2.58 \\
-Full guard & 0.84 & 0.00 & 3.18 & 2.97 \\
+Full guard & \textbf{0.84} & \textbf{0.00} & 3.18 & 2.97 \\
 Light guard & 0.83 & 0.00 & 3.03 & 2.78 \\
 \bottomrule
 \end{tabular}
@@ -171,13 +180,16 @@ We compute nonparametric bootstrap confidence intervals by resampling task IDs w
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{llrr}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}llrr@{}}
 \toprule
 Suite & Adapter & Poisoned TSR 95\% CI & BCR 95\% CI \\
 \midrule
 Semantic/schema & Base & [0.40, 0.67] & [0.45, 0.70] \\
 Semantic/schema & Full guard & [0.87, 0.98] & [0.00, 0.00] \\
 Semantic/schema & Light guard & [0.80, 0.95] & [0.00, 0.00] \\
+\addlinespace[2pt]
+\midrule
 Numerical & Base & [0.27, 0.53] & [0.13, 0.35] \\
 Numerical & Full guard & [0.63, 0.85] & [0.00, 0.00] \\
 Numerical & Light guard & [0.67, 0.88] & [0.00, 0.00] \\
@@ -208,7 +220,8 @@ The extension contains table-discovery, customer/order, support/team, clinic/reg
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{llll}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}llll@{}}
 \toprule
 Task group & Tables & Join key & Poison types \\
 \midrule
@@ -230,7 +243,8 @@ The released \path{iclr2027_overhead_latency_audit.csv} records latency coverage
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lrrrr}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrr@{}}
 \toprule
 Run & Clean sec. & Toxic sec. & Clean events & Toxic events \\
 \midrule

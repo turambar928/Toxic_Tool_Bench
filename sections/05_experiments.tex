@@ -32,14 +32,15 @@ Table~\ref{tab:gpt-expanded-cross-agent-120} reports the 120-task GPT-only cross
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{lrrrrr}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrrr@{}}
 \toprule
 Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & RR \\
 \midrule
-LangGraph ReAct & 0.93 & 0.60 & 0.33 & 0.33 & 0.44 \\
-smolagents & 0.91 & 0.55 & 0.36 & 0.38 & 0.10 \\
+LangGraph ReAct & \textbf{0.93} & 0.60 & 0.33 & 0.33 & \textbf{0.44} \\
+smolagents & 0.91 & 0.55 & \textbf{0.36} & 0.38 & 0.10 \\
 \texttt{data2mcp} & 0.77 & 0.48 & 0.28 & 0.37 & 0.23 \\
-AutoGen & 0.92 & 0.65 & 0.27 & 0.20 & 0.37 \\
+AutoGen & 0.92 & \textbf{0.65} & 0.27 & \textbf{0.20} & 0.37 \\
 \bottomrule
 \end{tabular}
 \caption{GPT-only expanded cross-agent results on 120 tasks, combining 60 numerical and 60 semantic/schema expanded release tasks.}
@@ -55,13 +56,16 @@ The cross-model results support the same conclusion as the expanded GPT-only run
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{llrrrr}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}llrrrr@{}}
 \toprule
 Suite & Model & Mean clean TSR & Mean poisoned TSR & Mean $\Delta$TSR & Mean BCR \\
 \midrule
 Numerical & GPT & 0.91 & 0.51 & 0.40 & 0.45 \\
 Numerical & Claude & 0.92 & 0.67 & 0.26 & 0.31 \\
 Numerical & Qwen & 0.82 & 0.47 & 0.35 & 0.38 \\
+\addlinespace[2pt]
+\midrule
 Semantic/schema & GPT & 0.98 & 0.50 & 0.48 & 0.46 \\
 Semantic/schema & Claude & 1.00 & 0.68 & 0.32 & 0.38 \\
 Semantic/schema & Qwen & 0.87 & 0.51 & 0.37 & 0.31 \\
@@ -78,13 +82,14 @@ The numerical suite lets us compare poisoning operators across completed model--
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{lrrrrr}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrrr@{}}
 \toprule
 Poison type & Toxic TSR & BCR & ADR & VR & RR \\
 \midrule
 Aggregate scaling & 0.43 & 0.41 & 0.07 & 0.11 & 0.12 \\
-Rank swap & 0.49 & 0.52 & 0.01 & 0.18 & 0.16 \\
-Sign flip & 0.90 & 0.11 & 0.04 & 0.31 & 0.28 \\
+Rank swap & 0.49 & \textbf{0.52} & 0.01 & 0.18 & 0.16 \\
+Sign flip & \textbf{0.90} & \textbf{0.11} & 0.04 & \textbf{0.31} & \textbf{0.28} \\
 \bottomrule
 \end{tabular}
 \caption{Average numerical poison-type behavior across completed model--adapter groups. The table aggregates \texttt{poison\_type\_summary.csv}.}
@@ -100,15 +105,20 @@ Table~\ref{tab:data2mcp-guarded} reports the full 120-task ablation across six \
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{lrrrrr}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrrr@{}}
 \toprule
 Adapter & Clean TSR & Poisoned TSR & BCR & VR & RR \\
 \midrule
+\multicolumn{6}{@{}l}{\textit{Base and prompt-only variants}} \\
 Base & 0.82 & 0.47 & 0.41 & 0.09 & 0.18 \\
 Caution only & 0.80 & 0.51 & 0.37 & 0.28 & 0.27 \\
 Expectation only & 0.79 & 0.48 & 0.53 & 0.03 & 0.09 \\
+\addlinespace[2pt]
+\midrule
+\multicolumn{6}{@{}l}{\textit{Independent-verification variants}} \\
 Verification only & 0.88 & 0.82 & 0.00 & 0.86 & 0.82 \\
-Full guard & 0.84 & 0.84 & 0.00 & 1.00 & 0.84 \\
+Full guard & 0.84 & \textbf{0.84} & \textbf{0.00} & \textbf{1.00} & \textbf{0.84} \\
 Light guard & 0.84 & 0.83 & 0.00 & 1.00 & 0.83 \\
 \bottomrule
 \end{tabular}
@@ -121,16 +131,19 @@ Table~\ref{tab:data2mcp-guarded-breakdown} breaks the same ablation down by suit
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{llrrrrr}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}llrrrrr@{}}
 \toprule
 Suite & Adapter & Clean TSR & Poisoned TSR & BCR & VR & RR \\
 \midrule
 Semantic/schema & Base & 0.93 & 0.53 & 0.58 & 0.17 & 0.27 \\
-Semantic/schema & Full guard & 0.93 & 0.93 & 0.00 & 1.00 & 0.93 \\
+Semantic/schema & Full guard & \textbf{0.93} & \textbf{0.93} & \textbf{0.00} & \textbf{1.00} & \textbf{0.93} \\
 Semantic/schema & Light guard & 0.88 & 0.88 & 0.00 & 1.00 & 0.88 \\
+\addlinespace[2pt]
+\midrule
 Numerical & Base & 0.72 & 0.40 & 0.23 & 0.02 & 0.10 \\
 Numerical & Full guard & 0.75 & 0.75 & 0.00 & 1.00 & 0.75 \\
-Numerical & Light guard & 0.80 & 0.78 & 0.00 & 1.00 & 0.78 \\
+Numerical & Light guard & \textbf{0.80} & \textbf{0.78} & \textbf{0.00} & \textbf{1.00} & \textbf{0.78} \\
 \bottomrule
 \end{tabular}
 \caption{Suite breakdown for the expanded \texttt{data2mcp} defense ablation.}
@@ -150,16 +163,19 @@ We further probe two harder settings: cheaper verification policies and repeated
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{llrrrr}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}llrrrr@{}}
 \toprule
 Suite & Adapter & Clean TSR & Poisoned TSR & BCR & RR \\
 \midrule
 Numerical-20 & Abstain & 0.50 & 0.30 & 0.00 & 0.30 \\
 Numerical-20 & Randomized & 0.35 & 0.25 & 0.05 & 0.15 \\
 Numerical-20 & Selective & 0.30 & 0.25 & 0.05 & 0.25 \\
+\addlinespace[2pt]
+\midrule
 Semantic-10 & Abstain & 0.60 & 0.50 & 0.00 & 0.50 \\
 Semantic-10 & Randomized & 0.90 & 0.10 & 0.30 & 0.00 \\
-Semantic-10 & Selective & 0.70 & 0.80 & 0.00 & 0.80 \\
+Semantic-10 & Selective & 0.70 & \textbf{0.80} & \textbf{0.00} & \textbf{0.80} \\
 \bottomrule
 \end{tabular}
 \caption{Supplementary stronger-baseline stress tests on fixed stratified subsets. Full-suite defense results remain in Table~\ref{tab:data2mcp-guarded}; these runs isolate cost--robustness tradeoffs for alternative verification policies.}
@@ -177,7 +193,8 @@ On this extension, the base \texttt{data2mcp} adapter obtains clean TSR 0.85 and
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{lrrrrrr}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
 Adapter & Clean TSR & Poisoned TSR & BCR & RR & Clean sec. & Toxic sec. \\
 \midrule
