@@ -1,2 +1,2 @@
-"""ToxicTool-Bench pilot implementation."""
+"""ToxicBench pilot implementation."""
 

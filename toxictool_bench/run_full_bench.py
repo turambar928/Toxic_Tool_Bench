@@ -14,7 +14,7 @@ from tools import DataToolEnv
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run ToxicTool-Bench with full framework adapters.")
+    parser = argparse.ArgumentParser(description="Run ToxicBench with full framework adapters.")
     parser.add_argument("--tasks", type=Path, default=Path("toxictool_bench/tasks/numerical.jsonl"))
     parser.add_argument("--api-file", type=Path, default=Path("api"))
     parser.add_argument("--output-dir", type=Path, default=Path("toxictool_bench/results"))

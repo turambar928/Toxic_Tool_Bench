@@ -22,7 +22,7 @@ class ChunkSelection:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Summarize chunked ToxicTool-Bench matrix runs.")
+    parser = argparse.ArgumentParser(description="Summarize chunked ToxicBench matrix runs.")
     parser.add_argument("--tasks", nargs="+", type=Path, required=True)
     parser.add_argument("--adapters", nargs="+", required=True)
     parser.add_argument("--starts", nargs="+", type=int, required=True)

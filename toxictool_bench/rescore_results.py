@@ -10,7 +10,7 @@ from run_bench import load_tasks
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Rescore ToxicTool-Bench JSONL result files.")
+    parser = argparse.ArgumentParser(description="Rescore ToxicBench JSONL result files.")
     parser.add_argument("result_files", nargs="+", type=Path)
     parser.add_argument("--tasks", type=Path, default=Path("toxictool_bench/tasks/numerical.jsonl"))
     return parser.parse_args()

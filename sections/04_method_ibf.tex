@@ -1,13 +1,13 @@
-\section{\methodname{}}
+\section{Guarded Verification}
 \label{sec:method}
 
-\methodname{} is a mitigation wrapper for improving trust calibration in tool-augmented data agents. Its goal is not to make the base model broadly more cautious, but to change how tool observations are used in the final answer. A successful tool return is treated as evidence to check, rather than as a fact to copy.
+Guarded Verification is a mitigation wrapper for improving trust calibration in tool-augmented data agents. Its goal is not to make the base model broadly more cautious, but to change how tool observations are used in the final answer. A successful tool return is treated as evidence to check, rather than as a fact to copy.
 
 The method does not require retraining the underlying model or changing the benchmark tools. In the current implementation, we instantiate it for \texttt{data2mcp} as an adapter-level wrapper around the dataframe route. The guarded adapter runs the original route, performs an independent verification route over the same task, and selects the final answer from the verified evidence. The key intervention is structural: the agent must obtain fresh evidence before adopting a potentially corrupted observation.
 
 \subsection{Guarded Agent Loop}
 
-For a user query $q$ and tool environment $\mathcal{T}$, \methodname{} adds four steps around the base data-agent route.
+For a user query $q$ and tool environment $\mathcal{T}$, Guarded Verification adds four steps around the base data-agent route.
 
 \begin{enumerate}
     \item \textbf{Expectation generation.} Before relying on a tool result, the wrapper elicits coarse expectations or invariants for the requested analysis.
@@ -51,6 +51,6 @@ The light guarded adapter uses the same high-level policy but a tighter verifica
 
 \subsection{Scope and Limitations}
 
-\methodname{} is evaluated as an adapter-level wrapper for \texttt{data2mcp}. We do not claim that the current implementation is an optimal or universal defense for all data-agent frameworks. It is a controlled mitigation experiment: if blind compliance is driven by unverified trust in successful observations, then forcing independent verification should reduce BCR and improve recovery.
+Guarded Verification is evaluated as an adapter-level wrapper for \texttt{data2mcp}. We do not claim that the current implementation is an optimal or universal defense for all data-agent frameworks. It is a controlled mitigation experiment: if blind compliance is driven by unverified trust in successful observations, then forcing independent verification should reduce BCR and improve recovery.
 
 The guard also has costs. It increases tool events and routing work because it asks for expectations and a second evidence path. It can under-recover when the verification budget is too small, and it may be unnecessary for low-risk observations. Future implementations should learn when to activate verification selectively, for example using confidence estimates, disagreement between tool routes, or poison-type risk priors. In this paper, we use the full guard as the main defense result and the light guard as an overhead/robustness tradeoff.

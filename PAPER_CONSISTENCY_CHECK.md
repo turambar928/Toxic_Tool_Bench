@@ -16,9 +16,7 @@ Date: 2026-07-19
   - `sections/06_related_work.tex`
   - `sections/07_discussion_limitations.tex`
   - appendix: `sections/08_appendix_guard_details.tex`
-- `main.tex` defines:
-  - `\benchmarkname`: `ToxicTool-Bench`
-  - `\methodname`: `Guarded Verification`
+- The paper text now uses the literal names `ToxicBench` and `Guarded Verification` rather than benchmark/method name macros.
 - `main.tex` uses `iclr2026_conference.sty` if present and falls back to `article` layout otherwise, so the paper can be sanity-compiled before the official style file is added.
 
 ## Checked
@@ -35,7 +33,7 @@ Date: 2026-07-19
 
 ## Fixed
 
-- Normalized the defense naming around `Guarded Verification` in the method section and paper macro.
+- Normalized the defense naming around `Guarded Verification` in the method section and paper text.
 - Updated RQ2 to match the completed numerical and semantic/schema experiments instead of implying a completed instruction-poisoning suite.
 - Reworded the benchmark discussion of data-embedded instructions as framework support rather than a reported main experiment.
 - Reworded the experiment failure-pattern list to avoid implying instruction-poisoning results in the main tables.

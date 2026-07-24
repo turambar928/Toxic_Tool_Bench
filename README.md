@@ -1,6 +1,6 @@
-# ToxicTool-Bench
+# ToxicBench
 
-ToxicTool-Bench evaluates whether data-analysis agents blindly trust tool outputs that look successful but are silently poisoned. The benchmark focuses on a practical failure mode for tool-augmented agents: the tool call succeeds, the return format is normal, but the returned content is numerically corrupted, semantically misleading, or stale.
+ToxicBench evaluates whether data-analysis agents blindly trust tool outputs that look successful but are silently poisoned. The benchmark focuses on a practical failure mode for tool-augmented agents: the tool call succeeds, the return format is normal, but the returned content is numerically corrupted, semantically misleading, or stale.
 
 The main behavioral metric is blind compliance: whether an agent copies or relies on poisoned tool evidence in its final answer without validation.
 

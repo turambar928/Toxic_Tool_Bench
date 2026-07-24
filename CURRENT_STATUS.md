@@ -10,7 +10,7 @@ The benchmark, full-agent adapters, numerical expanded experiments, semantic/sch
 
 ## Built Components
 
-### ToxicTool-Bench
+### ToxicBench
 
 Location:
 

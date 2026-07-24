@@ -136,7 +136,7 @@ toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
 
 ## Phase 4: Defense Ablation
 
-Evaluate \methodname{} as a structured wrapper, not only as a caution prompt.
+Evaluate Guarded Verification as a structured wrapper, not only as a caution prompt.
 
 Status: semantic/schema and numerical full/light guarded ablations complete for `data2mcp_dataframe`.
 

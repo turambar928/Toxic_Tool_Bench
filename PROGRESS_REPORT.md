@@ -1,4 +1,4 @@
-# ToxicTool-Bench Progress Report
+# ToxicBench Progress Report
 
 Last updated: 2026-07-19
 
@@ -16,7 +16,7 @@ Last updated: 2026-07-19
 - semantic/schema poisoning 已扩展到 24 个任务、14 个 CSV、5 类 poisoner，并完成 `gpt-5.4-mini`、`claude-sonnet-4-6`、`Qwen3.6-35B-A3B-no-thinking` 三模型 practical-speed adapter 实验。
 - `data2mcp_dataframe_guarded` 和 `data2mcp_dataframe_guarded_light` 已经完成 semantic/schema 与 numerical ablation。
 - guarded overhead/case-study artifacts 和 bootstrap confidence intervals 已经生成。
-- abstract / introduction / method / experiments 已经统一成 “ToxicTool-Bench 暴露 blind compliance + guarded verification 降低 BCR” 的论文主线。
+- abstract / introduction / method / experiments 已经统一成 “ToxicBench 暴露 blind compliance + guarded verification 降低 BCR” 的论文主线。
 - `main.tex`、`README.md`、`references.bib` 和 GitHub release-facing 文档已经补齐。
 - 当前重点已经从继续跑实验转为最终 PDF 编译、页数控制、citation polish 和 release package verification。
 
@@ -380,8 +380,8 @@ compileall passed
    - `07_discussion_limitations.tex`
    - appendix 中 include `08_appendix_guard_details.tex`
 3. 检查符号一致性：
-   - `\benchmarkname{}`
-   - `\methodname{}`
+   - `ToxicBench`
+   - `Guarded Verification`
    - TSR / BCR / ADR / VR / RR
 4. 检查表格引用和 artifact 对应关系：
    - numerical cross-model

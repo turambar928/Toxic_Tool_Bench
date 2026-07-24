@@ -1,4 +1,4 @@
-# ToxicTool-Bench Pilot Results
+# ToxicBench Pilot Results
 
 This file archives the early 4-task pilot runs. These results are useful for development history, but they should not be cited as the main paper evidence. The formal results are in `EXPERIMENT_RESULTS.md`.
 

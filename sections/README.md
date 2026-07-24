@@ -13,9 +13,4 @@ These files are written as modular LaTeX sections included by the project-level 
 - `07_discussion_limitations.tex`: limitations and positioning.
 - `08_appendix_guard_details.tex`: appendix material for light guard, overhead, and framework-boundary details.
 
-Suggested macros for `main.tex`:
-
-```tex
-\newcommand{\benchmarkname}{ToxicTool-Bench}
-\newcommand{\methodname}{Guarded Verification}
-```
+The paper uses literal names in the section files: `ToxicBench` for the benchmark and `Guarded Verification` for the defense.

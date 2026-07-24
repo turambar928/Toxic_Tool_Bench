@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bootstrap confidence intervals for ToxicTool-Bench result JSONL files."""
+"""Bootstrap confidence intervals for ToxicBench result JSONL files."""
 
 from __future__ import annotations
 

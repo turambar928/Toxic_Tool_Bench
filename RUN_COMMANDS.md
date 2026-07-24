@@ -1,4 +1,4 @@
-# ToxicTool-Bench Run Commands
+# ToxicBench Run Commands
 
 All commands are intended to be run from the repository root:
 

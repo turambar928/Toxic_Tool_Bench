@@ -7,7 +7,7 @@ The aggregate metrics show that silent tool poisoning is a recurring failure mod
 
 The most direct failure mode is copying a poisoned observation into the final answer without further checks. In a daily-sales mean task, the clean dataframe supports an average of \texttt{16.0}, but the poisoned observation reports \texttt{32.0}. The base \texttt{data2mcp} adapter returns \texttt{32.0} and restates a plausible calculation. Nothing in the final answer indicates that the agent recognized the observation as untrustworthy. This is the core BCR failure: the tool call succeeds, the output looks analytical, and the agent treats that successful observation as reliable evidence.
 
-The same pattern appears in semantic tasks. In a treatment/control label-flip case, the poisoned observation states that \texttt{Control} has the highest conversion rate while preserving the clean rate \texttt{0.145}. The base adapter returns \texttt{Control -- 0.145}. The number is plausible, but the entity binding is wrong. This illustrates why \benchmarkname{} evaluates more than arithmetic error: a data agent must preserve the link between values, labels, rows, and evidence sources.
+The same pattern appears in semantic tasks. In a treatment/control label-flip case, the poisoned observation states that \texttt{Control} has the highest conversion rate while preserving the clean rate \texttt{0.145}. The base adapter returns \texttt{Control -- 0.145}. The number is plausible, but the entity binding is wrong. This illustrates why ToxicBench evaluates more than arithmetic error: a data agent must preserve the link between values, labels, rows, and evidence sources.
 
 \subsection{Validation Must Recompute Evidence}
 

@@ -1,4 +1,4 @@
-# ToxicTool-Bench Pilot
+# ToxicBench Pilot
 
 This folder contains a runnable pilot benchmark for silent tool poisoning in data agents.
 

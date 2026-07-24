@@ -1,4 +1,4 @@
-# ToxicTool-Bench Formal Experiment Results
+# ToxicBench Formal Experiment Results
 
 Last updated: 2026-07-17
 

@@ -1,4 +1,4 @@
-# ToxicTool-Bench Full Experiment Roadmap
+# ToxicBench Full Experiment Roadmap
 
 This roadmap tracks what has been completed and what remains after the first formal experiment package.
 
@@ -204,7 +204,7 @@ This is one of the user's existing baseline agents.
 
 Preparation work:
 
-1. Create a tiny DA-agent compatible task JSONL from ToxicTool tasks.
+1. Create a tiny DA-agent compatible task JSONL from ToxicBench tasks.
 2. Copy each benchmark CSV into the task instance directory expected by DA-agent.
 3. Configure model endpoint in DA-agent config or pass through CLI.
 4. Add toxic observation proxy. If direct tool interception is too expensive, run through a controlled task environment where the corrupted CSV/result file is injected.
@@ -269,7 +269,7 @@ It is heavyweight and may require runtime/session/container setup.
 Preparation work:
 
 1. Decide whether to use existing `baseline_agent/de-agent` runner or official OpenHands runtime.
-2. Create DACOMP-style task folders for ToxicTool tasks.
+2. Create DACOMP-style task folders for ToxicBench tasks.
 3. Configure `CodeActAgent`.
 4. Add poisoning either through file-level task construction or tool/runtime interception.
 5. Parse output trajectories.

@@ -129,7 +129,7 @@ CHECKS = (
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Check local dependency readiness for ToxicTool-Bench full adapters.")
+    parser = argparse.ArgumentParser(description="Check local dependency readiness for ToxicBench full adapters.")
     parser.add_argument("--strict", action="store_true", help="Exit non-zero if any adapter is not ready.")
     return parser.parse_args()
 

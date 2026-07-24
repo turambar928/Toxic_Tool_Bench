@@ -8,7 +8,7 @@ Our experiments evaluate four questions:
     \item \textbf{RQ1:} How often do data agents blindly comply with silently poisoned tool outputs?
     \item \textbf{RQ2:} Which poisoning operators are most damaging within numerical and semantic/schema tasks?
     \item \textbf{RQ3:} Does stronger clean-task performance imply better trust calibration under poisoning?
-    \item \textbf{RQ4:} Can \methodname{} reduce blind compliance without substantially hurting clean-task performance?
+    \item \textbf{RQ4:} Can Guarded Verification reduce blind compliance without substantially hurting clean-task performance?
 \end{itemize}
 
 \subsection{Experimental Setup}
@@ -93,7 +93,7 @@ Sign flip & 0.90 & 0.11 & 0.04 & 0.31 & 0.28 \\
 
 \subsection{Guarded Verification Ablation}
 
-We next evaluate whether \methodname{} can reduce blind compliance for \texttt{data2mcp}. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal data-analysis route, and finally performs an independent verification pass before producing the final answer. In our scorer, a validation event only counts toward VR when it is a fresh post-poison tool call or recomputation that is separate from the poisoned observation; restating the primary answer or expressing rhetorical doubt is insufficient. This design targets silent observation poisoning rather than prompt-level instruction following.
+We next evaluate whether Guarded Verification can reduce blind compliance for \texttt{data2mcp}. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal data-analysis route, and finally performs an independent verification pass before producing the final answer. In our scorer, a validation event only counts toward VR when it is a fresh post-poison tool call or recomputation that is separate from the poisoned observation; restating the primary answer or expressing rhetorical doubt is insufficient. This design targets silent observation poisoning rather than prompt-level instruction following.
 
 Table~\ref{tab:data2mcp-guarded} reports the full 120-task ablation across six \texttt{data2mcp} variants. The base adapter has high clean TSR (0.82) but drops to 0.47 poisoned TSR with BCR 0.41. Caution-only prompting and expectation-only prompting do not solve the problem: both leave substantial blind compliance, and expectation-only has the highest BCR in the ablation. In contrast, variants that perform independent verification reduce observed BCR to 0.00. The full guard improves poisoned TSR to 0.84 while preserving clean TSR at 0.84; the light guard obtains a similar BCR reduction with poisoned TSR 0.83. Verification-only performs nearly as well, indicating that independent evidence gathering is the main active ingredient.
 
@@ -116,7 +116,7 @@ Light guard & 0.84 & 0.83 & 0.00 & 1.00 & 0.83 \\
 \label{tab:data2mcp-guarded}
 \end{table}
 
-Table~\ref{tab:data2mcp-guarded-breakdown} breaks the same ablation down by suite. The semantic/schema suite shows the cleanest trust-calibration split: the base adapter reaches 0.93 clean TSR but has BCR 0.58 under poisoning, while full guard keeps clean and poisoned TSR at 0.93 with BCR 0.00. The numerical suite is harder in absolute task success: verification removes blind compliance, but some ordinary calculation and answer-extraction failures remain. This supports a narrow interpretation of the defense result: \methodname{} primarily reduces unverified trust in successful observations, while residual TSR failures reflect remaining analysis competence and budget limits.
+Table~\ref{tab:data2mcp-guarded-breakdown} breaks the same ablation down by suite. The semantic/schema suite shows the cleanest trust-calibration split: the base adapter reaches 0.93 clean TSR but has BCR 0.58 under poisoning, while full guard keeps clean and poisoned TSR at 0.93 with BCR 0.00. The numerical suite is harder in absolute task success: verification removes blind compliance, but some ordinary calculation and answer-extraction failures remain. This supports a narrow interpretation of the defense result: Guarded Verification primarily reduces unverified trust in successful observations, while residual TSR failures reflect remaining analysis competence and budget limits.
 
 \begin{table}[t]
 \centering

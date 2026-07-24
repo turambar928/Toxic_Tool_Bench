@@ -11,7 +11,7 @@ DEFAULT_LABELS = ("bcr", "adr", "vr", "rr")
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Compute agreement for ToxicTool-Bench audit labels.")
+    parser = argparse.ArgumentParser(description="Compute agreement for ToxicBench audit labels.")
     parser.add_argument("--audit-csv", type=Path, required=True)
     parser.add_argument("--a-prefix", default="human_a_")
     parser.add_argument("--b-prefix", default="human_b_")

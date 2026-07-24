@@ -10,7 +10,7 @@ from evaluator import aggregate
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Summarize ToxicTool-Bench result JSONL files.")
+    parser = argparse.ArgumentParser(description="Summarize ToxicBench result JSONL files.")
     parser.add_argument("result_files", nargs="+", type=Path)
     parser.add_argument("--overall-output", type=Path, required=True)
     parser.add_argument("--poison-output", type=Path, required=True)

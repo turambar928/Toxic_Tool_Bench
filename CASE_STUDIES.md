@@ -1,4 +1,4 @@
-# ToxicTool-Bench Case Studies
+# ToxicBench Case Studies
 
 Generated from final rescored expanded-result files only. These examples are intended for paper discussion and appendix writing; they should not replace the aggregate tables.
 
