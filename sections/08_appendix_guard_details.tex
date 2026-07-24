@@ -137,7 +137,28 @@ The main text reports the full guarded \texttt{data2mcp} adapter as the defense 
 
 \subsection{Overhead}
 
-The guard increases routing work because it adds independent verification. In the expanded semantic/schema suite, base \texttt{data2mcp} averages \texttt{1.28} toxic tool events per run, full guard averages \texttt{3.18}, and light guard averages \texttt{3.03}. In the expanded numerical suite, the corresponding averages are \texttt{1.22}, \texttt{2.97}, and \texttt{2.78}. The current light implementation reduces verification budget but still runs a second evidence route; future implementations should trigger verification selectively rather than always running a second route.
+The guard increases routing work because it adds independent verification. Table~\ref{tab:appendix-cost-robustness} summarizes the robustness--cost tradeoff for the expanded 120-task \texttt{data2mcp} ablation. The base adapter averages \texttt{1.28} toxic tool events on semantic/schema tasks and \texttt{1.22} on numerical tasks. Full guard increases these to \texttt{3.18} and \texttt{2.97}, respectively, while reducing BCR from \texttt{0.41} to \texttt{0.00} and improving poisoned TSR from \texttt{0.47} to \texttt{0.84}. Verification-only and light guard show that most of the robustness gain comes from the independent evidence route; caution and expectation prompts add smaller routing overhead but leave substantial BCR.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Adapter & Toxic TSR & BCR & Sem. toxic events & Num. toxic events \\
+\midrule
+Base & 0.47 & 0.41 & 1.28 & 1.22 \\
+Caution only & 0.51 & 0.37 & 1.62 & 1.52 \\
+Expectation only & 0.48 & 0.53 & 1.03 & 1.07 \\
+Verification only & 0.82 & 0.00 & 2.73 & 2.58 \\
+Full guard & 0.84 & 0.00 & 3.18 & 2.97 \\
+Light guard & 0.83 & 0.00 & 3.03 & 2.78 \\
+\bottomrule
+\end{tabular}
+\caption{Cost--robustness tradeoff for the expanded 120-task \texttt{data2mcp} defense ablation. Event columns report average toxic tool events per run; full wall-clock latency is unavailable for these earlier ablation logs.}
+\label{tab:appendix-cost-robustness}
+\end{table}
+
+The current light implementation reduces verification budget but still runs a second evidence route. A practical deployment should trigger verification selectively rather than always running a second route, for example using route disagreement, high-risk poison families, provenance uncertainty, or calibrated confidence.
 
 \subsection{Bootstrap Confidence Intervals}
 
@@ -198,21 +219,19 @@ Product analytics & product sales/products & sku & rank swap, label swap \\
 
 \subsection{Latency and Cost Proxies}
 
-The original full guard ablation reports tool-event overhead because the earlier run logs did not include wall-clock latency. The current runner records \texttt{elapsed\_seconds} for new runs. Table~\ref{tab:appendix-realistic-latency} reports wall-clock latency for the multi-table extension and representative verification-baseline smoke runs. The values are not a replacement for provider billing, but they give a deployment-relevant overhead signal in addition to tool-event counts.
+The released \path{iclr2027_overhead_latency_audit.csv} records latency coverage, mean/p50/p90 wall-clock seconds, tool events, raw actions, and final-answer length for available JSONL logs. The original 120-task \texttt{data2mcp} defense ablation predates \texttt{elapsed\_seconds}, so Table~\ref{tab:appendix-cost-robustness} uses tool events as the cost proxy. Newer runs include wall-clock fields. Table~\ref{tab:appendix-realistic-latency} reports the available latency measurements for the 13-task multi-table extension and the LangGraph verification replication. These values are not provider billing estimates: the API gateways used in the experiments do not expose reliable per-call dollar charges, and latency varies with backend queueing.
 
 \begin{table}[h]
 \centering
 \small
 \begin{tabular}{lrrrr}
 \toprule
-Adapter & Clean TSR & Toxic TSR & Clean sec. & Toxic sec. \\
+Run & Clean sec. & Toxic sec. & Clean events & Toxic events \\
 \midrule
-\texttt{data2mcp} base, 13 tasks & 0.85 & 0.23 & 24.43 & 25.08 \\
-\texttt{data2mcp} guarded, smoke & 1.00 & 1.00 & 52.45 & 44.07 \\
-\texttt{data2mcp} randomized, smoke & 1.00 & 1.00 & 32.70 & 19.27 \\
-\texttt{data2mcp} selective, smoke & 1.00 & 1.00 & 26.28 & 11.83 \\
+\texttt{data2mcp} base, multi-table 13 & 24.43 & 25.08 & 4.08 & 4.62 \\
+LangGraph verification, semantic 10 & 19.74 & 17.72 & 3.60 & 3.70 \\
 \bottomrule
 \end{tabular}
-\caption{Wall-clock latency for newly logged multi-table runs. Smoke rows validate execution paths and are not used as full-suite performance estimates.}
+\caption{Wall-clock latency for runs with complete \texttt{elapsed\_seconds} coverage. Seconds and tool events are means over clean or toxic environment instances.}
 \label{tab:appendix-realistic-latency}
 \end{table}
