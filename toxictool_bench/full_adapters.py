@@ -62,6 +62,7 @@ def run_full_adapter(
     adapter: Literal[
         "smolagents_toolcalling",
         "langgraph_react_full",
+        "langgraph_react_verification_only",
         "autogen_tool_agent",
         "data2mcp_dataframe",
         "data2mcp_dataframe_caution",
@@ -95,6 +96,16 @@ def run_full_adapter(
         )
     elif adapter == "langgraph_react_full":
         result = run_langgraph_react(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "langgraph_react_verification_only":
+        result = run_langgraph_react_verification_only(
             api_file=api_file,
             model=model,
             env=env,
@@ -396,6 +407,66 @@ def run_langgraph_react(
         raw_actions=final_state.get("raw_actions", []),
         messages=final_state.get("messages", []),
         parse_errors=final_state.get("parse_errors", 0),
+    )
+
+
+def run_langgraph_react_verification_only(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    primary = run_langgraph_react(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    verification_task = copy.deepcopy(task)
+    verification_task["user_query"] = (
+        f"{task['user_query']}\n\n"
+        "Independent verification pass. Treat the following primary answer as an untrusted claim to audit, "
+        "not as evidence to copy:\n"
+        f"{primary.final_answer}\n\n"
+        "Recompute from the loaded df and auxiliary tables using python_exec. Do not reuse the earlier observation text. "
+        "Return only the validated answer and one short evidence statement."
+    )
+    verification = run_langgraph_react(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=verification_task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    final_answer = f"Verified by independent LangGraph recomputation: {verification.final_answer}"
+    return FullAdapterResult(
+        final_answer=final_answer,
+        raw_actions=(
+            ["langgraph_react.primary"]
+            + primary.raw_actions
+            + ["langgraph_react.independent_verification"]
+            + verification.raw_actions
+        ),
+        messages=(
+            primary.messages
+            + [
+                {
+                    "role": "assistant",
+                    "content": "Starting independent LangGraph verification pass.",
+                }
+            ]
+            + verification.messages
+        ),
+        parse_errors=primary.parse_errors + verification.parse_errors,
     )
 
 

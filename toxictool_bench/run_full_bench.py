@@ -25,6 +25,7 @@ def parse_args() -> argparse.Namespace:
         choices=[
             "smolagents_toolcalling",
             "langgraph_react_full",
+            "langgraph_react_verification_only",
             "autogen_tool_agent",
             "data2mcp_dataframe",
             "data2mcp_dataframe_caution",

@@ -32,6 +32,15 @@ CHECKS = (
         note="LangGraph local checkout.",
     ),
     AdapterCheck(
+        name="langgraph_react_verification_only",
+        paths=(
+            BASELINE_DIR / "langgraph" / "libs" / "langgraph",
+            BASELINE_DIR / "langgraph" / "libs" / "prebuilt",
+        ),
+        imports=("langgraph.graph",),
+        note="same dependency surface as base LangGraph.",
+    ),
+    AdapterCheck(
         name="smolagents_toolcalling",
         paths=(BASELINE_DIR / "smolagents" / "src",),
         imports=("smolagents",),

@@ -14,20 +14,20 @@ Our experiments evaluate four questions:
 \subsection{Experimental Setup}
 
 \paragraph{Tasks.}
-We use two scales of task suites. For cross-model experiments, the numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. To strengthen cross-agent scale, we additionally run a GPT-only expanded cross-agent pass on ICLR 2027 candidate suites with 60 numerical tasks and 60 semantic/schema tasks. The same 120-task expanded suites are used for the \texttt{data2mcp} defense ablation. We report numerical and semantic/schema results separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
+We use two scales of task suites. For cross-model experiments, the numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. To strengthen cross-agent scale, we additionally run a GPT-only expanded cross-agent pass on release suites with 60 numerical tasks and 60 semantic/schema tasks. The same 120-task expanded suites are used for the \texttt{data2mcp} defense ablation. We report numerical and semantic/schema results separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
 
 \paragraph{Agents and models.}
 We evaluate complete framework adapters rather than only prompt-style profiles. The adapters are LangGraph ReAct, Hugging Face smolagents, \texttt{data2mcp}'s DataFrame router, PandasAI, DA-Agent, and AutoGen. We run all completed adapters with \texttt{gpt-5.4-mini}. For cross-model experiments, we run the five practical-speed adapters with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking}: LangGraph, smolagents, \texttt{data2mcp}, PandasAI, and AutoGen. DA-Agent is included in the GPT main table but excluded from cross-model tables because the Claude run reached only 5 of 68 clean/poisoned environment instances after more than twenty minutes.
 
 \paragraph{Poisoning boundaries.}
-LangGraph, smolagents, \texttt{data2mcp}, and AutoGen are poisoned at a tool-observation boundary. PandasAI is coarser: it runs the full agent and applies poisoning at the chat-result boundary because internal code-execution observations are not exposed through the same protocol. These are end-to-end framework measurements rather than pure model-only comparisons.
+LangGraph, smolagents, \texttt{data2mcp}, and AutoGen are poisoned at a tool-observation boundary. PandasAI is coarser: it runs the full agent and applies poisoning at the chat-result boundary because internal code-execution observations are not exposed through the same protocol. PandasAI BCR therefore measures end-to-end susceptibility to a poisoned final chat result, not fine-grained compliance with an individual internal dataframe observation. These are end-to-end framework measurements rather than pure model-only comparisons.
 
 \paragraph{Analysis.}
 For each agent, model, and task family, we report clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR where space permits. We also inspect trajectories to identify failure modes such as copying a poisoned value into the final report, rationalizing an impossible result, accepting corrupted metadata, or performing validation but ignoring the validation result. Section~\ref{sec:qualitative} summarizes representative trajectories from the final rescored runs.
 
 \subsection{Expanded GPT-Only Cross-Agent Results}
 
-Table~\ref{tab:gpt-expanded-cross-agent-120} reports the 120-task GPT-only cross-agent pass over four practical-speed framework adapters. This run uses the larger ICLR 2027 candidate suites rather than the smaller cross-model suites. The larger evaluation preserves the main finding: all four adapters maintain moderate to high clean TSR, but poisoned TSR drops by 0.27--0.36 and blind compliance remains nonzero. LangGraph and AutoGen recover more often on semantic/schema tasks than on numerical tasks, but the combined results still show substantial poisoned degradation. \texttt{data2mcp} has the lowest clean TSR in this expanded cross-agent run, yet still exhibits BCR 0.37, showing that blind compliance is not just a side effect of high clean capability.
+Table~\ref{tab:gpt-expanded-cross-agent-120} reports the 120-task GPT-only cross-agent pass over four practical-speed framework adapters. This run uses the larger expanded release suites rather than the smaller cross-model suites. The larger evaluation preserves the main finding: all four adapters maintain moderate to high clean TSR, but poisoned TSR drops by 0.27--0.36 and blind compliance remains nonzero. LangGraph and AutoGen recover more often on semantic/schema tasks than on numerical tasks, but the combined results still show substantial poisoned degradation. \texttt{data2mcp} has the lowest clean TSR in this expanded cross-agent run, yet still exhibits BCR 0.37, showing that blind compliance is not just a side effect of high clean capability.
 
 \begin{table}[t]
 \centering
@@ -42,7 +42,7 @@ smolagents & 0.91 & 0.55 & 0.36 & 0.38 & 0.10 \\
 AutoGen & 0.92 & 0.65 & 0.27 & 0.20 & 0.37 \\
 \bottomrule
 \end{tabular}
-\caption{GPT-only expanded cross-agent results on 120 tasks, combining 60 numerical and 60 semantic/schema ICLR 2027 candidate tasks.}
+\caption{GPT-only expanded cross-agent results on 120 tasks, combining 60 numerical and 60 semantic/schema expanded release tasks.}
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
@@ -93,7 +93,7 @@ Sign flip & 0.90 & 0.11 & 0.04 & 0.31 & 0.28 \\
 
 \subsection{Guarded Verification Ablation}
 
-We next evaluate whether \methodname{} can reduce blind compliance for \texttt{data2mcp}. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal data-analysis route, and finally performs an independent verification pass before producing the final answer. This design targets silent observation poisoning rather than prompt-level instruction following.
+We next evaluate whether \methodname{} can reduce blind compliance for \texttt{data2mcp}. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal data-analysis route, and finally performs an independent verification pass before producing the final answer. In our scorer, a validation event only counts toward VR when it is a fresh post-poison tool call or recomputation that is separate from the poisoned observation; restating the primary answer or expressing rhetorical doubt is insufficient. This design targets silent observation poisoning rather than prompt-level instruction following.
 
 Table~\ref{tab:data2mcp-guarded} reports the full 120-task ablation across six \texttt{data2mcp} variants. The base adapter has high clean TSR (0.82) but drops to 0.47 poisoned TSR with BCR 0.41. Caution-only prompting and expectation-only prompting do not solve the problem: both leave substantial blind compliance, and expectation-only has the highest BCR in the ablation. In contrast, variants that perform independent verification reduce observed BCR to 0.00. The full guard improves poisoned TSR to 0.84 while preserving clean TSR at 0.84; the light guard obtains a similar BCR reduction with poisoned TSR 0.83. Verification-only performs nearly as well, indicating that independent evidence gathering is the main active ingredient.
 
@@ -136,6 +136,12 @@ Numerical & Light guard & 0.80 & 0.78 & 0.00 & 1.00 & 0.78 \\
 \caption{Suite breakdown for the expanded \texttt{data2mcp} defense ablation.}
 \label{tab:data2mcp-guarded-breakdown}
 \end{table}
+
+\paragraph{Clean-run false positives and overhead.}
+The full guard verifies every task, so clean-run VR should be read as an unnecessary-verification rate rather than as anomaly detection. We estimate harmful false positives by clean TSR regression: on the 120-task ablation, full guard clean TSR is 0.84 versus 0.82 for base \texttt{data2mcp}, so always-on verification does not reduce aggregate clean success in this setting. Budgeted policies can be less stable, however, because they sometimes spend steps on verification while failing ordinary answer extraction. We log wall-clock time and tool-event counts for every run; the released overhead summaries report these timing proxies, but we do not claim provider billing deltas because the API logs do not expose reliable per-call dollar costs across all model gateways.
+
+\paragraph{Replication beyond \texttt{data2mcp}.}
+To test whether the core verification effect is specific to \texttt{data2mcp}, we add a LangGraph verification-only adapter. This adapter runs the ordinary LangGraph ReAct route, treats the primary answer as an untrusted claim, and then runs a separate LangGraph recomputation route before finalizing. A semantic/schema smoke replication completed one clean/toxic task pair with clean TSR 1.00, toxic TSR 1.00, BCR 0.00, VR 1.00 on the toxic run, and RR 1.00. This is not yet a full second-framework defense evaluation, but it verifies that the independent-evidence mechanism is implementable outside \texttt{data2mcp}; Appendix~\ref{sec:appendix-langgraph-replication} gives the exact protocol and artifact path.
 
 \subsection{Supplementary Defense Stress Tests}
 

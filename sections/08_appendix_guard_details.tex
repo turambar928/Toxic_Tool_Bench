@@ -41,9 +41,10 @@ The main text keeps compact tables for page budget. Detailed adapter-level cross
     \item Cross-model summaries: \path{cross_model_summary.csv} and \path{semantic_schema_cross_model_summary.csv}.
     \item Expanded GPT summaries: files matching \path{iclr2027_gpt_expanded_cross_agent_*_summary.csv}.
     \item Defense ablation summary: \path{iclr2027_data2mcp_ablation_auto_combined_summary.csv}.
-    \item Multi-table extension: \path{realistic_extension_iclr2027.jsonl} and \path{iclr2027_realistic_extension_*_summary.csv}.
-    \item Verification baseline stress tests: stratified task files and summary CSVs.
-    \item Multi-route stress: the semantic guard stress summary CSV.
+    \item Multi-table extension: task JSONL and extension summary CSVs.
+    \item Verification stress: stratified task files and summary CSVs.
+    \item LangGraph replication: \path{iclr2027_langgraph_verification_replication_smoke_summary.csv}.
+    \item Multi-route stress: semantic guard stress summary CSV.
     \item Manual audit: the scorer sheet, two-annotator template, pending IAA JSON, and \path{audit_agreement.py}.
 \end{itemize}
 
@@ -77,6 +78,24 @@ Semantic-10 & Selective & 0.70 & 0.80 & 0.00 & 1.00 & 1.00 & 0.80 \\
 \caption{Supplementary stronger verification baselines on fixed stratified subsets.}
 \label{tab:appendix-stronger-baselines}
 \end{table}
+
+\subsection{LangGraph Verification Replication}
+\label{sec:appendix-langgraph-replication}
+
+We add \path{langgraph_react_verification_only} to test whether the independent-verification mechanism can be implemented outside \texttt{data2mcp}. The adapter first runs the ordinary LangGraph ReAct route, then starts a second LangGraph route whose prompt treats the primary answer as an untrusted claim and asks for recomputation from the loaded dataframe or auxiliary tables. The final answer is taken from the verification route. This mirrors the evidence-selection idea used by \methodname{}, but it does not include the full expectation-generation and tie-breaking policy of the \texttt{data2mcp} guard.
+
+The current paper includes a completed smoke replication rather than a full second-framework ablation. On one completed semantic/schema clean/toxic task pair, the adapter obtains clean TSR \texttt{1.00}, toxic TSR \texttt{1.00}, toxic BCR \texttt{0.00}, toxic VR \texttt{1.00}, and toxic RR \texttt{1.00}. The partial run log and compact summary are released so the result is reproducible, but we treat it only as implementation evidence. A full stratified-10 or 120-task LangGraph ablation remains future work because the two-route LangGraph run is substantially slower than the \texttt{data2mcp} guard under the same API gateway.
+
+The command template is:
+\begin{verbatim}
+TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent \
+python3 toxictool_bench/run_full_bench.py \
+  --tasks toxictool_bench/tasks/semantic_schema_iclr2027_stratified10.jsonl \
+  --adapter langgraph_react_verification_only \
+  --model gpt-5.4-mini \
+  --env both \
+  --max-steps 6
+\end{verbatim}
 
 \subsection{Multi-Route Poisoning Stress Protocol}
 
