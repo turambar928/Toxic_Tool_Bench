@@ -8,10 +8,10 @@ MAX_TOKENS="${MAX_TOKENS:-3072}"
 LIMIT="${LIMIT:-5}"
 STARTS="${STARTS:-0 5 10 15 20 25 30 35 40 45 50 55}"
 TASK_SUITES="${TASK_SUITES:-toxictool_bench/tasks/numerical_iclr2027.jsonl toxictool_bench/tasks/semantic_schema_iclr2027.jsonl}"
-ADAPTERS="${ADAPTERS:-langgraph_react_full smolagents_toolcalling data2mcp_dataframe pandasai_dataframe autogen_tool_agent}"
+ADAPTERS="${ADAPTERS:-langgraph_react_full smolagents_toolcalling dataframe_router pandasai_dataframe autogen_tool_agent}"
 OUTPUT_PREFIX="${OUTPUT_PREFIX:-toxictool_bench/results/iclr2027_${MODEL}_expanded_cross_agent}"
-BASELINE_DIR="${TOXICTOOL_BASELINE_DIR:-/home/taozifu2025/data2mcpv2/baseline_agent}"
-DATA2MCP_SRC="${TOXICTOOL_DATA2MCP_SRC:-/home/taozifu2025/data2mcpv2/src}"
+BASELINE_DIR="${TOXICTOOL_BASELINE_DIR:-/path/to/baseline_agent}"
+DATAFRAME_ROUTER_SRC="${TOXICTOOL_DATAFRAME_ROUTER_SRC:-/path/to/dataframe_router/src}"
 
 run_adapter() {
   local adapter="$1"
@@ -26,8 +26,8 @@ run_adapter() {
     smolagents_toolcalling)
       py_path="$py_path:$BASELINE_DIR/smolagents/src"
       ;;
-    data2mcp_dataframe*)
-      py_path="$py_path:$DATA2MCP_SRC"
+    dataframe_router*)
+      py_path="$py_path:$DATAFRAME_ROUTER_SRC"
       ;;
     pandasai_dataframe)
       py_path="$py_path:$BASELINE_DIR/pandas-ai:$BASELINE_DIR/pandas-ai/extensions/llms/litellm"
@@ -60,7 +60,7 @@ failures=()
 for tasks in $TASK_SUITES; do
   for adapter in $ADAPTERS; do
     for start in $STARTS; do
-      if ! TOXICTOOL_BASELINE_DIR="$BASELINE_DIR" TOXICTOOL_DATA2MCP_SRC="$DATA2MCP_SRC" run_adapter "$adapter" "$tasks" "$start"; then
+      if ! TOXICTOOL_BASELINE_DIR="$BASELINE_DIR" TOXICTOOL_DATAFRAME_ROUTER_SRC="$DATAFRAME_ROUTER_SRC" run_adapter "$adapter" "$tasks" "$start"; then
         failures+=("$MODEL:$tasks:$adapter:start$start")
       fi
     done

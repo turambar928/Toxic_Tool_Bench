@@ -23,7 +23,7 @@ Full framework adapters:
 
 - `langgraph_react_full`
 - `smolagents_toolcalling`
-- `data2mcp_dataframe`
+- `dataframe_router`
 - `pandasai_dataframe`
 - `da_agent_full`
 - `autogen_tool_agent`
@@ -73,7 +73,7 @@ Combined 120-task summary:
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 0.93 | 0.60 | 0.33 | 0.33 | 0.07 | 0.43 | 0.44 |
 | `smolagents_toolcalling` | 0.91 | 0.55 | 0.36 | 0.38 | 0.00 | 0.10 | 0.10 |
-| `data2mcp_dataframe` | 0.77 | 0.48 | 0.28 | 0.37 | 0.16 | 0.22 | 0.23 |
+| `dataframe_router` | 0.77 | 0.48 | 0.28 | 0.37 | 0.16 | 0.22 | 0.23 |
 | `autogen_tool_agent` | 0.92 | 0.65 | 0.27 | 0.20 | 0.06 | 0.45 | 0.37 |
 
 Suite-level summaries:
@@ -89,11 +89,11 @@ Raw result files:
 ```text
 toxictool_bench/results/20260721-145704_langgraph_react_full_gpt-5.4-mini_both.jsonl
 toxictool_bench/results/20260721-152956_smolagents_toolcalling_gpt-5.4-mini_both.jsonl
-toxictool_bench/results/20260721-155522_data2mcp_dataframe_gpt-5.4-mini_both.jsonl
+toxictool_bench/results/20260721-155522_dataframe_router_gpt-5.4-mini_both.jsonl
 toxictool_bench/results/20260721-172417_autogen_tool_agent_gpt-5.4-mini_both.jsonl
 toxictool_bench/results/20260721-182010_langgraph_react_full_gpt-5.4-mini_both.jsonl
 toxictool_bench/results/20260721-184737_smolagents_toolcalling_gpt-5.4-mini_both.jsonl
-toxictool_bench/results/20260721-191227_data2mcp_dataframe_gpt-5.4-mini_both.jsonl
+toxictool_bench/results/20260721-191227_dataframe_router_gpt-5.4-mini_both.jsonl
 toxictool_bench/results/20260721-203945_autogen_tool_agent_gpt-5.4-mini_both.jsonl
 ```
 
@@ -103,7 +103,7 @@ toxictool_bench/results/20260721-203945_autogen_tool_agent_gpt-5.4-mini_both.jso
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 1.00 | 0.41 | 0.59 | 0.68 | 0.00 | 0.00 | 0.00 |
 | `smolagents_toolcalling` | 0.97 | 0.62 | 0.35 | 0.32 | 0.00 | 0.15 | 0.15 |
-| `data2mcp_dataframe` | 0.65 | 0.47 | 0.18 | 0.24 | 0.12 | 0.03 | 0.09 |
+| `dataframe_router` | 0.65 | 0.47 | 0.18 | 0.24 | 0.12 | 0.03 | 0.09 |
 | `pandasai_dataframe` | 1.00 | 0.47 | 0.53 | 0.65 | 0.00 | 0.00 | 0.00 |
 | `da_agent_full` | 0.85 | 0.53 | 0.32 | 0.32 | 0.06 | 0.38 | 0.38 |
 | `autogen_tool_agent` | 0.97 | 0.56 | 0.41 | 0.47 | 0.03 | 0.00 | 0.00 |
@@ -113,7 +113,7 @@ Result files:
 ```text
 paper/iclr/toxictool_bench/results/20260707-133726_langgraph_react_full_gpt-5.4-mini_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-134758_smolagents_toolcalling_gpt-5.4-mini_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260707-122940_data2mcp_dataframe_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260707-122940_dataframe_router_gpt-5.4-mini_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-130327_pandasai_dataframe_gpt-5.4-mini_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-130859_da_agent_full_gpt-5.4-mini_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-124859_autogen_tool_agent_gpt-5.4-mini_both.rescored.jsonl
@@ -129,7 +129,7 @@ Cross-model runs use the same 34-task expanded set. `da_agent_full` is omitted f
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 0.88 | 0.76 | 0.12 | 0.18 | 0.06 | 0.18 | 0.18 |
 | `smolagents_toolcalling` | 1.00 | 0.82 | 0.18 | 0.12 | 0.03 | 0.50 | 0.50 |
-| `data2mcp_dataframe` | 0.85 | 0.62 | 0.24 | 0.24 | 0.26 | 0.50 | 0.53 |
+| `dataframe_router` | 0.85 | 0.62 | 0.24 | 0.24 | 0.26 | 0.50 | 0.53 |
 | `pandasai_dataframe` | 0.97 | 0.32 | 0.65 | 0.76 | 0.00 | 0.00 | 0.00 |
 | `autogen_tool_agent` | 0.91 | 0.82 | 0.09 | 0.24 | 0.09 | 0.15 | 0.15 |
 
@@ -138,7 +138,7 @@ Result files:
 ```text
 paper/iclr/toxictool_bench/results/20260707-160205_langgraph_react_full_claude-sonnet-4-6_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-161144_smolagents_toolcalling_claude-sonnet-4-6_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260707-162340_data2mcp_dataframe_claude-sonnet-4-6_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260707-162340_dataframe_router_claude-sonnet-4-6_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-170254_pandasai_dataframe_claude-sonnet-4-6_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-171009_autogen_tool_agent_claude-sonnet-4-6_both.rescored.jsonl
 ```
@@ -151,7 +151,7 @@ The first Qwen attempt hit `HTTP 429`; after adding retry/backoff to `ChatClient
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 1.00 | 0.44 | 0.56 | 0.59 | 0.00 | 0.06 | 0.06 |
 | `smolagents_toolcalling` | 0.82 | 0.65 | 0.18 | 0.18 | 0.03 | 0.18 | 0.18 |
-| `data2mcp_dataframe` | 0.32 | 0.24 | 0.09 | 0.06 | 0.03 | 0.35 | 0.09 |
+| `dataframe_router` | 0.32 | 0.24 | 0.09 | 0.06 | 0.03 | 0.35 | 0.09 |
 | `pandasai_dataframe` | 1.00 | 0.26 | 0.74 | 0.76 | 0.00 | 0.00 | 0.00 |
 | `autogen_tool_agent` | 0.94 | 0.76 | 0.18 | 0.29 | 0.03 | 0.32 | 0.29 |
 
@@ -160,7 +160,7 @@ Result files:
 ```text
 paper/iclr/toxictool_bench/results/20260707-180904_langgraph_react_full_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-181347_smolagents_toolcalling_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260707-185704_data2mcp_dataframe_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260707-185704_dataframe_router_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-191325_pandasai_dataframe_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260707-191533_autogen_tool_agent_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
 ```
@@ -191,7 +191,7 @@ The semantic/schema expansion now contains 24 tasks over 14 CSV datasets. It cov
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 1.00 | 0.79 | 0.21 | 0.21 | 0.00 | 0.75 | 0.75 |
 | `smolagents_toolcalling` | 1.00 | 0.46 | 0.54 | 0.50 | 0.00 | 0.04 | 0.00 |
-| `data2mcp_dataframe` | 0.92 | 0.29 | 0.62 | 0.62 | 0.00 | 0.00 | 0.00 |
+| `dataframe_router` | 0.92 | 0.29 | 0.62 | 0.62 | 0.00 | 0.00 | 0.00 |
 | `pandasai_dataframe` | 1.00 | 0.25 | 0.75 | 0.75 | 0.00 | 0.00 | 0.00 |
 | `autogen_tool_agent` | 1.00 | 0.71 | 0.29 | 0.21 | 0.04 | 0.75 | 0.67 |
 
@@ -201,7 +201,7 @@ The semantic/schema expansion now contains 24 tasks over 14 CSV datasets. It cov
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 1.00 | 0.96 | 0.04 | 0.00 | 0.00 | 0.79 | 0.75 |
 | `smolagents_toolcalling` | 1.00 | 0.71 | 0.29 | 0.25 | 0.00 | 0.46 | 0.42 |
-| `data2mcp_dataframe` | 1.00 | 0.46 | 0.54 | 0.54 | 0.08 | 0.25 | 0.25 |
+| `dataframe_router` | 1.00 | 0.46 | 0.54 | 0.54 | 0.08 | 0.25 | 0.25 |
 | `pandasai_dataframe` | 1.00 | 0.29 | 0.71 | 0.75 | 0.00 | 0.00 | 0.00 |
 | `autogen_tool_agent` | 1.00 | 0.96 | 0.04 | 0.38 | 0.12 | 0.54 | 0.58 |
 
@@ -211,7 +211,7 @@ The semantic/schema expansion now contains 24 tasks over 14 CSV datasets. It cov
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 1.00 | 0.79 | 0.21 | 0.21 | 0.00 | 0.75 | 0.75 |
 | `smolagents_toolcalling` | 1.00 | 0.46 | 0.54 | 0.38 | 0.00 | 0.21 | 0.04 |
-| `data2mcp_dataframe` | 0.54 | 0.33 | 0.21 | 0.04 | 0.12 | 0.62 | 0.33 |
+| `dataframe_router` | 0.54 | 0.33 | 0.21 | 0.04 | 0.12 | 0.62 | 0.33 |
 | `pandasai_dataframe` | 0.83 | 0.21 | 0.62 | 0.67 | 0.00 | 0.00 | 0.00 |
 | `autogen_tool_agent` | 1.00 | 0.75 | 0.25 | 0.25 | 0.12 | 0.54 | 0.58 |
 
@@ -220,17 +220,17 @@ Result files:
 ```text
 paper/iclr/toxictool_bench/results/20260717-151320_langgraph_react_full_gpt-5.4-mini_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-152215_smolagents_toolcalling_gpt-5.4-mini_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260717-152700_data2mcp_dataframe_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260717-152700_dataframe_router_gpt-5.4-mini_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-154035_pandasai_dataframe_gpt-5.4-mini_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-154417_autogen_tool_agent_gpt-5.4-mini_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-174634_langgraph_react_full_claude-sonnet-4-6_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-175313_smolagents_toolcalling_claude-sonnet-4-6_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260717-175813_data2mcp_dataframe_claude-sonnet-4-6_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260717-175813_dataframe_router_claude-sonnet-4-6_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-181538_pandasai_dataframe_claude-sonnet-4-6_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-181929_autogen_tool_agent_claude-sonnet-4-6_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-183020_langgraph_react_full_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-183447_smolagents_toolcalling_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260717-184710_data2mcp_dataframe_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260717-184710_dataframe_router_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-193637_pandasai_dataframe_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
 paper/iclr/toxictool_bench/results/20260717-193925_autogen_tool_agent_Qwen3.6-35B-A3B-no-thinking_both.rescored.jsonl
 ```
@@ -246,17 +246,17 @@ paper/iclr/toxictool_bench/results/semantic_schema_cross_model_poison_summary.cs
 
 Semantic/schema takeaways:
 
-1. Semantic poisoning is at least as damaging as numerical poisoning for some adapters. `data2mcp_dataframe` and `pandasai_dataframe` have large poisoned TSR drops and high BCR.
+1. Semantic poisoning is at least as damaging as numerical poisoning for some adapters. `dataframe_router` and `pandasai_dataframe` have large poisoned TSR drops and high BCR.
 2. Cross-model behavior is not monotonic. Claude makes LangGraph more robust on semantic/schema tasks, but AutoGen still shows nontrivial blind compliance despite high poisoned TSR.
 3. Biased retrieval is represented explicitly. LangGraph tends to recover via validation, while weaker tool-use integrations often either copy biased evidence or fail to validate.
-4. Stale metadata and label flips remain damaging for smolagents, data2mcp, and PandasAI; LangGraph and AutoGen recover more often through validation.
+4. Stale metadata and label flips remain damaging for smolagents, DataFrame Router, and PandasAI; LangGraph and AutoGen recover more often through validation.
 
-## Guarded data2mcp Ablation
+## Guarded DataFrame Router Ablation
 
-We implemented a guarded `data2mcp` adapter that runs a two-pass expectation/check/recovery policy:
+We implemented a guarded `DataFrame Router` adapter that runs a two-pass expectation/check/recovery policy:
 
 1. Generate task-specific expectations about columns, labels, entity bindings, and evidence rows.
-2. Run the normal `data2mcp_dataframe` route.
+2. Run the normal `dataframe_router` route.
 3. Run an independent verification route that recomputes or re-inspects the dataframe before finalizing.
 4. Use the verified answer as final output and mark the trajectory as validated/recomputed.
 
@@ -269,18 +269,18 @@ model: gpt-5.4-mini
 
 | Adapter | Clean TSR | Poisoned TSR | Delta TSR | Toxic BCR | Toxic ADR | Toxic VR | Toxic RR |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `data2mcp_dataframe` | 0.92 | 0.29 | 0.62 | 0.62 | 0.00 | 0.00 | 0.00 |
-| `data2mcp_dataframe_guarded` | 0.83 | 0.83 | 0.00 | 0.00 | 1.00 | 1.00 | 0.83 |
-| `data2mcp_dataframe_guarded_light` | 0.83 | 0.71 | 0.12 | 0.00 | 1.00 | 1.00 | 0.71 |
+| `dataframe_router` | 0.92 | 0.29 | 0.62 | 0.62 | 0.00 | 0.00 | 0.00 |
+| `dataframe_router_guarded` | 0.83 | 0.83 | 0.00 | 0.00 | 1.00 | 1.00 | 0.83 |
+| `dataframe_router_guarded_light` | 0.83 | 0.71 | 0.12 | 0.00 | 1.00 | 1.00 | 0.71 |
 
 Result files:
 
 ```text
-paper/iclr/toxictool_bench/results/20260717-152700_data2mcp_dataframe_gpt-5.4-mini_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260717-214348_data2mcp_dataframe_guarded_gpt-5.4-mini_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260718-153208_data2mcp_dataframe_guarded_light_gpt-5.4-mini_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_semantic_ablation_poison_summary.csv
+paper/iclr/toxictool_bench/results/20260717-152700_dataframe_router_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260717-214348_dataframe_router_guarded_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260718-153208_dataframe_router_guarded_light_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/dataframe_router_guarded_semantic_ablation_summary.csv
+paper/iclr/toxictool_bench/results/dataframe_router_guarded_semantic_ablation_poison_summary.csv
 ```
 
 Interpretation:
@@ -299,26 +299,26 @@ model: gpt-5.4-mini
 
 | Adapter | Clean TSR | Poisoned TSR | Delta TSR | Toxic BCR | Toxic ADR | Toxic VR | Toxic RR |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `data2mcp_dataframe` | 0.65 | 0.47 | 0.18 | 0.24 | 0.12 | 0.03 | 0.09 |
-| `data2mcp_dataframe_guarded` | 0.79 | 0.74 | 0.06 | 0.00 | 1.00 | 1.00 | 0.74 |
-| `data2mcp_dataframe_guarded_light` | 0.68 | 0.65 | 0.03 | 0.00 | 1.00 | 1.00 | 0.65 |
+| `dataframe_router` | 0.65 | 0.47 | 0.18 | 0.24 | 0.12 | 0.03 | 0.09 |
+| `dataframe_router_guarded` | 0.79 | 0.74 | 0.06 | 0.00 | 1.00 | 1.00 | 0.74 |
+| `dataframe_router_guarded_light` | 0.68 | 0.65 | 0.03 | 0.00 | 1.00 | 1.00 | 0.65 |
 
 Numerical result files:
 
 ```text
-paper/iclr/toxictool_bench/results/20260707-122940_data2mcp_dataframe_gpt-5.4-mini_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260718-003358_data2mcp_dataframe_guarded_gpt-5.4-mini_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/20260718-160351_data2mcp_dataframe_guarded_light_gpt-5.4-mini_both.rescored.jsonl
-paper/iclr/toxictool_bench/results/data2mcp_guarded_numerical_ablation_summary.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_numerical_ablation_poison_summary.csv
+paper/iclr/toxictool_bench/results/20260707-122940_dataframe_router_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260718-003358_dataframe_router_guarded_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/20260718-160351_dataframe_router_guarded_light_gpt-5.4-mini_both.rescored.jsonl
+paper/iclr/toxictool_bench/results/dataframe_router_guarded_numerical_ablation_summary.csv
+paper/iclr/toxictool_bench/results/dataframe_router_guarded_numerical_ablation_poison_summary.csv
 ```
 
 Numerical interpretation:
 
 1. The guarded route eliminates observed blind compliance on the 34-task numerical suite: BCR drops from 0.24 to 0.00.
-2. Unlike the semantic/schema run, numerical clean TSR improves from 0.65 to 0.79 because the verification pass also corrects some ordinary data2mcp tool-use failures.
+2. Unlike the semantic/schema run, numerical clean TSR improves from 0.65 to 0.79 because the verification pass also corrects some ordinary DataFrame Router tool-use failures.
 3. Poisoned TSR improves from 0.47 to 0.74 and RR rises from 0.09 to 0.74.
-4. The main remaining cost is latency: full guarded mode roughly doubles data2mcp routing work because it always performs an independent verification pass.
+4. The main remaining cost is latency: full guarded mode roughly doubles DataFrame Router routing work because it always performs an independent verification pass.
 
 Light-guard interpretation:
 
@@ -329,7 +329,7 @@ Light-guard interpretation:
 Overhead and case-study artifacts:
 
 ```text
-paper/iclr/toxictool_bench/results/data2mcp_guarded_overhead_summary.csv
+paper/iclr/toxictool_bench/results/dataframe_router_guarded_overhead_summary.csv
 paper/iclr/GUARDED_CASE_STUDIES.md
 ```
 
@@ -339,8 +339,8 @@ paper/iclr/GUARDED_CASE_STUDIES.md
 2. Rank swaps are particularly damaging because they preserve plausible numbers while corrupting the binding between an entity and its statistic.
 3. PandasAI is highly vulnerable in the current coarse poisoning setup, especially when the poisoned chat result is directly used as the final analytical answer.
 4. DA-Agent shows more validation and recovery on `gpt-5.4-mini`, but current throughput makes cross-model DA-Agent runs impractical without a dedicated resume/timeout mechanism.
-5. `data2mcp` is sensitive to model/tool-use behavior; under Qwen, many runs hit max-turn behavior and clean TSR is low.
-6. A guarded `data2mcp` verification policy substantially reduces blind compliance on both semantic/schema and numerical suites; the main remaining tradeoff is validation-pass overhead and occasional over-analysis.
+5. `DataFrame Router` is sensitive to model/tool-use behavior; under Qwen, many runs hit max-turn behavior and clean TSR is low.
+6. A guarded `DataFrame Router` verification policy substantially reduces blind compliance on both semantic/schema and numerical suites; the main remaining tradeoff is validation-pass overhead and occasional over-analysis.
 
 ## Additional Artifacts
 
@@ -365,7 +365,7 @@ Bootstrap confidence intervals:
 paper/iclr/toxictool_bench/results/numerical_gpt_bootstrap_ci.csv
 paper/iclr/toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv
 paper/iclr/toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
-paper/iclr/toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv
+paper/iclr/toxictool_bench/results/dataframe_router_guarded_bootstrap_ci.csv
 ```
 
 Pilot archive:

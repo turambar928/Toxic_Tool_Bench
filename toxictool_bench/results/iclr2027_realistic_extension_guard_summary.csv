@@ -1,4 +1,4 @@
 model,adapter,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr,toxic_adr,toxic_vr,toxic_rr,avg_elapsed_clean,avg_elapsed_toxic,n
-gpt-5.4-mini,data2mcp_dataframe,0.8500,0.2300,0.6200,0.4600,0.1500,0.1500,0.0800,24.4300,25.0800,13
-gpt-5.4-mini,data2mcp_dataframe_guarded,0.9231,1.0000,-0.0769,0.0000,1.0000,1.0000,1.0000,50.8576,46.8176,13
-gpt-5.4-mini,data2mcp_dataframe_guarded_light,0.8462,0.8462,0.0000,0.0000,1.0000,1.0000,0.8462,49.2742,48.7858,13
+gpt-5.4-mini,dataframe_router,0.8500,0.2300,0.6200,0.4600,0.1500,0.1500,0.0800,24.4300,25.0800,13
+gpt-5.4-mini,dataframe_router_guarded,0.9231,1.0000,-0.0769,0.0000,1.0000,1.0000,1.0000,50.8576,46.8176,13
+gpt-5.4-mini,dataframe_router_guarded_light,0.8462,0.8462,0.0000,0.0000,1.0000,1.0000,0.8462,49.2742,48.7858,13

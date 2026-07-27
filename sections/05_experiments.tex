@@ -14,20 +14,20 @@ Our experiments evaluate four questions:
 \subsection{Experimental Setup}
 
 \paragraph{Tasks.}
-We use two scales of task suites. For cross-model experiments, the numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. To increase cross-agent coverage, we additionally run a GPT-only expanded evaluation with 60 numerical tasks and 60 semantic/schema tasks. The same 120-task expanded suites are used for the \texttt{data2mcp} defense ablation. We report numerical and semantic/schema results separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
+We use two scales of task suites. For cross-model experiments, the numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. To increase cross-agent coverage, we additionally run a GPT-only expanded evaluation with 60 numerical tasks and 60 semantic/schema tasks. The same 120-task expanded suites are used for the DataFrame Router defense ablation. We report numerical and semantic/schema results separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
 
 \paragraph{Agents and models.}
-We evaluate complete framework adapters rather than prompt-only profiles. The adapters are LangGraph ReAct, Hugging Face smolagents, \texttt{data2mcp}'s DataFrame router, PandasAI, DA-Agent, and AutoGen. We run all completed adapters with \texttt{gpt-5.4-mini}. For cross-model experiments, we run LangGraph, smolagents, \texttt{data2mcp}, PandasAI, and AutoGen with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent is included in the GPT main table but excluded from cross-model tables because the Claude run reached only 5 of 68 clean/poisoned environment instances after more than twenty minutes.
+We evaluate complete framework adapters rather than prompt-only profiles. The adapters are LangGraph ReAct, Hugging Face smolagents, a DataFrame Router adapter, PandasAI, DA-Agent, and AutoGen. We run all completed adapters with \texttt{gpt-5.4-mini}. For cross-model experiments, we run LangGraph, smolagents, DataFrame Router, PandasAI, and AutoGen with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent is included in the GPT main table but excluded from cross-model tables because the Claude run reached only 5 of 68 clean/poisoned environment instances after more than twenty minutes.
 
 \paragraph{Poisoning boundaries.}
-LangGraph, smolagents, \texttt{data2mcp}, and AutoGen are poisoned at a tool-observation boundary. PandasAI is coarser: it runs the full agent and applies poisoning at the chat-result boundary because internal code-execution observations are not exposed through the same protocol. PandasAI BCR therefore measures end-to-end susceptibility to a poisoned final chat result, not fine-grained compliance with an individual internal dataframe observation. These are end-to-end framework measurements rather than pure model-only comparisons.
+LangGraph, smolagents, DataFrame Router, and AutoGen are poisoned at a tool-observation boundary. PandasAI is coarser: it runs the full agent and applies poisoning at the chat-result boundary because internal code-execution observations are not exposed through the same protocol. PandasAI BCR therefore measures end-to-end susceptibility to a poisoned final chat result, not fine-grained compliance with an individual internal dataframe observation. These are end-to-end framework measurements rather than pure model-only comparisons.
 
 \paragraph{Analysis.}
 For each agent, model, and task family, we report clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR where space permits. We also inspect trajectories to identify failure modes such as copying a poisoned value into the final report, rationalizing an inconsistent result, accepting corrupted metadata, or validating but not using the validation result. Section~\ref{sec:qualitative} summarizes representative trajectories from the final rescored runs.
 
 \subsection{Expanded GPT-Only Cross-Agent Results}
 
-Table~\ref{tab:gpt-expanded-cross-agent-120} reports the 120-task GPT-only cross-agent evaluation over four framework adapters. This run uses the larger expanded suites rather than the smaller cross-model suites. The main pattern is stable: all four adapters maintain moderate to high clean TSR, but poisoned TSR drops by 0.27--0.36 and blind compliance remains nonzero. LangGraph and AutoGen recover more often on semantic/schema tasks than on numerical tasks, but the combined results still show substantial poisoned degradation. \texttt{data2mcp} has the lowest clean TSR in this expanded run, yet still exhibits BCR 0.37, showing that blind compliance is not only a side effect of high clean capability.
+Table~\ref{tab:gpt-expanded-cross-agent-120} reports the 120-task GPT-only cross-agent evaluation over four framework adapters. This run uses the larger expanded suites rather than the smaller cross-model suites. The main pattern is stable: all four adapters maintain moderate to high clean TSR, but poisoned TSR drops by 0.27--0.36 and blind compliance remains nonzero. LangGraph and AutoGen recover more often on semantic/schema tasks than on numerical tasks, but the combined results still show substantial poisoned degradation. DataFrame Router has the lowest clean TSR in this expanded run, yet still exhibits BCR 0.37, showing that blind compliance is not only a side effect of high clean capability.
 
 \begin{table}[t]
 \centering
@@ -39,7 +39,7 @@ Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & RR \\
 \midrule
 LangGraph ReAct & \textbf{0.93} & 0.60 & 0.33 & 0.33 & \textbf{0.44} \\
 smolagents & 0.91 & 0.55 & \textbf{0.36} & 0.38 & 0.10 \\
-\texttt{data2mcp} & 0.77 & 0.48 & 0.28 & 0.37 & 0.23 \\
+DataFrame Router & 0.77 & 0.48 & 0.28 & 0.37 & 0.23 \\
 AutoGen & 0.92 & \textbf{0.65} & 0.27 & \textbf{0.20} & 0.37 \\
 \bottomrule
 \end{tabular}
@@ -98,9 +98,9 @@ Sign flip & \textbf{0.90} & \textbf{0.11} & 0.04 & \textbf{0.31} & \textbf{0.28}
 
 \subsection{Guarded Verification Ablation}
 
-We next evaluate whether Guarded Verification can reduce blind compliance for \texttt{data2mcp}. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal data-analysis route, and finally performs an independent verification pass before producing the final answer. In our scorer, a validation event only counts toward VR when it is a fresh post-poison tool call or recomputation that is separate from the poisoned observation; restating the primary answer or expressing rhetorical doubt is insufficient. This design targets silent observation poisoning rather than prompt-level instruction following.
+We next evaluate whether Guarded Verification can reduce blind compliance for the DataFrame Router. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal data-analysis route, and finally performs an independent verification pass before producing the final answer. In our scorer, a validation event only counts toward VR when it is a fresh post-poison tool call or recomputation that is separate from the poisoned observation; restating the primary answer or expressing rhetorical doubt is insufficient. This design targets silent observation poisoning rather than prompt-level instruction following.
 
-Table~\ref{tab:data2mcp-guarded} reports the full 120-task ablation across six \texttt{data2mcp} variants. The base adapter has high clean TSR (0.82) but drops to 0.47 poisoned TSR with BCR 0.41. Caution-only prompting and expectation-only prompting do not solve the problem: both leave substantial blind compliance, and expectation-only has the highest BCR in the ablation. In contrast, variants that perform independent verification reduce observed BCR to 0.00. The full guard improves poisoned TSR to 0.84 while preserving clean TSR at 0.84; the light guard obtains a similar BCR reduction with poisoned TSR 0.83. Verification-only performs nearly as well, indicating that independent evidence gathering is the main active ingredient.
+Table~\ref{tab:dataframe-router-guarded} reports the full 120-task ablation across six DataFrame Router variants. The base adapter has high clean TSR (0.82) but drops to 0.47 poisoned TSR with BCR 0.41. Caution-only prompting and expectation-only prompting do not solve the problem: both leave substantial blind compliance, and expectation-only has the highest BCR in the ablation. In contrast, variants that perform independent verification reduce observed BCR to 0.00. The full guard improves poisoned TSR to 0.84 while preserving clean TSR at 0.84; the light guard obtains a similar BCR reduction with poisoned TSR 0.83. Verification-only performs nearly as well, indicating that independent evidence gathering is the main active ingredient.
 
 \begin{table}[t]
 \centering
@@ -122,11 +122,11 @@ Full guard & 0.84 & \textbf{0.84} & \textbf{0.00} & \textbf{1.00} & \textbf{0.84
 Light guard & 0.84 & 0.83 & 0.00 & 1.00 & 0.83 \\
 \bottomrule
 \end{tabular}
-\caption{Expanded 120-task \texttt{data2mcp} defense ablation with \texttt{gpt-5.4-mini}. The table combines 60 numerical and 60 semantic/schema tasks.}
-\label{tab:data2mcp-guarded}
+\caption{Expanded 120-task DataFrame Router defense ablation with \texttt{gpt-5.4-mini}. The table combines 60 numerical and 60 semantic/schema tasks.}
+\label{tab:dataframe-router-guarded}
 \end{table}
 
-Table~\ref{tab:data2mcp-guarded-breakdown} breaks the same ablation down by suite. The semantic/schema suite shows the cleanest trust-calibration split: the base adapter reaches 0.93 clean TSR but has BCR 0.58 under poisoning, while full guard keeps clean and poisoned TSR at 0.93 with BCR 0.00. The numerical suite is harder in absolute task success: verification removes blind compliance, but some ordinary calculation and answer-extraction failures remain. This supports a narrow interpretation of the defense result: Guarded Verification primarily reduces unverified trust in successful observations, while residual TSR failures reflect remaining analysis competence and budget limits.
+Table~\ref{tab:dataframe-router-guarded-breakdown} breaks the same ablation down by suite. The semantic/schema suite shows the cleanest trust-calibration split: the base adapter reaches 0.93 clean TSR but has BCR 0.58 under poisoning, while full guard keeps clean and poisoned TSR at 0.93 with BCR 0.00. The numerical suite is harder in absolute task success: verification removes blind compliance, but some ordinary calculation and answer-extraction failures remain. This supports a narrow interpretation of the defense result: Guarded Verification primarily reduces unverified trust in successful observations, while residual TSR failures reflect remaining analysis competence and budget limits.
 
 \begin{table}[t]
 \centering
@@ -146,15 +146,15 @@ Numerical & Full guard & 0.75 & 0.75 & 0.00 & 1.00 & 0.75 \\
 Numerical & Light guard & \textbf{0.80} & \textbf{0.78} & \textbf{0.00} & \textbf{1.00} & \textbf{0.78} \\
 \bottomrule
 \end{tabular}
-\caption{Suite breakdown for the expanded \texttt{data2mcp} defense ablation.}
-\label{tab:data2mcp-guarded-breakdown}
+\caption{Suite breakdown for the expanded DataFrame Router defense ablation.}
+\label{tab:dataframe-router-guarded-breakdown}
 \end{table}
 
 \paragraph{Clean-run false positives and overhead.}
-The full guard verifies every task, so clean-run VR should be read as an unnecessary-verification rate rather than as anomaly detection. We estimate harmful false positives by clean TSR regression: on the 120-task ablation, full guard clean TSR is 0.84 versus 0.82 for base \texttt{data2mcp}, so always-on verification does not reduce aggregate clean success in this setting. Budgeted policies can be less stable, however, because they sometimes spend steps on verification while failing ordinary answer extraction. We log wall-clock time and tool-event counts for every run; the released overhead summaries report these timing proxies, but we do not claim provider billing deltas because the API logs do not expose reliable per-call dollar costs across all model gateways.
+The full guard verifies every task, so clean-run VR should be read as an unnecessary-verification rate rather than as anomaly detection. We estimate harmful false positives by clean TSR regression: on the 120-task ablation, full guard clean TSR is 0.84 versus 0.82 for base DataFrame Router, so always-on verification does not reduce aggregate clean success in this setting. Budgeted policies can be less stable, however, because they sometimes spend steps on verification while failing ordinary answer extraction. We log wall-clock time and tool-event counts for every run; the released overhead summaries report these timing proxies, but we do not claim provider billing deltas because the API logs do not expose reliable per-call dollar costs across all model gateways.
 
-\paragraph{Replication beyond \texttt{data2mcp}.}
-To test whether the core verification effect is specific to \texttt{data2mcp}, we add a LangGraph verification-only adapter. This adapter runs the ordinary LangGraph ReAct route, treats the primary answer as an untrusted claim, and then runs a separate LangGraph recomputation route before finalizing. On a fixed 10-task semantic/schema stratified subset, it obtains clean TSR 1.00, toxic TSR 0.90, BCR 0.00, toxic VR 1.00, and RR 0.90. This is smaller than the 120-task \texttt{data2mcp} ablation, but it provides a second-framework replication of the key mechanism: independent evidence gathering suppresses blind compliance rather than merely adding cautionary text. Appendix~\ref{sec:appendix-langgraph-replication} gives the exact protocol and artifact path.
+\paragraph{Replication beyond DataFrame Router.}
+To test whether the core verification effect is specific to DataFrame Router, we add a LangGraph verification-only adapter. This adapter runs the ordinary LangGraph ReAct route, treats the primary answer as an untrusted claim, and then runs a separate LangGraph recomputation route before finalizing. On a fixed 10-task semantic/schema stratified subset, it obtains clean TSR 1.00, toxic TSR 0.90, BCR 0.00, toxic VR 1.00, and RR 0.90. This is smaller than the 120-task DataFrame Router ablation, but it provides a second-framework replication of the key mechanism: independent evidence gathering suppresses blind compliance rather than merely adding cautionary text. Appendix~\ref{sec:appendix-langgraph-replication} gives the exact protocol and artifact path.
 
 \subsection{Supplementary Defense Stress Tests}
 
@@ -178,7 +178,7 @@ Semantic-10 & Randomized & 0.90 & 0.10 & 0.30 & 0.00 \\
 Semantic-10 & Selective & 0.70 & \textbf{0.80} & \textbf{0.00} & \textbf{0.80} \\
 \bottomrule
 \end{tabular}
-\caption{Supplementary stronger-baseline stress tests on fixed stratified subsets. Full-suite defense results remain in Table~\ref{tab:data2mcp-guarded}; these runs isolate cost--robustness tradeoffs for alternative verification policies.}
+\caption{Supplementary stronger-baseline stress tests on fixed stratified subsets. Full-suite defense results remain in Table~\ref{tab:dataframe-router-guarded}; these runs isolate cost--robustness tradeoffs for alternative verification policies.}
 \label{tab:defense-stress-main}
 \end{table}
 
@@ -188,7 +188,7 @@ We also stress the \texttt{poison\_once} assumption by allowing repeated probabi
 
 To move beyond single-table CSV analysis, we add a realistic extension suite with 13 tasks over four joined table pairs. The tasks require notebook-style reasoning: discover the correct table pair, inspect both tables, and compute the answer through an exact join or cross-table validation. The suite is released as \texttt{realistic\_extension\_iclr2027.jsonl} together with the auxiliary tables used by the execution tools.
 
-On this extension, the base \texttt{data2mcp} adapter obtains clean TSR 0.85 and poisoned TSR 0.23 with BCR 0.46. This shows that silent poisoning remains challenging when tasks move beyond a single flat table and require join-style analysis. Guarded Verification transfers to this harder execution surface: full guard reaches poisoned TSR 1.00 with BCR 0.00, while the light guard reaches poisoned TSR 0.85 with BCR 0.00 under a tighter verification budget. The result supports the same conclusion as the 120-task ablation, with higher latency because each join task needs an additional evidence route.
+On this extension, the base DataFrame Router adapter obtains clean TSR 0.85 and poisoned TSR 0.23 with BCR 0.46. This shows that silent poisoning remains challenging when tasks move beyond a single flat table and require join-style analysis. Guarded Verification transfers to this harder execution surface: full guard reaches poisoned TSR 1.00 with BCR 0.00, while the light guard reaches poisoned TSR 0.85 with BCR 0.00 under a tighter verification budget. The result supports the same conclusion as the 120-task ablation, with higher latency because each join task needs an additional evidence route.
 
 \begin{table}[t]
 \centering
@@ -198,17 +198,17 @@ On this extension, the base \texttt{data2mcp} adapter obtains clean TSR 0.85 and
 \toprule
 Adapter & Clean TSR & Poisoned TSR & BCR & RR & Clean sec. & Toxic sec. \\
 \midrule
-\texttt{data2mcp} base & 0.85 & 0.23 & 0.46 & 0.08 & 24.43 & 25.08 \\
-\texttt{data2mcp} full guard & 0.92 & \textbf{1.00} & \textbf{0.00} & \textbf{1.00} & 50.86 & 46.82 \\
-\texttt{data2mcp} light guard & 0.85 & 0.85 & \textbf{0.00} & 0.85 & 49.27 & 48.79 \\
+DataFrame Router base & 0.85 & 0.23 & 0.46 & 0.08 & 24.43 & 25.08 \\
+DataFrame Router full guard & 0.92 & \textbf{1.00} & \textbf{0.00} & \textbf{1.00} & 50.86 & 46.82 \\
+DataFrame Router light guard & 0.85 & 0.85 & \textbf{0.00} & 0.85 & 49.27 & 48.79 \\
 \bottomrule
 \end{tabular}
-\caption{\texttt{data2mcp} on the 13-task multi-table join extension. Latency columns report mean wall-clock seconds per clean/toxic environment instance.}
+\caption{DataFrame Router on the 13-task multi-table join extension. Latency columns report mean wall-clock seconds per clean/toxic environment instance.}
 \label{tab:multi-table-extension-base}
 \end{table}
 
 \subsection{Uncertainty and Experimental Caveats}
 
-We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement and recomputing clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR. The full CI tables are released for the numerical cross-model results, semantic/schema cross-model results, and the expanded guarded \texttt{data2mcp} ablation. The guarded ablation CIs are summarized in Appendix~\ref{sec:appendix-guard}.
+We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement and recomputing clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR. The full CI tables are released for the numerical cross-model results, semantic/schema cross-model results, and the expanded guarded DataFrame Router ablation. The guarded ablation CIs are summarized in Appendix~\ref{sec:appendix-guard}.
 
-The results should be interpreted as end-to-end framework measurements. DA-Agent is excluded from the Claude and Qwen cross-model tables because of runtime, PandasAI uses a coarser poisoning boundary, and Qwen lowers \texttt{data2mcp} clean TSR because many runs hit the maximum-turn limit. These caveats affect fine-grained model comparisons, but not the main finding: successful tool use often coexists with blind compliance under silent observation poisoning, and structured verification can reduce that compliance.
+The results should be interpreted as end-to-end framework measurements. DA-Agent is excluded from the Claude and Qwen cross-model tables because of runtime, PandasAI uses a coarser poisoning boundary, and Qwen lowers DataFrame Router clean TSR because many runs hit the maximum-turn limit. These caveats affect fine-grained model comparisons, but not the main finding: successful tool use often coexists with blind compliance under silent observation poisoning, and structured verification can reduce that compliance.

@@ -6,7 +6,7 @@ Last updated: 2026-07-19
 
 The project is now at the submission-package and release-cleanup stage.
 
-The benchmark, full-agent adapters, numerical expanded experiments, semantic/schema cross-model experiments, GPT-only 120-task expanded cross-agent pass, rescoring pipeline, guarded data2mcp defense ablations, bootstrap confidence intervals, case studies, paper skeleton, and GitHub README are in place. The next work should focus on final PDF compilation, page-budget control, citation polish, and release-package verification.
+The benchmark, full-agent adapters, numerical expanded experiments, semantic/schema cross-model experiments, GPT-only 120-task expanded cross-agent pass, rescoring pipeline, guarded DataFrame Router defense ablations, bootstrap confidence intervals, case studies, paper skeleton, and GitHub README are in place. The next work should focus on final PDF compilation, page-budget control, citation polish, and release-package verification.
 
 ## Built Components
 
@@ -96,9 +96,9 @@ Implemented full adapters:
 
 - `langgraph_react_full`
 - `smolagents_toolcalling`
-- `data2mcp_dataframe`
-- `data2mcp_dataframe_guarded`
-- `data2mcp_dataframe_guarded_light`
+- `dataframe_router`
+- `dataframe_router_guarded`
+- `dataframe_router_guarded_light`
 - `pandasai_dataframe`
 - `da_agent_full`
 - `autogen_tool_agent`
@@ -146,7 +146,7 @@ Completed on all 6 full adapters:
 
 - LangGraph
 - smolagents
-- data2mcp
+- DataFrame Router
 - PandasAI
 - DA-Agent
 - AutoGen
@@ -166,7 +166,7 @@ GPT-only expanded cross-agent pass completed on 120 ICLR 2027 candidate tasks:
 - 60 semantic/schema tasks
 - LangGraph
 - smolagents
-- data2mcp
+- DataFrame Router
 - AutoGen
 
 Combined summary:
@@ -181,7 +181,7 @@ Completed on 5 full adapters:
 
 - LangGraph
 - smolagents
-- data2mcp
+- DataFrame Router
 - PandasAI
 - AutoGen
 
@@ -201,7 +201,7 @@ Completed on 5 full adapters:
 
 - LangGraph
 - smolagents
-- data2mcp
+- DataFrame Router
 - PandasAI
 - AutoGen
 
@@ -300,25 +300,25 @@ compileall passed
 High-level findings from completed runs:
 
 - Poisoned TSR is consistently below clean TSR for high-performing agents.
-- The semantic/schema suite shows large drops for `data2mcp_dataframe` and `pandasai_dataframe` under `gpt-5.4-mini`.
+- The semantic/schema suite shows large drops for `dataframe_router` and `pandasai_dataframe` under `gpt-5.4-mini`.
 - Rank swaps are the most dangerous poison type by average BCR.
 - Aggregate scaling is also damaging and often directly copied.
 - Sign flips are easier to detect or recover from.
 - PandasAI remains highly vulnerable under the current coarse poisoning setup.
 - DA-Agent shows higher validation/recovery on `gpt-5.4-mini`, but is too slow for current cross-model batching.
-- data2mcp performance depends strongly on model choice; Qwen often hits max-turn behavior in the current router setup.
-- The guarded `data2mcp` semantic/schema ablation reduces BCR from 0.62 to 0.00 and raises poisoned TSR from 0.29 to 0.83, with a clean TSR tradeoff from 0.92 to 0.83.
+- DataFrame Router performance depends strongly on model choice; Qwen often hits max-turn behavior in the current router setup.
+- The guarded `DataFrame Router` semantic/schema ablation reduces BCR from 0.62 to 0.00 and raises poisoned TSR from 0.29 to 0.83, with a clean TSR tradeoff from 0.92 to 0.83.
 - The light guarded semantic/schema ablation also keeps BCR at 0.00, but poisoned TSR is lower at 0.71.
-- The guarded `data2mcp` numerical ablation reduces BCR from 0.24 to 0.00, raises clean TSR from 0.65 to 0.79, and raises poisoned TSR from 0.47 to 0.74.
+- The guarded `DataFrame Router` numerical ablation reduces BCR from 0.24 to 0.00, raises clean TSR from 0.65 to 0.79, and raises poisoned TSR from 0.47 to 0.74.
 - The light guarded numerical ablation also keeps BCR at 0.00, but clean/toxic TSR are lower at 0.68/0.65.
 - Guarded overhead and case-study artifacts have been generated:
-  - `toxictool_bench/results/data2mcp_guarded_overhead_summary.csv`
+  - `toxictool_bench/results/dataframe_router_guarded_overhead_summary.csv`
   - `GUARDED_CASE_STUDIES.md`
 - Bootstrap CI artifacts have been generated:
   - `toxictool_bench/results/numerical_gpt_bootstrap_ci.csv`
   - `toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
   - `toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv`
-  - `toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv`
+  - `toxictool_bench/results/dataframe_router_guarded_bootstrap_ci.csv`
 
 Poison-type averages across completed cross-model runs:
 

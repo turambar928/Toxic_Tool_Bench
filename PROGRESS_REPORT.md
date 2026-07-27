@@ -14,7 +14,7 @@ Last updated: 2026-07-19
 - 论文 qualitative analysis 已经压缩为主文版本，额外 light-guard / overhead / framework-boundary 内容已移动到 appendix section。
 - `EXPERIMENT_RESULTS.md` 已经改成正式 expanded/cross-model 结果入口，旧 4-task pilot 已归档到 `PILOT_RESULTS.md`。
 - semantic/schema poisoning 已扩展到 24 个任务、14 个 CSV、5 类 poisoner，并完成 `gpt-5.4-mini`、`claude-sonnet-4-6`、`Qwen3.6-35B-A3B-no-thinking` 三模型 practical-speed adapter 实验。
-- `data2mcp_dataframe_guarded` 和 `data2mcp_dataframe_guarded_light` 已经完成 semantic/schema 与 numerical ablation。
+- `dataframe_router_guarded` 和 `dataframe_router_guarded_light` 已经完成 semantic/schema 与 numerical ablation。
 - guarded overhead/case-study artifacts 和 bootstrap confidence intervals 已经生成。
 - abstract / introduction / method / experiments 已经统一成 “ToxicBench 暴露 blind compliance + guarded verification 降低 BCR” 的论文主线。
 - `main.tex`、`README.md`、`references.bib` 和 GitHub release-facing 文档已经补齐。
@@ -110,9 +110,9 @@ toxictool_bench/tasks/semantic_schema.jsonl
 
 - `langgraph_react_full`
 - `smolagents_toolcalling`
-- `data2mcp_dataframe`
-- `data2mcp_dataframe_guarded`
-- `data2mcp_dataframe_guarded_light`
+- `dataframe_router`
+- `dataframe_router_guarded`
+- `dataframe_router_guarded_light`
 - `pandasai_dataframe`
 - `da_agent_full`
 - `autogen_tool_agent`
@@ -138,7 +138,7 @@ toxictool_bench/tasks/semantic_schema.jsonl
 | --- | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 1.00 | 0.41 | 0.59 | 0.68 |
 | `smolagents_toolcalling` | 0.97 | 0.62 | 0.35 | 0.32 |
-| `data2mcp_dataframe` | 0.65 | 0.47 | 0.18 | 0.24 |
+| `dataframe_router` | 0.65 | 0.47 | 0.18 | 0.24 |
 | `pandasai_dataframe` | 1.00 | 0.47 | 0.53 | 0.65 |
 | `da_agent_full` | 0.85 | 0.53 | 0.32 | 0.32 |
 | `autogen_tool_agent` | 0.97 | 0.56 | 0.41 | 0.47 |
@@ -156,7 +156,7 @@ toxictool_bench/tasks/semantic_schema.jsonl
 | --- | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 0.88 | 0.76 | 0.12 | 0.18 |
 | `smolagents_toolcalling` | 1.00 | 0.82 | 0.18 | 0.12 |
-| `data2mcp_dataframe` | 0.85 | 0.62 | 0.24 | 0.24 |
+| `dataframe_router` | 0.85 | 0.62 | 0.24 | 0.24 |
 | `pandasai_dataframe` | 0.97 | 0.32 | 0.65 | 0.76 |
 | `autogen_tool_agent` | 0.91 | 0.82 | 0.09 | 0.24 |
 
@@ -181,7 +181,7 @@ toxictool_bench/tasks/semantic_schema.jsonl
 | --- | ---: | ---: | ---: | ---: |
 | `langgraph_react_full` | 1.00 | 0.44 | 0.56 | 0.59 |
 | `smolagents_toolcalling` | 0.82 | 0.65 | 0.18 | 0.18 |
-| `data2mcp_dataframe` | 0.32 | 0.24 | 0.09 | 0.06 |
+| `dataframe_router` | 0.32 | 0.24 | 0.09 | 0.06 |
 | `pandasai_dataframe` | 1.00 | 0.26 | 0.74 | 0.76 |
 | `autogen_tool_agent` | 0.94 | 0.76 | 0.18 | 0.29 |
 
@@ -198,7 +198,7 @@ toxictool_bench/tasks/semantic_schema.jsonl
 - `aggregate_scale` 也有稳定破坏性，agent 经常直接复述被放大的数值。
 - `sign_flip` 相对更容易被发现或恢复。
 - PandasAI 在当前 coarse poisoning 设置下非常脆弱，三个模型上 BCR 都很高。
-- data2mcp 的结果强依赖底层模型；Qwen 下 clean TSR 很低，说明目前 router/tool execution setup 还需要针对该模型调参。
+- DataFrame Router 的结果强依赖底层模型；Qwen 下 clean TSR 很低，说明目前 router/tool execution setup 还需要针对该模型调参。
 - DA-Agent 在 GPT 上有更明显的 validation/recovery 行为，但跨模型吞吐是当前瓶颈。
 
 ## Semantic/Schema Cross-Model Results
@@ -223,17 +223,17 @@ toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
 | --- | --- | ---: | ---: | ---: | ---: |
 | GPT | `langgraph_react_full` | 1.00 | 0.79 | 0.21 | 0.21 |
 | GPT | `smolagents_toolcalling` | 1.00 | 0.46 | 0.54 | 0.50 |
-| GPT | `data2mcp_dataframe` | 0.92 | 0.29 | 0.62 | 0.62 |
+| GPT | `dataframe_router` | 0.92 | 0.29 | 0.62 | 0.62 |
 | GPT | `pandasai_dataframe` | 1.00 | 0.25 | 0.75 | 0.75 |
 | GPT | `autogen_tool_agent` | 1.00 | 0.71 | 0.29 | 0.21 |
 | Claude | `langgraph_react_full` | 1.00 | 0.96 | 0.04 | 0.00 |
 | Claude | `smolagents_toolcalling` | 1.00 | 0.71 | 0.29 | 0.25 |
-| Claude | `data2mcp_dataframe` | 1.00 | 0.46 | 0.54 | 0.54 |
+| Claude | `dataframe_router` | 1.00 | 0.46 | 0.54 | 0.54 |
 | Claude | `pandasai_dataframe` | 1.00 | 0.29 | 0.71 | 0.75 |
 | Claude | `autogen_tool_agent` | 1.00 | 0.96 | 0.04 | 0.38 |
 | Qwen | `langgraph_react_full` | 1.00 | 0.79 | 0.21 | 0.21 |
 | Qwen | `smolagents_toolcalling` | 1.00 | 0.46 | 0.54 | 0.38 |
-| Qwen | `data2mcp_dataframe` | 0.54 | 0.33 | 0.21 | 0.04 |
+| Qwen | `dataframe_router` | 0.54 | 0.33 | 0.21 | 0.04 |
 | Qwen | `pandasai_dataframe` | 0.83 | 0.21 | 0.62 | 0.67 |
 | Qwen | `autogen_tool_agent` | 1.00 | 0.75 | 0.25 | 0.25 |
 
@@ -251,12 +251,12 @@ toxictool_bench/results/semantic_schema_summary.csv
 toxictool_bench/results/semantic_schema_poison_summary.csv
 toxictool_bench/results/semantic_schema_cross_model_summary.csv
 toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
-toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv
-toxictool_bench/results/data2mcp_guarded_numerical_ablation_summary.csv
-toxictool_bench/results/data2mcp_guarded_overhead_summary.csv
+toxictool_bench/results/dataframe_router_guarded_semantic_ablation_summary.csv
+toxictool_bench/results/dataframe_router_guarded_numerical_ablation_summary.csv
+toxictool_bench/results/dataframe_router_guarded_overhead_summary.csv
 toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv
 toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
-toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv
+toxictool_bench/results/dataframe_router_guarded_bootstrap_ci.csv
 ```
 
 论文 section：
@@ -315,27 +315,27 @@ compileall passed
 
 - 已经把 `CASE_STUDIES.md` 中的代表性样例整理为 `sections/06_qualitative_analysis.tex` 初稿。
 - 已经把旧 pilot 结果从 `EXPERIMENT_RESULTS.md` 拆出到 `PILOT_RESULTS.md`。
-- 已经把 semantic/schema 跨模型结果和 guarded `data2mcp` ablation 写入 `EXPERIMENT_RESULTS.md` 和 `sections/05_experiments.tex`。
-- 已经实现 `data2mcp_dataframe_guarded`，并完成 `gpt-5.4-mini` semantic/schema 24-task ablation：BCR 0.62 -> 0.00，poisoned TSR 0.29 -> 0.83，clean TSR 0.92 -> 0.83。
+- 已经把 semantic/schema 跨模型结果和 guarded `DataFrame Router` ablation 写入 `EXPERIMENT_RESULTS.md` 和 `sections/05_experiments.tex`。
+- 已经实现 `dataframe_router_guarded`，并完成 `gpt-5.4-mini` semantic/schema 24-task ablation：BCR 0.62 -> 0.00，poisoned TSR 0.29 -> 0.83，clean TSR 0.92 -> 0.83。
 - 已经完成 `gpt-5.4-mini` numerical 34-task guarded ablation：BCR 0.24 -> 0.00，clean TSR 0.65 -> 0.79，poisoned TSR 0.47 -> 0.74。
-- 已经实现并跑完整 `data2mcp_dataframe_guarded_light`：
+- 已经实现并跑完整 `dataframe_router_guarded_light`：
   - semantic/schema: clean 0.83, toxic 0.71, BCR 0.00, RR 0.71
   - numerical: clean 0.68, toxic 0.65, BCR 0.00, RR 0.65
 - 已经生成 guarded overhead 统计和 case studies：
-  - `toxictool_bench/results/data2mcp_guarded_overhead_summary.csv`
+  - `toxictool_bench/results/dataframe_router_guarded_overhead_summary.csv`
   - `GUARDED_CASE_STUDIES.md`
 - 已经生成 bootstrap CI：
   - `toxictool_bench/results/numerical_gpt_bootstrap_ci.csv`
   - `toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
   - `toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv`
-  - `toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv`
+  - `toxictool_bench/results/dataframe_router_guarded_bootstrap_ci.csv`
 - qualitative examples 已经压缩为主文版本，light-guard failure、overhead 和 framework-boundary 细节已放入 `sections/08_appendix_guard_details.tex`。
 - DA-Agent 当前策略：保留 GPT 主表，跨模型遗漏作为 throughput limitation 报告。
 - bootstrap CI 已完成；只有在最终关键 claim 的 CI 仍显得过宽时，才需要 optional rerun。
 - stronger ablation 已完成第一轮：
   - full guard: 主 defense result
   - light guard: appendix/tradeoff result
-  - overhead summary: `data2mcp_guarded_overhead_summary.csv`
+  - overhead summary: `dataframe_router_guarded_overhead_summary.csv`
 - 仍可作为后续扩展的 ablation：
   - poison severity
   - poison once vs repeated poison
@@ -358,7 +358,7 @@ compileall passed
 
 - OpenHands full adapter 还没有完成；当前建议作为 future work，不阻塞主表。
 - PandasAI poisoning boundary 需要更细，最好能拦截内部 code execution result。
-- data2mcp + Qwen 的 max-turn / tool-use 行为需要单独 debug，否则会压低 clean TSR 并影响横向比较。
+- DataFrame Router + Qwen 的 max-turn / tool-use 行为需要单独 debug，否则会压低 clean TSR 并影响横向比较。
 - DA-Agent 的 cross-model throughput 需要优化，或者作为明确 limitation 处理。
 
 ## 建议的下一步

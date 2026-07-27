@@ -1,6 +1,6 @@
 model,adapter,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr,toxic_adr,toxic_vr,toxic_rr,n
 gpt-5.4-mini,autogen_tool_agent,1.00,0.71,0.29,0.21,0.04,0.75,0.67,24
-gpt-5.4-mini,data2mcp_dataframe,0.92,0.29,0.62,0.62,0.00,0.00,0.00,24
+gpt-5.4-mini,dataframe_router,0.92,0.29,0.62,0.62,0.00,0.00,0.00,24
 gpt-5.4-mini,langgraph_react_full,1.00,0.79,0.21,0.21,0.00,0.75,0.75,24
 gpt-5.4-mini,pandasai_dataframe,1.00,0.25,0.75,0.75,0.00,0.00,0.00,24
 gpt-5.4-mini,smolagents_toolcalling,1.00,0.46,0.54,0.50,0.00,0.04,0.00,24

@@ -7,8 +7,8 @@ ENVIRONMENT="${ENVIRONMENT:-both}"
 START_INDEX="${START_INDEX:-0}"
 LIMIT="${LIMIT:-0}"
 BASELINE_DIR="${TOXICTOOL_BASELINE_DIR:-baseline_agent}"
-DATA2MCP_SRC="${TOXICTOOL_DATA2MCP_SRC:-src}"
-ADAPTERS="${ADAPTERS:-langgraph_react_full smolagents_toolcalling data2mcp_dataframe pandasai_dataframe autogen_tool_agent}"
+DATAFRAME_ROUTER_SRC="${TOXICTOOL_DATAFRAME_ROUTER_SRC:-${TOXICTOOL_DATA2MCP_SRC:-src}}"
+ADAPTERS="${ADAPTERS:-langgraph_react_full smolagents_toolcalling dataframe_router pandasai_dataframe autogen_tool_agent}"
 
 run_adapter() {
   local adapter="$1"
@@ -22,8 +22,8 @@ run_adapter() {
     smolagents_toolcalling)
       py_path="$py_path:$BASELINE_DIR/smolagents/src"
       ;;
-    data2mcp_dataframe*)
-      py_path="$py_path:$DATA2MCP_SRC"
+    dataframe_router*)
+      py_path="$py_path:$DATAFRAME_ROUTER_SRC"
       ;;
     pandasai_dataframe)
       py_path="$py_path:$BASELINE_DIR/pandas-ai:$BASELINE_DIR/pandas-ai/extensions/llms/litellm"

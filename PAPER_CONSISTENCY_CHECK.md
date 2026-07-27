@@ -27,8 +27,8 @@ Date: 2026-07-19
 - Main numerical cross-model table matches `toxictool_bench/results/cross_model_summary.csv`.
 - Main semantic/schema table matches `toxictool_bench/results/semantic_schema_cross_model_summary.csv`.
 - Guarded ablation table matches:
-  - `toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv`
-  - `toxictool_bench/results/data2mcp_guarded_numerical_ablation_summary.csv`
+  - `toxictool_bench/results/dataframe_router_guarded_semantic_ablation_summary.csv`
+  - `toxictool_bench/results/dataframe_router_guarded_numerical_ablation_summary.csv`
 - Appendix light-guard and CI values match the guarded result artifacts as written.
 
 ## Fixed
@@ -38,7 +38,7 @@ Date: 2026-07-19
 - Reworded the benchmark discussion of data-embedded instructions as framework support rather than a reported main experiment.
 - Reworded the experiment failure-pattern list to avoid implying instruction-poisoning results in the main tables.
 - Reorganized Section 5 after the GPT-only 120-task expanded cross-agent run:
-  - main text keeps the 120-task cross-agent table and the 120-task `data2mcp` defense table as the primary results;
+  - main text keeps the 120-task cross-agent table and the 120-task `DataFrame Router` defense table as the primary results;
   - cross-model evidence is compressed into one adapter-mean table;
   - detailed adapter-level cross-model and suite-breakdown tables are released as artifact CSVs and listed in the appendix.
 - Added a review-response pass:

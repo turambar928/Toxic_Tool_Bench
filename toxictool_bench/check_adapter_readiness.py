@@ -10,7 +10,12 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BASELINE_DIR = Path(os.environ.get("TOXICTOOL_BASELINE_DIR", REPO_ROOT / "baseline_agent"))
-DATA2MCP_SRC = Path(os.environ.get("TOXICTOOL_DATA2MCP_SRC", REPO_ROOT / "src"))
+DATAFRAME_ROUTER_SRC = Path(
+    os.environ.get(
+        "TOXICTOOL_DATAFRAME_ROUTER_SRC",
+        os.environ.get("TOXICTOOL_DATA2MCP_SRC", REPO_ROOT / "src"),
+    )
+)
 
 
 @dataclass(frozen=True)
@@ -47,58 +52,58 @@ CHECKS = (
         note="smolagents local checkout.",
     ),
     AdapterCheck(
-        name="data2mcp_dataframe",
-        paths=(DATA2MCP_SRC,),
+        name="dataframe_router",
+        paths=(DATAFRAME_ROUTER_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
-        note="data2mcp_v2 package and FastMCP dependencies.",
+        note="DataFrame Router package and FastMCP dependencies.",
     ),
     AdapterCheck(
-        name="data2mcp_dataframe_caution",
-        paths=(DATA2MCP_SRC,),
+        name="dataframe_router_caution",
+        paths=(DATAFRAME_ROUTER_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
-        note="same dependency surface as base data2mcp.",
+        note="same dependency surface as base DataFrame Router.",
     ),
     AdapterCheck(
-        name="data2mcp_dataframe_expectation_only",
-        paths=(DATA2MCP_SRC,),
+        name="dataframe_router_expectation_only",
+        paths=(DATAFRAME_ROUTER_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
-        note="same dependency surface as base data2mcp.",
+        note="same dependency surface as base DataFrame Router.",
     ),
     AdapterCheck(
-        name="data2mcp_dataframe_verification_only",
-        paths=(DATA2MCP_SRC,),
+        name="dataframe_router_verification_only",
+        paths=(DATAFRAME_ROUTER_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
-        note="same dependency surface as base data2mcp.",
+        note="same dependency surface as base DataFrame Router.",
     ),
     AdapterCheck(
-        name="data2mcp_dataframe_guarded",
-        paths=(DATA2MCP_SRC,),
+        name="dataframe_router_guarded",
+        paths=(DATAFRAME_ROUTER_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
-        note="same dependency surface as base data2mcp.",
+        note="same dependency surface as base DataFrame Router.",
     ),
     AdapterCheck(
-        name="data2mcp_dataframe_guarded_light",
-        paths=(DATA2MCP_SRC,),
+        name="dataframe_router_guarded_light",
+        paths=(DATAFRAME_ROUTER_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
-        note="same dependency surface as base data2mcp.",
+        note="same dependency surface as base DataFrame Router.",
     ),
     AdapterCheck(
-        name="data2mcp_dataframe_abstain",
-        paths=(DATA2MCP_SRC,),
+        name="dataframe_router_abstain",
+        paths=(DATAFRAME_ROUTER_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
-        note="same dependency surface as base data2mcp.",
+        note="same dependency surface as base DataFrame Router.",
     ),
     AdapterCheck(
-        name="data2mcp_dataframe_randomized",
-        paths=(DATA2MCP_SRC,),
+        name="dataframe_router_randomized",
+        paths=(DATAFRAME_ROUTER_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
-        note="same dependency surface as base data2mcp.",
+        note="same dependency surface as base DataFrame Router.",
     ),
     AdapterCheck(
-        name="data2mcp_dataframe_selective",
-        paths=(DATA2MCP_SRC,),
+        name="dataframe_router_selective",
+        paths=(DATAFRAME_ROUTER_SRC,),
         imports=("data2mcp_v2.config", "fastmcp.tools"),
-        note="same dependency surface as base data2mcp.",
+        note="same dependency surface as base DataFrame Router.",
     ),
     AdapterCheck(
         name="pandasai_dataframe",
@@ -144,7 +149,7 @@ def _display_path(path: Path) -> str:
 def main() -> None:
     args = parse_args()
     print(f"baseline_dir={BASELINE_DIR}")
-    print(f"data2mcp_src={DATA2MCP_SRC}")
+    print(f"dataframe_router_src={DATAFRAME_ROUTER_SRC}")
     missing_any = False
     for check in CHECKS:
         missing_paths = [path for path in check.paths if not path.exists()]

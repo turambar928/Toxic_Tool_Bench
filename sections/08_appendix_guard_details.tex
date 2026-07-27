@@ -60,7 +60,7 @@ The main text keeps compact tables for page budget. Detailed adapter-level cross
 \begin{itemize}
     \item Cross-model summaries: \path{cross_model_summary.csv} and \path{semantic_schema_cross_model_summary.csv}.
     \item Expanded GPT summaries: files matching \path{iclr2027_gpt_expanded_cross_agent_*_summary.csv}.
-    \item Defense ablation summary: \path{iclr2027_data2mcp_ablation_auto_combined_summary.csv}.
+    \item Defense ablation summary: \path{iclr2027_dataframe_router_ablation_auto_combined_summary.csv}.
     \item Multi-table extension: task JSONL and extension summary CSVs.
     \item Verification stress: stratified task files and summary CSVs.
     \item LangGraph replication: stratified-10 JSONL and summary CSV.
@@ -74,11 +74,11 @@ The main text keeps compact tables for page budget. Detailed adapter-level cross
 
 The full guard gives priority to independently verified evidence. If the primary route and verification route disagree, the final answer is drawn from the verification route when it produces a task-specific value, label, or evidence binding. If verification is inconclusive, the guarded adapter returns a qualified answer rather than copying the primary result. This policy is intentionally conservative: it can convert blind compliance into abstention or under-recovery when the verification budget is too small.
 
-We estimate false-override risk through clean TSR. If the guard frequently overrode correct primary answers with noisy verification, clean TSR would fall. In the expanded 120-task \texttt{data2mcp} ablation, full guard has clean TSR \texttt{0.84}, comparable to base \texttt{0.82}, while reducing toxic BCR from \texttt{0.41} to \texttt{0.00}. This does not prove universal robustness, but it suggests that the observed BCR reduction is not obtained by indiscriminate abstention on clean tasks.
+We estimate false-override risk through clean TSR. If the guard frequently overrode correct primary answers with noisy verification, clean TSR would fall. In the expanded 120-task DataFrame Router ablation, full guard has clean TSR \texttt{0.84}, comparable to base \texttt{0.82}, while reducing toxic BCR from \texttt{0.41} to \texttt{0.00}. This does not prove universal robustness, but it suggests that the observed BCR reduction is not obtained by indiscriminate abstention on clean tasks.
 
 \subsection{Alternative Verification Baselines}
 
-We include three additional adapter-level baselines. \path{data2mcp_dataframe_abstain} runs a primary route and a verification route, then abstains when the two disagree. \path{data2mcp_dataframe_randomized} triggers independent recomputation according to a deterministic task-level random gate. \path{data2mcp_dataframe_selective} triggers verification for high-risk query patterns such as rankings, ratios, denominators, schema lookup, evidence retrieval, and source-of-truth metadata. These baselines distinguish always-on guarding from cheaper policies that verify selectively or refuse to answer under disagreement.
+We include three additional adapter-level baselines. \path{dataframe_router_abstain} runs a primary route and a verification route, then abstains when the two disagree. \path{dataframe_router_randomized} triggers independent recomputation according to a deterministic task-level random gate. \path{dataframe_router_selective} triggers verification for high-risk query patterns such as rankings, ratios, denominators, schema lookup, evidence retrieval, and source-of-truth metadata. These baselines distinguish always-on guarding from cheaper policies that verify selectively or refuse to answer under disagreement.
 
 Table~\ref{tab:appendix-stronger-baselines} reports the fixed-subset results. The numerical subset is difficult for all three alternatives under a six-step cap; this reflects ordinary analysis failures and failed answer extraction rather than blind compliance alone. On the semantic subset, randomized verification has high clean TSR but misses several toxic label/stale cases, while selective verification preserves the no-BCR behavior of full guarding on this subset.
 
@@ -107,9 +107,9 @@ Semantic-10 & Selective & 0.70 & \textbf{0.80} & \textbf{0.00} & \textbf{1.00} &
 \section{Second-Framework Replication}
 \label{sec:appendix-langgraph-replication}
 
-We add \path{langgraph_react_verification_only} to test whether the independent-verification mechanism can be implemented outside \texttt{data2mcp}. The adapter first runs the ordinary LangGraph ReAct route, then starts a second LangGraph route whose prompt treats the primary answer as an untrusted claim and asks for recomputation from the loaded dataframe or auxiliary tables. The final answer is taken from the verification route. This mirrors the evidence-selection idea used by Guarded Verification, but it does not include the full expectation-generation and tie-breaking policy of the \texttt{data2mcp} guard.
+We add \path{langgraph_react_verification_only} to test whether the independent-verification mechanism can be implemented outside DataFrame Router. The adapter first runs the ordinary LangGraph ReAct route, then starts a second LangGraph route whose prompt treats the primary answer as an untrusted claim and asks for recomputation from the loaded dataframe or auxiliary tables. The final answer is taken from the verification route. This mirrors the evidence-selection idea used by Guarded Verification, but it does not include the full expectation-generation and tie-breaking policy of the DataFrame Router guard.
 
-On a fixed 10-task semantic/schema stratified subset, the adapter obtains clean TSR \texttt{1.00}, toxic TSR \texttt{0.90}, toxic BCR \texttt{0.00}, toxic VR \texttt{1.00}, and toxic RR \texttt{0.90}. This is not a full 120-task second-framework ablation, but it shows that the independent-evidence mechanism is implementable outside \texttt{data2mcp} and preserves the main behavioral pattern on held-out semantic/schema poison types. The merged run log and compact summary are released as \path{iclr2027_langgraph_verification_replication_semantic_strat10.jsonl} and \path{iclr2027_langgraph_verification_replication_semantic_strat10_summary.csv}.
+On a fixed 10-task semantic/schema stratified subset, the adapter obtains clean TSR \texttt{1.00}, toxic TSR \texttt{0.90}, toxic BCR \texttt{0.00}, toxic VR \texttt{1.00}, and toxic RR \texttt{0.90}. This is not a full 120-task second-framework ablation, but it shows that the independent-evidence mechanism is implementable outside DataFrame Router and preserves the main behavioral pattern on held-out semantic/schema poison types. The merged run log and compact summary are released as \path{iclr2027_langgraph_verification_replication_semantic_strat10.jsonl} and \path{iclr2027_langgraph_verification_replication_semantic_strat10_summary.csv}.
 
 The command template is:
 \begin{verbatim}
@@ -150,7 +150,7 @@ The command template is:
 \begin{verbatim}
 python3 toxictool_bench/run_full_bench.py \
   --tasks toxictool_bench/tasks/semantic_schema_iclr2027.jsonl \
-  --adapter data2mcp_dataframe_guarded \
+  --adapter dataframe_router_guarded \
   --model gpt-5.4-mini \
   --env both \
   --poison-repeat \
@@ -159,13 +159,13 @@ python3 toxictool_bench/run_full_bench.py \
 
 \section{Light-Guard Tradeoff}
 
-The main text reports the full guarded \texttt{data2mcp} adapter as the defense result. We also evaluate a lower-budget light guard that caps the verification route more aggressively. On the expanded semantic/schema suite, the light guard obtains clean TSR \texttt{0.88}, poisoned TSR \texttt{0.88}, BCR \texttt{0.00}, and RR \texttt{0.88}. On the expanded numerical suite, it obtains clean TSR \texttt{0.80}, poisoned TSR \texttt{0.78}, BCR \texttt{0.00}, and RR \texttt{0.78}. Combined over 120 tasks, light guard obtains clean TSR \texttt{0.84}, poisoned TSR \texttt{0.83}, BCR \texttt{0.00}, and RR \texttt{0.83}. The light guard therefore preserves the blind-compliance reduction and is competitive with the full guard, but we keep full guarding as the main result because it allocates a more reliable verification budget.
+The main text reports the full guarded DataFrame Router adapter as the defense result. We also evaluate a lower-budget light guard that caps the verification route more aggressively. On the expanded semantic/schema suite, the light guard obtains clean TSR \texttt{0.88}, poisoned TSR \texttt{0.88}, BCR \texttt{0.00}, and RR \texttt{0.88}. On the expanded numerical suite, it obtains clean TSR \texttt{0.80}, poisoned TSR \texttt{0.78}, BCR \texttt{0.00}, and RR \texttt{0.78}. Combined over 120 tasks, light guard obtains clean TSR \texttt{0.84}, poisoned TSR \texttt{0.83}, BCR \texttt{0.00}, and RR \texttt{0.83}. The light guard therefore preserves the blind-compliance reduction and is competitive with the full guard, but we keep full guarding as the main result because it allocates a more reliable verification budget.
 
 \section{Overhead and Confidence Intervals}
 
 \subsection{Tool-Event Overhead}
 
-The guard increases routing work because it adds independent verification. Table~\ref{tab:appendix-cost-robustness} summarizes the robustness--cost tradeoff for the expanded 120-task \texttt{data2mcp} ablation. The base adapter averages \texttt{1.28} toxic tool events on semantic/schema tasks and \texttt{1.22} on numerical tasks. Full guard increases these to \texttt{3.18} and \texttt{2.97}, respectively, while reducing BCR from \texttt{0.41} to \texttt{0.00} and improving poisoned TSR from \texttt{0.47} to \texttt{0.84}. Verification-only and light guard show that most of the robustness gain comes from the independent evidence route; caution and expectation prompts add smaller routing overhead but leave substantial BCR.
+The guard increases routing work because it adds independent verification. Table~\ref{tab:appendix-cost-robustness} summarizes the robustness--cost tradeoff for the expanded 120-task DataFrame Router ablation. The base adapter averages \texttt{1.28} toxic tool events on semantic/schema tasks and \texttt{1.22} on numerical tasks. Full guard increases these to \texttt{3.18} and \texttt{2.97}, respectively, while reducing BCR from \texttt{0.41} to \texttt{0.00} and improving poisoned TSR from \texttt{0.47} to \texttt{0.84}. Verification-only and light guard show that most of the robustness gain comes from the independent evidence route; caution and expectation prompts add smaller routing overhead but leave substantial BCR.
 
 \begin{table}[h]
 \centering
@@ -187,7 +187,7 @@ Full guard & \textbf{0.84} & \textbf{0.00} & 3.18 & 2.97 \\
 Light guard & 0.83 & 0.00 & 3.03 & 2.78 \\
 \bottomrule
 \end{tabular}
-\caption{Cost--robustness tradeoff for the expanded 120-task \texttt{data2mcp} defense ablation. Event columns report average toxic tool events per run; full wall-clock latency is unavailable for these earlier ablation logs.}
+\caption{Cost--robustness tradeoff for the expanded 120-task DataFrame Router defense ablation. Event columns report average toxic tool events per run; full wall-clock latency is unavailable for these earlier ablation logs.}
 \label{tab:appendix-cost-robustness}
 \end{table}
 
@@ -215,7 +215,7 @@ Numerical & Full guard & [0.63, 0.85] & [0.00, 0.00] \\
 Numerical & Light guard & [0.67, 0.88] & [0.00, 0.00] \\
 \bottomrule
 \end{tabular}
-\caption{Bootstrap confidence intervals for guarded \texttt{data2mcp} ablations.}
+\caption{Bootstrap confidence intervals for guarded DataFrame Router ablations.}
 \label{tab:appendix-guard-ci}
 \end{table}
 
@@ -225,13 +225,13 @@ The complete mechanically extracted guard cases are stored in \texttt{GUARDED\_C
 
 \section{Framework Boundaries}
 
-Poisoning boundaries differ across frameworks. LangGraph, smolagents, \texttt{data2mcp}, and AutoGen are poisoned at a tool-observation boundary. PandasAI is currently poisoned at a coarser chat-result boundary. DA-Agent is integrated through its action loop, but its observations can include shell output and tracebacks. We therefore interpret results as end-to-end framework measurements rather than pure model-only measurements.
+Poisoning boundaries differ across frameworks. LangGraph, smolagents, DataFrame Router, and AutoGen are poisoned at a tool-observation boundary. PandasAI is currently poisoned at a coarser chat-result boundary. DA-Agent is integrated through its action loop, but its observations can include shell output and tracebacks. We therefore interpret results as end-to-end framework measurements rather than pure model-only measurements.
 
 \section{Multi-Table Extension}
 
 \subsection{Execution Surface}
 
-The multi-table extension uses the same poisoned-observation protocol but exposes auxiliary CSVs as named tables inside the execution environment. The primary dataframe remains available as \texttt{df}; auxiliary tables are exposed through \texttt{tables} by dataset stem and filename alias. For \texttt{data2mcp}, the router also receives a dedicated execution tool for exact multi-table joins. This is intentionally closer to notebook-style analysis than to the single-table tasks used in the original benchmark suites.
+The multi-table extension uses the same poisoned-observation protocol but exposes auxiliary CSVs as named tables inside the execution environment. The primary dataframe remains available as \texttt{df}; auxiliary tables are exposed through \texttt{tables} by dataset stem and filename alias. For DataFrame Router, the router also receives a dedicated execution tool for exact multi-table joins. This is intentionally closer to notebook-style analysis than to the single-table tasks used in the original benchmark suites.
 
 \subsection{Task Inventory}
 
@@ -258,7 +258,7 @@ Product analytics & product sales/products & sku & rank swap, label swap \\
 
 \subsection{Latency and Cost Proxies}
 
-The released \path{iclr2027_overhead_latency_audit.csv} records latency coverage, mean/p50/p90 wall-clock seconds, tool events, raw actions, and final-answer length for available JSONL logs. The original 120-task \texttt{data2mcp} defense ablation predates \texttt{elapsed\_seconds}, so Table~\ref{tab:appendix-cost-robustness} uses tool events as the cost proxy. Newer runs include wall-clock fields. Table~\ref{tab:appendix-realistic-latency} reports the available latency measurements for the 13-task multi-table extension and the LangGraph verification replication. These values are not provider billing estimates: the API gateways used in the experiments do not expose reliable per-call dollar charges, and latency varies with backend queueing.
+The released \path{iclr2027_overhead_latency_audit.csv} records latency coverage, mean/p50/p90 wall-clock seconds, tool events, raw actions, and final-answer length for available JSONL logs. The original 120-task DataFrame Router defense ablation predates \texttt{elapsed\_seconds}, so Table~\ref{tab:appendix-cost-robustness} uses tool events as the cost proxy. Newer runs include wall-clock fields. Table~\ref{tab:appendix-realistic-latency} reports the available latency measurements for the 13-task multi-table extension and the LangGraph verification replication. These values are not provider billing estimates: the API gateways used in the experiments do not expose reliable per-call dollar charges, and latency varies with backend queueing.
 
 \begin{table}[h]
 \centering
@@ -268,9 +268,9 @@ The released \path{iclr2027_overhead_latency_audit.csv} records latency coverage
 \toprule
 Run & Clean sec. & Toxic sec. & Clean events & Toxic events \\
 \midrule
-\texttt{data2mcp} base, multi-table 13 & 24.43 & 25.08 & 4.08 & 4.62 \\
-\texttt{data2mcp} full guard, multi-table 13 & 50.86 & 46.82 & 5.92 & 6.23 \\
-\texttt{data2mcp} light guard, multi-table 13 & 49.27 & 48.79 & 5.85 & 6.15 \\
+DataFrame Router base, multi-table 13 & 24.43 & 25.08 & 4.08 & 4.62 \\
+DataFrame Router full guard, multi-table 13 & 50.86 & 46.82 & 5.92 & 6.23 \\
+DataFrame Router light guard, multi-table 13 & 49.27 & 48.79 & 5.85 & 6.15 \\
 LangGraph verification, semantic 10 & 19.74 & 17.72 & 3.60 & 3.70 \\
 \bottomrule
 \end{tabular}

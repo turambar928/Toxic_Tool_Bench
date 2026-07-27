@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from evaluator import aggregate, evaluate_run
-from full_adapters import run_full_adapter
+from full_adapters import DATAFRAME_ROUTER_ALIASES, run_full_adapter
 from run_bench import chunk_suffix, load_tasks, select_tasks
 from tools import DataToolEnv
 
@@ -27,15 +27,7 @@ def parse_args() -> argparse.Namespace:
             "langgraph_react_full",
             "langgraph_react_verification_only",
             "autogen_tool_agent",
-            "data2mcp_dataframe",
-            "data2mcp_dataframe_caution",
-            "data2mcp_dataframe_expectation_only",
-            "data2mcp_dataframe_verification_only",
-            "data2mcp_dataframe_guarded",
-            "data2mcp_dataframe_guarded_light",
-            "data2mcp_dataframe_abstain",
-            "data2mcp_dataframe_randomized",
-            "data2mcp_dataframe_selective",
+            *DATAFRAME_ROUTER_ALIASES.keys(),
             "pandasai_dataframe",
             "da_agent_full",
         ],

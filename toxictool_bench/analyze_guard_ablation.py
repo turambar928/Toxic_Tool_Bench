@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Summarize data2mcp guard ablations and extract representative cases."""
+"""Summarize DataFrame Router guard ablations and extract representative cases."""
 
 from __future__ import annotations
 
@@ -188,7 +188,7 @@ def main() -> None:
     write_csv(summary, args.output_csv)
 
     cases = [
-        "# Guarded data2mcp Case Studies",
+        "# Guarded DataFrame Router Case Studies",
         "",
         "Generated from rescored base/full/light ablation files. Cases are selected mechanically: base blind-compliance cases that full guard recovers, and full-guard successes that light guard loses under the tighter budget.",
         "",

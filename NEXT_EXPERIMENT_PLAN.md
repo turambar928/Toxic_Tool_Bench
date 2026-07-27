@@ -68,7 +68,7 @@ Adapters:
 ```text
 langgraph_react_full
 smolagents_toolcalling
-data2mcp_dataframe
+dataframe_router
 pandasai_dataframe
 autogen_tool_agent
 ```
@@ -120,7 +120,7 @@ Adapters:
 ```text
 langgraph_react_full
 smolagents_toolcalling
-data2mcp_dataframe
+dataframe_router
 pandasai_dataframe
 autogen_tool_agent
 ```
@@ -138,7 +138,7 @@ toxictool_bench/results/semantic_schema_cross_model_poison_summary.csv
 
 Evaluate Guarded Verification as a structured wrapper, not only as a caution prompt.
 
-Status: semantic/schema and numerical full/light guarded ablations complete for `data2mcp_dataframe`.
+Status: semantic/schema and numerical full/light guarded ablations complete for `dataframe_router`.
 
 Core comparisons:
 
@@ -168,25 +168,25 @@ Current result on the 24-task semantic/schema suite with `gpt-5.4-mini`:
 
 | Adapter | Clean TSR | Poisoned TSR | Delta TSR | Toxic BCR | Toxic VR | Toxic RR |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `data2mcp_dataframe` | 0.92 | 0.29 | 0.62 | 0.62 | 0.00 | 0.00 |
-| `data2mcp_dataframe_guarded` | 0.83 | 0.83 | 0.00 | 0.00 | 1.00 | 0.83 |
-| `data2mcp_dataframe_guarded_light` | 0.83 | 0.71 | 0.12 | 0.00 | 1.00 | 0.71 |
+| `dataframe_router` | 0.92 | 0.29 | 0.62 | 0.62 | 0.00 | 0.00 |
+| `dataframe_router_guarded` | 0.83 | 0.83 | 0.00 | 0.00 | 1.00 | 0.83 |
+| `dataframe_router_guarded_light` | 0.83 | 0.71 | 0.12 | 0.00 | 1.00 | 0.71 |
 
 Current result on the 34-task numerical suite with `gpt-5.4-mini`:
 
 | Adapter | Clean TSR | Poisoned TSR | Delta TSR | Toxic BCR | Toxic VR | Toxic RR |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `data2mcp_dataframe` | 0.65 | 0.47 | 0.18 | 0.24 | 0.03 | 0.09 |
-| `data2mcp_dataframe_guarded` | 0.79 | 0.74 | 0.06 | 0.00 | 1.00 | 0.74 |
-| `data2mcp_dataframe_guarded_light` | 0.68 | 0.65 | 0.03 | 0.00 | 1.00 | 0.65 |
+| `dataframe_router` | 0.65 | 0.47 | 0.18 | 0.24 | 0.03 | 0.09 |
+| `dataframe_router_guarded` | 0.79 | 0.74 | 0.06 | 0.00 | 1.00 | 0.74 |
+| `dataframe_router_guarded_light` | 0.68 | 0.65 | 0.03 | 0.00 | 1.00 | 0.65 |
 
 Output files:
 
 ```text
-toxictool_bench/results/data2mcp_guarded_semantic_ablation_summary.csv
-toxictool_bench/results/data2mcp_guarded_semantic_ablation_poison_summary.csv
-toxictool_bench/results/data2mcp_guarded_numerical_ablation_summary.csv
-toxictool_bench/results/data2mcp_guarded_numerical_ablation_poison_summary.csv
+toxictool_bench/results/dataframe_router_guarded_semantic_ablation_summary.csv
+toxictool_bench/results/dataframe_router_guarded_semantic_ablation_poison_summary.csv
+toxictool_bench/results/dataframe_router_guarded_numerical_ablation_summary.csv
+toxictool_bench/results/dataframe_router_guarded_numerical_ablation_poison_summary.csv
 ```
 
 ## Phase 5: Paper Integration
@@ -215,12 +215,12 @@ Status: qualitative evidence and overhead summary generated for the current guar
 Generated files:
 
 ```text
-toxictool_bench/results/data2mcp_guarded_overhead_summary.csv
+toxictool_bench/results/dataframe_router_guarded_overhead_summary.csv
 GUARDED_CASE_STUDIES.md
 toxictool_bench/results/numerical_gpt_bootstrap_ci.csv
 toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv
 toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
-toxictool_bench/results/data2mcp_guarded_bootstrap_ci.csv
+toxictool_bench/results/dataframe_router_guarded_bootstrap_ci.csv
 ```
 
 ## ICLR 2027 Expansion Track
@@ -234,7 +234,7 @@ toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
 
 Recommended order:
 
-1. Run partial smoke tests for `data2mcp_dataframe`, `langgraph_react_full`, and `pandasai_dataframe`.
+1. Run partial smoke tests for `dataframe_router`, `langgraph_react_full`, and `pandasai_dataframe`.
 2. Generate severity summaries with `--severity-output` and check obvious/plausible/subtle trends.
 3. Run full guard and light guard on the expanded candidate suites.
 4. Only then expand to all adapters and cross-model runs.

@@ -27,7 +27,28 @@ except ImportError:
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BASELINE_DIR = Path(os.environ.get("TOXICTOOL_BASELINE_DIR", REPO_ROOT / "baseline_agent"))
-DATA2MCP_SRC = Path(os.environ.get("TOXICTOOL_DATA2MCP_SRC", REPO_ROOT / "src"))
+DATA2MCP_SRC = Path(
+    os.environ.get(
+        "TOXICTOOL_DATAFRAME_ROUTER_SRC",
+        os.environ.get("TOXICTOOL_DATA2MCP_SRC", REPO_ROOT / "src"),
+    )
+)
+
+DATAFRAME_ROUTER_ALIASES = {
+    "dataframe_router": "data2mcp_dataframe",
+    "dataframe_router_caution": "data2mcp_dataframe_caution",
+    "dataframe_router_expectation_only": "data2mcp_dataframe_expectation_only",
+    "dataframe_router_verification_only": "data2mcp_dataframe_verification_only",
+    "dataframe_router_guarded": "data2mcp_dataframe_guarded",
+    "dataframe_router_guarded_light": "data2mcp_dataframe_guarded_light",
+    "dataframe_router_abstain": "data2mcp_dataframe_abstain",
+    "dataframe_router_randomized": "data2mcp_dataframe_randomized",
+    "dataframe_router_selective": "data2mcp_dataframe_selective",
+}
+
+
+def normalize_adapter_name(adapter: str) -> str:
+    return DATAFRAME_ROUTER_ALIASES.get(adapter, adapter)
 
 
 def add_baseline_paths() -> None:
@@ -64,6 +85,15 @@ def run_full_adapter(
         "langgraph_react_full",
         "langgraph_react_verification_only",
         "autogen_tool_agent",
+        "dataframe_router",
+        "dataframe_router_caution",
+        "dataframe_router_expectation_only",
+        "dataframe_router_verification_only",
+        "dataframe_router_guarded",
+        "dataframe_router_guarded_light",
+        "dataframe_router_abstain",
+        "dataframe_router_randomized",
+        "dataframe_router_selective",
         "data2mcp_dataframe",
         "data2mcp_dataframe_caution",
         "data2mcp_dataframe_expectation_only",
@@ -85,6 +115,7 @@ def run_full_adapter(
     max_tokens: int,
 ) -> AgentRun:
     add_baseline_paths()
+    adapter = normalize_adapter_name(adapter)
     if adapter == "smolagents_toolcalling":
         result = run_smolagents_toolcalling(
             api_file=api_file,
@@ -598,7 +629,7 @@ def run_data2mcp_dataframe(
         max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        dependency_label="data2mcp adapter",
+        dependency_label="DataFrame Router adapter",
     )
     query = (
         _data2mcp_task_header(task)
@@ -610,7 +641,7 @@ def run_data2mcp_dataframe(
     final_text, messages = asyncio.run(router.route(query))
     return FullAdapterResult(
         final_answer=str(final_text),
-        raw_actions=["data2mcp_v2.Router.route"],
+        raw_actions=["dataframe_router.Router.route"],
         messages=_stringify_messages(messages),
     )
 
@@ -633,7 +664,7 @@ def run_data2mcp_dataframe_caution(
         max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        dependency_label="data2mcp caution adapter",
+        dependency_label="DataFrame Router caution adapter",
     )
     query = (
         _data2mcp_task_header(task)
@@ -647,7 +678,7 @@ def run_data2mcp_dataframe_caution(
     final_text, messages = asyncio.run(router.route(query))
     return FullAdapterResult(
         final_answer=str(final_text),
-        raw_actions=["data2mcp_v2.Router.route", "data2mcp_ablation.caution_prompt"],
+        raw_actions=["dataframe_router.Router.route", "dataframe_router_ablation.caution_prompt"],
         messages=_stringify_messages(messages),
     )
 
@@ -670,7 +701,7 @@ def run_data2mcp_dataframe_expectation_only(
         max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        dependency_label="data2mcp expectation-only adapter",
+        dependency_label="DataFrame Router expectation-only adapter",
     )
     expectation = _guard_expectation_text(task)
     query = (
@@ -685,7 +716,7 @@ def run_data2mcp_dataframe_expectation_only(
     final_text, messages = asyncio.run(router.route(query))
     return FullAdapterResult(
         final_answer=str(final_text),
-        raw_actions=["data2mcp_v2.Router.route", "data2mcp_ablation.expectation_only"],
+        raw_actions=["dataframe_router.Router.route", "dataframe_router_ablation.expectation_only"],
         messages=[{"role": "system", "content": f"Guard expectation: {expectation}"}] + _stringify_messages(messages),
     )
 
@@ -708,7 +739,7 @@ def run_data2mcp_dataframe_verification_only(
         max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        dependency_label="data2mcp verification-only adapter",
+        dependency_label="DataFrame Router verification-only adapter",
     )
     initial_query = (
         _data2mcp_task_header(task)
@@ -737,9 +768,9 @@ def run_data2mcp_dataframe_verification_only(
     return FullAdapterResult(
         final_answer=f"Verified by independent recomputation: {verified_text}",
         raw_actions=[
-            "data2mcp_v2.Router.route",
-            "data2mcp_ablation.initial_answer",
-            "data2mcp_ablation.verification_only",
+            "dataframe_router.Router.route",
+            "dataframe_router_ablation.initial_answer",
+            "dataframe_router_ablation.verification_only",
         ],
         messages=(
             _stringify_messages(initial_messages)
@@ -767,7 +798,7 @@ def run_data2mcp_dataframe_guarded(
         max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        dependency_label="data2mcp guarded adapter",
+        dependency_label="DataFrame Router guarded adapter",
     )
 
     expectation = _guard_expectation_text(task)
@@ -809,9 +840,9 @@ def run_data2mcp_dataframe_guarded(
     return FullAdapterResult(
         final_answer=str(final_answer),
         raw_actions=[
-            "data2mcp_v2.Router.route",
-            "data2mcp_guard.expectation",
-            "data2mcp_guard.independent_verification",
+            "dataframe_router.Router.route",
+            "dataframe_router_guard.expectation",
+            "dataframe_router_guard.independent_verification",
         ],
         messages=messages,
     )
@@ -939,9 +970,9 @@ def run_data2mcp_dataframe_guarded_light(
         max_tokens=min(max_tokens, 1536),
     )
     result.raw_actions = [
-        "data2mcp_v2.Router.route",
-        "data2mcp_guard_light.expectation",
-        "data2mcp_guard_light.budgeted_verification",
+        "dataframe_router.Router.route",
+        "dataframe_router_guard_light.expectation",
+        "dataframe_router_guard_light.budgeted_verification",
     ]
     return result
 
@@ -964,7 +995,7 @@ def run_data2mcp_dataframe_abstain(
         max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        dependency_label="data2mcp abstain adapter",
+        dependency_label="DataFrame Router abstain adapter",
     )
     initial_query = _data2mcp_prompt(task, "Use dataframe_query_tool to compute the answer exactly before finalizing.")
     initial_text, initial_messages = asyncio.run(router.route(initial_query))
@@ -983,9 +1014,9 @@ def run_data2mcp_dataframe_abstain(
     return FullAdapterResult(
         final_answer=final_answer,
         raw_actions=[
-            "data2mcp_v2.Router.route",
-            "data2mcp_abstain.primary",
-            "data2mcp_abstain.verification",
+            "dataframe_router.Router.route",
+            "dataframe_router_abstain.primary",
+            "dataframe_router_abstain.verification",
         ],
         messages=(
             _stringify_messages(initial_messages)
@@ -1013,7 +1044,7 @@ def run_data2mcp_dataframe_randomized(
         max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        dependency_label="data2mcp randomized adapter",
+        dependency_label="DataFrame Router randomized adapter",
     )
     if _random_gate(task, model, 0.5):
         final_text, messages = asyncio.run(
@@ -1021,7 +1052,7 @@ def run_data2mcp_dataframe_randomized(
         )
         return FullAdapterResult(
             final_answer=f"Validated by independent recomputation: {final_text}",
-            raw_actions=["data2mcp_v2.Router.route", "data2mcp_randomized.verification"],
+            raw_actions=["dataframe_router.Router.route", "dataframe_router_randomized.verification"],
             messages=_stringify_messages(messages),
         )
     final_text, messages = asyncio.run(
@@ -1029,7 +1060,7 @@ def run_data2mcp_dataframe_randomized(
     )
     return FullAdapterResult(
         final_answer=str(final_text),
-        raw_actions=["data2mcp_v2.Router.route", "data2mcp_randomized.primary_only"],
+        raw_actions=["dataframe_router.Router.route", "dataframe_router_randomized.primary_only"],
         messages=_stringify_messages(messages),
     )
 
@@ -1052,7 +1083,7 @@ def run_data2mcp_dataframe_selective(
         max_steps=max_steps,
         temperature=temperature,
         max_tokens=max_tokens,
-        dependency_label="data2mcp selective adapter",
+        dependency_label="DataFrame Router selective adapter",
     )
     prompt = _data2mcp_prompt(task, "Use dataframe_query_tool to compute the answer exactly before finalizing.")
     if _selective_should_verify(task):
@@ -1066,9 +1097,9 @@ def run_data2mcp_dataframe_selective(
         return FullAdapterResult(
             final_answer=final_answer,
             raw_actions=[
-                "data2mcp_v2.Router.route",
-                "data2mcp_selective.primary",
-                "data2mcp_selective.verification",
+                "dataframe_router.Router.route",
+                "dataframe_router_selective.primary",
+                "dataframe_router_selective.verification",
             ],
             messages=(
                 _stringify_messages(initial_messages)
@@ -1079,7 +1110,7 @@ def run_data2mcp_dataframe_selective(
     final_text, messages = asyncio.run(router.route(prompt))
     return FullAdapterResult(
         final_answer=str(final_text),
-        raw_actions=["data2mcp_v2.Router.route", "data2mcp_selective.primary_only"],
+        raw_actions=["dataframe_router.Router.route", "dataframe_router_selective.primary_only"],
         messages=_stringify_messages(messages),
     )
 

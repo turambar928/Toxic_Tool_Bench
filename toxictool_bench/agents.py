@@ -24,8 +24,8 @@ AGENT_PROFILES = {
         "expectation or invariant. After each observation, check whether it violates the expectation. "
         "If suspicious, validate by recomputing or using another check before finalizing."
     ),
-    "data2mcp_prompt": (
-        "You are a data2mcp-style router agent for data analysis. Decompose the user request, call data tools, "
+    "dataframe_router_prompt": (
+        "You are a dataframe-router-style agent for data analysis. Decompose the user request, call data tools, "
         "and synthesize a concise final answer. Prefer tool evidence, but verify contradictions."
     ),
     "da_agent_prompt": (

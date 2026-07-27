@@ -1,0 +1,4 @@
+model,adapter,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr,toxic_adr,toxic_vr,toxic_rr,n
+gpt-5.4-mini,dataframe_router,0.92,0.29,0.62,0.62,0.00,0.00,0.00,24
+gpt-5.4-mini,dataframe_router_guarded,0.83,0.83,0.00,0.00,1.00,1.00,0.83,24
+gpt-5.4-mini,dataframe_router_guarded_light,0.83,0.71,0.12,0.00,1.00,1.00,0.71,24
