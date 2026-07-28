@@ -100,6 +100,7 @@ For a complete artifact map, see `ARTIFACT_MANIFEST.md`. The core paper-facing r
 - Guarded ablation: `toxictool_bench/results/langgraph_guarded_ablation_summary.csv`
 - Guarded suite breakdown: `toxictool_bench/results/langgraph_guarded_ablation_suite_summary.csv`
 - Guarded overhead: `toxictool_bench/results/langgraph_guarded_overhead_summary.csv`
+- Guard cost/latency distribution: `toxictool_bench/results/guard_cost_latency_distribution.csv`
 - Multi-table extension: `toxictool_bench/results/langgraph_multitable_extension_summary.csv`
 - AutoGen replication: `toxictool_bench/results/autogen_guarded_replication_summary.csv`
 - AutoGen replication CIs: `toxictool_bench/results/autogen_guarded_replication_bootstrap_ci.csv`

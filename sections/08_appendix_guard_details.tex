@@ -1,4 +1,4 @@
-\section{Behavior-Metric Scoring and Audit Protocol}
+\section{Scoring, Audit, and Artifacts}
 \label{sec:appendix-guard}
 
 \subsection{Deterministic Scoring Rules}
@@ -53,14 +53,14 @@ RR & 80 & 1.00 & 1.00 & 0.38 \\
 \label{tab:appendix-audit-agreement}
 \end{table}
 
-\section{Released Detailed Tables}
+\subsection{Released Detailed Tables}
 
 The main text keeps compact tables for page budget. Detailed adapter-level cross-model tables and the expanded GPT-only cross-agent breakdowns are released as machine-readable artifacts:
 
 \begin{itemize}
     \item Cross-model summaries: \path{cross_model_summary.csv} and \path{semantic_schema_cross_model_summary.csv}.
     \item Expanded GPT summaries: files matching \path{iclr2027_gpt_expanded_cross_agent_*_summary.csv}.
-    \item Defense ablation summaries: \path{langgraph_guarded_ablation_summary.csv}, \path{langgraph_guarded_ablation_suite_summary.csv}, \path{langgraph_guarded_overhead_summary.csv}, and \path{langgraph_guarded_bootstrap_ci.csv}.
+    \item Defense ablation summaries: \path{langgraph_guarded_ablation_summary.csv}, \path{langgraph_guarded_ablation_suite_summary.csv}, \path{langgraph_guarded_overhead_summary.csv}, \path{guard_cost_latency_distribution.csv}, and \path{langgraph_guarded_bootstrap_ci.csv}.
     \item AutoGen defense replication: \path{autogen_guarded_replication_summary.csv}, \path{autogen_guarded_replication_suite_summary.csv}, \path{autogen_guarded_replication_bootstrap_ci.csv}, and combined JSONL logs matching \path{autogen_*_expanded120_combined.jsonl}.
     \item Multi-table extension: task JSONL and extension summary CSVs.
     \item Verification stress: stratified task files and summary CSVs.
@@ -105,7 +105,7 @@ Semantic-10 & Selective & 0.70 & \textbf{0.80} & \textbf{0.00} & \textbf{1.00} &
 \label{tab:appendix-stronger-baselines}
 \end{table}
 
-\section{LangGraph Verification Variants}
+\subsection{LangGraph Verification Variant}
 \label{sec:appendix-langgraph-replication}
 
 We add \path{langgraph_react_verification_only} to isolate the independent-verification mechanism from the rest of Guarded Verification. The adapter first runs the ordinary LangGraph ReAct route, then starts a second LangGraph route whose prompt treats the primary answer as an untrusted claim and asks for recomputation from the loaded dataframe or auxiliary tables. The final answer is taken from the verification route. This mirrors the evidence-selection idea used by Guarded Verification, but it does not include the full expectation-generation and tie-breaking policy of the full guard.
@@ -123,7 +123,7 @@ python3 toxictool_bench/run_full_bench.py \
   --max-steps 8
 \end{verbatim}
 
-\section{AutoGen Defense Replication}
+\subsection{AutoGen Defense Replication}
 \label{sec:appendix-autogen-replication}
 
 We replicate the two independent-verification variants on AutoGen to test whether the mitigation effect transfers beyond LangGraph. The implementation uses the same benchmark tools and poisoning proxy. \path{autogen_verification_only} runs a primary AutoGen route, treats the primary answer as an untrusted claim, and launches a second AutoGen recomputation route. \path{autogen_guarded} additionally injects task-specific expectations before the primary route and uses verified evidence as the final answer source.
@@ -150,7 +150,7 @@ Numerical & Guarded & 0.85 & 0.87 & 0.00 & 0.73 & 0.87 & 24.67 \\
 
 Combined over both expanded suites, AutoGen verification-only obtains clean TSR \texttt{0.93}, toxic TSR \texttt{0.93}, BCR \texttt{0.00}, VR \texttt{0.86}, and RR \texttt{0.93}. The guarded variant obtains clean TSR \texttt{0.92}, toxic TSR \texttt{0.93}, BCR \texttt{0.00}, VR \texttt{0.87}, and RR \texttt{0.93}. Compared with the base AutoGen expanded run (poisoned TSR \texttt{0.65}, BCR \texttt{0.20}), both variants support the same conclusion as the LangGraph ablation: independent verification, not cautionary text alone, is the active mechanism that reduces blind compliance.
 
-\section{Multi-Route Poisoning Stress Protocol}
+\subsection{Multi-Route Poisoning Stress}
 
 The default defense ablation uses \path{poison_once}, which creates a clean independent verification path after the first poisoned observation. To stress this assumption, the benchmark runner now supports repeated and probabilistic poisoning. The \path{--poison-repeat} flag disables the one-shot constraint, and the probability flag corrupts each eligible observation with deterministic probability \(p\). We recommend reporting \(p \in \{0, 0.25, 0.5, 1.0\}\), where \(p=1.0\) approximates a shared corrupted source whenever the poisoning operator can match the verification output.
 
@@ -185,7 +185,7 @@ python3 toxictool_bench/run_full_bench.py \
   --poison-probability 0.50
 \end{verbatim}
 
-\section{Light-Guard Tradeoff}
+\paragraph{Light-guard tradeoff.}
 
 The main text reports the full guarded LangGraph adapter as the defense result. We also evaluate a lower-budget light guard that caps the verification route more aggressively. On the expanded semantic/schema suite, the light guard obtains clean TSR \texttt{0.98}, poisoned TSR \texttt{0.98}, BCR \texttt{0.00}, and RR \texttt{0.98}. On the expanded numerical suite, it obtains clean TSR \texttt{0.83}, poisoned TSR \texttt{0.87}, BCR \texttt{0.00}, and RR \texttt{0.87}. Combined over 120 tasks, light guard obtains clean TSR \texttt{0.91}, poisoned TSR \texttt{0.93}, BCR \texttt{0.00}, and RR \texttt{0.93}. The light guard therefore preserves the blind-compliance reduction and is competitive with the full guard, but we keep full guarding as the main result because it allocates a more reliable verification budget.
 
@@ -221,6 +221,29 @@ Light guard & \textbf{0.93} & 0.00 & 4.48 & 3.88 \\
 
 The current light implementation reduces verification budget but still runs a second evidence route. A practical deployment should trigger verification selectively rather than always running a second route, for example using route disagreement, high-risk poison families, provenance uncertainty, or calibrated confidence.
 
+\subsection{Latency Distribution}
+
+Table~\ref{tab:appendix-latency-distribution} reports wall-clock latency distributions for the main public-framework defense runs. For LangGraph, the full guard increases mean latency from \texttt{7.92}s to \texttt{22.72}s and mean tool events from \texttt{2.04} to \texttt{4.67}; the light guard reduces the mean latency to \texttt{21.09}s and the 90th percentile from \texttt{29.51}s to \texttt{26.33}s. For AutoGen, verification-only and guarded variants both operate at about four tool events per run, with mean latency \texttt{27.10}s and \texttt{25.41}s, respectively. These are wall-clock measurements from the experiment runner, not normalized provider billing measurements. Token usage is not reported because the model gateways used in these runs do not expose a consistent per-call token accounting field across all adapters.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Adapter & Rows & Mean sec. & P50 sec. & P90 sec. & Tool events \\
+\midrule
+LangGraph base & 120 & 7.92 & 7.31 & 10.60 & 2.04 \\
+LangGraph full guard & 120 & 22.72 & 21.28 & 29.51 & 4.67 \\
+LangGraph light guard & 120 & 21.09 & 20.64 & 26.33 & 4.53 \\
+AutoGen verification-only & 240 & 27.10 & 26.01 & 32.34 & 4.11 \\
+AutoGen guarded & 240 & 25.41 & 24.60 & 29.60 & 4.07 \\
+\bottomrule
+\end{tabular}
+\caption{Latency distribution and tool-event overhead for public-framework defense runs. Rows are clean/toxic environment instances.}
+\label{tab:appendix-latency-distribution}
+\end{table}
+
 \subsection{Bootstrap Confidence Intervals}
 
 We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement. Table~\ref{tab:appendix-guard-ci} reports compact intervals for the guarded ablations; complete CI files are released with the artifacts.
@@ -247,21 +270,21 @@ Numerical & Light guard & [0.78, 0.95] & [0.00, 0.00] \\
 \label{tab:appendix-guard-ci}
 \end{table}
 
-\section{Additional Qualitative Cases}
+\section{Additional Analyses}
 
+\paragraph{Qualitative cases.}
 The complete mechanically extracted guard cases are stored in \texttt{GUARDED\_CASE\_STUDIES.md}. They include base blind-compliance cases that full guard recovers, as well as full-guard successes that light guard loses under the tighter budget.
 
-\section{Framework Boundaries}
-
+\paragraph{Framework boundaries.}
 Poisoning boundaries differ across frameworks. LangGraph, smolagents, and AutoGen are poisoned at a tool-observation boundary. PandasAI is currently poisoned at a coarser chat-result boundary. DA-Agent is integrated through its action loop, but its observations can include shell output and tracebacks. We therefore interpret results as end-to-end framework measurements rather than pure model-only measurements.
 
-\section{Multi-Table Extension}
+\subsection{Multi-Table Extension}
 
-\subsection{Execution Surface}
+\paragraph{Execution surface.}
 
 The multi-table extension uses the same poisoned-observation protocol but exposes auxiliary CSVs as named tables inside the execution environment. The primary dataframe remains available as \texttt{df}; auxiliary tables are exposed through \texttt{tables} by dataset stem and filename alias. This is intentionally closer to notebook-style analysis than to the single-table tasks used in the original benchmark suites.
 
-\subsection{Task Inventory}
+\paragraph{Task inventory.}
 
 The extension contains table-discovery, customer/order, support/team, clinic/region, and product/category joins. Table~\ref{tab:appendix-multitable-tasks} lists the released task families and poisoning operators.
 
@@ -284,7 +307,7 @@ Product analytics & product sales/products & sku & rank swap, label swap \\
 \label{tab:appendix-multitable-tasks}
 \end{table}
 
-\subsection{Latency and Cost Proxies}
+\paragraph{Latency and cost proxies.}
 
 The released \path{langgraph_guarded_overhead_summary.csv} and \path{langgraph_multitable_extension_summary.csv} record wall-clock seconds and tool events for the new LangGraph defense runs. Table~\ref{tab:appendix-realistic-latency} reports the available latency measurements for the 13-task multi-table extension and the expanded LangGraph guard ablation. These values are not provider billing estimates: the API gateways used in the experiments do not expose reliable per-call dollar charges, and latency varies with backend queueing.
 

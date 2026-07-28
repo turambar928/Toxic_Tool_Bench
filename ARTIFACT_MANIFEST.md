@@ -47,6 +47,7 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/results/langgraph_guarded_ablation_summary.csv` | Main LangGraph Guarded Verification ablation. |
 | `toxictool_bench/results/langgraph_guarded_ablation_suite_summary.csv` | Suite-level LangGraph ablation breakdown. |
 | `toxictool_bench/results/langgraph_guarded_overhead_summary.csv` | LangGraph guard tool-event and latency overhead. |
+| `toxictool_bench/results/guard_cost_latency_distribution.csv` | Compact latency distribution and tool-event summary for the main public-framework defense runs. |
 | `toxictool_bench/results/langgraph_multitable_extension_summary.csv` | LangGraph multi-table join extension. |
 | `toxictool_bench/results/autogen_guarded_replication_summary.csv` | AutoGen second-framework defense replication. |
 | `toxictool_bench/results/autogen_guarded_replication_suite_summary.csv` | Suite-level AutoGen defense replication breakdown. |
@@ -110,4 +111,3 @@ api
 ```
 
 Before preparing an anonymous submission package, verify that the public archive does not contain local paths, API keys, or private endpoint configuration. The current paper text uses anonymous authors and does not require the ignored `api` file.
-

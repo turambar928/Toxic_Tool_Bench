@@ -1,0 +1,6 @@
+adapter,n_rows,mean_elapsed_seconds,p50_elapsed_seconds,p90_elapsed_seconds,mean_tool_events
+LangGraph base,120,7.9233,7.3132,10.5955,2.0417
+LangGraph full guard,120,22.7203,21.283,29.506,4.6667
+LangGraph light guard,120,21.0871,20.6445,26.331,4.5333
+AutoGen verification-only,240,27.1011,26.0101,32.3425,4.1125
+AutoGen guarded,240,25.4087,24.6015,29.5983,4.0708
