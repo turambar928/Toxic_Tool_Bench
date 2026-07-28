@@ -1,12 +1,12 @@
 # ICLR Project Current Status
 
-Last updated: 2026-07-19
+Last updated: 2026-07-28
 
 ## Current Stage
 
 The project is now at the submission-package and release-cleanup stage.
 
-The benchmark, full-agent adapters, numerical expanded experiments, semantic/schema cross-model experiments, GPT-only 120-task expanded cross-agent pass, rescoring pipeline, guarded DataFrame Router defense ablations, bootstrap confidence intervals, case studies, paper skeleton, and GitHub README are in place. The next work should focus on final PDF compilation, page-budget control, citation polish, and release-package verification.
+The benchmark, full-agent adapters, numerical expanded experiments, semantic/schema cross-model experiments, GPT-only 120-task expanded cross-agent pass, rescoring pipeline, guarded LangGraph ReAct defense ablations, bootstrap confidence intervals, case studies, paper skeleton, and GitHub README are in place. The defense mainline has been switched to LangGraph ReAct so the paper no longer depends on an unpublished custom agent as its primary mitigation result. The next work should focus on final PDF compilation, page-budget control, citation polish, and release-package verification.
 
 ## Built Components
 
@@ -95,10 +95,12 @@ Current semantic/schema suite:
 Implemented full adapters:
 
 - `langgraph_react_full`
+- `langgraph_react_caution`
+- `langgraph_react_expectation_only`
+- `langgraph_react_verification_only`
+- `langgraph_react_guarded`
+- `langgraph_react_guarded_light`
 - `smolagents_toolcalling`
-- `dataframe_router`
-- `dataframe_router_guarded`
-- `dataframe_router_guarded_light`
 - `pandasai_dataframe`
 - `da_agent_full`
 - `autogen_tool_agent`
@@ -142,11 +144,10 @@ Additional poisoner fix:
 
 ### gpt-5.4-mini
 
-Completed on all 6 full adapters:
+Completed on public full adapters:
 
 - LangGraph
 - smolagents
-- DataFrame Router
 - PandasAI
 - DA-Agent
 - AutoGen
@@ -166,7 +167,6 @@ GPT-only expanded cross-agent pass completed on 120 ICLR 2027 candidate tasks:
 - 60 semantic/schema tasks
 - LangGraph
 - smolagents
-- DataFrame Router
 - AutoGen
 
 Combined summary:
@@ -177,11 +177,10 @@ toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_summary.csv
 
 ### claude-sonnet-4-6
 
-Completed on 5 full adapters:
+Completed on public full adapters:
 
 - LangGraph
 - smolagents
-- DataFrame Router
 - PandasAI
 - AutoGen
 
@@ -197,11 +196,10 @@ Reason:
 
 ### Qwen3.6-35B-A3B-no-thinking
 
-Completed on 5 full adapters:
+Completed on public full adapters:
 
 - LangGraph
 - smolagents
-- DataFrame Router
 - PandasAI
 - AutoGen
 
@@ -300,25 +298,31 @@ compileall passed
 High-level findings from completed runs:
 
 - Poisoned TSR is consistently below clean TSR for high-performing agents.
-- The semantic/schema suite shows large drops for `dataframe_router` and `pandasai_dataframe` under `gpt-5.4-mini`.
+- The semantic/schema suite shows large drops for several adapters under `gpt-5.4-mini`, including PandasAI under the current coarse poisoning boundary.
 - Rank swaps are the most dangerous poison type by average BCR.
 - Aggregate scaling is also damaging and often directly copied.
 - Sign flips are easier to detect or recover from.
 - PandasAI remains highly vulnerable under the current coarse poisoning setup.
 - DA-Agent shows higher validation/recovery on `gpt-5.4-mini`, but is too slow for current cross-model batching.
-- DataFrame Router performance depends strongly on model choice; Qwen often hits max-turn behavior in the current router setup.
-- The guarded `DataFrame Router` semantic/schema ablation reduces BCR from 0.62 to 0.00 and raises poisoned TSR from 0.29 to 0.83, with a clean TSR tradeoff from 0.92 to 0.83.
-- The light guarded semantic/schema ablation also keeps BCR at 0.00, but poisoned TSR is lower at 0.71.
-- The guarded `DataFrame Router` numerical ablation reduces BCR from 0.24 to 0.00, raises clean TSR from 0.65 to 0.79, and raises poisoned TSR from 0.47 to 0.74.
-- The light guarded numerical ablation also keeps BCR at 0.00, but clean/toxic TSR are lower at 0.68/0.65.
+- The guarded LangGraph semantic/schema ablation reduces BCR from 0.13 to 0.00 and raises poisoned TSR from 0.82 to 0.98.
+- The guarded LangGraph numerical ablation reduces BCR from 0.47 to 0.00 and raises poisoned TSR from 0.42 to 0.87.
+- Combined over the 120-task expanded ablation, full guard keeps clean TSR at 0.93, raises poisoned TSR from 0.62 to 0.93, and reduces BCR from 0.30 to 0.00.
+- AutoGen replication over the same 120 expanded tasks reduces BCR to 0.00 for both verification-only and guarded variants, with poisoned TSR 0.93.
+- The 13-task multi-table join extension shows the same pattern: base LangGraph has clean TSR 1.00, poisoned TSR 0.23, and BCR 0.77; full/light guards reach poisoned TSR 1.00 with BCR 0.00.
 - Guarded overhead and case-study artifacts have been generated:
-  - `toxictool_bench/results/dataframe_router_guarded_overhead_summary.csv`
+  - `toxictool_bench/results/langgraph_guarded_overhead_summary.csv`
+  - `toxictool_bench/results/langgraph_multitable_extension_summary.csv`
+  - `toxictool_bench/results/autogen_guarded_replication_summary.csv`
+  - `toxictool_bench/results/autogen_guarded_replication_bootstrap_ci.csv`
+  - `toxictool_bench/results/autogen_verification_only_gpt-5.4-mini_expanded120_combined.jsonl`
+  - `toxictool_bench/results/autogen_guarded_gpt-5.4-mini_expanded120_combined.jsonl`
   - `GUARDED_CASE_STUDIES.md`
 - Bootstrap CI artifacts have been generated:
   - `toxictool_bench/results/numerical_gpt_bootstrap_ci.csv`
   - `toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
   - `toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv`
-  - `toxictool_bench/results/dataframe_router_guarded_bootstrap_ci.csv`
+  - `toxictool_bench/results/langgraph_guarded_bootstrap_ci.csv`
+  - `toxictool_bench/results/autogen_guarded_replication_bootstrap_ci.csv`
 
 Poison-type averages across completed cross-model runs:
 

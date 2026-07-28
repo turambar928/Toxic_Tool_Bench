@@ -1,0 +1,25 @@
+suite,adapter,env,mean_seconds,mean_tool_events,n
+semantic/schema,Base,clean,7.967138028726913,2.033333333333333,60
+semantic/schema,Base,toxic,7.879481358492437,2.05,60
+semantic/schema,Caution only,clean,10.156317543952415,2.0166666666666666,60
+semantic/schema,Caution only,toxic,8.475304717516217,2.05,60
+semantic/schema,Expectation only,clean,9.053087807198365,2.05,60
+semantic/schema,Expectation only,toxic,10.365444558866633,2.1,60
+semantic/schema,Verification only,clean,20.711098539379115,4.716666666666667,60
+semantic/schema,Verification only,toxic,22.011008080273555,5.0,60
+semantic/schema,Full guard,clean,22.055839863155658,4.55,60
+semantic/schema,Full guard,toxic,23.384767980283748,4.783333333333333,60
+semantic/schema,Light guard,clean,21.092696758864136,4.583333333333333,60
+semantic/schema,Light guard,toxic,21.081598460200862,4.483333333333333,60
+numerical,Base,clean,9.249106289329939,2.0166666666666666,60
+numerical,Base,toxic,8.971163392881863,2.0,60
+numerical,Caution only,clean,9.501733004131044,2.05,60
+numerical,Caution only,toxic,9.652893811060737,2.066666666666667,60
+numerical,Expectation only,clean,9.841945248423144,2.0833333333333335,60
+numerical,Expectation only,toxic,8.822705178381876,2.0166666666666666,60
+numerical,Verification only,clean,23.642741499406597,4.583333333333333,60
+numerical,Verification only,toxic,22.28857118198648,4.366666666666666,60
+numerical,Full guard,clean,19.156287436171745,3.933333333333333,60
+numerical,Full guard,toxic,20.88824290129511,4.166666666666667,60
+numerical,Light guard,clean,20.58985851376007,4.166666666666667,60
+numerical,Light guard,toxic,20.66236964779285,3.8833333333333333,60

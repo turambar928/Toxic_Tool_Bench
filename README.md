@@ -40,12 +40,12 @@ The main behavioral metric is blind compliance: whether an agent copies or relie
 
 - Numerical suite: 34 tasks over 11 CSV datasets.
 - Semantic/schema suite: 24 tasks over 14 CSV datasets.
-- ICLR 2027 expanded candidate suites:
+- Expanded release suites:
   - `toxictool_bench/tasks/numerical_iclr2027.jsonl`: 60 numerical tasks.
   - `toxictool_bench/tasks/semantic_schema_iclr2027.jsonl`: 60 semantic/schema tasks.
   - These add severity labels and additional poison taxonomy coverage such as ratio inversion, denominator swap, unit conversion, and missing-filter poisoning.
 - Poisoning families: aggregate scaling, sign flips, rank/label swaps, treatment/control flips, column semantic swaps, stale metadata, and biased retrieval evidence.
-- Agent adapters: LangGraph ReAct, smolagents, `DataFrame Router`, PandasAI, DA-Agent, and AutoGen.
+- Agent adapters: LangGraph ReAct, smolagents, PandasAI, DA-Agent, and AutoGen.
 - Models used where practical: `gpt-5.4-mini`, `claude-sonnet-4-6`, and `Qwen3.6-35B-A3B-no-thinking`.
 
 ## Metrics
@@ -62,21 +62,26 @@ The main behavioral metric is blind compliance: whether an agent copies or relie
 
 The completed experiments show that high clean-task success does not imply robustness to silently corrupted tool observations. Several agents solve clean tasks while directly copying poisoned values, labels, or retrieved evidence under poisoning.
 
-The `DataFrame Router` guarded-verification defense substantially improves robustness:
+The LangGraph ReAct guarded-verification defense substantially improves robustness on the 120-task expanded ablation:
 
 ```text
-Semantic/schema, 24 tasks:
-Base DataFrame Router:    Clean TSR 0.92, Poisoned TSR 0.29, BCR 0.62, RR 0.00
-Full guard:       Clean TSR 0.83, Poisoned TSR 0.83, BCR 0.00, RR 0.83
-Light guard:      Clean TSR 0.83, Poisoned TSR 0.71, BCR 0.00, RR 0.71
+Combined 120 tasks:
+Base LangGraph:   Clean TSR 0.93, Poisoned TSR 0.62, BCR 0.30, RR 0.42
+Full guard:       Clean TSR 0.93, Poisoned TSR 0.93, BCR 0.00, RR 0.93
+Light guard:      Clean TSR 0.91, Poisoned TSR 0.93, BCR 0.00, RR 0.93
 
-Numerical, 34 tasks:
-Base DataFrame Router:    Clean TSR 0.65, Poisoned TSR 0.47, BCR 0.24, RR 0.09
-Full guard:       Clean TSR 0.79, Poisoned TSR 0.74, BCR 0.00, RR 0.74
-Light guard:      Clean TSR 0.68, Poisoned TSR 0.65, BCR 0.00, RR 0.65
+Multi-table join extension, 13 tasks:
+Base LangGraph:   Clean TSR 1.00, Poisoned TSR 0.23, BCR 0.77, RR 0.15
+Full guard:       Clean TSR 1.00, Poisoned TSR 1.00, BCR 0.00, RR 1.00
+Light guard:      Clean TSR 1.00, Poisoned TSR 1.00, BCR 0.00, RR 1.00
+
+AutoGen replication, 120 tasks:
+Base AutoGen:     Clean TSR 0.92, Poisoned TSR 0.65, BCR 0.20, RR 0.37
+Verification:     Clean TSR 0.93, Poisoned TSR 0.93, BCR 0.00, RR 0.93
+Guarded:          Clean TSR 0.92, Poisoned TSR 0.93, BCR 0.00, RR 0.93
 ```
 
-For the ICLR 2027 expansion, the DataFrame Router defense runner now supports a six-way
+For the expanded release, the LangGraph defense runner supports a six-way
 ablation matrix: base, caution prompt only, expectation only, verification only,
 full guard, and light guard.
 
@@ -86,13 +91,17 @@ See `EXPERIMENT_RESULTS.md`, `PROGRESS_REPORT.md`, and `CURRENT_STATUS.md` for f
 
 - Cross-model numerical summary: `toxictool_bench/results/cross_model_summary.csv`
 - Cross-model semantic/schema summary: `toxictool_bench/results/semantic_schema_cross_model_summary.csv`
-- Guarded semantic ablation: `toxictool_bench/results/dataframe_router_guarded_semantic_ablation_summary.csv`
-- Guarded numerical ablation: `toxictool_bench/results/dataframe_router_guarded_numerical_ablation_summary.csv`
-- Guarded overhead: `toxictool_bench/results/dataframe_router_guarded_overhead_summary.csv`
+- Guarded ablation: `toxictool_bench/results/langgraph_guarded_ablation_summary.csv`
+- Guarded suite breakdown: `toxictool_bench/results/langgraph_guarded_ablation_suite_summary.csv`
+- Guarded overhead: `toxictool_bench/results/langgraph_guarded_overhead_summary.csv`
+- Multi-table extension: `toxictool_bench/results/langgraph_multitable_extension_summary.csv`
+- AutoGen replication: `toxictool_bench/results/autogen_guarded_replication_summary.csv`
+- AutoGen replication CIs: `toxictool_bench/results/autogen_guarded_replication_bootstrap_ci.csv`
+- AutoGen combined logs: `toxictool_bench/results/autogen_*_expanded120_combined.jsonl`
 - Bootstrap CIs:
   - `toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
   - `toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv`
-  - `toxictool_bench/results/dataframe_router_guarded_bootstrap_ci.csv`
+  - `toxictool_bench/results/langgraph_guarded_bootstrap_ci.csv`
 
 ## Paper
 
@@ -112,7 +121,7 @@ See `RUN_COMMANDS.md` for the exact experiment commands. The main scripts are:
 ```bash
 bash toxictool_bench/run_expanded_full_adapters.sh
 bash toxictool_bench/run_semantic_schema_full_adapters.sh
-bash toxictool_bench/run_dataframe_router_guard_ablation.sh
+bash toxictool_bench/run_langgraph_guard_ablation.sh
 bash toxictool_bench/run_iclr2027_experiments.sh
 ```
 
@@ -134,7 +143,6 @@ Use external paths when they already exist locally:
 
 ```bash
 export TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent
-export TOXICTOOL_DATAFRAME_ROUTER_SRC=/path/to/dataframe_router/src
 ```
 
 To regenerate the ICLR 2027 expanded candidate task files:

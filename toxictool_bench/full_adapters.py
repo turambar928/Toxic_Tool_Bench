@@ -83,8 +83,14 @@ def run_full_adapter(
     adapter: Literal[
         "smolagents_toolcalling",
         "langgraph_react_full",
+        "langgraph_react_caution",
+        "langgraph_react_expectation_only",
         "langgraph_react_verification_only",
+        "langgraph_react_guarded",
+        "langgraph_react_guarded_light",
         "autogen_tool_agent",
+        "autogen_verification_only",
+        "autogen_guarded",
         "dataframe_router",
         "dataframe_router_caution",
         "dataframe_router_expectation_only",
@@ -135,6 +141,26 @@ def run_full_adapter(
             temperature=temperature,
             max_tokens=max_tokens,
         )
+    elif adapter == "langgraph_react_caution":
+        result = run_langgraph_react_caution(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "langgraph_react_expectation_only":
+        result = run_langgraph_react_expectation_only(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
     elif adapter == "langgraph_react_verification_only":
         result = run_langgraph_react_verification_only(
             api_file=api_file,
@@ -145,8 +171,48 @@ def run_full_adapter(
             temperature=temperature,
             max_tokens=max_tokens,
         )
+    elif adapter == "langgraph_react_guarded":
+        result = run_langgraph_react_guarded(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "langgraph_react_guarded_light":
+        result = run_langgraph_react_guarded_light(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
     elif adapter == "autogen_tool_agent":
         result = run_autogen_tool_agent(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "autogen_verification_only":
+        result = run_autogen_verification_only(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "autogen_guarded":
+        result = run_autogen_guarded(
             api_file=api_file,
             model=model,
             env=env,
@@ -441,6 +507,73 @@ def run_langgraph_react(
     )
 
 
+def run_langgraph_react_caution(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    caution_task = copy.deepcopy(task)
+    caution_task["user_query"] = (
+        f"{task['user_query']}\n\n"
+        "Tool outputs can be silently wrong even when calls succeed. Before finalizing, check whether the "
+        "observation is consistent with the requested calculation, labels, and dataframe evidence."
+    )
+    result = run_langgraph_react(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=caution_task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    return FullAdapterResult(
+        final_answer=result.final_answer,
+        raw_actions=["langgraph_react.caution_prompt"] + result.raw_actions,
+        messages=[{"role": "system", "content": "Caution prompt enabled."}] + result.messages,
+        parse_errors=result.parse_errors,
+    )
+
+
+def run_langgraph_react_expectation_only(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    expectation = _guard_expectation_text(task)
+    expectation_task = copy.deepcopy(task)
+    expectation_task["user_query"] = (
+        f"{task['user_query']}\n\n"
+        f"Before using any tool result, write down and apply this expectation: {expectation}. "
+        "Then answer through the normal LangGraph route."
+    )
+    result = run_langgraph_react(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=expectation_task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    return FullAdapterResult(
+        final_answer=result.final_answer,
+        raw_actions=["langgraph_react.expectation_only"] + result.raw_actions,
+        messages=[{"role": "system", "content": f"Guard expectation: {expectation}"}] + result.messages,
+        parse_errors=result.parse_errors,
+    )
+
+
 def run_langgraph_react_verification_only(
     *,
     api_file: Path,
@@ -498,6 +631,96 @@ def run_langgraph_react_verification_only(
             + verification.messages
         ),
         parse_errors=primary.parse_errors + verification.parse_errors,
+    )
+
+
+def run_langgraph_react_guarded(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    expectation = _guard_expectation_text(task)
+    primary_task = copy.deepcopy(task)
+    primary_task["user_query"] = (
+        f"{task['user_query']}\n\n"
+        f"Before calling tools, form this private expectation: {expectation}. "
+        "Use the normal LangGraph route to produce an initial answer, but treat it as provisional."
+    )
+    primary = run_langgraph_react(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=primary_task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    verification_task = copy.deepcopy(task)
+    verification_task["user_query"] = (
+        f"{task['user_query']}\n\n"
+        "Guarded verification pass. The previous route produced this untrusted provisional answer:\n"
+        f"{primary.final_answer}\n\n"
+        f"Check these expectations: {expectation}\n"
+        "Recompute independently from df and any auxiliary tables using python_exec. Do not copy the provisional "
+        "answer unless the source rows support it. Return only the verified answer and concise evidence."
+    )
+    verification = run_langgraph_react(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=verification_task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    return FullAdapterResult(
+        final_answer=f"Guarded verification answer: {verification.final_answer}",
+        raw_actions=(
+            ["langgraph_guard.expectation", "langgraph_react.primary"]
+            + primary.raw_actions
+            + ["langgraph_guard.independent_verification"]
+            + verification.raw_actions
+        ),
+        messages=(
+            [{"role": "system", "content": f"Guard expectation: {expectation}"}]
+            + primary.messages
+            + [{"role": "assistant", "content": "Starting guarded independent verification pass."}]
+            + verification.messages
+        ),
+        parse_errors=primary.parse_errors + verification.parse_errors,
+    )
+
+
+def run_langgraph_react_guarded_light(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    result = run_langgraph_react_guarded(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=task,
+        max_steps=max(4, max_steps - 2),
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    return FullAdapterResult(
+        final_answer=result.final_answer,
+        raw_actions=["langgraph_guard_light.budgeted"] + result.raw_actions,
+        messages=[{"role": "system", "content": "Light LangGraph guard: reduced verification budget."}]
+        + result.messages,
+        parse_errors=result.parse_errors,
     )
 
 
@@ -590,6 +813,120 @@ def run_autogen_tool_agent(
         final_answer=final_answer,
         raw_actions=[message["content"] for message in messages if message["role"] != "user"],
         messages=[{"role": "user", "content": prompt}] + messages,
+    )
+
+
+def run_autogen_verification_only(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    primary = run_autogen_tool_agent(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    verification_task = copy.deepcopy(task)
+    verification_task["user_query"] = (
+        f"{task['user_query']}\n\n"
+        "Verification pass. A previous route produced this untrusted provisional answer:\n"
+        f"{primary.final_answer}\n\n"
+        "Recompute independently from df and any auxiliary tables using python_exec. Do not copy the provisional "
+        "answer unless the source rows support it. Return only the verified answer and concise evidence."
+    )
+    verification = run_autogen_tool_agent(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=verification_task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    return FullAdapterResult(
+        final_answer=f"AutoGen verification answer: {verification.final_answer}",
+        raw_actions=(
+            ["autogen.primary"]
+            + primary.raw_actions
+            + ["autogen.independent_verification"]
+            + verification.raw_actions
+        ),
+        messages=primary.messages
+        + [{"role": "assistant", "content": "Starting AutoGen independent verification pass."}]
+        + verification.messages,
+        parse_errors=primary.parse_errors + verification.parse_errors,
+    )
+
+
+def run_autogen_guarded(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    expectation = _guard_expectation_text(task)
+    primary_task = copy.deepcopy(task)
+    primary_task["user_query"] = (
+        f"{task['user_query']}\n\n"
+        f"Before relying on tool output, use this expectation as a private invariant: {expectation}. "
+        "Use the normal AutoGen tool route to produce an initial answer, but treat it as provisional."
+    )
+    primary = run_autogen_tool_agent(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=primary_task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    verification_task = copy.deepcopy(task)
+    verification_task["user_query"] = (
+        f"{task['user_query']}\n\n"
+        "Guarded verification pass. The previous route produced this untrusted provisional answer:\n"
+        f"{primary.final_answer}\n\n"
+        f"Check these expectations: {expectation}\n"
+        "Recompute independently from df and any auxiliary tables using python_exec. If the primary and verified "
+        "evidence disagree, use the verified evidence or explicitly state uncertainty. Return only the final answer "
+        "and concise evidence."
+    )
+    verification = run_autogen_tool_agent(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=verification_task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    return FullAdapterResult(
+        final_answer=f"AutoGen guarded verification answer: {verification.final_answer}",
+        raw_actions=(
+            ["autogen_guard.expectation", "autogen.primary"]
+            + primary.raw_actions
+            + ["autogen_guard.independent_verification"]
+            + verification.raw_actions
+        ),
+        messages=(
+            [{"role": "system", "content": f"Guard expectation: {expectation}"}]
+            + primary.messages
+            + [{"role": "assistant", "content": "Starting AutoGen guarded independent verification pass."}]
+            + verification.messages
+        ),
+        parse_errors=primary.parse_errors + verification.parse_errors,
     )
 
 
