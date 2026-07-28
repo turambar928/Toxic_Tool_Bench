@@ -35,7 +35,7 @@ Ambiguous cases are adjudicated against over-crediting the agent. A statement su
 
 Table~\ref{tab:appendix-audit-agreement} reports agreement for the completed 80-run calibration sheet. The sample is stratified across numerical, semantic/schema, guard, and stronger-baseline trajectories. The two audit passes use the rubric above and are released as \path{iclr2027_manual_audit_completed_stratified80.csv}; the computed agreement JSON is \path{iclr2027_manual_audit_iaa_completed.json}. We interpret this as a scorer-calibration check, not as a substitute for a larger independent annotation campaign.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
@@ -83,7 +83,7 @@ We include three additional policy baselines. The abstain policy runs a primary 
 
 Table~\ref{tab:appendix-stronger-baselines} reports the fixed-subset results. The numerical subset is difficult for all three alternatives under a six-step cap; this reflects ordinary analysis failures and failed answer extraction rather than blind compliance alone. On the semantic subset, randomized verification has high clean TSR but misses several toxic label/stale cases, while selective verification preserves the no-BCR behavior of full guarding on this subset.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{4.5pt}
@@ -128,7 +128,7 @@ python3 toxictool_bench/run_full_bench.py \
 
 We replicate the two independent-verification variants on AutoGen to test whether the mitigation effect transfers beyond LangGraph. The implementation uses the same benchmark tools and poisoning proxy. \path{autogen_verification_only} runs a primary AutoGen route, treats the primary answer as an untrusted claim, and launches a second AutoGen recomputation route. \path{autogen_guarded} additionally injects task-specific expectations before the primary route and uses verified evidence as the final answer source.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{4.5pt}
@@ -156,7 +156,7 @@ The default defense ablation uses \path{poison_once}, which creates a clean inde
 
 Table~\ref{tab:appendix-multiroute-stress} reports this stress test on the semantic stratified subset with toxic-only evaluation. Recovery degrades sharply as repeated poisoning becomes stronger, confirming that Guarded Verification should not be read as robust to a fully compromised evidence substrate. The important distinction is behavioral: even at \(p=1.0\), the guard avoids blind copying and instead produces contested or under-recovered answers.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{6pt}
@@ -195,7 +195,7 @@ The main text reports the full guarded LangGraph adapter as the defense result. 
 
 The guard increases routing work because it adds independent verification. Table~\ref{tab:appendix-cost-robustness} summarizes the robustness--cost tradeoff for the expanded 120-task LangGraph ablation. The base adapter averages \texttt{2.05} toxic tool events on semantic/schema tasks and \texttt{2.00} on numerical tasks. Full guard increases these to \texttt{4.78} and \texttt{4.17}, respectively, while reducing BCR from \texttt{0.30} to \texttt{0.00} and improving poisoned TSR from \texttt{0.62} to \texttt{0.93}. Verification-only and light guard show that most of the robustness gain comes from the independent evidence route; caution and expectation prompts add smaller routing overhead but leave substantial BCR.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
@@ -225,7 +225,7 @@ The current light implementation reduces verification budget but still runs a se
 
 We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement. Table~\ref{tab:appendix-guard-ci} reports compact intervals for the guarded ablations; complete CI files are released with the artifacts.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
@@ -265,7 +265,7 @@ The multi-table extension uses the same poisoned-observation protocol but expose
 
 The extension contains table-discovery, customer/order, support/team, clinic/region, and product/category joins. Table~\ref{tab:appendix-multitable-tasks} lists the released task families and poisoning operators.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{4.5pt}
@@ -288,7 +288,7 @@ Product analytics & product sales/products & sku & rank swap, label swap \\
 
 The released \path{langgraph_guarded_overhead_summary.csv} and \path{langgraph_multitable_extension_summary.csv} record wall-clock seconds and tool events for the new LangGraph defense runs. Table~\ref{tab:appendix-realistic-latency} reports the available latency measurements for the 13-task multi-table extension and the expanded LangGraph guard ablation. These values are not provider billing estimates: the API gateways used in the experiments do not expose reliable per-call dollar charges, and latency varies with backend queueing.
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}

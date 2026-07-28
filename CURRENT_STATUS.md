@@ -161,7 +161,7 @@ sections/05_experiments.tex
 
 Semantic/schema 24-task suite is also complete on the five practical-speed adapters.
 
-GPT-only expanded cross-agent pass completed on 120 ICLR 2027 candidate tasks:
+GPT-only expanded cross-agent pass completed on 120 expanded release tasks:
 
 - 60 numerical tasks
 - 60 semantic/schema tasks

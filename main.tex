@@ -40,6 +40,9 @@ DATA AGENTS}
 
 \clearpage
 \appendix
+\setcounter{section}{0}
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
 \input{sections/08_appendix_guard_details}
 
 \IfFileExists{iclr2026_conference.bst}{

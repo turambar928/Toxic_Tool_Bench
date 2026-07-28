@@ -32,3 +32,8 @@ env/
 
 # Benchmark runtime caches
 toxictool_bench/cache/
+
+# Local benchmark run logs. Paper-facing summaries and selected raw logs can be
+# added explicitly with `git add -f` when they are release artifacts.
+toxictool_bench/results/20*.jsonl
+toxictool_bench/results/20*.summary.json
