@@ -30,6 +30,7 @@ The main behavioral metric is blind compliance: whether an agent copies or relie
 │   ├── evaluator.py
 │   └── run_full_bench.py
 ├── EXPERIMENT_RESULTS.md
+├── ARTIFACT_MANIFEST.md
 ├── CASE_STUDIES.md
 ├── GUARDED_CASE_STUDIES.md
 ├── RUN_COMMANDS.md
@@ -85,12 +86,17 @@ For the expanded release, the LangGraph defense runner supports a six-way
 ablation matrix: base, caution prompt only, expectation only, verification only,
 full guard, and light guard.
 
-See `EXPERIMENT_RESULTS.md`, `PROGRESS_REPORT.md`, and `CURRENT_STATUS.md` for fuller summaries.
+See `EXPERIMENT_RESULTS.md`, `ARTIFACT_MANIFEST.md`, `SUBMISSION_CHECKLIST.md`, and `CURRENT_STATUS.md` for fuller summaries and release-package status.
 
 ## Important Artifacts
 
+For a complete artifact map, see `ARTIFACT_MANIFEST.md`. The core paper-facing result files are:
+
 - Cross-model numerical summary: `toxictool_bench/results/cross_model_summary.csv`
 - Cross-model semantic/schema summary: `toxictool_bench/results/semantic_schema_cross_model_summary.csv`
+- Expanded GPT cross-agent summary: `toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_summary.csv`
+- Expanded GPT poison breakdown: `toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_poison_summary.csv`
+- Expanded GPT severity breakdown: `toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_severity_summary.csv`
 - Guarded ablation: `toxictool_bench/results/langgraph_guarded_ablation_summary.csv`
 - Guarded suite breakdown: `toxictool_bench/results/langgraph_guarded_ablation_suite_summary.csv`
 - Guarded overhead: `toxictool_bench/results/langgraph_guarded_overhead_summary.csv`
@@ -116,26 +122,30 @@ The current environment used to prepare this export did not include `pdflatex` o
 
 ## Reproduction
 
-See `RUN_COMMANDS.md` for the exact experiment commands. The main scripts are:
+See `RUN_COMMANDS.md` for the exact experiment commands and `ARTIFACT_MANIFEST.md` for expected outputs. The main scripts are:
 
 ```bash
-bash toxictool_bench/run_expanded_full_adapters.sh
-bash toxictool_bench/run_semantic_schema_full_adapters.sh
-bash toxictool_bench/run_langgraph_guard_ablation.sh
-bash toxictool_bench/run_iclr2027_experiments.sh
+python3 toxictool_bench/check_adapter_readiness.py
+ADAPTERS="langgraph_react_full smolagents_toolcalling autogen_tool_agent" \
+  bash toxictool_bench/run_expanded_full_adapters.sh gpt-5.4-mini
+ADAPTERS="langgraph_react_full langgraph_react_caution langgraph_react_expectation_only langgraph_react_verification_only langgraph_react_guarded langgraph_react_guarded_light" \
+  bash toxictool_bench/run_langgraph_guard_ablation.sh gpt-5.4-mini toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
+ADAPTERS="autogen_verification_only autogen_guarded" \
+  bash toxictool_bench/run_autogen_guard_replication.sh gpt-5.4-mini toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
 ```
 
-Long ICLR 2027 runs can be chunked:
+Long expanded runs can be chunked:
 
 ```bash
 START_INDEX=0 LIMIT=10 bash toxictool_bench/run_iclr2027_experiments.sh
 START_INDEX=10 LIMIT=10 bash toxictool_bench/run_iclr2027_experiments.sh
 ```
 
-Check local full-adapter dependencies before launching expensive runs:
+Run static and unit checks:
 
 ```bash
-python3 toxictool_bench/check_adapter_readiness.py
+python3 toxictool_bench/check_paper_static.py --main main.tex
+python3 -m pytest toxictool_bench/tests -q
 ```
 
 Large third-party adapter checkouts do not need to be committed into this repo.

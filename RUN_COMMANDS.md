@@ -3,7 +3,7 @@
 Run all commands from the repository root:
 
 ```bash
-cd /home/taozifu2025/toxicbench
+cd /path/to/toxicbench
 ```
 
 ## Smoke Tests
