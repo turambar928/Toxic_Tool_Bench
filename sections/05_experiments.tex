@@ -74,6 +74,9 @@ Semantic/schema & Qwen & 0.87 & 0.51 & 0.37 & 0.31 \\
 \label{tab:cross-model-compact}
 \end{table}
 
+\paragraph{Uncertainty.}
+Because the cross-model suites are smaller than the expanded GPT-only run, we avoid fine-grained model ranking claims and release adapter-level bootstrap intervals for each run. The uncertainty is still consistent with the main degradation claim. For example, in the 24-task semantic/schema suite, GPT LangGraph has poisoned TSR 0.79 with 95\% CI [0.62, 0.92], while GPT smolagents and PandasAI have BCR intervals [0.29, 0.71] and [0.58, 0.92], respectively. In the 34-task numerical suite, GPT LangGraph has BCR 0.68 with 95\% CI [0.50, 0.82], and GPT PandasAI has BCR 0.65 with 95\% CI [0.50, 0.79]. These intervals are wide enough that they should not be read as precise framework rankings, but they show that the observed clean-to-toxic degradation and blind compliance are not isolated single-task artifacts.
+
 \subsection{Poison-Type Breakdown}
 
 The numerical suite lets us compare poisoning operators across completed model--adapter groups. Table~\ref{tab:poison-type-breakdown} shows that rank swaps are the most likely to induce blind compliance, with average BCR 0.52. Aggregate scaling is also damaging, with average BCR 0.41 and average poisoned TSR 0.43. Sign flips are easier for agents to recover from: average poisoned TSR is 0.90, average BCR is 0.11, and average recovery is 0.28. This pattern suggests that entity binding and plausible aggregate values are more dangerous than sign errors that often contradict visible trends.
@@ -148,6 +151,9 @@ Numerical & Light guard & 0.83 & \textbf{0.87} & \textbf{0.00} & 0.73 & \textbf{
 \caption{Suite breakdown for the expanded LangGraph ReAct defense ablation.}
 \label{tab:langgraph-guarded-breakdown}
 \end{table}
+
+\paragraph{Defense confidence intervals.}
+Bootstrap intervals give the same picture as the point estimates. On the expanded semantic/schema suite, base LangGraph poisoned TSR is 0.82 with 95\% CI [0.72, 0.90] and BCR is 0.13 with 95\% CI [0.05, 0.22], while full guard poisoned TSR is 0.98 with 95\% CI [0.95, 1.00] and BCR is exactly 0.00 under every bootstrap sample. On the expanded numerical suite, base poisoned TSR is 0.42 with 95\% CI [0.28, 0.53] and BCR is 0.47 with 95\% CI [0.35, 0.60], while full guard poisoned TSR is 0.87 with 95\% CI [0.77, 0.95] and BCR remains 0.00. AutoGen replication also has BCR 0.00 with 95\% CI [0.00, 0.00] for both verification-only and guarded variants, and poisoned TSR 0.93 with 95\% CI [0.88, 0.98].
 
 \paragraph{Clean-run false positives and overhead.}
 The full guard verifies every task, so clean-run VR should be read as an unnecessary-verification rate rather than as anomaly detection. We estimate harmful false positives by clean TSR regression: on the 120-task ablation, full guard clean TSR is 0.93 versus 0.93 for base LangGraph, so always-on verification does not reduce aggregate clean success in this setting. The cost is concrete: base LangGraph averages 2.04 tool events and 7.92 seconds per task, while full guard averages 4.67 tool events and 22.72 seconds; the median/90th-percentile latency rises from 7.31/10.60 seconds to 21.28/29.51 seconds. Light guard is slightly cheaper at 4.53 tool events and 21.09 seconds on average, with median/90th-percentile latency 20.64/26.33 seconds. Budgeted policies can be less stable, however, because they sometimes spend steps on verification while failing ordinary answer extraction. We log wall-clock time and tool-event counts for every run; the released overhead summaries report these timing proxies, and Appendix~\ref{sec:appendix-guard} now includes a compact latency distribution table. We do not claim provider billing deltas because the API logs do not expose reliable per-call dollar costs across all model gateways.
