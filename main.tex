@@ -1,9 +1,13 @@
 \documentclass{article}
 
-\IfFileExists{iclr2026_conference.sty}{
-    \usepackage{iclr2026_conference,times}
+\IfFileExists{iclr2027_conference.sty}{
+    \usepackage{iclr2027_conference,times}
 }{
-    \usepackage[margin=1in]{geometry}
+    \IfFileExists{iclr2026_conference.sty}{
+        \usepackage{iclr2026_conference,times}
+    }{
+        \usepackage[margin=1in]{geometry}
+    }
 }
 
 \usepackage{amsmath}
@@ -17,9 +21,7 @@
 \emergencystretch=2em
 
 
-\title{WHEN TOOLS SILENTLY LIE: EVALUATING AND MIT-\\
-IGATING BLIND COMPLIANCE IN TOOL-AUGMENTED\\
-DATA AGENTS}
+\title{WHEN TOOLS SILENTLY LIE: EVALUATING AND MITIGATING BLIND COMPLIANCE IN TOOL-AUGMENTED DATA AGENTS}
 
 \author{Anonymous Authors}
 \date{}
@@ -30,12 +32,9 @@ DATA AGENTS}
 
 \input{sections/00_abstract}
 \input{sections/01_introduction}
-\input{sections/02_problem_setup}
-\input{sections/03_toxictool_bench}
-\input{sections/04_method_ibf}
-\input{sections/05_experiments}
-\input{sections/06_qualitative_analysis}
 \input{sections/06_related_work}
+\input{sections/03_toxictool_bench}
+\input{sections/05_experiments}
 \input{sections/07_discussion_limitations}
 
 \clearpage
@@ -45,10 +44,14 @@ DATA AGENTS}
 \renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
 \input{sections/08_appendix_guard_details}
 
-\IfFileExists{iclr2026_conference.bst}{
-    \bibliographystyle{iclr2026_conference}
+\IfFileExists{iclr2027_conference.bst}{
+    \bibliographystyle{iclr2027_conference}
 }{
-    \bibliographystyle{plainnat}
+    \IfFileExists{iclr2026_conference.bst}{
+        \bibliographystyle{iclr2026_conference}
+    }{
+        \bibliographystyle{plainnat}
+    }
 }
 \bibliography{references}
 

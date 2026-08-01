@@ -1,38 +1,24 @@
 \section{Experiments}
 \label{sec:experiments}
 
-\subsection{Research Questions}
+We ask whether silent poisoning causes blind compliance across agents and models, which operators are most harmful, and whether Guarded Verification improves robustness without reducing clean-task success.
 
-Our experiments evaluate four questions:
-\begin{itemize}
-    \item \textbf{RQ1:} How often do data agents blindly comply with silently poisoned tool outputs?
-    \item \textbf{RQ2:} Which poisoning operators are most damaging within numerical and semantic/schema tasks?
-    \item \textbf{RQ3:} Does stronger clean-task performance imply better trust calibration under poisoning?
-    \item \textbf{RQ4:} Can Guarded Verification reduce blind compliance without substantially hurting clean-task performance?
-\end{itemize}
+\subsection{Setup}
 
-\subsection{Experimental Setup}
+\paragraph{Tasks and agents.}
+The cross-model evaluation uses 34 numerical tasks and 24 semantic/schema tasks. A larger GPT-only evaluation and the defense ablation use 60 tasks from each family (120 total). We evaluate LangGraph ReAct, smolagents, PandasAI, DA-Agent, and AutoGen where feasible, using \texttt{gpt-5.4-mini}, \texttt{claude-sonnet-4-6}, and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent is omitted from Claude/Qwen runs because of runtime. LangGraph, smolagents, and AutoGen expose tool observations directly; PandasAI is instrumented at its coarser chat-result boundary. We therefore interpret results as end-to-end adapter measurements, not pure model rankings.
 
-\paragraph{Tasks.}
-We use two scales of task suites. For cross-model experiments, the numerical suite contains 34 tasks over 11 CSV datasets and covers means, totals, growth rates, group rankings, ratios, retention rates, defect rates, and support-queue statistics. The semantic/schema suite contains 24 tasks over 14 CSV datasets and covers treatment--control label flips, schema column swaps, stale metadata in data dictionaries, and biased retrieval evidence. To increase cross-agent coverage, we additionally run a GPT-only expanded evaluation with 60 numerical tasks and 60 semantic/schema tasks. The same 120-task expanded suites are used for the LangGraph ReAct defense ablation. We report numerical and semantic/schema results separately because they stress different trust failures: arithmetic robustness versus evidence binding, schema interpretation, and retrieval grounding.
+\paragraph{Protocol.}
+Every task is run in paired clean and poisoned environments. We report clean and poisoned TSR, their difference, and the behavioral metrics in Section~\ref{sec:benchmark}. Confidence intervals use task-level nonparametric bootstrap resampling. Full adapter-level results, confidence intervals, trajectories, and timing logs are released with the benchmark.
 
-\paragraph{Agents and models.}
-We evaluate complete framework adapters rather than prompt-only profiles. The adapters are LangGraph ReAct, Hugging Face smolagents, PandasAI, DA-Agent, and AutoGen. We run all completed adapters with \texttt{gpt-5.4-mini}. For cross-model experiments, we run LangGraph, smolagents, PandasAI, and AutoGen with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent is included in the GPT main table but excluded from cross-model tables because the Claude run reached only 5 of 68 clean/poisoned environment instances after more than twenty minutes.
+\subsection{Blind Compliance Across Agents and Models}
 
-\paragraph{Poisoning boundaries.}
-LangGraph, smolagents, and AutoGen are poisoned at a tool-observation boundary. PandasAI is coarser: it runs the full agent and applies poisoning at the chat-result boundary because internal code-execution observations are not exposed through the same protocol. PandasAI BCR therefore measures end-to-end susceptibility to a poisoned final chat result, not fine-grained compliance with an individual internal dataframe observation. These are end-to-end framework measurements rather than pure model-only comparisons.
-
-\paragraph{Analysis.}
-For each agent, model, and task family, we report clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR where space permits. We also inspect trajectories to identify failure modes such as copying a poisoned value into the final report, rationalizing an inconsistent result, accepting corrupted metadata, or validating but not using the validation result. Section~\ref{sec:qualitative} summarizes representative trajectories from the final rescored runs.
-
-\subsection{Expanded GPT-Only Cross-Agent Results}
-
-Table~\ref{tab:gpt-expanded-cross-agent-120} reports the 120-task GPT-only cross-agent evaluation over three public framework adapters. This run uses the larger expanded suites rather than the smaller cross-model suites. The main pattern is stable: all three adapters maintain high clean TSR, but poisoned TSR drops by 0.27--0.36 and blind compliance remains nonzero. LangGraph and AutoGen recover more often on semantic/schema tasks than on numerical tasks, but the combined results still show substantial poisoned degradation. The spread across adapters shows that blind compliance is not only a side effect of a single implementation style.
+Table~\ref{tab:gpt-expanded-cross-agent-120} reports the expanded 120-task GPT-only evaluation. All adapters solve most clean tasks, yet poisoned TSR falls by 0.27--0.36 and BCR remains nonzero. Thus, strong clean performance does not imply calibrated trust in tool evidence, and the effect is not specific to one framework.
 
 \begin{table}[t]
 \centering
 \small
-\setlength{\tabcolsep}{5pt}
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}lrrrrr@{}}
 \toprule
 Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & RR \\
@@ -42,178 +28,65 @@ smolagents & 0.91 & 0.55 & \textbf{0.36} & 0.38 & 0.10 \\
 AutoGen & 0.92 & \textbf{0.65} & 0.27 & \textbf{0.20} & 0.37 \\
 \bottomrule
 \end{tabular}
-\caption{GPT-only expanded cross-agent results on 120 tasks, combining 60 numerical and 60 semantic/schema expanded release tasks.}
+\caption{Expanded GPT-only results on 120 tasks (60 numerical and 60 semantic/schema).}
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
-\subsection{Cross-Model Generalization}
+The smaller suites allow repetition across model families. Table~\ref{tab:cross-model-compact} averages completed adapters within each model--suite group. Every group shows a substantial clean-to-poisoned gap and nonzero BCR. Semantic/schema corruption is especially revealing: GPT and Claude average near-perfect clean TSR, but poisoned TSR falls to 0.50 and 0.68. We avoid fine-grained model rankings because the suites and completed adapter sets are modest; adapter-level bootstrap intervals are reported in the artifact. Representative intervals remain far from a no-effect interpretation, including GPT--LangGraph numerical BCR 0.68 [0.50, 0.82] and semantic poisoned TSR 0.79 [0.62, 0.92].
 
-We use the smaller 34-task numerical and 24-task semantic/schema suites for cross-model experiments because they are practical to repeat across model families and framework adapters. Table~\ref{tab:cross-model-compact} summarizes results by averaging over completed adapters for each model and suite. The detailed adapter-level tables are released in \texttt{cross\_model\_summary.csv} and \texttt{semantic\_schema\_cross\_model\_summary.csv}.
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Suite & Model & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR \\
+\midrule
+Numerical & GPT & 0.91 & 0.51 & 0.40 & 0.45 \\
+ & Claude & 0.92 & 0.67 & 0.26 & 0.31 \\
+ & Qwen & 0.82 & 0.47 & 0.35 & 0.38 \\
+\midrule
+Semantic/schema & GPT & 0.98 & 0.50 & 0.48 & 0.46 \\
+ & Claude & 1.00 & 0.68 & 0.32 & 0.38 \\
+ & Qwen & 0.87 & 0.51 & 0.37 & 0.31 \\
+\bottomrule
+\end{tabular}
+\caption{Cross-model summary, averaged over completed adapters. Numerical uses 34 tasks; semantic/schema uses 24.}
+\label{tab:cross-model-compact}
+\end{table}
 
-The cross-model results support the same conclusion as the expanded GPT-only run. Clean TSR remains high on average, but poisoned TSR drops sharply and BCR remains nonzero for every model--suite group. Semantic/schema poisoning is especially diagnostic: GPT and Claude average clean TSR near 1.00 on the 24-task suite, yet their average poisoned TSR falls to 0.50 and 0.68, respectively. These results suggest that silent poisoning is not merely an arithmetic weakness or a single-model artifact.
+Operator-level results clarify the mechanism. Across completed numerical model--adapter groups, rank swaps cause the highest BCR (0.52), followed by aggregate scaling (0.41); sign flips are more visible and produce BCR 0.11. The difficult cases preserve plausible magnitudes while changing which entity, label, or schema meaning the value belongs to. This supports our focus on evidence binding rather than numeric tolerance alone.
+
+\subsection{Guarded Verification}
+
+Table~\ref{tab:langgraph-guarded} compares six LangGraph variants on the same 120 tasks. Caution-only and expectation-only prompting leave substantial blind compliance. Any variant that obtains independent evidence reduces observed BCR to 0.00. Full Guarded Verification raises poisoned TSR from 0.62 to 0.93 while preserving clean TSR, and verification-only performs nearly as well. Independent evidence collection, rather than cautious wording, is therefore the main active ingredient.
 
 \begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{4.5pt}
-\begin{tabular}{@{}llrrrr@{}}
-\toprule
-Suite & Model & Mean clean TSR & Mean poisoned TSR & Mean $\Delta$TSR & Mean BCR \\
-\midrule
-Numerical & GPT & 0.91 & 0.51 & 0.40 & 0.45 \\
-Numerical & Claude & 0.92 & 0.67 & 0.26 & 0.31 \\
-Numerical & Qwen & 0.82 & 0.47 & 0.35 & 0.38 \\
-\addlinespace[2pt]
-\midrule
-Semantic/schema & GPT & 0.98 & 0.50 & 0.48 & 0.46 \\
-Semantic/schema & Claude & 1.00 & 0.68 & 0.32 & 0.38 \\
-Semantic/schema & Qwen & 0.87 & 0.51 & 0.37 & 0.31 \\
-\bottomrule
-\end{tabular}
-\caption{Compact cross-model summary. Values are adapter means over completed full-framework runs. Numerical uses the 34-task suite; semantic/schema uses the 24-task suite.}
-\label{tab:cross-model-compact}
-\end{table}
-
-\paragraph{Uncertainty.}
-Because the cross-model suites are smaller than the expanded GPT-only run, we avoid fine-grained model ranking claims and release adapter-level bootstrap intervals for each run. The uncertainty is still consistent with the main degradation claim. For example, in the 24-task semantic/schema suite, GPT LangGraph has poisoned TSR 0.79 with 95\% CI [0.62, 0.92], while GPT smolagents and PandasAI have BCR intervals [0.29, 0.71] and [0.58, 0.92], respectively. In the 34-task numerical suite, GPT LangGraph has BCR 0.68 with 95\% CI [0.50, 0.82], and GPT PandasAI has BCR 0.65 with 95\% CI [0.50, 0.79]. These intervals are wide enough that they should not be read as precise framework rankings, but they show that the observed clean-to-toxic degradation and blind compliance are not isolated single-task artifacts.
-
-\subsection{Poison-Type Breakdown}
-
-The numerical suite lets us compare poisoning operators across completed model--adapter groups. Table~\ref{tab:poison-type-breakdown} shows that rank swaps are the most likely to induce blind compliance, with average BCR 0.52. Aggregate scaling is also damaging, with average BCR 0.41 and average poisoned TSR 0.43. Sign flips are easier for agents to recover from: average poisoned TSR is 0.90, average BCR is 0.11, and average recovery is 0.28. This pattern suggests that entity binding and plausible aggregate values are more dangerous than sign errors that often contradict visible trends.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{5pt}
 \begin{tabular}{@{}lrrrrr@{}}
 \toprule
-Poison type & Toxic TSR & BCR & ADR & VR & RR \\
+Variant & Clean TSR & Poisoned TSR & BCR & VR & RR \\
 \midrule
-Aggregate scaling & 0.43 & 0.41 & 0.07 & 0.11 & 0.12 \\
-Rank swap & 0.49 & \textbf{0.52} & 0.01 & 0.18 & 0.16 \\
-Sign flip & \textbf{0.90} & \textbf{0.11} & 0.04 & \textbf{0.31} & \textbf{0.28} \\
-\bottomrule
-\end{tabular}
-\caption{Average numerical poison-type behavior across completed model--adapter groups. The table aggregates \texttt{poison\_type\_summary.csv}.}
-\label{tab:poison-type-breakdown}
-\end{table}
-
-\subsection{Guarded Verification Ablation}
-
-We next evaluate whether Guarded Verification can reduce blind compliance for LangGraph ReAct. The guarded adapter first elicits task-specific expectations about columns, labels, entity bindings, and evidence rows, then runs the normal ReAct tool route, and finally performs an independent verification pass before producing the final answer. In our scorer, a validation event only counts toward VR when it is a fresh post-poison tool call or recomputation that is separate from the poisoned observation; restating the primary answer or expressing rhetorical doubt is insufficient. This design targets silent observation poisoning rather than prompt-level instruction following.
-
-Table~\ref{tab:langgraph-guarded} reports the full 120-task ablation across six LangGraph variants. The base adapter has high clean TSR (0.93) but drops to 0.62 poisoned TSR with BCR 0.30. Caution-only prompting reduces BCR but does not remove blind compliance, and expectation-only leaves nearly the same failure pattern as the base route. In contrast, variants that perform independent verification reduce observed BCR to 0.00. The full guard improves poisoned TSR to 0.93 while preserving clean TSR at 0.93; the light guard obtains the same poisoned TSR with a slightly lower clean TSR. Verification-only also performs strongly, indicating that independent evidence gathering is the main active ingredient.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{@{}lrrrrr@{}}
-\toprule
-Adapter & Clean TSR & Poisoned TSR & BCR & VR & RR \\
-\midrule
-\multicolumn{6}{@{}l}{\textit{Base and prompt-only variants}} \\
 Base & 0.93 & 0.62 & 0.30 & 0.44 & 0.42 \\
 Caution only & \textbf{0.94} & 0.68 & 0.21 & 0.44 & 0.41 \\
 Expectation only & \textbf{0.94} & 0.61 & 0.28 & 0.43 & 0.39 \\
-\addlinespace[2pt]
-\midrule
-\multicolumn{6}{@{}l}{\textit{Independent-verification variants}} \\
 Verification only & 0.91 & 0.89 & 0.00 & \textbf{0.91} & 0.89 \\
 Full guard & 0.93 & \textbf{0.93} & \textbf{0.00} & 0.87 & \textbf{0.93} \\
 Light guard & 0.91 & \textbf{0.93} & 0.00 & 0.87 & \textbf{0.93} \\
 \bottomrule
 \end{tabular}
-\caption{Expanded 120-task LangGraph ReAct defense ablation with \texttt{gpt-5.4-mini}. The table combines 60 numerical and 60 semantic/schema tasks.}
+\caption{LangGraph ReAct defense ablation on 120 tasks with \texttt{gpt-5.4-mini}.}
 \label{tab:langgraph-guarded}
 \end{table}
 
-Table~\ref{tab:langgraph-guarded-breakdown} breaks the same ablation down by suite. The semantic/schema suite shows the cleanest trust-calibration split: the base adapter reaches 1.00 clean TSR and 0.82 poisoned TSR, while full guard keeps BCR at 0.00 and reaches 0.98 poisoned TSR. The numerical suite is harder in absolute task success: the base adapter falls from 0.85 clean TSR to 0.42 poisoned TSR with BCR 0.47, while full guard raises poisoned TSR to 0.87 with BCR 0.00. This supports a narrow interpretation of the defense result: Guarded Verification primarily reduces unverified trust in successful observations, while residual TSR failures reflect remaining analysis competence and budget limits.
+The effect holds in both task families. Full guard raises numerical poisoned TSR from 0.42 to 0.87 and semantic/schema poisoned TSR from 0.82 to 0.98, with BCR 0.00 in both. Bootstrap 95\% intervals for guarded BCR are [0.00, 0.00]; corresponding poisoned-TSR intervals are [0.77, 0.95] and [0.95, 1.00]. A second-framework replication yields the same qualitative result: AutoGen guarded and verification-only variants both reach poisoned TSR 0.93 and BCR 0.00 over 120 tasks, compared with 0.65 and 0.20 for base AutoGen.
 
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{4.5pt}
-\begin{tabular}{@{}llrrrrr@{}}
-\toprule
-Suite & Adapter & Clean TSR & Poisoned TSR & BCR & VR & RR \\
-\midrule
-Semantic/schema & Base & \textbf{1.00} & 0.82 & 0.13 & 0.85 & 0.80 \\
-Semantic/schema & Full guard & 0.98 & \textbf{0.98} & \textbf{0.00} & \textbf{1.00} & \textbf{0.98} \\
-Semantic/schema & Light guard & 0.98 & \textbf{0.98} & 0.00 & 1.00 & \textbf{0.98} \\
-\addlinespace[2pt]
-\midrule
-Numerical & Base & 0.85 & 0.42 & 0.47 & 0.03 & 0.03 \\
-Numerical & Full guard & \textbf{0.88} & \textbf{0.87} & \textbf{0.00} & 0.73 & \textbf{0.87} \\
-Numerical & Light guard & 0.83 & \textbf{0.87} & \textbf{0.00} & 0.73 & \textbf{0.87} \\
-\bottomrule
-\end{tabular}
-\caption{Suite breakdown for the expanded LangGraph ReAct defense ablation.}
-\label{tab:langgraph-guarded-breakdown}
-\end{table}
+\paragraph{Harder workflows and adversaries.}
+On a 13-task multi-table join extension, base LangGraph attains clean TSR 1.00 but poisoned TSR 0.23 and BCR 0.77; full guard reaches 1.00 poisoned TSR and 0.00 BCR. When verification observations are repeatedly poisoned, however, recovery falls from 0.80 at poisoning probability $p=0$ to 0.10 at $p=1$. BCR remains 0.00 because the guard marks conflicting evidence rather than silently endorsing it. Guarded Verification therefore prevents unqualified adoption under this stress test, but cannot guarantee the correct answer when all evidence routes share corruption.
 
-\paragraph{Defense confidence intervals.}
-Bootstrap intervals give the same picture as the point estimates. On the expanded semantic/schema suite, base LangGraph poisoned TSR is 0.82 with 95\% CI [0.72, 0.90] and BCR is 0.13 with 95\% CI [0.05, 0.22], while full guard poisoned TSR is 0.98 with 95\% CI [0.95, 1.00] and BCR is exactly 0.00 under every bootstrap sample. On the expanded numerical suite, base poisoned TSR is 0.42 with 95\% CI [0.28, 0.53] and BCR is 0.47 with 95\% CI [0.35, 0.60], while full guard poisoned TSR is 0.87 with 95\% CI [0.77, 0.95] and BCR remains 0.00. AutoGen replication also has BCR 0.00 with 95\% CI [0.00, 0.00] for both verification-only and guarded variants, and poisoned TSR 0.93 with 95\% CI [0.88, 0.98].
+\paragraph{Cost and selectivity.}
+Always-on verification has a measurable cost. LangGraph base averages 2.04 tool events and 7.92 seconds per task; full guard averages 4.67 events and 22.72 seconds, with median/90th-percentile latency increasing from 7.31/10.60 to 21.28/29.51 seconds. Light guard averages 4.53 events and 21.09 seconds. AutoGen guarded averages 4.07 events and 25.41 seconds. The full guard does not reduce aggregate clean TSR, but it verifies clean tasks unnecessarily. Budgeted abstain, random, and rule-based selective policies reduce cost only inconsistently, especially on numerical tasks. Appendix~\ref{sec:appendix-guard} reports suite breakdowns, stress tests, latency distributions, qualitative cases, and complete confidence intervals.
 
-\paragraph{Clean-run false positives and overhead.}
-The full guard verifies every task, so clean-run VR should be read as an unnecessary-verification rate rather than as anomaly detection. We estimate harmful false positives by clean TSR regression: on the 120-task ablation, full guard clean TSR is 0.93 versus 0.93 for base LangGraph, so always-on verification does not reduce aggregate clean success in this setting. The cost is concrete: base LangGraph averages 2.04 tool events and 7.92 seconds per task, while full guard averages 4.67 tool events and 22.72 seconds; the median/90th-percentile latency rises from 7.31/10.60 seconds to 21.28/29.51 seconds. Light guard is slightly cheaper at 4.53 tool events and 21.09 seconds on average, with median/90th-percentile latency 20.64/26.33 seconds. Budgeted policies can be less stable, however, because they sometimes spend steps on verification while failing ordinary answer extraction. We log wall-clock time and tool-event counts for every run; the released overhead summaries report these timing proxies, and Appendix~\ref{sec:appendix-guard} now includes a compact latency distribution table. We do not claim provider billing deltas because the API logs do not expose reliable per-call dollar costs across all model gateways.
-
-\paragraph{Second-framework replication.}
-To test whether the mitigation is tied to LangGraph, we replicate the core verification variants on AutoGen over the same 120 expanded tasks. The base AutoGen adapter in Table~\ref{tab:gpt-expanded-cross-agent-120} has poisoned TSR 0.65 and BCR 0.20. AutoGen verification-only and guarded variants both reduce BCR to 0.00 and obtain poisoned TSR 0.93, with clean TSR 0.93 and 0.92, respectively. The replication has a similar cost profile: verification-only averages 4.11 tool events and 27.10 seconds, while guarded averages 4.07 tool events and 25.41 seconds, with median/90th-percentile latency 26.01/32.34 seconds and 24.60/29.60 seconds. This result does not make a universal framework-generalization claim, but it shows that the main BCR reduction is reproducible in a second public agent loop. Appendix~\ref{sec:appendix-autogen-replication} reports the suite breakdown and runtime.
-
-\subsection{Supplementary Defense Stress Tests}
-
-We further probe two harder settings: cheaper verification policies and repeated poisoning of verification routes. Table~\ref{tab:defense-stress-main} summarizes a fixed stratified subset covering numerical aggregate/rank/sign/ratio corruptions and semantic label/schema/stale/retrieval corruptions. The abstain policy eliminates blind compliance but loses task success, especially on numerical tasks. Randomized verification is cheaper, but it misses high-risk semantic cases and leaves BCR at 0.30 on the semantic subset. Selective verification performs best among the cheaper policies on the semantic subset, matching the full guard's qualitative behavior on these cases, but still leaves residual BCR on the harder numerical subset.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{@{}llrrrr@{}}
-\toprule
-Suite & Adapter & Clean TSR & Poisoned TSR & BCR & RR \\
-\midrule
-Numerical-20 & Abstain & 0.50 & 0.30 & 0.00 & 0.30 \\
-Numerical-20 & Randomized & 0.35 & 0.25 & 0.05 & 0.15 \\
-Numerical-20 & Selective & 0.30 & 0.25 & 0.05 & 0.25 \\
-\addlinespace[2pt]
-\midrule
-Semantic-10 & Abstain & 0.60 & 0.50 & 0.00 & 0.50 \\
-Semantic-10 & Randomized & 0.90 & 0.10 & 0.30 & 0.00 \\
-Semantic-10 & Selective & 0.70 & \textbf{0.80} & \textbf{0.00} & \textbf{0.80} \\
-\bottomrule
-\end{tabular}
-\caption{Supplementary stronger-baseline stress tests on fixed stratified subsets. Full-suite defense results remain in Table~\ref{tab:langgraph-guarded}; these runs isolate cost--robustness tradeoffs for alternative verification policies.}
-\label{tab:defense-stress-main}
-\end{table}
-
-We also stress the \texttt{poison\_once} assumption by allowing repeated probabilistic poisoning on the semantic subset. With \texttt{--poison-repeat}, increasing the probability that each eligible verification observation is also corrupted reduces recovery: toxic TSR/RR falls from 0.80 at \(p=0\) to 0.10 at \(p=1.0\). BCR remains 0.00 across this stress test because the guard continues to mark the evidence as contested rather than silently adopting the poisoned result. Thus, under stronger adversaries, the guarantee should be interpreted as reducing blind compliance, not guaranteeing recovery when every evidence route can be corrupted.
-
-\subsection{Multi-Table Join Extension}
-
-To move beyond single-table CSV analysis, we add a realistic extension suite with 13 tasks over four joined table pairs. The tasks require notebook-style reasoning: discover the correct table pair, inspect both tables, and compute the answer through an exact join or cross-table validation. The suite is released as \texttt{realistic\_extension\_iclr2027.jsonl} together with the auxiliary tables used by the execution tools.
-
-On this extension, the base LangGraph ReAct adapter obtains clean TSR 1.00 and poisoned TSR 0.23 with BCR 0.77. This shows that silent poisoning remains challenging when tasks move beyond a single flat table and require join-style analysis: the agent can solve the clean join but still adopt a corrupted observation under poisoning. Guarded Verification transfers to this harder execution surface: both full and light guards reach poisoned TSR 1.00 with BCR 0.00. The result supports the same conclusion as the 120-task ablation, with higher latency because each join task needs an additional evidence route.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{@{}lrrrrrr@{}}
-\toprule
-Adapter & Clean TSR & Poisoned TSR & BCR & RR & Clean sec. & Toxic sec. \\
-\midrule
-LangGraph ReAct base & \textbf{1.00} & 0.23 & 0.77 & 0.15 & 8.42 & 9.55 \\
-LangGraph ReAct full guard & \textbf{1.00} & \textbf{1.00} & \textbf{0.00} & \textbf{1.00} & 18.92 & 23.27 \\
-LangGraph ReAct light guard & \textbf{1.00} & \textbf{1.00} & \textbf{0.00} & \textbf{1.00} & 17.92 & 22.96 \\
-\bottomrule
-\end{tabular}
-\caption{LangGraph ReAct on the 13-task multi-table join extension. Latency columns report mean wall-clock seconds per clean/toxic environment instance.}
-\label{tab:multi-table-extension-base}
-\end{table}
-
-\subsection{Uncertainty and Experimental Caveats}
-
-We compute nonparametric bootstrap confidence intervals by resampling task IDs with replacement and recomputing clean TSR, poisoned TSR, $\Delta$TSR, BCR, ADR, VR, and RR. The full CI tables are released for the numerical cross-model results, semantic/schema cross-model results, and the expanded guarded LangGraph ablation. The guarded ablation CIs are summarized in Appendix~\ref{sec:appendix-guard}.
-
-The results should be interpreted as end-to-end framework measurements. DA-Agent is excluded from the Claude and Qwen cross-model tables because of runtime, and PandasAI uses a coarser poisoning boundary. These caveats affect fine-grained model comparisons, but not the main finding: successful tool use often coexists with blind compliance under silent observation poisoning, and structured verification can reduce that compliance.
+Overall, the experiments establish three points: blind compliance persists across agent and model families; binding-preserving corruptions are harder than conspicuous sign errors; and structural independent verification greatly improves trust calibration under an explicit redundancy assumption.
