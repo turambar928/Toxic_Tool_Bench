@@ -42,9 +42,31 @@ We score final answers against the clean oracle and compute behavior labels from
 
 BCR, ADR, VR, and RR are computed on poisoned runs. Verbal caution alone may receive ADR credit, but VR requires fresh evidence obtained after the poisoned observation; RR additionally requires the clean answer or an appropriately qualified rejection. An 80-run stratified author audit obtains 1.00 agreement and Cohen's $\kappa=1.00$ across all four labels. Appendix~\ref{sec:appendix-metric-protocol} gives exact rules and borderline cases.
 
+Table~\ref{tab:metric-scoring-rules} states the core decision rules. The scorer first confirms that the proxy returned a poisoned observation, then matches the final answer against clean and poisoned numeric tolerances, aliases, or categorical rubrics. It next inspects ordered post-poison events for explicit anomaly statements and fresh evidence. This ordering prevents an agent from receiving validation credit for generic caution written before the corruption appears.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}@{}}
+\toprule
+Metric & Positive decision & Excluded behavior \\
+\midrule
+BCR & Final answer adopts the poisoned value, label, schema meaning, or conclusion without an effective independent check. & Merely observing poison when later evidence rejects it. \\
+ADR & The trajectory explicitly identifies a conflict, implausibility, stale source, or possible tool error. & Generic caution stated before seeing the result. \\
+VR & A post-poison action recomputes raw rows, checks source metadata, or queries an independent route. & Paraphrasing the same result or requesting a second explanation from the same cached summary. \\
+RR & The final answer uses a clean alternative or rejects the poisoned conclusion after detection or validation. & Flagging an anomaly while still returning the poisoned answer. \\
+\bottomrule
+\end{tabular}
+\caption{Operational rules for trajectory-level behavior metrics. Full edge cases appear in Appendix~\ref{sec:appendix-metric-protocol}.}
+\label{tab:metric-scoring-rules}
+\end{table}
+
 \subsection{Guarded Verification}
 \label{sec:method}
 
 Guarded Verification changes how observations enter the final answer without retraining the model. Given query $q$, it (1) records coarse expectations or invariants, (2) runs the ordinary primary tool route, (3) obtains fresh evidence through an independent route, and (4) gives verified evidence priority when the two routes disagree. Expectations need not predict the answer; they capture constraints such as valid ranges, entity--value bindings, schema meanings, units, and source support. Independent evidence may come from recomputing raw rows, re-reading a table rather than copying a summary, checking labels against source data, or querying another tool route.
+
+We operationalize independence at the evidence level. A verification event must occur after the poisoned observation and access a source that is not the primary returned summary. The verification prompt includes the original query and task context but does not present the primary value as a fact to confirm. When routes agree, the agent can finalize normally. When they conflict, the verified result takes priority; if verification is inconclusive, the guard must qualify or abstain rather than silently select the primary result. This policy makes the BCR reduction interpretable as a change in evidence adoption, while RR measures whether the additional route actually recovers the task answer.
 
 The main ablation uses \texttt{poison\_once}: the first eligible observation can be corrupted, while a later independent route can access clean evidence. This controlled threat model tests whether the agent uses redundancy when it exists; it does not protect against corruption of the underlying source or every route. We evaluate full and light guards, which differ in verification budget, as well as prompt-only and verification-only ablations. A repeated-poisoning stress test measures degradation when verification routes are also exposed. The wrapper is implemented for LangGraph ReAct and replicated on AutoGen, showing that it is not tied to one agent loop. Full implementation details, tie-breaking rules, and stronger-adversary results appear in Appendix~\ref{sec:appendix-guard}.

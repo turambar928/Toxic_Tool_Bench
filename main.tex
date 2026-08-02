@@ -37,13 +37,6 @@
 \input{sections/05_experiments}
 \input{sections/07_discussion_limitations}
 
-\clearpage
-\appendix
-\setcounter{section}{0}
-\renewcommand{\thesection}{\Alph{section}}
-\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
-\input{sections/08_appendix_guard_details}
-
 \IfFileExists{iclr2027_conference.bst}{
     \bibliographystyle{iclr2027_conference}
 }{
@@ -54,5 +47,12 @@
     }
 }
 \bibliography{references}
+
+\clearpage
+\appendix
+\setcounter{section}{0}
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\input{sections/08_appendix_guard_details}
 
 \end{document}

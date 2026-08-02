@@ -57,6 +57,23 @@ Semantic/schema & GPT & 0.98 & 0.50 & 0.48 & 0.46 \\
 
 Operator-level results clarify the mechanism. Across completed numerical model--adapter groups, rank swaps cause the highest BCR (0.52), followed by aggregate scaling (0.41); sign flips are more visible and produce BCR 0.11. The difficult cases preserve plausible magnitudes while changing which entity, label, or schema meaning the value belongs to. This supports our focus on evidence binding rather than numeric tolerance alone.
 
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Poison type & Poisoned TSR & BCR & ADR & VR & RR \\
+\midrule
+Aggregate scaling & 0.43 & 0.41 & 0.07 & 0.11 & 0.12 \\
+Rank swap & 0.49 & \textbf{0.52} & 0.01 & 0.18 & 0.16 \\
+Sign flip & \textbf{0.90} & \textbf{0.11} & 0.04 & \textbf{0.31} & \textbf{0.28} \\
+\bottomrule
+\end{tabular}
+\caption{Numerical poison-type behavior averaged over completed model--adapter groups.}
+\label{tab:poison-type-breakdown}
+\end{table}
+
 \subsection{Guarded Verification}
 
 Table~\ref{tab:langgraph-guarded} compares six LangGraph variants on the same 120 tasks. Caution-only and expectation-only prompting leave substantial blind compliance. Any variant that obtains independent evidence reduces observed BCR to 0.00. Full Guarded Verification raises poisoned TSR from 0.62 to 0.93 while preserving clean TSR, and verification-only performs nearly as well. Independent evidence collection, rather than cautious wording, is therefore the main active ingredient.
@@ -81,12 +98,42 @@ Light guard & 0.91 & \textbf{0.93} & 0.00 & 0.87 & \textbf{0.93} \\
 \label{tab:langgraph-guarded}
 \end{table}
 
-The effect holds in both task families. Full guard raises numerical poisoned TSR from 0.42 to 0.87 and semantic/schema poisoned TSR from 0.82 to 0.98, with BCR 0.00 in both. Bootstrap 95\% intervals for guarded BCR are [0.00, 0.00]; corresponding poisoned-TSR intervals are [0.77, 0.95] and [0.95, 1.00]. A second-framework replication yields the same qualitative result: AutoGen guarded and verification-only variants both reach poisoned TSR 0.93 and BCR 0.00 over 120 tasks, compared with 0.65 and 0.20 for base AutoGen.
+The effect holds across task families and a second framework (Table~\ref{tab:defense-transfer}). Full guard improves the harder numerical suite by 0.45 poisoned TSR and the semantic/schema suite by 0.16, with BCR 0.00 in both. AutoGen shows the same pattern over 120 tasks. Bootstrap 95\% intervals for guarded BCR are [0.00, 0.00]; numerical and semantic/schema poisoned-TSR intervals are [0.77, 0.95] and [0.95, 1.00], respectively.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3.8pt}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Setting & Variant & Clean TSR & Poisoned TSR & BCR & RR \\
+\midrule
+LangGraph numerical-60 & Base & 0.85 & 0.42 & 0.47 & 0.03 \\
+ & Full guard & \textbf{0.88} & \textbf{0.87} & \textbf{0.00} & \textbf{0.87} \\
+LangGraph semantic-60 & Base & \textbf{1.00} & 0.82 & 0.13 & 0.80 \\
+ & Full guard & 0.98 & \textbf{0.98} & \textbf{0.00} & \textbf{0.98} \\
+AutoGen expanded-120 & Base & 0.92 & 0.65 & 0.20 & 0.37 \\
+ & Full guard & 0.92 & \textbf{0.93} & \textbf{0.00} & \textbf{0.93} \\
+Multi-table joins-13 & Base & \textbf{1.00} & 0.23 & 0.77 & 0.15 \\
+ & Full guard & \textbf{1.00} & \textbf{1.00} & \textbf{0.00} & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
+\caption{Defense transfer across task families, AutoGen, and the multi-table extension.}
+\label{tab:defense-transfer}
+\end{table}
 
 \paragraph{Harder workflows and adversaries.}
 On a 13-task multi-table join extension, base LangGraph attains clean TSR 1.00 but poisoned TSR 0.23 and BCR 0.77; full guard reaches 1.00 poisoned TSR and 0.00 BCR. When verification observations are repeatedly poisoned, however, recovery falls from 0.80 at poisoning probability $p=0$ to 0.10 at $p=1$. BCR remains 0.00 because the guard marks conflicting evidence rather than silently endorsing it. Guarded Verification therefore prevents unqualified adoption under this stress test, but cannot guarantee the correct answer when all evidence routes share corruption.
 
 \paragraph{Cost and selectivity.}
 Always-on verification has a measurable cost. LangGraph base averages 2.04 tool events and 7.92 seconds per task; full guard averages 4.67 events and 22.72 seconds, with median/90th-percentile latency increasing from 7.31/10.60 to 21.28/29.51 seconds. Light guard averages 4.53 events and 21.09 seconds. AutoGen guarded averages 4.07 events and 25.41 seconds. The full guard does not reduce aggregate clean TSR, but it verifies clean tasks unnecessarily. Budgeted abstain, random, and rule-based selective policies reduce cost only inconsistently, especially on numerical tasks. Appendix~\ref{sec:appendix-guard} reports suite breakdowns, stress tests, latency distributions, qualitative cases, and complete confidence intervals.
+
+\subsection{Qualitative Evidence}
+
+\paragraph{Plausible answers hide binding errors.}
+In a treatment/control task, the poisoned observation reports \texttt{Control--0.145}. The rate is copied from the clean computation and remains plausible; only the group binding is wrong. The base trajectory repeats this pair in the final answer without checking the underlying rows. Similar failures occur in ranking tasks, where the value is correct but attached to the wrong entity. These cases explain why rank and label swaps produce higher BCR than sign flips: magnitude checks do not reveal a corrupted association.
+
+\paragraph{Recovery requires new evidence.}
+On the same treatment task, the guarded trajectory re-inspects the dataframe, recomputes rates by group, and returns \texttt{Treatment--0.145}. In a multi-table customer-spend task, the base agent adopts a poisoned joined summary, whereas the guard reconstructs the join from the customer and order tables before finalizing. Caution-only traces often say that a result ``may need verification'' but still repeat it; these receive ADR but not VR or RR. The contrast grounds the aggregate finding: recovery comes from a post-poison evidence-producing action, not from more skeptical language alone.
 
 Overall, the experiments establish three points: blind compliance persists across agent and model families; binding-preserving corruptions are harder than conspicuous sign errors; and structural independent verification greatly improves trust calibration under an explicit redundancy assumption.

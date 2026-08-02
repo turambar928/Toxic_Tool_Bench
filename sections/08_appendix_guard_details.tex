@@ -1,3 +1,44 @@
+\section{Benchmark Construction and Threat Model}
+\label{sec:appendix-benchmark-details}
+
+\subsection{Formal Interaction Model}
+
+We consider an agent that receives query $q$ and interacts with tools $\mathcal{T}$. At step $t$, it emits action $a_t$, receives observation $o_t$, updates its internal state, and eventually produces answer $y$. For tool $f\in\mathcal{T}$ and input $x$, a clean call returns $o=f(x)$. A poisoned proxy instead returns
+\[
+    \tilde{o}=P(f,x,o;\theta),
+\]
+where $P$ is a task-specific poisoning operator and $\theta$ controls the target, replacement, or severity. A poisoning event belongs to ToxicBench only when it satisfies three conditions: (i) \emph{interface validity}, meaning the expected type, schema, and formatting are preserved; (ii) \emph{execution success}, meaning no exception, timeout, traceback, or warning is exposed; and (iii) \emph{task relevance}, meaning the observation remains plausible enough to support a downstream answer. The false content therefore enters through the tool-observation channel rather than being generated only by the model.
+
+The threat model covers silent corruption of an intermediate analytical route: pipeline bugs, stale summaries, incorrect unit conversion, label-binding errors, compromised retrieval results, or a proxy that modifies a successful return. It excludes ordinary malformed outputs and does not assume control of the system prompt. The main defense experiment further assumes that at least one independent evidence route remains available. Repeated-poisoning experiments relax this assumption but do not model an adversary with unrestricted control of the underlying data and every redundant source.
+
+\subsection{Paired Task Construction}
+
+Each task stores a user query, one or more datasets, a clean oracle or rubric, a poisoning specification, acceptable aliases or numeric tolerances, and the tool event eligible for corruption. The clean and poisoned runs hold the query, data, model, adapter, tool implementation, and execution budget fixed. The proxy first executes the real tool and logs its clean observation, then edits only the returned observation in the poisoned environment. The agent never sees the hidden clean value. Pairing makes a poisoned failure most informative when the clean run succeeds, because the difference can then be attributed to observation trust rather than inability to solve the task.
+
+We construct poisons around common analytical workflows. Numerical tasks cover means, sums, counts, growth rates, rankings, ratios, retention, defect rates, and support statistics. Semantic/schema tasks cover treatment/control bindings, column meanings, source-of-truth dictionaries, stale metadata, and retrieved evidence. Numerical operators scale aggregates, reverse signs, or swap entity labels. Semantic operators swap labels or column meanings, invert treatment/control semantics, return stale dictionary entries, or replace retrieved support with plausible but conclusion-changing evidence. Short labels are replaced only at label boundaries, preventing accidental edits inside unrelated words.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Suite & Tasks & Data & Main coverage \\
+\midrule
+Cross-model numerical & 34 & 11 CSVs & aggregates, rates, rankings, ratios \\
+Cross-model semantic/schema & 24 & 14 CSVs & labels, schema, metadata, retrieval \\
+Expanded numerical & 60 & tabular & repeated patterns and severity levels \\
+Expanded semantic/schema & 60 & tabular & binding and evidence variants \\
+Multi-table extension & 13 & 4 table pairs & discovery, joins, cross-table checks \\
+\bottomrule
+\end{tabular}
+\caption{ToxicBench task suites used in the main experiments and extensions.}
+\label{tab:appendix-suite-inventory}
+\end{table}
+
+\paragraph{Independent verifiability.}
+Every benchmark item retains a route by which the clean claim can be checked, such as recomputing from raw rows, comparing labels against the source table, consulting a separate schema field, or examining the evidence rows behind a retrieved summary. This property supports trajectory scoring and the controlled defense ablation. It does not imply that every deployed system has such redundancy; rather, it makes the availability and corruption of verification routes an explicit experimental variable.
+
 \section{Scoring, Audit, and Artifacts}
 \label{sec:appendix-guard}
 
@@ -74,6 +115,21 @@ The main text keeps compact tables for page budget. Detailed adapter-level cross
 \end{itemize}
 
 \section{Guarded Verification Details}
+
+\subsection{Full Guarded Agent Loop}
+
+Guarded Verification is an adapter-level wrapper and does not retrain the base model. For query $q$ and environment $\mathcal{T}$, it executes four stages:
+
+\begin{enumerate}
+    \item \textbf{Expectation generation.} Before the primary result is treated as authoritative, the wrapper records coarse invariants relevant to the task.
+    \item \textbf{Primary route.} The original agent executes its normal tool loop and produces a candidate observation and answer.
+    \item \textbf{Independent verification.} A second route recomputes or re-inspects the required evidence without receiving the primary value as a fact to confirm.
+    \item \textbf{Evidence-gated finalization.} Agreement permits ordinary finalization; disagreement gives priority to verified evidence, while inconclusive verification produces qualification or abstention.
+\end{enumerate}
+
+Expectations are deliberately weaker than exact answer predictions. Numerical expectations include non-negative counts, percentages in valid ranges, means bounded by observed extrema, and consistency between numerators and denominators. Binding expectations preserve the association between an entity and its statistic. Schema expectations check names, meanings, units, and timestamps against documentation. Retrieval expectations require that cited evidence support the claimed row, group, or recommendation. These expectations can expose obvious conflicts, but they do not replace independent evidence: a scaled value may remain in range, and a swapped label may satisfy every magnitude constraint.
+
+Operational independence requires that verification occur after the poisoned observation and access evidence beyond the returned primary summary. Valid routes include recomputing from raw dataframe rows, reconstructing a join from source tables, checking treatment labels against group rows, querying a separately exposed tool, or inspecting the source evidence behind a retrieval result. Rephrasing the primary output, asking the same cached summary to repeat itself, or merely generating a critique does not qualify. The full guard allocates enough steps for expectations, the primary route, and verification; the light guard follows the same policy under a tighter route budget.
 
 \subsection{Guard Tie-Breaking and False Overrides}
 
@@ -278,11 +334,63 @@ Numerical & Light guard & [0.78, 0.95] & [0.00, 0.00] \\
 
 \section{Additional Analyses}
 
-\paragraph{Qualitative cases.}
-The complete mechanically extracted guard cases are stored in \texttt{GUARDED\_CASE\_STUDIES.md}. They include base blind-compliance cases that full guard recovers, as well as full-guard successes that light guard loses under the tighter budget. In a treatment/control case, the poisoned observation preserves the plausible rate 0.145 but binds it to \texttt{Control}; the base agent repeats that pair, whereas the guarded trace re-inspects the dataframe and returns \texttt{Treatment--0.145}. Multi-table cases show the same distinction: recovery follows a fresh join rather than a verbal warning.
+\subsection{Experimental Protocol and Framework Boundaries}
 
-\paragraph{Framework boundaries.}
-Poisoning boundaries differ across frameworks. LangGraph, smolagents, and AutoGen are poisoned at a tool-observation boundary. PandasAI is currently poisoned at a coarser chat-result boundary. DA-Agent is integrated through its action loop, but its observations can include shell output and tracebacks. We therefore interpret results as end-to-end framework measurements rather than pure model-only measurements.
+The experiments evaluate complete framework adapters rather than prompt profiles. All feasible adapters are run with \texttt{gpt-5.4-mini}; LangGraph, smolagents, PandasAI, and AutoGen are additionally evaluated with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent remains in the GPT evaluation but is omitted from the Claude and Qwen summaries because its cross-model execution did not complete within a practical runtime budget. Each reported pair uses the same task, model, adapter, and step cap in clean and poisoned environments.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Adapter & Poisoning boundary & GPT & Claude/Qwen \\
+\midrule
+LangGraph ReAct & tool observation & yes & yes \\
+smolagents & tool observation & yes & yes \\
+AutoGen & tool observation & yes & yes \\
+PandasAI & final chat result & yes & yes \\
+DA-Agent & action/execution trace & yes & omitted for runtime \\
+\bottomrule
+\end{tabular}
+\caption{Framework coverage and poisoning instrumentation. Results are end-to-end adapter measurements because boundaries are not identical.}
+\label{tab:appendix-framework-boundaries}
+\end{table}
+
+PandasAI is the main comparability caveat: its public interface does not expose internal code-execution observations through the same adapter protocol, so poisoning is applied to the completed chat result. Its BCR measures end-to-end adoption of a poisoned returned answer rather than response to one internal dataframe event. DA-Agent observations may include shell output and tracebacks. We therefore use cross-framework results to establish prevalence, not to claim a strict architecture ranking. Bootstrap intervals are computed within each adapter--model run by resampling task IDs.
+
+\subsection{Expanded Qualitative Analysis}
+
+The complete mechanically extracted cases are stored in \texttt{CASE\_STUDIES.md} and \texttt{GUARDED\_CASE\_STUDIES.md}. Three patterns recur. First, blind compliance often resembles competent analysis: the agent cites a successful computation, repeats a plausible value, and provides fluent reasoning, while the value--entity binding is wrong. In a treatment/control case, the poisoned observation preserves rate 0.145 but binds it to \texttt{Control}; the base agent returns \texttt{Control--0.145} without checking the rows. In a multi-table customer-spend case, the base route adopts a poisoned joined summary and restates its arithmetic, even though the clean join supports another segment.
+
+Second, verbal skepticism is not reliable recovery. Caution-only trajectories may state that the output ``should be verified'' or appears surprising, yet still place the poisoned value in the final answer. These cases motivate separating ADR from VR and RR. A phrase indicating doubt can show anomaly awareness, but only a new evidence-producing action demonstrates validation, and only a corrected or appropriately qualified answer demonstrates recovery.
+
+Third, guarded recovery follows concrete recomputation. The guarded treatment trace groups the dataframe rows again and returns \texttt{Treatment--0.145}; the guarded join trace reloads both tables, reconstructs the join key, and derives the clean entity--value pair. Under tighter budgets, the light guard may avoid repeating the poison but still miss the answer tolerance or fail to finish the join. Guarding can therefore transform blind compliance into under-recovery when the evidence route is expensive, which is why BCR and RR must be reported separately.
+
+\subsection{Suite-Level Defense Breakdown}
+
+Table~\ref{tab:appendix-guard-suite-breakdown} expands the combined ablation in the main text. The numerical suite has lower base validation and recovery, while semantic/schema tasks more often expose a source row or metadata route that the agent can inspect. Both full and light guards eliminate observed BCR in each suite, but residual numerical errors show that verification does not remove ordinary analysis limitations.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Suite & Variant & Clean TSR & Toxic TSR & BCR & VR & RR \\
+\midrule
+Semantic/schema & Base & 1.00 & 0.82 & 0.13 & 0.85 & 0.80 \\
+ & Full guard & 0.98 & 0.98 & 0.00 & 1.00 & 0.98 \\
+ & Light guard & 0.98 & 0.98 & 0.00 & 1.00 & 0.98 \\
+\midrule
+Numerical & Base & 0.85 & 0.42 & 0.47 & 0.03 & 0.03 \\
+ & Full guard & 0.88 & 0.87 & 0.00 & 0.73 & 0.87 \\
+ & Light guard & 0.83 & 0.87 & 0.00 & 0.73 & 0.87 \\
+\bottomrule
+\end{tabular}
+\caption{Suite-level LangGraph ReAct defense results on the expanded 120-task evaluation.}
+\label{tab:appendix-guard-suite-breakdown}
+\end{table}
 
 \subsection{Multi-Table Extension}
 
