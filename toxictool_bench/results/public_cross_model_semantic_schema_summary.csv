@@ -1,0 +1,4 @@
+suite,model,n_adapters,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr
+semantic/schema,Qwen3.6-35B-A3B-no-thinking,4,0.9575,0.5525,0.4050,0.3775
+semantic/schema,claude-sonnet-4-6,4,1.0000,0.7300,0.2700,0.3450
+semantic/schema,gpt-5.4-mini,4,1.0000,0.5525,0.4475,0.4175

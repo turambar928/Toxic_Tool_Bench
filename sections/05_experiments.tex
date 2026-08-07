@@ -32,7 +32,7 @@ AutoGen & 0.92 & \textbf{0.65} & 0.27 & \textbf{0.20} & 0.37 \\
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
-The smaller suites allow repetition across model families. Table~\ref{tab:cross-model-compact} averages completed adapters within each model--suite group. Every group shows a substantial clean-to-poisoned gap and nonzero BCR. Semantic/schema corruption is especially revealing: GPT and Claude average near-perfect clean TSR, but poisoned TSR falls to 0.50 and 0.68. We avoid fine-grained model rankings because the suites and completed adapter sets are modest; adapter-level bootstrap intervals are reported in the artifact. Representative intervals remain far from a no-effect interpretation, including GPT--LangGraph numerical BCR 0.68 [0.50, 0.82] and semantic poisoned TSR 0.79 [0.62, 0.92].
+The smaller suites allow repetition across model families. Table~\ref{tab:cross-model-compact} averages the same four public adapters in every model--suite group: LangGraph, smolagents, PandasAI, and AutoGen. Every group shows a substantial clean-to-poisoned gap and nonzero BCR. Semantic/schema corruption is especially revealing: GPT and Claude average perfect clean TSR, but poisoned TSR falls to 0.55 and 0.73. We avoid fine-grained model rankings because the suites are modest; adapter-level bootstrap intervals are reported in the artifact. Representative intervals remain far from a no-effect interpretation, including GPT--LangGraph numerical BCR 0.68 [0.50, 0.82] and semantic poisoned TSR 0.79 [0.62, 0.92].
 
 \begin{table}[t]
 \centering
@@ -42,20 +42,20 @@ The smaller suites allow repetition across model families. Table~\ref{tab:cross-
 \toprule
 Suite & Model & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR \\
 \midrule
-Numerical & GPT & 0.91 & 0.51 & 0.40 & 0.45 \\
- & Claude & 0.92 & 0.67 & 0.26 & 0.31 \\
- & Qwen & 0.82 & 0.47 & 0.35 & 0.38 \\
+Numerical & GPT & 0.99 & 0.52 & 0.47 & 0.53 \\
+ & Claude & 0.94 & 0.68 & 0.26 & 0.33 \\
+ & Qwen & 0.94 & 0.53 & 0.42 & 0.46 \\
 \midrule
-Semantic/schema & GPT & 0.98 & 0.50 & 0.48 & 0.46 \\
- & Claude & 1.00 & 0.68 & 0.32 & 0.38 \\
- & Qwen & 0.87 & 0.51 & 0.37 & 0.31 \\
+Semantic/schema & GPT & 1.00 & 0.55 & 0.45 & 0.42 \\
+ & Claude & 1.00 & 0.73 & 0.27 & 0.35 \\
+ & Qwen & 0.96 & 0.55 & 0.41 & 0.38 \\
 \bottomrule
 \end{tabular}
-\caption{Cross-model summary, averaged over completed adapters. Numerical uses 34 tasks; semantic/schema uses 24.}
+\caption{Cross-model summary, averaged over completed public adapters. Numerical uses 34 tasks; semantic/schema uses 24.}
 \label{tab:cross-model-compact}
 \end{table}
 
-Operator-level results clarify the mechanism. Across completed numerical model--adapter groups, rank swaps cause the highest BCR (0.52), followed by aggregate scaling (0.41); sign flips are more visible and produce BCR 0.11. The difficult cases preserve plausible magnitudes while changing which entity, label, or schema meaning the value belongs to. This supports our focus on evidence binding rather than numeric tolerance alone.
+Operator-level results clarify the mechanism. Across the 12 common model--adapter groups, rank swaps cause the highest BCR (0.58), followed by aggregate scaling (0.47); sign flips are more visible and produce BCR 0.14. The difficult cases preserve plausible magnitudes while changing which entity, label, or schema meaning the value belongs to. This supports our focus on evidence binding rather than numeric tolerance alone.
 
 \begin{table}[t]
 \centering
@@ -65,12 +65,12 @@ Operator-level results clarify the mechanism. Across completed numerical model--
 \toprule
 Poison type & Poisoned TSR & BCR & ADR & VR & RR \\
 \midrule
-Aggregate scaling & 0.43 & 0.41 & 0.07 & 0.11 & 0.12 \\
-Rank swap & 0.49 & \textbf{0.52} & 0.01 & 0.18 & 0.16 \\
-Sign flip & \textbf{0.90} & \textbf{0.11} & 0.04 & \textbf{0.31} & \textbf{0.28} \\
+Aggregate scaling & 0.46 & 0.47 & 0.05 & 0.11 & 0.11 \\
+Rank swap & 0.53 & \textbf{0.58} & 0.00 & 0.12 & 0.12 \\
+Sign flip & \textbf{0.93} & \textbf{0.14} & 0.00 & \textbf{0.18} & \textbf{0.18} \\
 \bottomrule
 \end{tabular}
-\caption{Numerical poison-type behavior averaged over completed model--adapter groups.}
+\caption{Numerical poison-type behavior averaged over the 12 common cross-model groups.}
 \label{tab:poison-type-breakdown}
 \end{table}
 

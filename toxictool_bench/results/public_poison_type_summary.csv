@@ -1,0 +1,4 @@
+poison_type,n_groups,toxic_tsr,bcr,adr,vr,rr
+aggregate_scale,12,0.4600,0.4717,0.0450,0.1125,0.1083
+rank_swap,12,0.5250,0.5833,0.0000,0.1167,0.1167
+sign_flip,12,0.9283,0.1433,0.0000,0.1783,0.1783
