@@ -369,7 +369,7 @@ Third, guarded recovery follows concrete recomputation. The guarded treatment tr
 
 \subsection{Suite-Level Defense Breakdown}
 
-Table~\ref{tab:appendix-guard-suite-breakdown} expands the combined ablation in the main text. The numerical suite has lower base validation and recovery, while semantic/schema tasks more often expose a source row or metadata route that the agent can inspect. Both full and light guards eliminate observed BCR in each suite, but residual numerical errors show that verification does not remove ordinary analysis limitations.
+Table~\ref{tab:appendix-guard-suite-breakdown} expands the combined ablation in the main text. The numerical suite has lower base validation and recovery, while semantic/schema tasks more often expose a source row or metadata route that the agent can inspect. Both full and light guards eliminate observed BCR in each suite, but residual numerical errors show that verification does not remove ordinary analysis limitations. Figure~\ref{fig:severity-heatmap} provides the complementary severity-level view for the expanded public cross-agent runs.
 
 \begin{table}[t]
 \centering
@@ -391,6 +391,20 @@ Numerical & Base & 0.85 & 0.42 & 0.47 & 0.03 & 0.03 \\
 \caption{Suite-level LangGraph ReAct defense results on the expanded 120-task evaluation.}
 \label{tab:appendix-guard-suite-breakdown}
 \end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_guard_suite_breakdown}
+\caption{Guarded-verification ablation broken down by task suite. Full and light guards reduce BCR to zero on both numerical and semantic/schema tasks, while the success-rate panel shows that verification has the largest benefit on numerical poisoning. Compact labels denote the same six variants used in Table~\ref{tab:appendix-guard-suite-breakdown}.}
+\label{fig:guard-suite-breakdown}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_severity_heatmap}
+\caption{Expanded GPT-only blind compliance by poison type and severity. Values average the three public expanded cross-agent adapters; blank cells indicate that a task family does not define that severity for the operator. The plot is descriptive rather than a claim of monotonic severity, since task counts vary by operator.}
+\label{fig:severity-heatmap}
+\end{figure*}
 
 \subsection{Multi-Table Extension}
 
