@@ -1,0 +1,4 @@
+suite,n_paired,base_correct,guard_correct,stable_correct,false_overrides,clean_repairs,false_override_task_ids,clean_repair_task_ids
+numerical,60,51,53,50,1,3,num_iclr2027_inventory_software_revenue_046,num_iclr2027_ad_email_margin_040;num_iclr2027_repeat_058;num_iclr2027_repeat_059
+realistic_extension,13,13,13,13,0,0,,
+semantic_schema,60,60,59,59,1,0,sem_label_trial_004,

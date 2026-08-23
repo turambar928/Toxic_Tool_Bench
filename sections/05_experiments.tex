@@ -90,7 +90,7 @@ Sign flip & \textbf{0.93} & \textbf{0.14} & \textbf{0.22} & \textbf{0.22} & 0.94
 
 \subsection{Guarded Verification}
 
-Table~\ref{tab:langgraph-guarded} compares six LangGraph variants on the same 120 instances. Caution-only and expectation-only prompting leave substantial blind compliance. Any variant that obtains independent evidence reduces observed BCR to 0.00. Full Guarded Verification raises poisoned TSR from 0.62 to 0.93 while preserving clean TSR, and verification-only performs nearly as well. Independent evidence collection, rather than cautious wording, is therefore the main active ingredient.
+Table~\ref{tab:langgraph-guarded} compares six LangGraph variants on the same 120 instances. Caution-only and expectation-only prompting leave substantial blind compliance. Any variant that obtains fresh post-observation evidence reduces observed BCR to 0.00. Full Guarded Verification raises poisoned TSR from 0.62 to 0.93 while preserving aggregate clean TSR, and verification-only performs nearly as well. At task level, full guard introduces two clean false overrides and repairs three base errors. Evidence collection, rather than cautious wording, is therefore the main active ingredient under \texttt{poison\_once}.
 
 \begin{table}[t]
 \centering
@@ -157,4 +157,4 @@ In a treatment/control task, the poisoned observation reports \texttt{Control--0
 \paragraph{Recovery requires new evidence.}
 On the same treatment task, the guarded trajectory re-inspects the dataframe, recomputes rates by group, and returns \texttt{Treatment--0.145}. In a multi-table customer-spend task, the base agent adopts a poisoned joined summary, whereas the guard reconstructs the join from the customer and order tables before finalizing. Generic statements that a result ``may need verification'' receive neither VR nor RR; ADR requires an explicit conflict or corruption claim tied to the returned result. The contrast grounds the aggregate finding: recovery comes from a post-poison evidence-producing action, not from skeptical language alone.
 
-Overall, the experiments establish three points: blind compliance persists across agent and model families; binding-preserving corruptions are harder than conspicuous sign errors; and structural independent verification greatly improves trust calibration under an explicit redundancy assumption.
+Overall, the experiments establish three points: blind compliance persists across agent and model families; binding-preserving corruptions are harder than conspicuous sign errors; and structural post-observation verification greatly improves trust calibration under an explicit clean-route assumption.

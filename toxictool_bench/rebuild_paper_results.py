@@ -103,6 +103,51 @@ def write_combined_guard(suite_path: Path, output: Path) -> None:
             writer.writerow(out)
 
 
+def write_clean_transition_summary(
+    spec_rows: list[tuple[dict[str, str], list[dict[str, Any]]]], output: Path
+) -> None:
+    """Report task-level clean-result changes between base and full guard."""
+    grouped: dict[tuple[str, str], dict[str, bool]] = {}
+    for spec, rows in spec_rows:
+        if spec["variant"] not in {"Base", "Full guard"}:
+            continue
+        clean = {
+            row["task_id"]: bool(row["metrics"]["task_success"])
+            for row in rows
+            if row.get("environment") == "clean"
+        }
+        grouped[(spec["suite"], spec["variant"])] = clean
+
+    fields = [
+        "suite", "n_paired", "base_correct", "guard_correct", "stable_correct",
+        "false_overrides", "clean_repairs", "false_override_task_ids", "clean_repair_task_ids",
+    ]
+    with output.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
+        writer.writeheader()
+        for suite in sorted({key[0] for key in grouped}):
+            base = grouped.get((suite, "Base"))
+            guard = grouped.get((suite, "Full guard"))
+            if base is None or guard is None:
+                continue
+            task_ids = sorted(base.keys() & guard.keys())
+            false_overrides = [task_id for task_id in task_ids if base[task_id] and not guard[task_id]]
+            clean_repairs = [task_id for task_id in task_ids if not base[task_id] and guard[task_id]]
+            writer.writerow(
+                {
+                    "suite": suite,
+                    "n_paired": len(task_ids),
+                    "base_correct": sum(base[task_id] for task_id in task_ids),
+                    "guard_correct": sum(guard[task_id] for task_id in task_ids),
+                    "stable_correct": sum(base[task_id] and guard[task_id] for task_id in task_ids),
+                    "false_overrides": len(false_overrides),
+                    "clean_repairs": len(clean_repairs),
+                    "false_override_task_ids": ";".join(false_overrides),
+                    "clean_repair_task_ids": ";".join(clean_repairs),
+                }
+            )
+
+
 def write_bootstrap_table(
     spec_rows: list[tuple[dict[str, str], list[dict[str, Any]]]],
     output: Path,
@@ -178,6 +223,10 @@ def main() -> None:
     write_combined_guard(autogen_suite, RESULTS / "autogen_guarded_replication_summary.csv")
     multitable = [(spec, rows) for spec, rows in scored if spec["experiment"] == "multitable"]
     write_guard_summary(multitable, RESULTS / "langgraph_multitable_extension_summary.csv")
+    write_clean_transition_summary(
+        langgraph + multitable,
+        RESULTS / "langgraph_guard_clean_transition_summary.csv",
+    )
     alternatives = [(spec, rows) for spec, rows in scored if spec["experiment"] == "alternative_baseline"]
     write_guard_summary(alternatives, RESULTS / "iclr2027_stronger_baselines_strict_summary.csv")
     stress = [(spec, rows) for spec, rows in scored if spec["experiment"] == "multiroute_stress"]

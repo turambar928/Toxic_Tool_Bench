@@ -49,9 +49,11 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/results/langgraph_guarded_overhead_summary.csv` | LangGraph guard tool-event and latency overhead. |
 | `toxictool_bench/results/guard_cost_latency_distribution.csv` | Compact latency distribution and tool-event summary for the main public-framework defense runs. |
 | `toxictool_bench/results/langgraph_multitable_extension_summary.csv` | LangGraph multi-table join extension. |
+| `toxictool_bench/results/langgraph_guard_clean_transition_summary.csv` | Task-level clean-result transitions and false overrides for base versus full guard. |
 | `toxictool_bench/results/autogen_guarded_replication_summary.csv` | AutoGen second-framework defense replication. |
 | `toxictool_bench/results/autogen_guarded_replication_suite_summary.csv` | Suite-level AutoGen defense replication breakdown. |
 | `toxictool_bench/results/paper_run_manifest.csv` | Immutable mapping from each paper result group to its raw run log. |
+| `toxictool_bench/results/artifact_sha256.csv` | SHA-256 checksums for task files, manifest-listed raw logs, scorer, poisoner, and paper-facing summaries. |
 | `toxictool_bench/results/iclr2027_semantic_guard_multiroute_stress_strict_summary.csv` | Strictly rescored repeated-poison stress test. |
 | `toxictool_bench/results/iclr2027_stronger_baselines_strict_summary.csv` | LangGraph abstain, randomized, and selective-policy results on fixed subsets. |
 
@@ -123,3 +125,5 @@ api
 ```
 
 Before preparing an anonymous submission package, verify that the public archive does not contain local paths, API keys, or private endpoint configuration. The current paper text uses anonymous authors and does not require the ignored `api` file.
+
+Bootstrap scripts use fixed command-line seeds (default `13`), and probabilistic poisoning derives deterministic decisions from task/call identifiers. `artifact_sha256.csv` records release-file checksums. This repository does not yet declare redistribution licenses for code and data; explicit software and dataset licenses must be selected before the archival release.
