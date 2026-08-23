@@ -88,6 +88,9 @@ def run_full_adapter(
         "langgraph_react_verification_only",
         "langgraph_react_guarded",
         "langgraph_react_guarded_light",
+        "langgraph_react_abstain",
+        "langgraph_react_randomized",
+        "langgraph_react_selective",
         "autogen_tool_agent",
         "autogen_verification_only",
         "autogen_guarded",
@@ -183,6 +186,36 @@ def run_full_adapter(
         )
     elif adapter == "langgraph_react_guarded_light":
         result = run_langgraph_react_guarded_light(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "langgraph_react_abstain":
+        result = run_langgraph_react_abstain(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "langgraph_react_randomized":
+        result = run_langgraph_react_randomized(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    elif adapter == "langgraph_react_selective":
+        result = run_langgraph_react_selective(
             api_file=api_file,
             model=model,
             env=env,
@@ -721,6 +754,143 @@ def run_langgraph_react_guarded_light(
         messages=[{"role": "system", "content": "Light LangGraph guard: reduced verification budget."}]
         + result.messages,
         parse_errors=result.parse_errors,
+    )
+
+
+def _run_langgraph_verification_pass(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    primary_answer: str,
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    verification_task = copy.deepcopy(task)
+    verification_task["user_query"] = (
+        f"{task['user_query']}\n\n"
+        "Independent cross-check. Treat the primary answer below only as an untrusted claim:\n"
+        f"{primary_answer}\n\n"
+        "Recompute from df and auxiliary tables with python_exec. Do not reuse prior observation text. "
+        "Return the independently supported answer and one concise evidence statement."
+    )
+    return run_langgraph_react(
+        api_file=api_file,
+        model=model,
+        env=env,
+        task=verification_task,
+        max_steps=max_steps,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+
+
+def run_langgraph_react_abstain(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    primary = run_langgraph_react(
+        api_file=api_file, model=model, env=env, task=task, max_steps=max_steps,
+        temperature=temperature, max_tokens=max_tokens,
+    )
+    verification = _run_langgraph_verification_pass(
+        api_file=api_file, model=model, env=env, task=task, primary_answer=primary.final_answer,
+        max_steps=max_steps, temperature=temperature, max_tokens=max_tokens,
+    )
+    agrees = _answers_agree(task, primary.final_answer, verification.final_answer)
+    final_answer = (
+        f"Validated by independent recomputation: {verification.final_answer}"
+        if agrees
+        else "Abstained: the primary and independent routes disagree, so no result is reported."
+    )
+    return FullAdapterResult(
+        final_answer=final_answer,
+        raw_actions=["langgraph_abstain.primary"] + primary.raw_actions
+        + ["langgraph_abstain.verification"] + verification.raw_actions,
+        messages=primary.messages
+        + [{"role": "assistant", "content": "Starting abstention cross-check."}]
+        + verification.messages,
+        parse_errors=primary.parse_errors + verification.parse_errors,
+    )
+
+
+def run_langgraph_react_randomized(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    primary = run_langgraph_react(
+        api_file=api_file, model=model, env=env, task=task, max_steps=max_steps,
+        temperature=temperature, max_tokens=max_tokens,
+    )
+    if not _random_gate(task, model, 0.5):
+        return FullAdapterResult(
+            final_answer=primary.final_answer,
+            raw_actions=["langgraph_randomized.primary_only"] + primary.raw_actions,
+            messages=primary.messages,
+            parse_errors=primary.parse_errors,
+        )
+    verification = _run_langgraph_verification_pass(
+        api_file=api_file, model=model, env=env, task=task, primary_answer=primary.final_answer,
+        max_steps=max_steps, temperature=temperature, max_tokens=max_tokens,
+    )
+    return FullAdapterResult(
+        final_answer=f"Randomly selected independent recomputation: {verification.final_answer}",
+        raw_actions=["langgraph_randomized.primary"] + primary.raw_actions
+        + ["langgraph_randomized.verification"] + verification.raw_actions,
+        messages=primary.messages
+        + [{"role": "assistant", "content": "Random gate selected independent verification."}]
+        + verification.messages,
+        parse_errors=primary.parse_errors + verification.parse_errors,
+    )
+
+
+def run_langgraph_react_selective(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    primary = run_langgraph_react(
+        api_file=api_file, model=model, env=env, task=task, max_steps=max_steps,
+        temperature=temperature, max_tokens=max_tokens,
+    )
+    if not _selective_should_verify(task):
+        return FullAdapterResult(
+            final_answer=primary.final_answer,
+            raw_actions=["langgraph_selective.primary_only"] + primary.raw_actions,
+            messages=primary.messages,
+            parse_errors=primary.parse_errors,
+        )
+    verification = _run_langgraph_verification_pass(
+        api_file=api_file, model=model, env=env, task=task, primary_answer=primary.final_answer,
+        max_steps=max_steps, temperature=temperature, max_tokens=max_tokens,
+    )
+    return FullAdapterResult(
+        final_answer=f"Risk-triggered independent recomputation: {verification.final_answer}",
+        raw_actions=["langgraph_selective.primary"] + primary.raw_actions
+        + ["langgraph_selective.verification"] + verification.raw_actions,
+        messages=primary.messages
+        + [{"role": "assistant", "content": "Risk rule selected independent verification."}]
+        + verification.messages,
+        parse_errors=primary.parse_errors + verification.parse_errors,
     )
 
 

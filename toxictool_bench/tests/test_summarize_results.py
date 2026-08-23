@@ -24,6 +24,7 @@ def test_write_severity_groups_by_poison_type_and_severity(tmp_path):
                 "anomaly_detection": False,
                 "validation": False,
                 "recovery": False,
+                "poison_exposed": True,
             },
         },
         {
@@ -37,6 +38,7 @@ def test_write_severity_groups_by_poison_type_and_severity(tmp_path):
                 "anomaly_detection": True,
                 "validation": True,
                 "recovery": True,
+                "poison_exposed": True,
             },
         },
     ]
@@ -51,3 +53,5 @@ def test_write_severity_groups_by_poison_type_and_severity(tmp_path):
     assert out[0]["severity"] == "plausible"
     assert out[0]["bcr"] == "0.50"
     assert out[0]["n"] == "2"
+    assert out[0]["n_exposed"] == "2"
+    assert out[0]["poison_delivery_rate"] == "1.00"

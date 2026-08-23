@@ -13,7 +13,7 @@ from build_public_paper_summaries import read_rows, write_cross_model  # noqa: E
 
 def test_public_summary_uses_explicit_adapter_allowlist(tmp_path):
     source = tmp_path / "source.csv"
-    fields = ["model", "adapter", "clean_tsr", "poisoned_tsr", "delta_tsr", "toxic_bcr"]
+    fields = ["model", "adapter", "clean_tsr", "poisoned_tsr", "delta_tsr", "toxic_bcr", "poison_delivery_rate"]
     with source.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
@@ -25,6 +25,7 @@ def test_public_summary_uses_explicit_adapter_allowlist(tmp_path):
                 "poisoned_tsr": "0.5",
                 "delta_tsr": "0.5",
                 "toxic_bcr": "0.4",
+                "poison_delivery_rate": "0.8",
             }
         )
         writer.writerow(
@@ -35,6 +36,7 @@ def test_public_summary_uses_explicit_adapter_allowlist(tmp_path):
                 "poisoned_tsr": "0.0",
                 "delta_tsr": "0.0",
                 "toxic_bcr": "0.0",
+                "poison_delivery_rate": "1.0",
             }
         )
 
@@ -52,5 +54,6 @@ def test_public_summary_uses_explicit_adapter_allowlist(tmp_path):
             "poisoned_tsr": "0.5000",
             "delta_tsr": "0.5000",
             "toxic_bcr": "0.4000",
+            "poison_delivery_rate": "0.8000",
         }
     ]

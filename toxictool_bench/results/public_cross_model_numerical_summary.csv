@@ -1,4 +1,4 @@
-suite,model,n_adapters,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr
-numerical,Qwen3.6-35B-A3B-no-thinking,4,0.9400,0.5275,0.4150,0.4550
-numerical,claude-sonnet-4-6,4,0.9400,0.6800,0.2600,0.3250
-numerical,gpt-5.4-mini,4,0.9850,0.5150,0.4700,0.5300
+suite,model,n_adapters,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr,poison_delivery_rate
+numerical,Qwen3.6-35B-A3B-no-thinking,4,0.9400,0.5275,0.4150,0.5700,0.7625
+numerical,claude-sonnet-4-6,4,0.9400,0.6800,0.2600,0.3600,0.8800
+numerical,gpt-5.4-mini,4,0.9850,0.5150,0.4700,0.6650,0.7925

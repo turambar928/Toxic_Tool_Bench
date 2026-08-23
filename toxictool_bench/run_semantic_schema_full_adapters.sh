@@ -8,7 +8,6 @@ API_FILE="api"
 ADAPTERS=(
   "langgraph_react_full"
   "smolagents_toolcalling"
-  "dataframe_router"
   "pandasai_dataframe"
   "autogen_tool_agent"
 )
@@ -17,10 +16,6 @@ for adapter in "${ADAPTERS[@]}"; do
   max_steps=8
   max_tokens=2048
   case "$adapter" in
-    dataframe_router)
-      max_steps=10
-      max_tokens=3072
-      ;;
     pandasai_dataframe)
       max_steps=4
       max_tokens=2048

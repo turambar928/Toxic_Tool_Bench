@@ -1,6 +1,6 @@
 # Paper Consistency Check
 
-Date: 2026-07-19
+Date: 2026-08-19
 
 ## Entry Point
 
@@ -8,16 +8,13 @@ Date: 2026-07-19
 - Section order:
   - `sections/00_abstract.tex`
   - `sections/01_introduction.tex`
-  - `sections/02_problem_setup.tex`
-  - `sections/03_toxictool_bench.tex`
-  - `sections/04_method_ibf.tex`
-  - `sections/05_experiments.tex`
-  - `sections/06_qualitative_analysis.tex`
   - `sections/06_related_work.tex`
+  - `sections/03_toxictool_bench.tex`
+  - `sections/05_experiments.tex`
   - `sections/07_discussion_limitations.tex`
   - appendix: `sections/08_appendix_guard_details.tex`
 - The paper text now uses the literal names `ToxicBench` and `Guarded Verification` rather than benchmark/method name macros.
-- `main.tex` uses `iclr2026_conference.sty` if present and falls back to `article` layout otherwise, so the paper can be sanity-compiled before the official style file is added.
+- `main.tex` prefers the ICLR 2027 style, falls back to the ICLR 2026 style if present, and otherwise uses an `article` layout for static editing.
 
 ## Checked
 
@@ -26,9 +23,8 @@ Date: 2026-07-19
 - Related-work citations are present and `main.tex` includes `references.bib`.
 - Main numerical cross-model table matches `toxictool_bench/results/cross_model_summary.csv`.
 - Main semantic/schema table matches `toxictool_bench/results/semantic_schema_cross_model_summary.csv`.
-- Guarded ablation table matches:
-  - `toxictool_bench/results/dataframe_router_guarded_semantic_ablation_summary.csv`
-  - `toxictool_bench/results/dataframe_router_guarded_numerical_ablation_summary.csv`
+- Guarded ablation table matches `toxictool_bench/results/langgraph_guarded_ablation_summary.csv`
+  and its suite-level companion.
 - Appendix light-guard and CI values match the guarded result artifacts as written.
 
 ## Fixed
@@ -38,7 +34,7 @@ Date: 2026-07-19
 - Reworded the benchmark discussion of data-embedded instructions as framework support rather than a reported main experiment.
 - Reworded the experiment failure-pattern list to avoid implying instruction-poisoning results in the main tables.
 - Reorganized Section 5 after the GPT-only 120-task expanded cross-agent run:
-  - main text keeps the 120-task cross-agent table and the 120-task `DataFrame Router` defense table as the primary results;
+  - main text keeps the 120-task cross-agent table and the 120-task LangGraph defense table as the primary results;
   - cross-model evidence is compressed into one adapter-mean table;
   - detailed adapter-level cross-model and suite-breakdown tables are released as artifact CSVs and listed in the appendix.
 - Added a review-response pass:
@@ -46,7 +42,11 @@ Date: 2026-07-19
   - Appendix now includes the behavior-metric rubric with borderline cases for rhetorical skepticism, recomputation, recovery, and blind copying.
   - Section 4 and Section 7 now clarify the independent-verification assumption and the `poison_once` defense setting.
   - Related work now covers RAG security/poisoning, evidence-integration defenses, and tool-agent calibration.
-  - Limitations now call out missing wall-clock/cost overhead, adaptive poisoning of all routes, stronger defense baselines, and scaling to larger databases/joins/notebook workflows.
+  - Limitations now call out adaptive poisoning of all routes and scaling to larger databases/joins/notebook workflows.
+- Replaced the unpublished DataFrame Router defense mainline with LangGraph ReAct and an AutoGen replication.
+- Added measured wall-clock/tool-event overhead, LangGraph alternative policies, a multi-table extension,
+  and repeated probabilistic poisoning stress tests.
+- Rebuilt all paper-facing summaries from `paper_run_manifest.csv` with exposure-conditioned behavior metrics.
 
 ## Remaining Before Submission
 

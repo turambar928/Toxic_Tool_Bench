@@ -1,6 +1,6 @@
 # ToxicBench Artifact Manifest
 
-Last updated: 2026-07-28
+Last updated: 2026-08-19
 
 This manifest lists the paper-facing artifacts needed to inspect and reproduce the ToxicBench experiments. It intentionally emphasizes public-framework results: LangGraph ReAct, smolagents, PandasAI, DA-Agent where practical, and AutoGen. Legacy development artifacts may remain in `toxictool_bench/results/`, but they are not part of the current paper mainline.
 
@@ -51,6 +51,9 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/results/langgraph_multitable_extension_summary.csv` | LangGraph multi-table join extension. |
 | `toxictool_bench/results/autogen_guarded_replication_summary.csv` | AutoGen second-framework defense replication. |
 | `toxictool_bench/results/autogen_guarded_replication_suite_summary.csv` | Suite-level AutoGen defense replication breakdown. |
+| `toxictool_bench/results/paper_run_manifest.csv` | Immutable mapping from each paper result group to its raw run log. |
+| `toxictool_bench/results/iclr2027_semantic_guard_multiroute_stress_strict_summary.csv` | Strictly rescored repeated-poison stress test. |
+| `toxictool_bench/results/iclr2027_stronger_baselines_strict_summary.csv` | LangGraph abstain, randomized, and selective-policy results on fixed subsets. |
 
 ## Confidence Intervals
 
@@ -67,6 +70,8 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | Artifact | Scope |
 |---|---|
 | `toxictool_bench/results/20260727-*_langgraph_react_*_gpt-5.4-mini_both.jsonl` | Selected raw logs for the LangGraph expanded guard ablation. |
+| `toxictool_bench/results/20260819-*_langgraph_react_{abstain,randomized,selective}_gpt-5.4-mini_both.jsonl` | LangGraph alternative-policy logs on fixed numerical and semantic subsets. |
+| `toxictool_bench/results/20260819-20*_langgraph_react_guarded_gpt-5.4-mini_toxic.jsonl` | LangGraph repeated-probabilistic poisoning stress logs. |
 | `toxictool_bench/results/autogen_verification_only_gpt-5.4-mini_expanded120_combined.jsonl` | Combined AutoGen verification-only 120-task clean/toxic log. |
 | `toxictool_bench/results/autogen_guarded_gpt-5.4-mini_expanded120_combined.jsonl` | Combined AutoGen guarded 120-task clean/toxic log. |
 | `CASE_STUDIES.md` | Qualitative blind-compliance cases. |
@@ -81,8 +86,11 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/bootstrap_ci.py` | Nonparametric task-level bootstrap CIs. |
 | `toxictool_bench/check_paper_static.py` | Static citation/reference/placeholder check for the paper. |
 | `toxictool_bench/audit_agreement.py` | Human-audit agreement utility. |
-| `toxictool_bench/results/iclr2027_manual_audit_completed_stratified80.csv` | Completed 80-run audit sheet. |
-| `toxictool_bench/results/iclr2027_manual_audit_iaa_completed.json` | Agreement statistics for the completed audit. |
+| `toxictool_bench/rebuild_paper_results.py` | Rebuild paper-facing summaries and CIs from the immutable run manifest. |
+| `toxictool_bench/recalibrate_author_audit.py` | Compare the strict scorer with the earlier single-author labels. |
+| `toxictool_bench/results/iclr2027_manual_audit_completed_stratified80.csv` | Historical 80-run single-author audit sheet; repeated passes are not independent IAA. |
+| `toxictool_bench/results/strict_scorer_author_audit_comparison.csv` | Run-level strict-scorer versus single-author diagnostic comparison. |
+| `toxictool_bench/results/strict_scorer_author_audit_agreement.json` | Agreement summary for that diagnostic comparison; not inter-annotator agreement. |
 
 ## Reproduction Commands
 
@@ -90,6 +98,10 @@ The canonical command list is `RUN_COMMANDS.md`. The most important entry points
 
 ```bash
 python3 toxictool_bench/check_adapter_readiness.py
+python3 toxictool_bench/rebuild_paper_results.py
+python3 toxictool_bench/build_public_paper_summaries.py
+python3 toxictool_bench/recalibrate_author_audit.py
+python3 toxictool_bench/plot_paper_figures.py --preview-dir /tmp/toxicbench-figures
 python3 toxictool_bench/run_full_bench.py --tasks toxictool_bench/tasks/semantic_schema_iclr2027.jsonl --adapter langgraph_react_full --model gpt-5.4-mini --env both --limit 1
 bash toxictool_bench/run_langgraph_guard_ablation.sh gpt-5.4-mini toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
 bash toxictool_bench/run_autogen_guard_replication.sh gpt-5.4-mini toxictool_bench/tasks/semantic_schema_iclr2027.jsonl

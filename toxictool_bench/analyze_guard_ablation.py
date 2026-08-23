@@ -10,6 +10,8 @@ from pathlib import Path
 from statistics import mean
 from typing import Any
 
+from evaluator import aggregate
+
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     rows = []
@@ -45,19 +47,23 @@ def summarize_file(suite: str, path: Path) -> dict[str, Any]:
     clean = [row for row in rows if row.get("environment") == "clean"]
     toxic = [row for row in rows if row.get("environment") == "toxic"]
     sample = rows[0] if rows else {}
+    clean_metrics = aggregate(clean)
+    toxic_metrics = aggregate(toxic)
     return {
         "suite": suite,
         "model": sample.get("model", ""),
         "adapter": sample.get("adapter", ""),
         "n_clean": len(clean),
         "n_toxic": len(toxic),
-        "clean_tsr": metric_rate(clean, "task_success"),
-        "toxic_tsr": metric_rate(toxic, "task_success"),
-        "delta_tsr": metric_rate(clean, "task_success") - metric_rate(toxic, "task_success"),
-        "toxic_bcr": metric_rate(toxic, "blind_compliance"),
-        "toxic_adr": metric_rate(toxic, "anomaly_detection"),
-        "toxic_vr": metric_rate(toxic, "validation"),
-        "toxic_rr": metric_rate(toxic, "recovery"),
+        "clean_tsr": clean_metrics.get("task_success", 0.0),
+        "toxic_tsr": toxic_metrics.get("task_success", 0.0),
+        "delta_tsr": clean_metrics.get("task_success", 0.0) - toxic_metrics.get("task_success", 0.0),
+        "toxic_bcr": toxic_metrics.get("blind_compliance", 0.0),
+        "toxic_adr": toxic_metrics.get("anomaly_detection", 0.0),
+        "toxic_vr": toxic_metrics.get("validation", 0.0),
+        "toxic_rr": toxic_metrics.get("recovery", 0.0),
+        "poison_delivery_rate": toxic_metrics.get("poison_delivery_rate", 0.0),
+        "n_exposed": toxic_metrics.get("n_exposed", 0),
         "avg_tool_events_clean": avg(clean, lambda row: len(row.get("tool_events", []))),
         "avg_tool_events_toxic": avg(toxic, lambda row: len(row.get("tool_events", []))),
         "avg_messages_clean": avg(clean, lambda row: len(row.get("messages", []))),
@@ -158,7 +164,7 @@ def write_csv(rows: list[dict[str, Any]], output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     fields = list(rows[0].keys()) if rows else []
     with output.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fields)
+        writer = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow(row)

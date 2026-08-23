@@ -13,8 +13,8 @@ from collections import defaultdict
 from pathlib import Path
 
 
-METRICS = ("clean_tsr", "poisoned_tsr", "delta_tsr", "toxic_bcr")
-POISON_METRICS = ("toxic_tsr", "bcr", "adr", "vr", "rr")
+METRICS = ("clean_tsr", "poisoned_tsr", "delta_tsr", "toxic_bcr", "poison_delivery_rate")
+POISON_METRICS = ("toxic_tsr", "bcr", "adr", "vr", "rr", "poison_delivery_rate")
 PAPER_ADAPTERS = {
     "autogen_tool_agent",
     "langgraph_react_full",
@@ -39,7 +39,7 @@ def write_cross_model(rows: list[dict[str, str]], output: Path, suite: str) -> N
     fields = ["suite", "model", "n_adapters", *METRICS]
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for model in sorted(groups):
             group = groups[model]
@@ -59,7 +59,7 @@ def write_poison_type(rows: list[dict[str, str]], output: Path) -> None:
         groups[row["poison_type"]].append(row)
     fields = ["poison_type", "n_groups", *POISON_METRICS]
     with output.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for poison_type in sorted(groups):
             group = groups[poison_type]

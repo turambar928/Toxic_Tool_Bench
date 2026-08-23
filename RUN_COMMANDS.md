@@ -128,7 +128,53 @@ bash toxictool_bench/run_autogen_guard_replication.sh \
   gpt-5.4-mini toxictool_bench/tasks/numerical_iclr2027.jsonl
 ```
 
+## Alternative LangGraph Policies
+
+Run the abstain, deterministic-random, and keyword-selective policies on a
+fixed subset by replacing `POLICY` below:
+
+```bash
+TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent \
+python3 toxictool_bench/run_full_bench.py \
+  --tasks toxictool_bench/tasks/numerical_iclr2027_stratified20.jsonl \
+  --adapter langgraph_react_POLICY \
+  --model gpt-5.4-mini \
+  --env both \
+  --max-steps 6
+```
+
+Valid policy suffixes are `abstain`, `randomized`, and `selective`. For the
+semantic subset, replace the task path with
+`toxictool_bench/tasks/semantic_schema_iclr2027_stratified10.jsonl`.
+
+Repeated probabilistic poisoning stress test:
+
+```bash
+TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent \
+python3 toxictool_bench/run_full_bench.py \
+  --tasks toxictool_bench/tasks/semantic_schema_iclr2027_stratified10.jsonl \
+  --adapter langgraph_react_guarded \
+  --model gpt-5.4-mini \
+  --env toxic \
+  --max-steps 8 \
+  --poison-repeat \
+  --poison-probability 0.50
+```
+
 ## Summaries and Confidence Intervals
+
+Rebuild every paper-facing summary from the raw runs listed in the immutable
+manifest, then regenerate compact public summaries and the scorer diagnostic:
+
+```bash
+python3 toxictool_bench/rebuild_paper_results.py
+python3 toxictool_bench/build_public_paper_summaries.py
+python3 toxictool_bench/recalibrate_author_audit.py
+```
+
+The behavior columns `bcr`, `adr`, `vr`, and `rr` condition on delivered
+poison. `poison_delivery_rate` and `n_exposed` make that denominator explicit;
+TSR continues to use all environment runs.
 
 Bootstrap confidence intervals:
 
@@ -144,6 +190,13 @@ Static paper check:
 
 ```bash
 python3 toxictool_bench/check_paper_static.py --main main.tex
+```
+
+Regenerate vector PDF figures and optional high-resolution previews:
+
+```bash
+python3 toxictool_bench/plot_paper_figures.py \
+  --preview-dir /tmp/toxicbench-figures
 ```
 
 Tests:
@@ -173,4 +226,7 @@ toxictool_bench/results/langgraph_multitable_extension_summary.csv
 toxictool_bench/results/autogen_guarded_replication_summary.csv
 toxictool_bench/results/autogen_guarded_replication_suite_summary.csv
 toxictool_bench/results/autogen_guarded_replication_bootstrap_ci.csv
+toxictool_bench/results/paper_run_manifest.csv
+toxictool_bench/results/strict_scorer_author_audit_comparison.csv
+toxictool_bench/results/strict_scorer_author_audit_agreement.json
 ```

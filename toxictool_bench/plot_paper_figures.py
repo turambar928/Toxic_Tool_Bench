@@ -1,10 +1,4 @@
-"""Generate publication figures from the public ToxicBench result artifacts.
-
-The script intentionally allowlists adapters that are part of the paper. This
-prevents historical internal adapter runs from entering a figure by accident.
-PDF is the primary output for Overleaf; ``--preview-dir`` optionally writes
-PNG previews for visual inspection.
-"""
+"""Generate camera-ready ToxicBench figures from released result artifacts."""
 
 from __future__ import annotations
 
@@ -16,43 +10,59 @@ from pathlib import Path
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
 
 
 PUBLIC_ADAPTERS = {
     "autogen_tool_agent": "AutoGen",
-    "langgraph_react_full": "LangGraph ReAct",
+    "langgraph_react_full": "LangGraph",
     "pandasai_dataframe": "PandasAI",
     "smolagents_toolcalling": "smolagents",
 }
 EXPANDED_ADAPTERS = {
-    "autogen_tool_agent": "AutoGen",
-    "langgraph_react_full": "LangGraph ReAct",
+    "langgraph_react_full": "LangGraph",
     "smolagents_toolcalling": "smolagents",
+    "autogen_tool_agent": "AutoGen",
 }
 
+# Restrained, colorblind-safe palette. Blue denotes capability, vermilion risk,
+# and green evidence-based recovery throughout the paper.
 COLORS = {
-    "navy": "#1F3A5F",
-    "blue": "#557EA8",
-    "orange": "#C96F52",
-    "teal": "#428985",
-    "red": "#A94F4F",
-    "gold": "#B08A3E",
-    "ink": "#25313C",
-    "muted": "#687782",
-    "grid": "#D7DEE4",
+    "clean": "#32658A",
+    "toxic": "#D07A4A",
+    "risk": "#B9473E",
+    "verify": "#2F7D6D",
+    "recover": "#5A78A8",
+    "exposure": "#8064A2",
+    "neutral": "#7B858E",
+    "ink": "#202A32",
+    "muted": "#66727C",
+    "grid": "#D9DEE2",
+    "light": "#F3F5F6",
     "paper": "#FFFFFF",
 }
 
-mpl.rcParams.update({
-    "font.family": "serif",
-    "font.serif": ["STIXGeneral", "DejaVu Serif"],
-    "mathtext.fontset": "stix",
-    "axes.titleweight": "semibold",
-    "axes.labelweight": "regular",
-    "pdf.fonttype": 42,
-    "ps.fonttype": 42,
-})
+
+def configure_matplotlib() -> None:
+    mpl.rcParams.update(
+        {
+            "font.family": "sans-serif",
+            "font.sans-serif": ["Nimbus Sans", "Liberation Sans", "DejaVu Sans"],
+            "mathtext.fontset": "stixsans",
+            "font.size": 8,
+            "axes.titlesize": 9,
+            "axes.labelsize": 8,
+            "axes.titleweight": "semibold",
+            "axes.labelcolor": COLORS["ink"],
+            "text.color": COLORS["ink"],
+            "xtick.color": COLORS["muted"],
+            "ytick.color": COLORS["muted"],
+            "legend.fontsize": 7,
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
+            "savefig.facecolor": "white",
+        }
+    )
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -64,24 +74,40 @@ def mean(rows: list[dict[str, str]], key: str) -> float:
     return sum(float(row[key]) for row in rows) / len(rows)
 
 
-def style_axes(ax: mpl.axes.Axes) -> None:
+def format_rate(value: float) -> str:
+    rounded = np.floor(value * 100.0 + 0.5) / 100.0
+    return f"{rounded:.2f}"
+
+
+def style_axes(ax: mpl.axes.Axes, *, xgrid: bool = False) -> None:
     ax.set_facecolor(COLORS["paper"])
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_color(COLORS["grid"])
+    for side in ("top", "right", "left"):
+        ax.spines[side].set_visible(False)
     ax.spines["bottom"].set_color(COLORS["grid"])
-    ax.tick_params(colors=COLORS["ink"], labelsize=8, length=0)
-    ax.grid(axis="y", color=COLORS["grid"], linewidth=0.6, alpha=0.8)
+    ax.tick_params(length=0, labelsize=7.5)
+    ax.grid(axis="x" if xgrid else "y", color=COLORS["grid"], linewidth=0.55)
     ax.set_axisbelow(True)
+
+
+def panel_label(ax: mpl.axes.Axes, label: str) -> None:
+    ax.text(-0.14, 1.09, label, transform=ax.transAxes, fontsize=9, weight="bold")
 
 
 def save_figure(fig: mpl.figure.Figure, output: Path, preview_dir: Path | None) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, bbox_inches="tight", pad_inches=0.04)
+    fig.savefig(output, bbox_inches="tight", pad_inches=0.03)
     if preview_dir is not None:
         preview_dir.mkdir(parents=True, exist_ok=True)
-        fig.savefig(preview_dir / (output.stem + ".png"), dpi=220, bbox_inches="tight")
+        fig.savefig(preview_dir / f"{output.stem}.png", dpi=300, bbox_inches="tight", pad_inches=0.03)
     plt.close(fig)
+
+
+def short_model(model: str) -> str:
+    return {
+        "gpt-5.4-mini": "GPT",
+        "claude-sonnet-4-6": "Claude",
+        "Qwen3.6-35B-A3B-no-thinking": "Qwen",
+    }[model]
 
 
 def plot_cross_agent_model(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
@@ -91,115 +117,136 @@ def plot_cross_agent_model(results_dir: Path, output_dir: Path, preview_dir: Pat
         if row["adapter"] in EXPANDED_ADAPTERS
     ]
     expanded.sort(key=lambda row: list(EXPANDED_ADAPTERS).index(row["adapter"]))
-    models: list[dict[str, str]] = []
-    for path, suite in [
+
+    cross_model: list[dict[str, str]] = []
+    for path, suite in (
         ("public_cross_model_numerical_summary.csv", "Numerical"),
         ("public_cross_model_semantic_schema_summary.csv", "Semantic/schema"),
-    ]:
-        models.extend({**row, "suite": suite} for row in read_csv(results_dir / path))
+    ):
+        cross_model.extend({**row, "suite": suite} for row in read_csv(results_dir / path))
     model_order = ["gpt-5.4-mini", "claude-sonnet-4-6", "Qwen3.6-35B-A3B-no-thinking"]
-    suite_order = ["Numerical", "Semantic/schema"]
-    models.sort(key=lambda row: (suite_order.index(row["suite"]), model_order.index(row["model"])))
+    cross_model.sort(key=lambda row: (["Numerical", "Semantic/schema"].index(row["suite"]), model_order.index(row["model"])))
 
-    fig, axes = plt.subplots(1, 3, figsize=(7.15, 2.65), gridspec_kw={"width_ratios": [1.05, 1.35, 1.25]})
+    fig, axes = plt.subplots(1, 3, figsize=(7.12, 2.45), gridspec_kw={"width_ratios": [1.08, 1.25, 1.25]})
+
     ax = axes[0]
-    style_axes(ax)
-    x = np.arange(len(expanded))
-    width = 0.34
-    clean = [float(row["clean_tsr"]) for row in expanded]
-    poisoned = [float(row["poisoned_tsr"]) for row in expanded]
-    ax.bar(x - width / 2, clean, width, color=COLORS["blue"], label="Clean TSR")
-    ax.bar(x + width / 2, poisoned, width, color=COLORS["orange"], label="Poisoned TSR")
-    # Keep adapter labels short enough for the compact three-panel layout.
-    ax.set_xticks(x, ["Auto\nGen", "Lang\nGraph", "smol.\nagents"])
-    ax.tick_params(axis="x", labelsize=7, pad=3)
-    ax.set_ylim(0, 1.08)
-    ax.set_ylabel("Task success rate", fontsize=8)
-    ax.set_title("Expanded GPT-only evaluation", fontsize=8.5, weight="semibold", pad=8)
-    for i, value in enumerate(poisoned):
-        ax.text(i + width / 2, value + 0.025, f"{value:.2f}", ha="center", fontsize=7, color=COLORS["ink"])
-    ax.text(-0.14, 1.16, "a", transform=ax.transAxes, fontsize=10, weight="bold")
+    style_axes(ax, xgrid=True)
+    y = np.arange(len(expanded))
+    clean = np.array([float(row["clean_tsr"]) for row in expanded])
+    toxic = np.array([float(row["poisoned_tsr"]) for row in expanded])
+    for i in range(len(expanded)):
+        ax.plot([toxic[i], clean[i]], [i, i], color=COLORS["grid"], linewidth=2.4, zorder=1)
+    ax.scatter(clean, y, color=COLORS["clean"], s=34, zorder=3)
+    ax.scatter(toxic, y, color=COLORS["toxic"], s=34, zorder=3)
+    ax.set_yticks(y, [EXPANDED_ADAPTERS[row["adapter"]] for row in expanded])
+    ax.invert_yaxis()
+    ax.set_xlim(0.45, 1.01)
+    ax.set_xlabel("Task success rate")
+    ax.set_title("Expanded GPT-only (120)", pad=7)
+    panel_label(ax, "a")
 
     ax = axes[1]
-    style_axes(ax)
-    y = np.arange(len(models))
-    clean = np.array([float(row["clean_tsr"]) for row in models])
-    poisoned = np.array([float(row["poisoned_tsr"]) for row in models])
-    for i, row in enumerate(models):
-        color = COLORS["navy"] if row["suite"] == "Numerical" else COLORS["teal"]
-        ax.plot([poisoned[i], clean[i]], [i, i], color=COLORS["grid"], linewidth=2, zorder=1)
-        ax.scatter(clean[i], i, s=30, color=COLORS["blue"], edgecolor="white", linewidth=0.7, zorder=3)
-        ax.scatter(poisoned[i], i, s=30, color=COLORS["orange"], edgecolor="white", linewidth=0.7, zorder=3)
-    labels = [f"{'Num.' if row['suite'] == 'Numerical' else 'Sem.'} / {row['model'].replace('Qwen3.6-35B-A3B-no-thinking', 'Qwen').replace('claude-sonnet-4-6', 'Claude').replace('gpt-5.4-mini', 'GPT')}" for row in models]
+    style_axes(ax, xgrid=True)
+    y = np.arange(len(cross_model))
+    clean = np.array([float(row["clean_tsr"]) for row in cross_model])
+    toxic = np.array([float(row["poisoned_tsr"]) for row in cross_model])
+    for i in range(len(cross_model)):
+        ax.plot([toxic[i], clean[i]], [i, i], color=COLORS["grid"], linewidth=2.2, zorder=1)
+    ax.scatter(clean, y, color=COLORS["clean"], s=29, zorder=3)
+    ax.scatter(toxic, y, color=COLORS["toxic"], s=29, zorder=3)
+    labels = [f"{'Num.' if row['suite'] == 'Numerical' else 'Sem.'} / {short_model(row['model'])}" for row in cross_model]
     ax.set_yticks(y, labels)
-    ax.set_xlim(0.25, 1.05)
-    ax.set_xlabel("TSR", fontsize=8)
-    ax.set_title("Paired clean-to-poisoned shift", fontsize=8.5, weight="semibold", pad=8)
-    ax.grid(axis="x", color=COLORS["grid"], linewidth=0.6)
-    ax.grid(axis="y", visible=False)
-    ax.text(-0.14, 1.16, "b", transform=ax.transAxes, fontsize=10, weight="bold")
+    ax.invert_yaxis()
+    ax.set_xlim(0.42, 1.02)
+    ax.set_xlabel("Task success rate")
+    ax.set_title("Cross-model mean", pad=7)
+    panel_label(ax, "b")
 
     ax = axes[2]
-    style_axes(ax)
-    bcr = np.array([float(row["toxic_bcr"]) for row in models])
-    ax.barh(y, bcr, color=[COLORS["navy"] if row["suite"] == "Numerical" else COLORS["teal"] for row in models], height=0.58)
-    ax.set_yticks(y, [f"{'Sem.' if row['suite'] == 'Semantic/schema' else 'Num.'} / {row['model'].replace('Qwen3.6-35B-A3B-no-thinking', 'Qwen').replace('claude-sonnet-4-6', 'Claude').replace('gpt-5.4-mini', 'GPT')}" for row in models])
-    ax.set_xlim(0, 0.85)
-    ax.set_xlabel("BCR", fontsize=8)
-    ax.set_title("Blind compliance", fontsize=8.5, weight="semibold", pad=8)
-    ax.grid(axis="x", color=COLORS["grid"], linewidth=0.6)
-    ax.grid(axis="y", visible=False)
-    ax.text(-0.14, 1.16, "c", transform=ax.transAxes, fontsize=10, weight="bold")
-    fig.legend(
-        [Patch(facecolor=COLORS["blue"]), Patch(facecolor=COLORS["orange"])],
-        ["Clean TSR", "Poisoned TSR"],
-        frameon=False, fontsize=7, ncol=2, loc="lower center", bbox_to_anchor=(0.5, 0.005),
-        columnspacing=1.2, handlelength=1.2,
-    )
-    fig.subplots_adjust(wspace=0.72, left=0.08, right=0.99, bottom=0.31, top=0.78)
+    style_axes(ax, xgrid=True)
+    bcr = np.array([float(row["toxic_bcr"]) for row in cross_model])
+    pdr = np.array([float(row["poison_delivery_rate"]) for row in cross_model])
+    for i in range(len(cross_model)):
+        ax.plot([bcr[i], pdr[i]], [i, i], color=COLORS["grid"], linewidth=2.2, zorder=1)
+    ax.scatter(bcr, y, marker="D", color=COLORS["risk"], s=27, zorder=3)
+    ax.scatter(pdr, y, marker="o", facecolor=COLORS["paper"], edgecolor=COLORS["exposure"], linewidth=1.3, s=30, zorder=3)
+    ax.set_yticks(y, labels)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 1.02)
+    ax.set_xlabel("Rate")
+    ax.set_title("Risk conditional on exposure", pad=7)
+    panel_label(ax, "c")
+
+    handles = [
+        Line2D([], [], marker="o", linestyle="none", color=COLORS["clean"], label="Clean TSR"),
+        Line2D([], [], marker="o", linestyle="none", color=COLORS["toxic"], label="Poisoned TSR"),
+        Line2D([], [], marker="D", linestyle="none", color=COLORS["risk"], label="BCR"),
+        Line2D([], [], marker="o", linestyle="none", markerfacecolor="white", markeredgecolor=COLORS["exposure"], label="PDR"),
+    ]
+    fig.legend(handles=handles, loc="lower center", ncol=4, frameon=False, bbox_to_anchor=(0.5, -0.01), handletextpad=0.35, columnspacing=1.15)
+    fig.subplots_adjust(left=0.10, right=0.99, top=0.84, bottom=0.25, wspace=0.58)
     save_figure(fig, output_dir / "fig_cross_agent_model.pdf", preview_dir)
 
 
-def plot_poison_types(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
-    rows = read_csv(results_dir / "public_poison_type_summary.csv")
-    order = ["sign_flip", "aggregate_scale", "rank_swap"]
-    rows.sort(key=lambda row: order.index(row["poison_type"]))
-    labels = {"sign_flip": "Sign flip", "aggregate_scale": "Aggregate scale", "rank_swap": "Rank swap"}
-    metrics = [("bcr", "BCR", COLORS["orange"]), ("vr", "VR", COLORS["teal"]), ("rr", "RR", COLORS["blue"])]
-    values = np.array([[float(row[key]) for key, _, _ in metrics] for row in rows])
-    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1.4, 1]})
-    ax = axes[0]
-    style_axes(ax)
-    x = np.arange(len(rows))
-    width = 0.23
-    for j, (_, label, color) in enumerate(metrics):
-        ax.bar(x + (j - 1) * width, values[:, j], width, color=color, label=label)
-    ax.set_xticks(x, ["Sign\nflip", "Aggregate\nscale", "Rank\nswap"])
-    ax.tick_params(axis="x", labelsize=7, pad=3)
-    ax.set_ylim(0, 0.72)
-    ax.set_ylabel("Rate", fontsize=8)
-    ax.set_title("Behavior by numerical poison type", fontsize=8.5, weight="semibold", pad=8)
-    ax.legend(frameon=False, fontsize=7, ncol=3, loc="upper left")
-    ax.text(-0.08, 1.08, "a", transform=ax.transAxes, fontsize=10, weight="bold")
+def plot_operator_profile(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
+    numerical = {row["poison_type"]: row for row in read_csv(results_dir / "public_poison_type_summary.csv")}
+    semantic_raw = [
+        row for row in read_csv(results_dir / "semantic_schema_cross_model_poison_summary.csv")
+        if row["adapter"] in PUBLIC_ADAPTERS
+    ]
+    semantic: dict[str, dict[str, float]] = {}
+    for poison_type in sorted({row["poison_type"] for row in semantic_raw}):
+        subset = [row for row in semantic_raw if row["poison_type"] == poison_type]
+        semantic[poison_type] = {key: mean(subset, key) for key in ("toxic_tsr", "bcr", "vr", "rr", "poison_delivery_rate")}
 
-    ax = axes[1]
-    ax.set_facecolor(COLORS["paper"])
-    im = ax.imshow(values, cmap=mpl.colors.LinearSegmentedColormap.from_list("paper_heat", ["#F4F7F8", "#B5D5D0", "#3A8D8D"]), vmin=0, vmax=0.72, aspect="auto")
-    ax.set_xticks(np.arange(len(metrics)), [label for _, label, _ in metrics])
-    ax.set_yticks(np.arange(len(rows)), [labels[row["poison_type"]] for row in rows])
-    ax.tick_params(labelsize=8, length=0)
-    ax.set_title("Rate profile", fontsize=8.5, weight="semibold", pad=8)
+    order = [
+        ("aggregate_scale", "Aggregate scale", "Numerical"),
+        ("rank_swap", "Rank swap", "Numerical"),
+        ("sign_flip", "Sign flip", "Numerical"),
+        ("label_swap", "Label swap", "Semantic/schema"),
+        ("treatment_control_flip", "Treatment/control", "Semantic/schema"),
+        ("stale_metadata", "Stale metadata", "Semantic/schema"),
+        ("column_semantic_swap", "Column swap", "Semantic/schema"),
+        ("biased_retrieval", "Biased retrieval", "Semantic/schema"),
+    ]
+    metrics = [
+        ("toxic_tsr", "Poisoned\nTSR"),
+        ("bcr", "BCR"),
+        ("vr", "VR"),
+        ("rr", "RR"),
+        ("poison_delivery_rate", "PDR"),
+    ]
+    matrix = []
+    for key, _, family in order:
+        source = numerical[key] if family == "Numerical" else semantic[key]
+        matrix.append([float(source[metric]) for metric, _ in metrics])
+    values = np.asarray(matrix)
+
+    fig, ax = plt.subplots(figsize=(7.12, 3.15))
+    cmap = mpl.colors.LinearSegmentedColormap.from_list(
+        "toxicbench_rates", ["#F5F6F7", "#D9E1E5", "#83A9B5", "#265F78"]
+    )
+    im = ax.imshow(values, cmap=cmap, vmin=0, vmax=1, aspect="auto")
+    ax.set_xticks(np.arange(len(metrics)), [label for _, label in metrics])
+    ax.set_yticks(np.arange(len(order)), [label for _, label, _ in order])
+    ax.tick_params(length=0, labelsize=8)
+    ax.tick_params(axis="x", pad=5)
+    ax.axhline(2.5, color=COLORS["paper"], linewidth=3.0)
+    ax.text(-0.19, 0.78, "Numerical", transform=ax.transAxes, rotation=90, va="center", ha="center", fontsize=7, color=COLORS["muted"])
+    ax.text(-0.19, 0.31, "Semantic / schema", transform=ax.transAxes, rotation=90, va="center", ha="center", fontsize=7, color=COLORS["muted"])
     for i in range(values.shape[0]):
         for j in range(values.shape[1]):
-            ax.text(j, i, f"{values[i, j]:.2f}", ha="center", va="center", fontsize=8, color=COLORS["ink"])
+            color = "white" if values[i, j] >= 0.58 else COLORS["ink"]
+            ax.text(j, i, format_rate(values[i, j]), ha="center", va="center", fontsize=7.4, color=color)
     for spine in ax.spines.values():
         spine.set_visible(False)
-    cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    cbar.ax.tick_params(labelsize=7, length=0)
+    cbar = fig.colorbar(im, ax=ax, fraction=0.024, pad=0.025)
+    cbar.set_label("Rate", fontsize=8)
+    cbar.ax.tick_params(length=0, labelsize=7)
     cbar.outline.set_visible(False)
-    ax.text(-0.18, 1.08, "b", transform=ax.transAxes, fontsize=10, weight="bold")
-    fig.subplots_adjust(wspace=0.42, left=0.08, right=0.96, bottom=0.29, top=0.82)
-    save_figure(fig, output_dir / "fig_poison_type_behavior.pdf", preview_dir)
+    ax.set_title("Failure and recovery profiles by poisoning operator", pad=9)
+    fig.subplots_adjust(left=0.25, right=0.94, top=0.88, bottom=0.14)
+    save_figure(fig, output_dir / "fig_operator_profile.pdf", preview_dir)
 
 
 def plot_guard_tradeoff(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
@@ -210,57 +257,75 @@ def plot_guard_tradeoff(results_dir: Path, output_dir: Path, preview_dir: Path |
         if row["env"] == "toxic":
             events[row["adapter"]].append(float(row["mean_tool_events"]))
     variants = ["Base", "Caution only", "Expectation only", "Verification only", "Full guard", "Light guard"]
-    colors = [COLORS["muted"], COLORS["gold"], COLORS["gold"], COLORS["teal"], COLORS["navy"], COLORS["blue"]]
-    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.85), gridspec_kw={"width_ratios": [1.15, 1]})
+    labels = ["Base", "Caution", "Expectation", "Verify", "Full", "Light"]
+    variant_colors = [COLORS["neutral"], COLORS["toxic"], COLORS["toxic"], COLORS["verify"], COLORS["clean"], COLORS["recover"]]
+
+    fig, axes = plt.subplots(1, 3, figsize=(7.12, 2.55), gridspec_kw={"width_ratios": [1.16, 1.0, 1.0]})
+
     ax = axes[0]
     style_axes(ax)
-    xvals = np.array([np.mean(events[v]) for v in variants])
-    yvals = np.array([float(ablation[v]["poisoned_tsr"]) for v in variants])
+    x = np.arange(len(variants))
+    toxic_tsr = np.array([float(ablation[v]["poisoned_tsr"]) for v in variants])
     bcr = np.array([float(ablation[v]["bcr"]) for v in variants])
-    sizes = 85 + 250 * (1 - bcr)
-    ax.scatter(xvals, yvals, s=sizes, c=colors, edgecolor="white", linewidth=0.8, zorder=3)
-    short_names = {"Base": "B", "Caution only": "C", "Expectation only": "E", "Verification only": "V", "Full guard": "F", "Light guard": "L"}
-    for x, y, variant in zip(xvals, yvals, variants):
-        ax.text(x, y, short_names[variant], ha="center", va="center", fontsize=7, weight="bold", color="white", zorder=4)
-    ax.set_xlabel("Mean poisoned tool events", fontsize=8)
-    ax.set_ylabel("Poisoned TSR", fontsize=8)
-    ax.set_xlim(1.7, 5.35)
-    ax.set_ylim(0.55, 1.01)
-    ax.set_title("Robustness versus verification budget", fontsize=8.5, weight="semibold", pad=8)
-    handles = [plt.Line2D([0], [0], marker="o", color="w", markerfacecolor=color, markersize=6, label=f"{short_names[name]} {name}") for name, color in zip(variants, colors)]
-    ax.legend(handles=handles, frameon=False, fontsize=6.2, ncol=3, loc="upper left", bbox_to_anchor=(0.0, -0.22), handletextpad=0.25, columnspacing=0.7)
-    ax.text(-0.08, 1.08, "a", transform=ax.transAxes, fontsize=10, weight="bold")
+    ax.plot(x, toxic_tsr, color=COLORS["clean"], linewidth=1.4, marker="o", markersize=4, label="Poisoned TSR")
+    ax.plot(x, bcr, color=COLORS["risk"], linewidth=1.4, marker="D", markersize=3.8, label="BCR")
+    ax.set_xticks(x, labels, rotation=38, ha="right")
+    ax.set_ylim(-0.03, 1.03)
+    ax.set_ylabel("Rate")
+    ax.set_title("Defense ablation", pad=7)
+    ax.legend(
+        frameon=True, facecolor="white", edgecolor="none", framealpha=0.92,
+        loc="center left", bbox_to_anchor=(0.0, 0.56), handlelength=1.2,
+    )
+    panel_label(ax, "a")
 
-    latency = read_csv(results_dir / "guard_cost_latency_distribution.csv")
     ax = axes[1]
     style_axes(ax)
-    names = ["LG\nbase", "LG\nfull", "LG\nlight", "AG\nverify", "AG\nguarded"]
-    rows = {row["adapter"]: row for row in latency}
+    cost = {row["adapter"]: row for row in read_csv(results_dir / "guard_cost_latency_distribution.csv")}
     keys = ["LangGraph base", "LangGraph full guard", "LangGraph light guard", "AutoGen verification-only", "AutoGen guarded"]
-    means = [float(rows[k]["mean_elapsed_seconds"]) for k in keys]
-    p50 = [float(rows[k]["p50_elapsed_seconds"]) for k in keys]
-    p90 = [float(rows[k]["p90_elapsed_seconds"]) for k in keys]
+    names = ["LG base", "LG full", "LG light", "AG verify", "AG guard"]
+    means = np.array([float(cost[key]["mean_elapsed_seconds"]) for key in keys])
+    p50 = np.array([float(cost[key]["p50_elapsed_seconds"]) for key in keys])
+    p90 = np.array([float(cost[key]["p90_elapsed_seconds"]) for key in keys])
     x = np.arange(len(keys))
-    ax.bar(x, means, color=[COLORS["muted"], COLORS["navy"], COLORS["blue"], COLORS["teal"], COLORS["teal"]], width=0.62)
-    ax.vlines(x, p50, p90, color=COLORS["ink"], linewidth=2, zorder=3)
-    ax.scatter(x, p50, color=COLORS["paper"], edgecolor=COLORS["ink"], s=20, zorder=4, label="P50")
-    ax.scatter(x, p90, color=COLORS["ink"], s=18, zorder=4, label="P90")
-    ax.set_xticks(x, names, fontsize=7)
-    ax.set_ylabel("Wall-clock seconds", fontsize=8)
-    ax.set_ylim(0, 36)
-    ax.set_title("Latency distribution", fontsize=8.5, weight="semibold", pad=8)
-    ax.legend(frameon=False, fontsize=7, loc="upper left")
-    ax.text(-0.1, 1.08, "b", transform=ax.transAxes, fontsize=10, weight="bold")
-    fig.subplots_adjust(wspace=0.38, left=0.08, right=0.99, bottom=0.36, top=0.82)
+    ax.bar(x, means, color=[COLORS["neutral"], COLORS["clean"], COLORS["recover"], COLORS["verify"], COLORS["verify"]], width=0.62)
+    ax.vlines(x, p50, p90, color=COLORS["ink"], linewidth=1.5, zorder=3)
+    ax.scatter(x, p50, facecolor="white", edgecolor=COLORS["ink"], s=13, zorder=4)
+    ax.scatter(x, p90, color=COLORS["ink"], s=11, zorder=4)
+    ax.set_xticks(x, names, rotation=38, ha="right")
+    ax.set_ylim(0, 34)
+    ax.set_ylabel("Seconds / task")
+    ax.set_title("Measured latency", pad=7)
+    panel_label(ax, "b")
+
+    ax = axes[2]
+    style_axes(ax)
+    stress = read_csv(results_dir / "iclr2027_semantic_guard_multiroute_stress_strict_summary.csv")
+    p = np.array([float(row["adapter"].split("=")[1]) for row in stress])
+    tsr = np.array([float(row["poisoned_tsr"]) for row in stress])
+    bcr = np.array([np.nan if int(row["n_exposed"]) == 0 else float(row["bcr"]) for row in stress])
+    rr = np.array([np.nan if int(row["n_exposed"]) == 0 else float(row["rr"]) for row in stress])
+    ax.plot(p, tsr, color=COLORS["clean"], marker="o", linewidth=1.4, markersize=4, label="Poisoned TSR")
+    ax.plot(p, bcr, color=COLORS["risk"], marker="D", linewidth=1.4, markersize=3.8, label="BCR")
+    ax.plot(p, rr, color=COLORS["verify"], marker="s", linewidth=1.4, markersize=3.8, label="RR")
+    ax.set_xticks(p, [f"{value:g}" for value in p])
+    ax.set_ylim(-0.03, 1.03)
+    ax.set_xlabel("Poison probability $p$\n(eligible observations)")
+    ax.set_title("Route-corruption stress test", pad=7)
+    ax.legend(
+        frameon=True, facecolor="white", edgecolor="none", framealpha=0.92,
+        loc="upper right", handlelength=1.2,
+    )
+    panel_label(ax, "c")
+
+    fig.subplots_adjust(left=0.07, right=0.995, top=0.84, bottom=0.31, wspace=0.42)
     save_figure(fig, output_dir / "fig_guard_tradeoff.pdf", preview_dir)
 
 
 def plot_severity(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
-    allowed = set(EXPANDED_ADAPTERS)
     rows = [
-        row
-        for row in read_csv(results_dir / "iclr2027_gpt_expanded_cross_agent_combined_severity_summary.csv")
-        if row["adapter"] in allowed
+        row for row in read_csv(results_dir / "iclr2027_gpt_expanded_cross_agent_combined_severity_summary.csv")
+        if row["adapter"] in EXPANDED_ADAPTERS
     ]
     operators = sorted({row["poison_type"] for row in rows})
     severities = ["obvious", "plausible", "subtle"]
@@ -272,114 +337,60 @@ def plot_severity(results_dir: Path, output_dir: Path, preview_dir: Path | None)
                 matrix[i, j] = mean(group, "bcr")
     pretty = {
         "aggregate_scale": "Aggregate scale", "biased_retrieval": "Biased retrieval", "column_semantic_swap": "Column swap",
-        "denominator_swap": "Denominator", "label_swap": "Label swap", "missing_filter": "Missing filter",
+        "denominator_swap": "Denominator swap", "label_swap": "Label swap", "missing_filter": "Missing filter",
         "rank_swap": "Rank swap", "ratio_inversion": "Ratio inversion", "sign_flip": "Sign flip",
         "stale_metadata": "Stale metadata", "treatment_control_flip": "Treatment/control", "unit_conversion": "Unit conversion",
     }
-    fig, ax = plt.subplots(figsize=(7.15, 3.05))
-    im = ax.imshow(matrix, cmap=mpl.colors.LinearSegmentedColormap.from_list("severity_heat", ["#F4F7F8", "#F2C28A", "#B54A4A"]), vmin=0, vmax=1, aspect="auto")
-    ax.set_xticks(np.arange(len(severities)), [s.capitalize() for s in severities])
-    ax.set_yticks(np.arange(len(operators)), [pretty.get(x, x.replace("_", " ").title()) for x in operators])
-    ax.tick_params(labelsize=8, length=0)
-    ax.set_xlabel("Poison severity", fontsize=8)
-    ax.set_title("Blind compliance across poison severity levels", fontsize=9, weight="semibold", pad=9)
+    fig, ax = plt.subplots(figsize=(7.12, 3.0))
+    cmap = mpl.colors.LinearSegmentedColormap.from_list("severity", ["#F5F6F7", "#E7C7B6", "#B9473E"])
+    im = ax.imshow(matrix, cmap=cmap, vmin=0, vmax=1, aspect="auto")
+    ax.set_xticks(np.arange(3), [name.capitalize() for name in severities])
+    ax.set_yticks(np.arange(len(operators)), [pretty.get(name, name.replace("_", " ").title()) for name in operators])
+    ax.tick_params(length=0, labelsize=8)
     for i in range(matrix.shape[0]):
         for j in range(matrix.shape[1]):
             if not np.isnan(matrix[i, j]):
-                ax.text(j, i, f"{matrix[i, j]:.2f}", ha="center", va="center", fontsize=7.5, color=COLORS["ink"])
+                color = "white" if matrix[i, j] >= 0.58 else COLORS["ink"]
+                ax.text(j, i, format_rate(matrix[i, j]), ha="center", va="center", fontsize=7.2, color=color)
     for spine in ax.spines.values():
         spine.set_visible(False)
-    cbar = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.02)
+    cbar = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.025)
     cbar.set_label("BCR", fontsize=8)
-    cbar.ax.tick_params(labelsize=7, length=0)
+    cbar.ax.tick_params(length=0, labelsize=7)
     cbar.outline.set_visible(False)
+    ax.set_title("Blind compliance by operator and annotated severity", pad=8)
+    fig.subplots_adjust(left=0.23, right=0.94, top=0.89, bottom=0.12)
     save_figure(fig, output_dir / "fig_severity_heatmap.pdf", preview_dir)
-
-
-def plot_semantic_types(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
-    rows = [
-        row for row in read_csv(results_dir / "semantic_schema_cross_model_poison_summary.csv")
-        if row["adapter"] in PUBLIC_ADAPTERS
-    ]
-    order = ["biased_retrieval", "column_semantic_swap", "label_swap", "stale_metadata", "treatment_control_flip"]
-    labels = {
-        "biased_retrieval": "Biased\nretrieval",
-        "column_semantic_swap": "Column\nswap",
-        "label_swap": "Label\nswap",
-        "stale_metadata": "Stale\nmetadata",
-        "treatment_control_flip": "Treatment/\ncontrol",
-    }
-    metrics = [("bcr", "BCR", COLORS["orange"]), ("adr", "ADR", COLORS["gold"]),
-               ("vr", "VR", COLORS["teal"]), ("rr", "RR", COLORS["blue"])]
-    grouped = []
-    for poison_type in order:
-        subset = [row for row in rows if row["poison_type"] == poison_type]
-        grouped.append([mean(subset, key) if subset else np.nan for key, _, _ in metrics])
-    values = np.array(grouped)
-    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.55), gridspec_kw={"width_ratios": [1.45, 1]})
-    ax = axes[0]
-    style_axes(ax)
-    x = np.arange(len(order))
-    width = 0.19
-    for j, (_, label, color) in enumerate(metrics):
-        ax.bar(x + (j - 1.5) * width, values[:, j], width, color=color, label=label)
-    ax.set_xticks(x, [labels[name] for name in order])
-    ax.tick_params(axis="x", labelsize=7, pad=3)
-    ax.set_ylim(0, 1.05)
-    ax.set_ylabel("Rate", fontsize=8)
-    ax.set_title("Behavior by semantic poison type", fontsize=8.5, weight="semibold", pad=8)
-    ax.legend(frameon=False, fontsize=7, ncol=4, loc="upper left", columnspacing=0.7, handlelength=1.0)
-    ax.text(-0.08, 1.08, "a", transform=ax.transAxes, fontsize=10, weight="bold")
-
-    ax = axes[1]
-    cmap = mpl.colors.LinearSegmentedColormap.from_list("semantic_heat", ["#F5F7F8", "#C8DCD9", "#428985"])
-    im = ax.imshow(values, cmap=cmap, vmin=0, vmax=1, aspect="auto")
-    ax.set_xticks(np.arange(len(metrics)), [label for _, label, _ in metrics])
-    ax.set_yticks(np.arange(len(order)), [labels[name].replace("\n", " ") for name in order])
-    ax.tick_params(labelsize=7, length=0)
-    ax.set_title("Rate profile", fontsize=8.5, weight="semibold", pad=8)
-    for i in range(values.shape[0]):
-        for j in range(values.shape[1]):
-            if not np.isnan(values[i, j]):
-                ax.text(j, i, f"{values[i, j]:.2f}", ha="center", va="center", fontsize=7, color=COLORS["ink"])
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-    cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    cbar.set_label("Rate", fontsize=8)
-    cbar.ax.tick_params(labelsize=7, length=0)
-    cbar.outline.set_visible(False)
-    ax.text(-0.18, 1.08, "b", transform=ax.transAxes, fontsize=10, weight="bold")
-    fig.subplots_adjust(wspace=0.42, left=0.08, right=0.96, bottom=0.28, top=0.82)
-    save_figure(fig, output_dir / "fig_semantic_poison_profile.pdf", preview_dir)
 
 
 def plot_guard_suite_breakdown(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
     rows = read_csv(results_dir / "langgraph_guarded_ablation_suite_summary.csv")
     variants = ["Base", "Caution only", "Expectation only", "Verification only", "Full guard", "Light guard"]
-    short = ["Base", "Caution", "Expect.", "Verify", "Full", "Light"]
-    suites = ["numerical", "semantic/schema"]
-    colors = [COLORS["muted"], COLORS["gold"], COLORS["gold"], COLORS["teal"], COLORS["navy"], COLORS["blue"]]
-    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.65), sharey=True)
+    labels = ["Base", "Caution", "Expectation", "Verify", "Full", "Light"]
+    suites = ["numerical", "semantic_schema"]
+    fig, axes = plt.subplots(1, 2, figsize=(7.12, 2.55), sharey=True)
     y = np.arange(len(variants))
-    for ax, metric, title, xlabel in zip(
-        axes, ["poisoned_tsr", "bcr"], ["Poisoned task success", "Blind compliance"], ["Poisoned TSR", "BCR"]
-    ):
-        style_axes(ax)
+    for ax, metric, title in zip(axes, ["poisoned_tsr", "bcr"], ["Poisoned task success", "Blind compliance"]):
+        style_axes(ax, xgrid=True)
         for i, suite in enumerate(suites):
             values = [float(next(row[metric] for row in rows if row["suite"] == suite and row["adapter"] == variant)) for variant in variants]
-            offset = (i - 0.5) * 0.30
-            ax.barh(y + offset, values, height=0.25, color=COLORS["navy"] if i == 0 else COLORS["teal"], label=suite.title())
-        ax.set_xlim(0, 1.05)
-        ax.set_xlabel(xlabel, fontsize=8)
-        ax.set_title(title, fontsize=8.5, weight="semibold", pad=8)
-        ax.grid(axis="x", color=COLORS["grid"], linewidth=0.6)
-        ax.grid(axis="y", visible=False)
-        ax.set_yticks(y, short)
-        ax.invert_yaxis()
-        ax.legend(frameon=False, fontsize=7, loc="lower right")
-    axes[0].text(-0.12, 1.08, "a", transform=axes[0].transAxes, fontsize=10, weight="bold")
-    axes[1].text(-0.12, 1.08, "b", transform=axes[1].transAxes, fontsize=10, weight="bold")
-    fig.subplots_adjust(wspace=0.2, left=0.12, right=0.98, bottom=0.18, top=0.82)
+            offset = (i - 0.5) * 0.28
+            ax.scatter(values, y + offset, marker="o" if i == 0 else "s", s=28,
+                       color=COLORS["clean"] if i == 0 else COLORS["verify"],
+                       label="Numerical" if suite == "numerical" else "Semantic/schema", zorder=3)
+        ax.set_xlim(-0.03, 1.03)
+        ax.set_xlabel("Rate")
+        ax.set_title(title, pad=7)
+        ax.set_yticks(y, labels)
+    axes[0].invert_yaxis()
+    handles = [
+        Line2D([], [], marker="o", linestyle="none", color=COLORS["clean"], label="Numerical"),
+        Line2D([], [], marker="s", linestyle="none", color=COLORS["verify"], label="Semantic/schema"),
+    ]
+    fig.legend(handles=handles, frameon=False, ncol=2, loc="lower center", bbox_to_anchor=(0.5, 0.005))
+    panel_label(axes[0], "a")
+    panel_label(axes[1], "b")
+    fig.subplots_adjust(left=0.14, right=0.99, top=0.84, bottom=0.27, wspace=0.22)
     save_figure(fig, output_dir / "fig_guard_suite_breakdown.pdf", preview_dir)
 
 
@@ -391,30 +402,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def configure_matplotlib() -> None:
-    mpl.rcParams.update(
-        {
-            "font.family": "serif",
-            "font.serif": ["Nimbus Roman", "DejaVu Serif"],
-            "mathtext.fontset": "stix",
-            "font.size": 8,
-            "axes.titlesize": 9,
-            "axes.labelsize": 8,
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
-            "savefig.facecolor": "white",
-        }
-    )
-
-
 def main() -> None:
     args = parse_args()
     configure_matplotlib()
     plot_cross_agent_model(args.results_dir, args.output_dir, args.preview_dir)
-    plot_poison_types(args.results_dir, args.output_dir, args.preview_dir)
+    plot_operator_profile(args.results_dir, args.output_dir, args.preview_dir)
     plot_guard_tradeoff(args.results_dir, args.output_dir, args.preview_dir)
     plot_severity(args.results_dir, args.output_dir, args.preview_dir)
-    plot_semantic_types(args.results_dir, args.output_dir, args.preview_dir)
     plot_guard_suite_breakdown(args.results_dir, args.output_dir, args.preview_dir)
 
 

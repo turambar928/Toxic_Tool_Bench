@@ -37,3 +37,9 @@ toxictool_bench/cache/
 # added explicitly with `git add -f` when they are release artifacts.
 toxictool_bench/results/20*.jsonl
 toxictool_bench/results/20*.summary.json
+
+# Paper-facing LangGraph reruns referenced by paper_run_manifest.csv.
+!toxictool_bench/results/20260819-20*_langgraph_react_guarded_gpt-5.4-mini_toxic.jsonl
+!toxictool_bench/results/20260819-20*_langgraph_react_abstain_gpt-5.4-mini_both.jsonl
+!toxictool_bench/results/20260819-20*_langgraph_react_randomized_gpt-5.4-mini_both.jsonl
+!toxictool_bench/results/20260819-20*_langgraph_react_selective_gpt-5.4-mini_both.jsonl
