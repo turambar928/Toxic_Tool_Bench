@@ -28,6 +28,7 @@ def parse_args() -> argparse.Namespace:
             "langgraph_react_caution",
             "langgraph_react_expectation_only",
             "langgraph_react_verification_only",
+            "langgraph_react_double_pass",
             "langgraph_react_guarded",
             "langgraph_react_guarded_light",
             "langgraph_react_abstain",

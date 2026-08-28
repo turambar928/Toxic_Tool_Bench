@@ -10,7 +10,7 @@ START_INDEX="${START_INDEX:-0}"
 LIMIT="${LIMIT:-0}"
 BASELINE_DIR="${TOXICTOOL_BASELINE_DIR:-}"
 
-ADAPTERS="${ADAPTERS:-langgraph_react_full langgraph_react_caution langgraph_react_expectation_only langgraph_react_verification_only langgraph_react_guarded langgraph_react_guarded_light}"
+ADAPTERS="${ADAPTERS:-langgraph_react_full langgraph_react_caution langgraph_react_expectation_only langgraph_react_verification_only langgraph_react_double_pass langgraph_react_guarded langgraph_react_guarded_light}"
 PYTHONPATH_VALUE="toxictool_bench"
 if [[ -n "$BASELINE_DIR" ]]; then
   PYTHONPATH_VALUE="${PYTHONPATH_VALUE}:${BASELINE_DIR}/langgraph/libs/langgraph:${BASELINE_DIR}/langgraph/libs/prebuilt"

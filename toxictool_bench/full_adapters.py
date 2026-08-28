@@ -174,6 +174,16 @@ def run_full_adapter(
             temperature=temperature,
             max_tokens=max_tokens,
         )
+    elif adapter == "langgraph_react_double_pass":
+        result = run_langgraph_react_double_pass(
+            api_file=api_file,
+            model=model,
+            env=env,
+            task=task,
+            max_steps=max_steps,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
     elif adapter == "langgraph_react_guarded":
         result = run_langgraph_react_guarded(
             api_file=api_file,
@@ -664,6 +674,34 @@ def run_langgraph_react_verification_only(
             + verification.messages
         ),
         parse_errors=primary.parse_errors + verification.parse_errors,
+    )
+
+
+def run_langgraph_react_double_pass(
+    *,
+    api_file: Path,
+    model: str,
+    env: DataToolEnv,
+    task: dict[str, Any],
+    max_steps: int,
+    temperature: float,
+    max_tokens: int,
+) -> FullAdapterResult:
+    """Matched-compute baseline: two ordinary routes with no guard instruction."""
+    first = run_langgraph_react(
+        api_file=api_file, model=model, env=env, task=task,
+        max_steps=max_steps, temperature=temperature, max_tokens=max_tokens,
+    )
+    second = run_langgraph_react(
+        api_file=api_file, model=model, env=env, task=task,
+        max_steps=max_steps, temperature=temperature, max_tokens=max_tokens,
+    )
+    return FullAdapterResult(
+        final_answer=second.final_answer,
+        raw_actions=["langgraph_react.double_pass.first"] + first.raw_actions +
+        ["langgraph_react.double_pass.second"] + second.raw_actions,
+        messages=first.messages + second.messages,
+        parse_errors=first.parse_errors + second.parse_errors,
     )
 
 
