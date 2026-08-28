@@ -3,9 +3,9 @@
   "agreement": {
     "bcr": {
       "n": 80,
-      "percent_agreement": 0.95,
-      "cohen_kappa": 0.6893203883495141,
-      "positive_rate_a": 0.1125,
+      "percent_agreement": 0.9375,
+      "cohen_kappa": 0.6363636363636364,
+      "positive_rate_a": 0.125,
       "positive_rate_b": 0.0625
     },
     "adr": {
@@ -17,16 +17,16 @@
     },
     "vr": {
       "n": 80,
-      "percent_agreement": 0.55,
-      "cohen_kappa": 0.25117004680187216,
-      "positive_rate_a": 0.2875,
+      "percent_agreement": 0.2625,
+      "cohen_kappa": 7.526935760170552e-17,
+      "positive_rate_a": 0.0,
       "positive_rate_b": 0.7375
     },
     "rr": {
       "n": 80,
-      "percent_agreement": 0.8625,
-      "cohen_kappa": 0.683453237410072,
-      "positive_rate_a": 0.2375,
+      "percent_agreement": 0.6625,
+      "cohen_kappa": 0.12195121951219512,
+      "positive_rate_a": 0.0375,
       "positive_rate_b": 0.375
     }
   }

@@ -1,4 +1,4 @@
 model,adapter,clean_tsr,poisoned_tsr,delta_tsr,toxic_bcr,toxic_adr,toxic_vr,toxic_rr,poison_delivery_rate,n_exposed,avg_elapsed_clean,avg_elapsed_toxic,n
-gpt-5.4-mini,autogen_tool_agent,0.83,0.58,0.25,0.40,0.00,0.07,0.07,0.72,43,0.00,0.00,60
+gpt-5.4-mini,autogen_tool_agent,0.83,0.58,0.25,0.40,0.00,0.05,0.05,0.72,43,0.00,0.00,60
 gpt-5.4-mini,langgraph_react_full,0.87,0.33,0.53,0.73,0.00,0.02,0.02,0.73,44,0.00,0.00,60
-gpt-5.4-mini,smolagents_toolcalling,0.82,0.50,0.32,0.65,0.00,0.18,0.18,0.57,34,0.00,0.00,60
+gpt-5.4-mini,smolagents_toolcalling,0.82,0.50,0.32,0.65,0.00,0.15,0.15,0.57,34,0.00,0.00,60

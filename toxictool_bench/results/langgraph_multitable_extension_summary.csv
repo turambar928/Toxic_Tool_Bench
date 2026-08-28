@@ -1,4 +1,4 @@
 suite,adapter,clean_tsr,poisoned_tsr,delta_tsr,bcr,adr,vr,rr,poison_delivery_rate,n_exposed,n,source
-realistic_extension,Base,1.0,0.23076923076923078,0.7692307692307692,0.5384615384615384,0.0,0.38461538461538464,0.15384615384615385,1.0,13,13,toxictool_bench/results/20260728-002920_langgraph_react_full_gpt-5.4-mini_both.jsonl
+realistic_extension,Base,1.0,0.23076923076923078,0.7692307692307692,0.7692307692307693,0.0,0.15384615384615385,0.15384615384615385,1.0,13,13,toxictool_bench/results/20260728-002920_langgraph_react_full_gpt-5.4-mini_both.jsonl
 realistic_extension,Full guard,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,13,13,toxictool_bench/results/20260728-003314_langgraph_react_guarded_gpt-5.4-mini_both.jsonl
 realistic_extension,Light guard,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,13,13,toxictool_bench/results/20260728-004224_langgraph_react_guarded_light_gpt-5.4-mini_both.jsonl

@@ -1,0 +1,10 @@
+# Core benchmark and public adapters. Versions reflect the validated environment.
+numpy==1.26.4
+pandas==2.3.3
+langgraph==1.2.7
+langchain-core==1.4.8
+langchain-openai==1.3.3
+autogen-agentchat==0.7.5
+autogen-core==0.7.5
+pandasai==3.0.0
+pytest==8.3.5

@@ -5,7 +5,7 @@ gpt-5.4-mini,autogen_tool_agent,missing_filter,0.67,0.00,0.00,0.00,0.00,0.33,1,3
 gpt-5.4-mini,autogen_tool_agent,rank_swap,0.69,0.25,0.00,0.06,0.06,1.00,16,16
 gpt-5.4-mini,autogen_tool_agent,ratio_inversion,0.33,0.00,0.00,0.00,0.00,0.33,1,3
 gpt-5.4-mini,autogen_tool_agent,sign_flip,1.00,0.12,0.00,0.12,0.12,1.00,8,8
-gpt-5.4-mini,autogen_tool_agent,unit_conversion,1.00,0.00,0.00,1.00,1.00,1.00,1,1
+gpt-5.4-mini,autogen_tool_agent,unit_conversion,1.00,0.00,0.00,0.00,0.00,1.00,1,1
 gpt-5.4-mini,langgraph_react_full,aggregate_scale,0.38,0.81,0.00,0.00,0.00,0.62,16,26
 gpt-5.4-mini,langgraph_react_full,denominator_swap,0.00,0.00,0.00,0.00,0.00,0.00,0,3
 gpt-5.4-mini,langgraph_react_full,missing_filter,1.00,0.00,0.00,0.50,0.50,0.67,2,3
@@ -16,7 +16,7 @@ gpt-5.4-mini,langgraph_react_full,unit_conversion,0.00,1.00,0.00,0.00,0.00,1.00,
 gpt-5.4-mini,smolagents_toolcalling,aggregate_scale,0.58,0.83,0.00,0.08,0.08,0.46,12,26
 gpt-5.4-mini,smolagents_toolcalling,denominator_swap,0.00,0.00,0.00,0.00,0.00,0.00,0,3
 gpt-5.4-mini,smolagents_toolcalling,missing_filter,0.33,0.00,0.00,0.00,0.00,0.67,2,3
-gpt-5.4-mini,smolagents_toolcalling,rank_swap,0.38,0.71,0.00,0.29,0.29,0.88,14,16
+gpt-5.4-mini,smolagents_toolcalling,rank_swap,0.38,0.71,0.00,0.21,0.21,0.88,14,16
 gpt-5.4-mini,smolagents_toolcalling,ratio_inversion,0.00,1.00,0.00,0.00,0.00,0.33,1,3
 gpt-5.4-mini,smolagents_toolcalling,sign_flip,1.00,0.00,0.00,0.25,0.25,0.50,4,8
 gpt-5.4-mini,smolagents_toolcalling,unit_conversion,0.00,1.00,0.00,0.00,0.00,1.00,1,1

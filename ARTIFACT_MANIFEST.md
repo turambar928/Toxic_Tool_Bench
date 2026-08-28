@@ -9,6 +9,8 @@ This manifest lists the paper-facing artifacts needed to inspect and reproduce t
 | Artifact | Purpose |
 |---|---|
 | `main.tex` | Main paper entry point. |
+| `REPRODUCIBILITY.md` | Environment, seeds, stress matrix, and release checks. |
+| `LICENSE` / `DATA_LICENSE.md` | Code and synthetic benchmark-data licensing. |
 | `sections/*.tex` | Paper sections and appendix. |
 | `references.bib` | Bibliography database. |
 | `SUBMISSION_CHECKLIST.md` | Reviewer-issue coverage and final PDF checklist. |

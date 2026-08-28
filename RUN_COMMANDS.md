@@ -169,6 +169,7 @@ manifest, then regenerate compact public summaries and the scorer diagnostic:
 ```bash
 python3 toxictool_bench/rebuild_paper_results.py
 python3 toxictool_bench/build_artifact_checksums.py
+python3 toxictool_bench/release_audit.py
 python3 toxictool_bench/build_public_paper_summaries.py
 python3 toxictool_bench/recalibrate_author_audit.py
 ```

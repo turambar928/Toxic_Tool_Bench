@@ -9,8 +9,8 @@ runs.
 Command shape:
 
 ```bash
-export TOXICTOOL_BASELINE_DIR=/home/taozifu2025/data2mcpv2/baseline_agent
-export TOXICTOOL_DATA2MCP_SRC=/home/taozifu2025/data2mcpv2/src
+export TOXICTOOL_BASELINE_DIR=/path/to/project/data2mcpv2/baseline_agent
+export TOXICTOOL_DATA2MCP_SRC=/path/to/project/data2mcpv2/src
 
 LIMIT=5 \
 ADAPTERS="data2mcp_dataframe data2mcp_dataframe_caution data2mcp_dataframe_expectation_only data2mcp_dataframe_verification_only data2mcp_dataframe_guarded data2mcp_dataframe_guarded_light" \
@@ -47,8 +47,8 @@ Interpretation:
 Command shape:
 
 ```bash
-export TOXICTOOL_BASELINE_DIR=/home/taozifu2025/data2mcpv2/baseline_agent
-export TOXICTOOL_DATA2MCP_SRC=/home/taozifu2025/data2mcpv2/src
+export TOXICTOOL_BASELINE_DIR=/path/to/project/data2mcpv2/baseline_agent
+export TOXICTOOL_DATA2MCP_SRC=/path/to/project/data2mcpv2/src
 
 LIMIT=5 \
 ADAPTERS="data2mcp_dataframe data2mcp_dataframe_caution data2mcp_dataframe_expectation_only data2mcp_dataframe_verification_only data2mcp_dataframe_guarded data2mcp_dataframe_guarded_light" \
