@@ -80,10 +80,11 @@ class ChatClient:
                 return body["choices"][0]["message"]["content"]
             except urllib.error.HTTPError as exc:
                 detail = exc.read().decode("utf-8", errors="replace")
-                if exc.code not in {429, 500, 502, 503, 504} or attempt >= self.max_retries:
+                retryable = exc.code in {429, 500, 502, 503, 504} or _is_nested_transient(detail)
+                if not retryable or attempt >= self.max_retries:
                     raise RuntimeError(f"LLM HTTP {exc.code}: {detail}") from exc
                 time.sleep(_retry_delay(exc, attempt))
-            except urllib.error.URLError as exc:
+            except (urllib.error.URLError, TimeoutError) as exc:
                 if attempt >= self.max_retries:
                     raise RuntimeError(f"LLM URL error: {exc}") from exc
                 time.sleep(_retry_delay(None, attempt))
@@ -99,3 +100,11 @@ def _retry_delay(exc: urllib.error.HTTPError | None, attempt: int) -> float:
             except ValueError:
                 pass
     return min(2.0 * (2**attempt), 120.0)
+
+
+def _is_nested_transient(detail: str) -> bool:
+    lowered = detail.lower()
+    return any(
+        marker in lowered
+        for marker in ("model_not_provisioned", "no available channel", "rate limit", "temporarily unavailable")
+    )
