@@ -79,7 +79,7 @@ def write_summary(rows: list[dict[str, Any]], path: Path) -> None:
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         for key, group in sorted(groups.items()):
             suite, model, adapter, environment = key

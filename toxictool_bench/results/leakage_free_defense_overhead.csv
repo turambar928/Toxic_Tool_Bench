@@ -1,0 +1,17 @@
+suite,model,adapter,environment,n,elapsed_n,elapsed_coverage,mean_elapsed_seconds,p50_elapsed_seconds,p90_elapsed_seconds,avg_tool_events,avg_raw_actions,avg_final_chars
+numerical,claude-haiku-4-5-20251001,langgraph_react_double_pass,clean,60,60,1.00,34.60,32.19,51.64,4.35,8.40,122.62
+numerical,claude-haiku-4-5-20251001,langgraph_react_double_pass,toxic,60,60,1.00,31.22,25.65,50.31,4.45,8.47,137.67
+numerical,claude-haiku-4-5-20251001,langgraph_react_full,clean,60,60,1.00,16.88,12.97,30.94,2.23,3.27,137.60
+numerical,claude-haiku-4-5-20251001,langgraph_react_full,toxic,60,60,1.00,16.35,14.82,27.37,2.32,3.35,164.37
+numerical,claude-haiku-4-5-20251001,langgraph_react_guarded,clean,60,60,1.00,38.45,37.44,58.06,4.47,9.47,249.98
+numerical,claude-haiku-4-5-20251001,langgraph_react_guarded,toxic,60,60,1.00,40.19,39.46,60.35,4.62,9.62,257.45
+numerical,claude-haiku-4-5-20251001,langgraph_react_verification_only,clean,60,60,1.00,30.84,27.70,44.88,4.27,8.27,199.52
+numerical,claude-haiku-4-5-20251001,langgraph_react_verification_only,toxic,60,60,1.00,31.69,29.61,52.93,4.30,8.32,209.08
+semantic_schema,claude-haiku-4-5-20251001,langgraph_react_double_pass,clean,60,60,1.00,40.72,38.35,60.98,4.75,9.90,221.30
+semantic_schema,claude-haiku-4-5-20251001,langgraph_react_double_pass,toxic,60,60,1.00,41.10,37.97,65.86,4.77,9.80,226.37
+semantic_schema,claude-haiku-4-5-20251001,langgraph_react_full,clean,60,60,1.00,18.23,17.23,29.43,2.30,3.85,220.00
+semantic_schema,claude-haiku-4-5-20251001,langgraph_react_full,toxic,60,60,1.00,17.60,16.33,30.89,2.40,3.90,227.72
+semantic_schema,claude-haiku-4-5-20251001,langgraph_react_guarded,clean,60,60,1.00,39.60,38.11,55.96,4.83,10.23,294.87
+semantic_schema,claude-haiku-4-5-20251001,langgraph_react_guarded,toxic,60,60,1.00,39.61,36.65,57.13,5.10,10.38,305.52
+semantic_schema,claude-haiku-4-5-20251001,langgraph_react_verification_only,clean,60,60,1.00,33.92,30.70,53.90,4.52,9.08,232.17
+semantic_schema,claude-haiku-4-5-20251001,langgraph_react_verification_only,toxic,60,60,1.00,36.34,31.99,55.60,4.57,9.10,233.98

@@ -8,7 +8,7 @@ import sys
 BENCH_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BENCH_DIR))
 
-from summarize_chunked_matrix import select_latest_complete_chunk  # noqa: E402
+from summarize_chunked_matrix import normalize_chunks, parse_suite_chunks, select_latest_complete_chunk  # noqa: E402
 
 
 def write_jsonl(path: Path, rows: list[dict]):
@@ -91,3 +91,22 @@ def test_select_latest_complete_chunk_accepts_legacy_start_zero_name(tmp_path):
 
     assert selection is not None
     assert selection.path == legacy
+
+
+def test_normalize_chunks_supports_mixed_sizes():
+    assert normalize_chunks(None, None, ["0:5", "5:5", "20:20"]) == [
+        (0, 5),
+        (5, 5),
+        (20, 20),
+    ]
+
+
+def test_normalize_chunks_preserves_legacy_starts_and_limit():
+    assert normalize_chunks([0, 20, 40], 20, None) == [(0, 20), (20, 20), (40, 20)]
+
+
+def test_parse_suite_chunks_supports_distinct_suite_layouts():
+    assert parse_suite_chunks(["numerical=0:20,20:20", "semantic=0:5,5:5"]) == {
+        "numerical": [(0, 20), (20, 20)],
+        "semantic": [(0, 5), (5, 5)],
+    }
