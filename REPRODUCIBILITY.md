@@ -2,8 +2,7 @@
 
 ## Environment
 
-The validated public-adapter environment is recorded in `requirements.txt`.
-Install it with:
+The validated public-adapter dependencies are pinned in `requirements.txt`:
 
 ```bash
 python3 -m venv .venv
@@ -11,47 +10,53 @@ python3 -m venv .venv
 python3 -m pip install -r requirements.txt
 ```
 
-The benchmark does not require the ignored `api` file to run its scorer or tests.
-Model runs require a local API configuration with a supported model and endpoint;
-the configuration is deliberately excluded from the repository.
+Scoring and tests do not require the ignored `api` file. Model runs require local endpoint configuration, which is deliberately excluded from the repository.
 
 ## Determinism
 
-All bootstrap commands default to seed `13`. Probabilistic poisoning derives its
-gate from a SHA-256 digest of task ID, tool name, call index, and arguments.
-Tasks, raw logs, summaries, and their checksums are listed in
-`toxictool_bench/results/paper_run_manifest.csv` and
-`toxictool_bench/results/artifact_sha256.csv`.
+Bootstrap commands use seed `13` unless overridden. Repeated poisoning derives each gate from a SHA-256 digest of task ID, tool name, call index, and arguments. The independent audit packet uses seed `20260831`. Task files, selected logs, summaries, and checksums are listed in the result manifests and `artifact_sha256.csv`.
 
-## Verification runs
+## Leakage-Free Defense Results
 
-The complete repeated-observation matrix is launched by:
+The paper-facing defense ablation uses `claude-haiku-4-5-20251001` and four LangGraph variants: Base, matched Double-pass, Verification-only, and Generic Guard. Rebuild its summaries, task-level bootstrap intervals, poison/severity tables, and overhead table with:
 
 ```bash
-MODEL=gpt-5.4-mini bash toxictool_bench/run_full_verification_stress.sh
+bash toxictool_bench/rebuild_leakage_free_defense_results.sh
 ```
 
-This matrix uses the same source tables for both routes. It tests repeated
-returned-observation corruption, not source-independent or Byzantine corruption.
-For a budget-matched control, use adapter
-`langgraph_react_double_pass`; it executes two ordinary routes without guard
-expectations or access to the primary answer.
+The matched Double-pass adapter executes two ordinary routes with the same per-route cap, without expectations or primary-answer handoff.
 
-## External checkouts
+## Repeated-Poison Matrix
 
-Adapters that rely on source checkouts accept `TOXICTOOL_BASELINE_DIR`. Their
-expected import paths are documented in `RUN_COMMANDS.md`. A release should
-record the exact checkout commit for every external adapter before archival;
-the current experiments use installed public packages for the adapters listed
-in `requirements.txt` and do not vendor those repositories.
-
-## Release audit
-
-Run the following before publishing:
+The complete matrix covers three suites, three two-route variants, and probabilities 0.25, 0.50, 0.75, and 1.00:
 
 ```bash
-python3 toxictool_bench/release_audit.py
+MODEL=claude-haiku-4-5-20251001 \
+  bash toxictool_bench/run_full_verification_stress.sh
+python3 toxictool_bench/summarize_verification_stress.py
+python3 toxictool_bench/plot_verification_stress.py
+```
+
+The matrix corrupts matching returned observations repeatedly. Primary and verification routes still share source tables and a backend, so this is not source-independent or Byzantine corruption.
+
+## Independent Audit
+
+Build the fixed blinded packet and, after two annotators independently complete and lock their sheets, compute agreement:
+
+```bash
+python3 toxictool_bench/build_blind_audit_packet.py
+python3 toxictool_bench/merge_blind_audit.py
+```
+
+Do not expose `key.csv`, raw scorer outputs, or one annotator's labels to the other. Report Cohen's kappa on pre-adjudication labels.
+
+## Release Checks
+
+```bash
 python3 toxictool_bench/build_artifact_checksums.py
+python3 toxictool_bench/release_audit.py
 python3 toxictool_bench/check_paper_static.py --main main.tex
 python3 -m pytest toxictool_bench/tests -q
 ```
+
+Adapters using external source checkouts accept `TOXICTOOL_BASELINE_DIR`; expected imports are documented in `RUN_COMMANDS.md`. Code and synthetic benchmark data are covered by `LICENSE` and `DATA_LICENSE.md`.

@@ -79,53 +79,40 @@ bash toxictool_bench/run_expanded_full_adapters.sh claude-sonnet-4-6 toxictool_b
 bash toxictool_bench/run_expanded_full_adapters.sh Qwen3.6-35B-A3B-no-thinking toxictool_bench/tasks/numerical_expanded.jsonl
 ```
 
-## LangGraph Guarded Verification Ablation
+## Leakage-Free LangGraph Defense
 
-Run the six-way ablation on a task file:
+The paper-facing ablation uses Base, matched Double-pass, Verification-only,
+and Generic Guard with `claude-haiku-4-5-20251001`. The selected raw logs are
+already released; rebuild every summary and CI with:
 
 ```bash
-TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent \
-ADAPTERS="langgraph_react_full langgraph_react_caution langgraph_react_expectation_only langgraph_react_verification_only langgraph_react_guarded langgraph_react_guarded_light" \
-bash toxictool_bench/run_langgraph_guard_ablation.sh \
-  gpt-5.4-mini toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
+bash toxictool_bench/rebuild_leakage_free_defense_results.sh
 ```
 
-Numerical expanded ablation:
+For a one-task post-fix smoke run, select one of
+`langgraph_react_full`, `langgraph_react_double_pass`,
+`langgraph_react_verification_only`, or `langgraph_react_guarded`:
 
 ```bash
-TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent \
-ADAPTERS="langgraph_react_full langgraph_react_caution langgraph_react_expectation_only langgraph_react_verification_only langgraph_react_guarded langgraph_react_guarded_light" \
-bash toxictool_bench/run_langgraph_guard_ablation.sh \
-  gpt-5.4-mini toxictool_bench/tasks/numerical_iclr2027.jsonl
+python3 toxictool_bench/run_full_bench.py \
+  --tasks toxictool_bench/tasks/semantic_schema_iclr2027.jsonl \
+  --adapter langgraph_react_guarded \
+  --model claude-haiku-4-5-20251001 \
+  --env both \
+  --limit 1 \
+  --max-steps 6
 ```
 
-Multi-table join extension:
+## Complete Repeated-Poison Stress
+
+The resumable runner covers numerical, semantic/schema, and multi-table suites
+for three two-route variants at probabilities 0.25, 0.50, 0.75, and 1.00:
 
 ```bash
-TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent \
-ADAPTERS="langgraph_react_full langgraph_react_guarded langgraph_react_guarded_light" \
-bash toxictool_bench/run_langgraph_guard_ablation.sh \
-  gpt-5.4-mini toxictool_bench/tasks/realistic_extension_iclr2027.jsonl
-```
-
-## AutoGen Guarded Verification Replication
-
-Run AutoGen verification-only and guarded variants on a task file:
-
-```bash
-TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent \
-ADAPTERS="autogen_verification_only autogen_guarded" \
-bash toxictool_bench/run_autogen_guard_replication.sh \
-  gpt-5.4-mini toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
-```
-
-For long runs, use chunks:
-
-```bash
-TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent \
-START_INDEX=0 LIMIT=20 ADAPTERS="autogen_guarded" \
-bash toxictool_bench/run_autogen_guard_replication.sh \
-  gpt-5.4-mini toxictool_bench/tasks/numerical_iclr2027.jsonl
+MODEL=claude-haiku-4-5-20251001 \
+  bash toxictool_bench/run_full_verification_stress.sh
+python3 toxictool_bench/summarize_verification_stress.py
+python3 toxictool_bench/plot_verification_stress.py
 ```
 
 ## Alternative LangGraph Policies
@@ -147,20 +134,6 @@ Valid policy suffixes are `abstain`, `randomized`, and `selective`. For the
 semantic subset, replace the task path with
 `toxictool_bench/tasks/semantic_schema_iclr2027_stratified10.jsonl`.
 
-Repeated probabilistic poisoning stress test:
-
-```bash
-TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent \
-python3 toxictool_bench/run_full_bench.py \
-  --tasks toxictool_bench/tasks/semantic_schema_iclr2027_stratified10.jsonl \
-  --adapter langgraph_react_guarded \
-  --model gpt-5.4-mini \
-  --env toxic \
-  --max-steps 8 \
-  --poison-repeat \
-  --poison-probability 0.50
-```
-
 ## Summaries and Confidence Intervals
 
 Rebuild every paper-facing summary from the raw runs listed in the immutable
@@ -168,6 +141,9 @@ manifest, then regenerate compact public summaries and the scorer diagnostic:
 
 ```bash
 python3 toxictool_bench/rebuild_paper_results.py
+bash toxictool_bench/rebuild_leakage_free_defense_results.sh
+python3 toxictool_bench/summarize_verification_stress.py
+python3 toxictool_bench/plot_verification_stress.py
 python3 toxictool_bench/build_artifact_checksums.py
 python3 toxictool_bench/release_audit.py
 python3 toxictool_bench/build_public_paper_summaries.py
@@ -220,15 +196,14 @@ toxictool_bench/results/*.csv
 Current paper-facing summary artifacts:
 
 ```text
-toxictool_bench/results/langgraph_guarded_ablation_summary.csv
-toxictool_bench/results/langgraph_guarded_ablation_suite_summary.csv
-toxictool_bench/results/langgraph_guarded_overhead_summary.csv
-toxictool_bench/results/langgraph_guarded_bootstrap_ci.csv
-toxictool_bench/results/langgraph_multitable_extension_summary.csv
-toxictool_bench/results/autogen_guarded_replication_summary.csv
-toxictool_bench/results/autogen_guarded_replication_suite_summary.csv
-toxictool_bench/results/autogen_guarded_replication_bootstrap_ci.csv
+toxictool_bench/results/leakage_free_defense_combined_summary.csv
+toxictool_bench/results/leakage_free_defense_combined_bootstrap_ci.csv
+toxictool_bench/results/leakage_free_defense_overhead.csv
+toxictool_bench/results/leakage_free_defense_manifest.csv
+toxictool_bench/results/verification_stress_summary.csv
+toxictool_bench/results/verification_stress_manifest.csv
 toxictool_bench/results/paper_run_manifest.csv
 toxictool_bench/results/strict_scorer_author_audit_comparison.csv
 toxictool_bench/results/strict_scorer_author_audit_agreement.json
+toxictool_bench/results/human_audit_v2/evidence.csv
 ```

@@ -1,116 +1,48 @@
 # ToxicBench Experiment Results
 
-Last updated: 2026-07-28
+Last updated: 2026-08-31
 
-This file summarizes the current paper-facing results. The defense mainline now uses LangGraph ReAct rather than an unpublished custom agent.
+## Benchmark Evidence
 
-## Completed Suites
+The paper reports a 34-task numerical and 24-task semantic/schema cross-model evaluation, a 120-task GPT-only cross-agent evaluation, and a 13-task multi-table extension. Across LangGraph, smolagents, PandasAI, DA-Agent, and AutoGen where feasible, clean competence coexists with poisoned-task degradation and nonzero exposure-conditioned BCR. Detailed adapter/model tables remain in the released cross-model and expanded summary CSVs.
 
-- Cross-model numerical suite: 34 tasks over 11 CSV datasets.
-- Cross-model semantic/schema suite: 24 tasks over 14 CSV datasets.
-- Expanded GPT-only suite: 120 tasks, split into 60 numerical and 60 semantic/schema tasks.
-- Multi-table join extension: 13 tasks over joined table pairs.
-- Guarded Verification ablation: six LangGraph ReAct variants on the expanded 120-task suite.
+## Leakage-Free Defense Ablation
 
-## Main Expanded Cross-Agent Result
-
-GPT-only expanded results on 120 tasks:
-
-| Adapter | Clean TSR | Poisoned TSR | Delta TSR | BCR | ADR | VR | RR |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| `langgraph_react_full` | 0.93 | 0.60 | 0.33 | 0.33 | 0.07 | 0.43 | 0.44 |
-| `smolagents_toolcalling` | 0.91 | 0.55 | 0.36 | 0.38 | 0.00 | 0.10 | 0.10 |
-| `autogen_tool_agent` | 0.92 | 0.65 | 0.27 | 0.20 | 0.06 | 0.45 | 0.37 |
-
-Artifact:
-
-```text
-toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_summary.csv
-```
-
-## LangGraph Guarded Verification Ablation
-
-Combined 120-task ablation:
+The current defense mainline uses LangGraph ReAct with `claude-haiku-4-5-20251001`. Generic expectations have no access to poison type, expected behavior, or the clean oracle.
 
 | Variant | Clean TSR | Poisoned TSR | Delta TSR | BCR | ADR | VR | RR |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Base | 0.93 | 0.62 | 0.31 | 0.30 | 0.06 | 0.44 | 0.42 |
-| Caution only | 0.94 | 0.68 | 0.26 | 0.21 | 0.06 | 0.44 | 0.41 |
-| Expectation only | 0.94 | 0.61 | 0.33 | 0.28 | 0.02 | 0.43 | 0.39 |
-| Verification only | 0.91 | 0.89 | 0.02 | 0.00 | 1.00 | 0.91 | 0.89 |
-| Full guard | 0.93 | 0.93 | 0.01 | 0.00 | 1.00 | 0.87 | 0.93 |
-| Light guard | 0.91 | 0.93 | -0.02 | 0.00 | 1.00 | 0.87 | 0.93 |
+| Base | 0.91 | 0.82 | 0.09 | 0.11 | 0.01 | 0.47 | 0.46 |
+| Double-pass | 0.91 | 0.92 | -0.01 | 0.01 | 0.00 | 0.98 | 0.95 |
+| Verification-only | 0.92 | 0.93 | -0.01 | 0.02 | 0.02 | 0.96 | 0.95 |
+| Generic Guard | 0.93 | 0.93 | 0.00 | 0.00 | 0.02 | 0.97 | 0.94 |
 
-Suite breakdown:
+Artifacts use the `toxictool_bench/results/leakage_free_defense_*` prefix. The matched Double-pass result shows that a second evidence route accounts for most of the gain.
 
-| Suite | Variant | Clean TSR | Poisoned TSR | BCR | VR | RR |
-|---|---|---:|---:|---:|---:|---:|
-| Semantic/schema | Base | 1.00 | 0.82 | 0.13 | 0.85 | 0.80 |
-| Semantic/schema | Full guard | 0.98 | 0.98 | 0.00 | 1.00 | 0.98 |
-| Semantic/schema | Light guard | 0.98 | 0.98 | 0.00 | 1.00 | 0.98 |
-| Numerical | Base | 0.85 | 0.42 | 0.47 | 0.03 | 0.03 |
-| Numerical | Full guard | 0.88 | 0.87 | 0.00 | 0.73 | 0.87 |
-| Numerical | Light guard | 0.83 | 0.87 | 0.00 | 0.73 | 0.87 |
+## Repeated-Poison Stress
 
-Artifacts:
+The complete stress matrix contains 1,596 toxic trajectories: 60 numerical, 60 semantic/schema, and 13 multi-table tasks; three two-route variants; and poisoning probabilities 0.25, 0.50, 0.75, and 1.00.
 
-```text
-toxictool_bench/results/langgraph_guarded_ablation_summary.csv
-toxictool_bench/results/langgraph_guarded_ablation_suite_summary.csv
-toxictool_bench/results/langgraph_guarded_overhead_summary.csv
-toxictool_bench/results/langgraph_guarded_bootstrap_ci.csv
-```
+At probability 1.00:
 
-## AutoGen Guarded Verification Replication
+| Suite | Variant | Poisoned TSR | BCR | RR |
+|---|---|---:|---:|---:|
+| Numerical | Verification-only | 0.68 | 0.44 | 0.09 |
+| Numerical | Double-pass | 0.63 | 0.24 | 0.02 |
+| Numerical | Generic Guard | 0.73 | 0.24 | 0.24 |
+| Semantic/schema | Verification-only | 0.97 | 0.13 | 0.82 |
+| Semantic/schema | Double-pass | 0.95 | 0.08 | 0.75 |
+| Semantic/schema | Generic Guard | 0.87 | 0.10 | 0.87 |
+| Multi-table | Verification-only | 0.69 | 0.38 | 0.38 |
+| Multi-table | Double-pass | 0.54 | 0.38 | 0.46 |
+| Multi-table | Generic Guard | 0.54 | 0.00 | 0.46 |
 
-The defense effect was replicated on AutoGen over the same 120 expanded tasks.
+The result narrows the claim: zero BCR is observed under `poison_once`, while repeated corruption can restore blind compliance and reduce recovery. Artifacts are `verification_stress_summary.csv`, `verification_stress_manifest.csv`, and `figures/verification_stress_curves.pdf`.
 
-| Variant | Clean TSR | Poisoned TSR | Delta TSR | BCR | ADR | VR | RR |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| `autogen_verification_only` | 0.93 | 0.93 | 0.00 | 0.00 | 1.00 | 0.86 | 0.93 |
-| `autogen_guarded` | 0.92 | 0.93 | -0.01 | 0.00 | 1.00 | 0.87 | 0.93 |
+## Cost
 
-Artifacts:
+Across the two 60-task suites, Base averages 16.98 seconds and 2.36 tool events per toxic run. Generic Guard averages 39.90 seconds and 4.86 events; Double-pass averages 36.16 seconds. The gateway does not provide consistent token usage, so the paper does not infer dollar costs.
 
-```text
-toxictool_bench/results/autogen_guarded_replication_summary.csv
-toxictool_bench/results/autogen_guarded_replication_suite_summary.csv
-toxictool_bench/results/autogen_guarded_replication_bootstrap_ci.csv
-toxictool_bench/results/autogen_verification_only_gpt-5.4-mini_expanded120_combined.jsonl
-toxictool_bench/results/autogen_guarded_gpt-5.4-mini_expanded120_combined.jsonl
-```
+## Audit Status
 
-## Multi-Table Join Extension
-
-LangGraph ReAct on 13 join-style tasks:
-
-| Variant | Clean TSR | Poisoned TSR | BCR | RR | Clean sec. | Toxic sec. |
-|---|---:|---:|---:|---:|---:|---:|
-| Base | 1.00 | 0.23 | 0.77 | 0.15 | 8.42 | 9.55 |
-| Full guard | 1.00 | 1.00 | 0.00 | 1.00 | 18.92 | 23.27 |
-| Light guard | 1.00 | 1.00 | 0.00 | 1.00 | 17.92 | 22.96 |
-
-Artifact:
-
-```text
-toxictool_bench/results/langgraph_multitable_extension_summary.csv
-```
-
-## Cross-Model Results
-
-The cross-model runs use the smaller 34-task numerical and 24-task semantic/schema suites. They show the same main pattern: high clean TSR does not imply low blind compliance. The paper uses compact adapter-mean tables, with full adapter-level artifacts here:
-
-```text
-toxictool_bench/results/cross_model_summary.csv
-toxictool_bench/results/semantic_schema_cross_model_summary.csv
-toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv
-toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv
-```
-
-## Main Takeaways
-
-1. Silent tool poisoning exposes a gap between tool-use competence and tool-trust calibration.
-2. Rank swaps, label swaps, and plausible aggregate scaling induce more blind compliance than obvious sign flips.
-3. Prompt-only caution is insufficient; independent verification is the active ingredient.
-4. LangGraph Guarded Verification reduces observed BCR to 0.00 on the expanded 120-task ablation and on the 13-task join extension, while improving poisoned-task success.
-5. AutoGen replication shows the same BCR reduction on the expanded 120-task suite, strengthening the mitigation claim beyond a single framework.
+The historical 80-run repeated-author comparison is diagnostic, not IAA. A separate blinded 120-trajectory packet is ready for two independent annotators. No IAA claim is made until both sheets are locked and merged.
