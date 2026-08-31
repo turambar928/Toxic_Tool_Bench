@@ -214,6 +214,13 @@ Multi-table & Verification only & 0.69 & 0.38 & 0.54 & 0.38 & 1.00 \\
 \label{tab:appendix-multiroute-stress}
 \end{table}
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.86\textwidth]{figures/verification_stress_curves}
+\caption{Full repeated-poison stress test. Each column covers a complete suite; rows report poisoned TSR, exposure-conditioned BCR, and RR as the probability of poisoning each eligible route observation increases. No method dominates across suites. Numerical recovery falls sharply, semantic/schema tasks remain more recoverable, and the 13-task multi-table estimates have visibly high variance. The corruption acts on returned observations, not the shared source.}
+\label{fig:guard-tradeoff}
+\end{figure*}
+
 The command template is:
 \begin{verbatim}
 python3 toxictool_bench/run_full_bench.py \

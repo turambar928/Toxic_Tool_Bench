@@ -14,6 +14,7 @@ venv/
 env/
 
 # LaTeX build artifacts
+main.pdf
 *.aux
 *.bbl
 *.bcf
