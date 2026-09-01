@@ -1,5 +1,7 @@
 # ToxicBench Independent Audit Protocol
 
+中文操作说明见 `ANNOTATOR_GUIDE_CN.md`。不了解项目的标注者只需阅读 `evidence.csv`，并填写自己对应的 `annotator_a.csv` 或 `annotator_b.csv`。
+
 This packet contains 120 exposed toxic trajectories sampled with a fixed seed
 from the full repeated-poison matrix. Sampling rotates across suite, adapter,
 and poison probability. Annotators must work independently and must not inspect
