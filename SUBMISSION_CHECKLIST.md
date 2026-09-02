@@ -12,7 +12,7 @@ Last updated: 2026-08-31
 | `poison_once` assumption | A full 1,596-run matrix covers 60 numerical, 60 semantic/schema, and 13 multi-table tasks at route-poison probabilities 0.25, 0.50, 0.75, and 1.00. BCR returns and RR falls under repeated poisoning. |
 | Route independence | The paper distinguishes observation, execution-route, and source independence. Source-independent coverage is 0/133; no Byzantine-source guarantee is claimed. |
 | Deterministic scoring | Main text gives compact BCR/ADR/VR/RR rules. The appendix gives temporal requirements, borderline cases, and the conservative lexical ADR limitation. |
-| Human audit / IAA | The historical 80-run repeated-author comparison is explicitly not IAA. A blinded 120-trajectory, two-annotator packet is released; genuine IAA remains pending until both external label sheets are locked. |
+| Human audit / IAA | A blinded 120-trajectory audit is complete. Pre-adjudication macro agreement is 0.967 and macro Cohen's kappa is 0.913; 12 trajectories are released for separate adjudication. |
 | Cost and latency | Main text and appendix report mean, p50, and p90 latency plus tool-event counts. Dollar cost is omitted because the gateway does not provide consistent token accounting. |
 | Stronger baselines | Results include Base, matched Double-pass, Verification-only, Generic Guard, plus fixed-subset abstain, randomized, and keyword-selective policies. |
 | Stronger adversary | Complete repeated-observation poisoning results and confidence intervals are released. Shared-source, parser, and cache corruption remain outside the measured threat model. |
@@ -23,7 +23,7 @@ Last updated: 2026-08-31
 
 ## Remaining External Step
 
-Two independent annotators must complete `results/human_audit_v2/annotator_a.csv` and `annotator_b.csv` without seeing the scorer key or each other's labels. Only then should `merge_blind_audit.py` be run and pre-adjudication Cohen's kappa reported.
+The two independent annotators completed `toxictool_bench/human_audit_v2/annotator_a.csv` and `annotator_b.csv`. The merge output is in the same directory. Remaining work is optional adjudication of the 12 disagreement rows; Cohen's kappa must remain based on the pre-adjudication labels.
 
 ## Final PDF Checks
 

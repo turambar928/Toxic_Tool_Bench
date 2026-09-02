@@ -48,6 +48,10 @@ python3 toxictool_bench/build_blind_audit_packet.py
 python3 toxictool_bench/merge_blind_audit.py
 ```
 
+The completed packet is stored in `toxictool_bench/human_audit_v2/`. The
+pre-adjudication macro Cohen's kappa is 0.913 over 120 trajectories. The merge
+script lists 12 rows with at least one disagreement in `adjudication.csv`.
+
 Do not expose `key.csv`, raw scorer outputs, or one annotator's labels to the other. Report Cohen's kappa on pre-adjudication labels.
 
 ## Release Checks

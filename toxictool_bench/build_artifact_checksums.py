@@ -28,6 +28,8 @@ def main() -> None:
         ROOT / "toxictool_bench/poisoners.py",
         MANIFEST,
     }
+    audit_dir = ROOT / "toxictool_bench/human_audit_v2"
+    paths.update(path for path in audit_dir.iterdir() if path.is_file() and path.name != "key.csv")
     with MANIFEST.open(newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
             paths.add(ROOT / row["source"])

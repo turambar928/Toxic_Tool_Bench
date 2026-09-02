@@ -44,6 +44,7 @@ toxictool_bench/results/human_audit_v2/key.csv
 toxictool_bench/results/human_audit_v2/merged_labels.csv
 toxictool_bench/results/human_audit_v2/adjudication.csv
 toxictool_bench/results/human_audit_v2/agreement.json
+toxictool_bench/human_audit_v2/key.csv
 
 # Paper-facing LangGraph reruns referenced by paper_run_manifest.csv.
 !toxictool_bench/results/20260819-20*_langgraph_react_guarded_gpt-5.4-mini_toxic.jsonl

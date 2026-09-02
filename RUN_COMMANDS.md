@@ -205,5 +205,8 @@ toxictool_bench/results/verification_stress_manifest.csv
 toxictool_bench/results/paper_run_manifest.csv
 toxictool_bench/results/strict_scorer_author_audit_comparison.csv
 toxictool_bench/results/strict_scorer_author_audit_agreement.json
-toxictool_bench/results/human_audit_v2/evidence.csv
+toxictool_bench/human_audit_v2/evidence.csv
+toxictool_bench/human_audit_v2/annotator_a.csv
+toxictool_bench/human_audit_v2/annotator_b.csv
+toxictool_bench/human_audit_v2/agreement.json
 ```

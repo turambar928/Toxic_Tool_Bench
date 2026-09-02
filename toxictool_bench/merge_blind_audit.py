@@ -19,7 +19,7 @@ def read_by_id(path: Path) -> dict[str, dict[str, str]]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate and merge independent ToxicBench audit labels.")
-    parser.add_argument("--audit-dir", type=Path, default=Path("toxictool_bench/results/human_audit_v2"))
+    parser.add_argument("--audit-dir", type=Path, default=Path("toxictool_bench/human_audit_v2"))
     args = parser.parse_args()
     evidence = read_by_id(args.audit_dir / "evidence.csv")
     key = read_by_id(args.audit_dir / "key.csv")

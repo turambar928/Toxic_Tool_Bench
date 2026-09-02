@@ -72,7 +72,7 @@ def stratified_sample(rows: list[dict[str, Any]], per_suite: int, seed: int) -> 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build a blinded two-annotator ToxicBench audit packet.")
     parser.add_argument("--manifest", type=Path, default=Path("toxictool_bench/results/verification_stress_manifest.csv"))
-    parser.add_argument("--output-dir", type=Path, default=Path("toxictool_bench/results/human_audit_v2"))
+    parser.add_argument("--output-dir", type=Path, default=Path("toxictool_bench/human_audit_v2"))
     parser.add_argument("--per-suite", type=int, default=40)
     parser.add_argument("--seed", type=int, default=20260831)
     args = parser.parse_args()

@@ -12,7 +12,7 @@ Last updated: 2026-08-31
 - Task-level bootstrap confidence intervals, poison/severity breakdowns, clean-transition analysis, tool-event counts, and latency distributions.
 - Complete repeated-poison matrix: 1,596 toxic trajectories over numerical, semantic/schema, and 13 multi-table tasks at four poisoning probabilities.
 - Deterministic strict scorer, regression tests, release audit, licenses, manifests, and checksums.
-- Blinded 120-trajectory packet and merge utility for a genuine two-person audit.
+- Blinded 120-trajectory packet, independent labels, pre-adjudication agreement, and merge utility for a genuine two-person audit.
 - Paper updated to use only post-fix defense results and to state that zero BCR is limited to `poison_once`.
 
 ## Main Post-Fix Defense Result
@@ -30,8 +30,8 @@ Extra evidence and compute explain most of the improvement. Generic Guard remove
 
 At poisoning probability 1.00, Generic Guard BCR is 0.24 on numerical tasks, 0.10 on semantic/schema tasks, and 0.00 on the 13 joins. Numerical RR falls to 0.24. The full curves and confidence intervals are in `verification_stress_summary.csv` and `figures/verification_stress_curves.pdf`.
 
-## Remaining Work
+## Audit Result
 
-The only required empirical step that cannot be completed by one author is independent annotation. Two people must label the blinded sheets separately; then `merge_blind_audit.py` can compute pre-adjudication Cohen's kappa. After that, update the appendix audit table and archive the locked labels and adjudication record.
+The two-annotator audit has 0.967 macro percent agreement and 0.913 macro Cohen's kappa over 120 trajectories. Per-label kappa is 0.914 for BCR, 0.826 for ADR, 0.948 for VR, and 0.965 for RR. Twelve trajectories have at least one disagreement and are listed in `human_audit_v2/adjudication.csv` for optional adjudication.
 
 The final PDF must be compiled and visually checked on Overleaf because no local TeX toolchain is installed.

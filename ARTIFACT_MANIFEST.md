@@ -91,8 +91,11 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/results/iclr2027_manual_audit_completed_stratified80.csv` | Historical 80-run single-author audit sheet; repeated passes are not independent IAA. |
 | `toxictool_bench/results/strict_scorer_author_audit_comparison.csv` | Run-level strict-scorer versus single-author diagnostic comparison. |
 | `toxictool_bench/results/strict_scorer_author_audit_agreement.json` | Agreement summary for that diagnostic comparison; not inter-annotator agreement. |
-| `toxictool_bench/results/human_audit_v2/evidence.csv` | Blinded evidence for 120 exposed trajectories. |
-| `toxictool_bench/results/human_audit_v2/annotator_{a,b}.csv` | Empty independent label sheets; completion is pending. |
+| `toxictool_bench/human_audit_v2/evidence.csv` | Blinded evidence for 120 exposed trajectories. |
+| `toxictool_bench/human_audit_v2/annotator_{a,b}.csv` | Completed independent label sheets. |
+| `toxictool_bench/human_audit_v2/agreement.json` | Pre-adjudication agreement and Cohen's kappa. |
+| `toxictool_bench/human_audit_v2/merged_labels.csv` | Merged labels for the audit sample. |
+| `toxictool_bench/human_audit_v2/adjudication.csv` | Twelve trajectories with at least one annotator disagreement. |
 | `toxictool_bench/build_blind_audit_packet.py` / `merge_blind_audit.py` | Fixed-seed packet builder and strict pre-adjudication IAA merger. |
 
 ## Reproduction Commands
