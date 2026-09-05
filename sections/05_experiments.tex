@@ -1,7 +1,7 @@
 \section{Experiments}
 \label{sec:experiments}
 
-We ask whether silent poisoning causes blind compliance across agents and models, which operators are most harmful, and whether Guarded Verification improves robustness without reducing clean-task success.
+We ask whether silent poisoning causes blind compliance across agents and models, which operators are most harmful, and how much a controlled evidence-verification protocol changes behavior at a fixed task.
 
 \subsection{Setup}
 
@@ -10,6 +10,8 @@ The cross-model evaluation uses 34 numerical and 24 semantic/schema instances. A
 
 \paragraph{Protocol.}
 Every task is run in paired clean and toxic environments. We report clean and poisoned TSR over all environment runs, PDR over toxic-environment runs, and BCR/ADR/VR/RR only over runs in which poison was delivered. Confidence intervals use task-level nonparametric bootstrap resampling. Full adapter-level results, confidence intervals, trajectories, timing logs, and the immutable run manifest are released with the benchmark.
+
+Because adapters expose different observation boundaries and have unequal model coverage, these cross-framework results are a prevalence study of silent poisoning rather than a strict ranking of agent frameworks or models.
 
 \subsection{Blind Compliance Across Agents and Models}
 
@@ -88,7 +90,7 @@ Sign flip & \textbf{0.93} & \textbf{0.14} & \textbf{0.22} & \textbf{0.22} & 0.94
 \label{fig:operator-profile}
 \end{figure*}
 
-\subsection{Guarded Verification}
+\subsection{Guarded Verification as a Controlled Attribution Protocol}
 
 Table~\ref{tab:langgraph-guarded} reports the leakage-free LangGraph ablation on the same 120 instances with Claude Haiku 4.5. The expectation prompt is generic and cannot access poison metadata, expected behavior, or clean answers. Base BCR is 0.11. Running two ordinary, isolated agent passes with the same total route budget raises poisoned TSR from 0.82 to 0.92 and lowers BCR to 0.01. Verification-only reaches 0.93 poisoned TSR with BCR 0.02, while expectation plus verification reaches 0.93 and 0.00. Thus, additional evidence and compute explain most of the gain; the generic guard removes the residual observed blind compliance under \texttt{poison\_once}. Paired task bootstrap intervals put Base BCR at [0.05, 0.17] and guarded BCR at [0.00, 0.00].
 
@@ -110,7 +112,7 @@ Generic guard & \textbf{0.93} & \textbf{0.93} & \textbf{0.00} & 0.97 & 0.94 \\
 \label{tab:langgraph-guarded}
 \end{table}
 
-The numerical suite accounts for most of the difference (Table~\ref{tab:defense-transfer}). Generic guarding raises numerical poisoned TSR from 0.65 to 0.87 and lowers BCR from 0.24 to 0.00; its poisoned-TSR interval is [0.78, 0.95]. Semantic/schema tasks are easier for this model: Base already reaches 0.98 poisoned TSR, and all three two-route variants reach 1.00. These results support a mechanism claim about enforced evidence collection in LangGraph, not cross-framework universality of the defense.
+The numerical suite accounts for most of the difference (Table~\ref{tab:defense-transfer}). Generic guarding raises numerical poisoned TSR from 0.65 to 0.87 and lowers BCR from 0.24 to 0.00; its poisoned-TSR interval is [0.78, 0.95]. Semantic/schema tasks are easier for this model: Base already reaches 0.98 poisoned TSR, and all three two-route variants reach 1.00. These results support a mechanism claim about enforced evidence collection in LangGraph, not cross-framework universality of the defense. The appropriate comparison is Double-pass versus Generic Guard: it isolates the incremental contribution of generic expectations and evidence gating after the second route has already been paid for. The small difference (0.92 to 0.93 poisoned TSR and 0.01 to 0.00 BCR) should not be read as evidence that the policy explains the full Base-to-Guard gain.
 
 \begin{table}[t]
 \centering
@@ -148,4 +150,4 @@ In a treatment/control task, the poisoned observation reports \texttt{Control--0
 \paragraph{Recovery requires new evidence.}
 On the same treatment task, the guarded trajectory re-inspects the dataframe, recomputes rates by group, and returns \texttt{Treatment--0.145}. In a multi-table customer-spend task, the base agent adopts a poisoned joined summary, whereas the guard reconstructs the join from the customer and order tables before finalizing. Generic statements that a result ``may need verification'' receive neither VR nor RR; ADR requires an explicit conflict or corruption claim tied to the returned result. The contrast grounds the aggregate finding: recovery comes from a post-poison evidence-producing action, not from skeptical language alone.
 
-Overall, the experiments establish three points: blind compliance persists across agent and model families; binding-preserving corruptions are harder than conspicuous sign errors; and structural post-observation verification greatly improves trust calibration under an explicit clean-route assumption.
+Overall, the experiments establish three points: blind compliance persists across agent and model families; binding-preserving corruptions are harder than conspicuous sign errors; and a second evidence route greatly improves trust calibration under an explicit clean-route assumption. The Generic Guard comparison further measures, rather than assumes, the smaller incremental effect of expectation and evidence gating.
