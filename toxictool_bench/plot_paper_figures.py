@@ -374,10 +374,19 @@ def plot_guard_suite_breakdown(results_dir: Path, output_dir: Path, preview_dir:
         style_axes(ax, xgrid=True)
         for i, suite in enumerate(suites):
             values = [float(next(row[metric] for row in rows if row["suite"] == suite and row["adapter"] == variant)) for variant in variants]
-            offset = (i - 0.5) * 0.28
-            ax.scatter(values, y + offset, marker="o" if i == 0 else "s", s=28,
-                       color=COLORS["clean"] if i == 0 else COLORS["verify"],
-                       label="Numerical" if suite == "numerical" else "Semantic/schema", zorder=3)
+            offset = (i - 0.5) * 0.30
+            bars = ax.barh(
+                y + offset,
+                values,
+                height=0.25,
+                color=COLORS["clean"] if i == 0 else COLORS["verify"],
+                alpha=0.92,
+                label="Numerical" if suite == "numerical" else "Semantic/schema",
+                zorder=3,
+            )
+            for bar, value in zip(bars, values):
+                if value > 0.005:
+                    ax.text(value + 0.018, bar.get_y() + bar.get_height() / 2, format_rate(value), va="center", fontsize=6.8)
         ax.set_xlim(-0.03, 1.03)
         ax.set_xlabel("Rate")
         ax.set_title(title, pad=7)
