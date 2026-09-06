@@ -11,6 +11,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 
 
 PUBLIC_ADAPTERS = {
@@ -127,64 +128,77 @@ def plot_cross_agent_model(results_dir: Path, output_dir: Path, preview_dir: Pat
     model_order = ["gpt-5.4-mini", "claude-sonnet-4-6", "Qwen3.6-35B-A3B-no-thinking"]
     cross_model.sort(key=lambda row: (["Numerical", "Semantic/schema"].index(row["suite"]), model_order.index(row["model"])))
 
-    fig, axes = plt.subplots(1, 3, figsize=(7.12, 2.45), gridspec_kw={"width_ratios": [1.08, 1.25, 1.25]})
+    blue_clean, blue_toxic = "#4F86B3", "#9FC2D8"
+    blue_dark, blue_light = "#2F638A", "#B9D5E3"
+    fig, axes = plt.subplots(1, 3, figsize=(7.12, 2.65), gridspec_kw={"width_ratios": [1.08, 1.25, 1.25]})
 
-    ax = axes[0]
-    style_axes(ax, xgrid=True)
-    y = np.arange(len(expanded))
-    clean = np.array([float(row["clean_tsr"]) for row in expanded])
-    toxic = np.array([float(row["poisoned_tsr"]) for row in expanded])
-    for i in range(len(expanded)):
-        ax.plot([toxic[i], clean[i]], [i, i], color=COLORS["grid"], linewidth=2.4, zorder=1)
-    ax.scatter(clean, y, color=COLORS["clean"], s=34, zorder=3)
-    ax.scatter(toxic, y, color=COLORS["toxic"], s=34, zorder=3)
-    ax.set_yticks(y, [EXPANDED_ADAPTERS[row["adapter"]] for row in expanded])
-    ax.invert_yaxis()
-    ax.set_xlim(0.45, 1.01)
-    ax.set_xlabel("Task success rate")
-    ax.set_title("Expanded GPT-only (120)", pad=7)
-    panel_label(ax, "a")
+    def paired_bars(ax, labels, first, second, first_label, second_label, title, xlim, panel):
+        style_axes(ax, xgrid=True)
+        y = np.arange(len(labels))
+        height = 0.31
+        bars_first = ax.barh(y - height / 2, first, height, color=blue_clean, label=first_label, zorder=2)
+        bars_second = ax.barh(y + height / 2, second, height, color=blue_toxic, label=second_label, zorder=2)
+        for bars, values in ((bars_first, first), (bars_second, second)):
+            for bar, value in zip(bars, values):
+                ax.text(value + 0.012, bar.get_y() + bar.get_height() / 2, format_rate(value), va="center", fontsize=6.5)
+        ax.set_yticks(y, labels)
+        ax.invert_yaxis()
+        ax.set_xlim(*xlim)
+        ax.set_xlabel("Task success rate")
+        ax.set_title(title, pad=7)
+        panel_label(ax, panel)
 
-    ax = axes[1]
-    style_axes(ax, xgrid=True)
-    y = np.arange(len(cross_model))
-    clean = np.array([float(row["clean_tsr"]) for row in cross_model])
-    toxic = np.array([float(row["poisoned_tsr"]) for row in cross_model])
-    for i in range(len(cross_model)):
-        ax.plot([toxic[i], clean[i]], [i, i], color=COLORS["grid"], linewidth=2.2, zorder=1)
-    ax.scatter(clean, y, color=COLORS["clean"], s=29, zorder=3)
-    ax.scatter(toxic, y, color=COLORS["toxic"], s=29, zorder=3)
+    expanded_labels = [EXPANDED_ADAPTERS[row["adapter"]] for row in expanded]
+    paired_bars(
+        axes[0],
+        expanded_labels,
+        np.array([float(row["clean_tsr"]) for row in expanded]),
+        np.array([float(row["poisoned_tsr"]) for row in expanded]),
+        "Clean TSR",
+        "Poisoned TSR",
+        "Expanded GPT-only (120)",
+        (0.45, 1.06),
+        "a",
+    )
+
     labels = [f"{'Num.' if row['suite'] == 'Numerical' else 'Sem.'} / {short_model(row['model'])}" for row in cross_model]
-    ax.set_yticks(y, labels)
-    ax.invert_yaxis()
-    ax.set_xlim(0.42, 1.02)
-    ax.set_xlabel("Task success rate")
-    ax.set_title("Cross-model mean", pad=7)
-    panel_label(ax, "b")
+    paired_bars(
+        axes[1],
+        labels,
+        np.array([float(row["clean_tsr"]) for row in cross_model]),
+        np.array([float(row["poisoned_tsr"]) for row in cross_model]),
+        "Clean TSR",
+        "Poisoned TSR",
+        "Cross-model mean",
+        (0.42, 1.08),
+        "b",
+    )
 
-    ax = axes[2]
-    style_axes(ax, xgrid=True)
+    style_axes(axes[2], xgrid=True)
+    y = np.arange(len(cross_model))
     bcr = np.array([float(row["toxic_bcr"]) for row in cross_model])
     pdr = np.array([float(row["poison_delivery_rate"]) for row in cross_model])
-    for i in range(len(cross_model)):
-        ax.plot([bcr[i], pdr[i]], [i, i], color=COLORS["grid"], linewidth=2.2, zorder=1)
-    ax.scatter(bcr, y, marker="D", color=COLORS["risk"], s=27, zorder=3)
-    ax.scatter(pdr, y, marker="o", facecolor=COLORS["paper"], edgecolor=COLORS["exposure"], linewidth=1.3, s=30, zorder=3)
-    ax.set_yticks(y, labels)
-    ax.invert_yaxis()
-    ax.set_xlim(0, 1.02)
-    ax.set_xlabel("Rate")
-    ax.set_title("Risk conditional on exposure", pad=7)
-    panel_label(ax, "c")
+    height = 0.31
+    bars_bcr = axes[2].barh(y - height / 2, bcr, height, color=blue_dark, label="BCR", zorder=2)
+    bars_pdr = axes[2].barh(y + height / 2, pdr, height, color=blue_light, edgecolor=blue_dark, linewidth=0.6, label="PDR", zorder=2)
+    for bars, values in ((bars_bcr, bcr), (bars_pdr, pdr)):
+        for bar, value in zip(bars, values):
+            axes[2].text(value + 0.012, bar.get_y() + bar.get_height() / 2, format_rate(value), va="center", fontsize=6.5)
+    axes[2].set_yticks(y, labels)
+    axes[2].invert_yaxis()
+    axes[2].set_xlim(0, 1.08)
+    axes[2].set_xlabel("Rate")
+    axes[2].set_title("Risk conditional on exposure", pad=7)
+    panel_label(axes[2], "c")
 
     handles = [
-        Line2D([], [], marker="o", linestyle="none", color=COLORS["clean"], label="Clean TSR"),
-        Line2D([], [], marker="o", linestyle="none", color=COLORS["toxic"], label="Poisoned TSR"),
-        Line2D([], [], marker="D", linestyle="none", color=COLORS["risk"], label="BCR"),
-        Line2D([], [], marker="o", linestyle="none", markerfacecolor="white", markeredgecolor=COLORS["exposure"], label="PDR"),
+        Patch(facecolor=blue_clean, label="Clean TSR"),
+        Patch(facecolor=blue_toxic, label="Poisoned TSR"),
+        Patch(facecolor=blue_dark, label="BCR"),
+        Patch(facecolor=blue_light, edgecolor=blue_dark, label="PDR"),
     ]
     fig.legend(handles=handles, loc="lower center", ncol=4, frameon=False, bbox_to_anchor=(0.5, -0.01), handletextpad=0.35, columnspacing=1.15)
-    fig.subplots_adjust(left=0.10, right=0.99, top=0.84, bottom=0.25, wspace=0.58)
+    fig.subplots_adjust(left=0.10, right=0.99, top=0.84, bottom=0.28, wspace=0.58)
     save_figure(fig, output_dir / "fig_cross_agent_model.pdf", preview_dir)
 
 
