@@ -13,9 +13,9 @@ LABELS = {
     "langgraph_react_guarded": "Generic Guard",
 }
 COLORS = {
-    "langgraph_react_verification_only": "#6E9FC2",
-    "langgraph_react_double_pass": "#D99472",
-    "langgraph_react_guarded": "#69A99A",
+    "langgraph_react_verification_only": "#4C93B5",
+    "langgraph_react_double_pass": "#78B6D0",
+    "langgraph_react_guarded": "#1F5F82",
 }
 MARKERS = {
     "langgraph_react_verification_only": "o",

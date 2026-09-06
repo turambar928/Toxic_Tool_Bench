@@ -26,20 +26,19 @@ EXPANDED_ADAPTERS = {
     "autogen_tool_agent": "AutoGen",
 }
 
-# Restrained, colorblind-safe palette. Blue denotes capability, vermilion risk,
-# and green evidence-based recovery throughout the paper.
+# A single blue palette keeps the paper visually consistent; lightness separates roles.
 COLORS = {
-    "clean": "#6E9FC2",
-    "toxic": "#D99472",
-    "risk": "#C96868",
-    "verify": "#69A99A",
-    "recover": "#829AC7",
-    "exposure": "#9B86B8",
-    "neutral": "#A4AFB8",
-    "ink": "#273746",
-    "muted": "#71808B",
-    "grid": "#DCE5EA",
-    "light": "#F5F8FA",
+    "clean": "#4C93B5",
+    "toxic": "#A9D2E5",
+    "risk": "#1F5F82",
+    "verify": "#6BAAC5",
+    "recover": "#78B6D0",
+    "exposure": "#3D7FA3",
+    "neutral": "#A9C9D8",
+    "ink": "#183B50",
+    "muted": "#5E7D8D",
+    "grid": "#D8E8F0",
+    "light": "#F2F8FB",
     "paper": "#FFFFFF",
 }
 
@@ -128,8 +127,8 @@ def plot_cross_agent_model(results_dir: Path, output_dir: Path, preview_dir: Pat
     model_order = ["gpt-5.4-mini", "claude-sonnet-4-6", "Qwen3.6-35B-A3B-no-thinking"]
     cross_model.sort(key=lambda row: (["Numerical", "Semantic/schema"].index(row["suite"]), model_order.index(row["model"])))
 
-    blue_clean, blue_toxic = "#4F86B3", "#9FC2D8"
-    blue_dark, blue_light = "#2F638A", "#B9D5E3"
+    blue_clean, blue_toxic = "#4C93B5", "#A9D2E5"
+    blue_dark, blue_light = "#1F5F82", "#C5E2EF"
     fig, axes = plt.subplots(1, 3, figsize=(7.12, 2.65), gridspec_kw={"width_ratios": [1.08, 1.25, 1.25]})
 
     def paired_bars(ax, labels, first, second, first_label, second_label, title, xlim, panel):
@@ -238,7 +237,7 @@ def plot_operator_profile(results_dir: Path, output_dir: Path, preview_dir: Path
 
     fig, ax = plt.subplots(figsize=(7.12, 3.15))
     cmap = mpl.colors.LinearSegmentedColormap.from_list(
-        "toxicbench_rates", ["#F7FAFC", "#D8E9F2", "#9DC5D8", "#5B91AE"]
+        "toxicbench_rates", ["#F7FBFD", "#DCEFFA", "#A9D2E5", "#4C93B5"]
     )
     im = ax.imshow(values, cmap=cmap, vmin=0, vmax=1, aspect="auto")
     ax.set_xticks(np.arange(len(metrics)), [label for _, label in metrics])
@@ -356,7 +355,7 @@ def plot_severity(results_dir: Path, output_dir: Path, preview_dir: Path | None)
         "stale_metadata": "Stale metadata", "treatment_control_flip": "Treatment/control", "unit_conversion": "Unit conversion",
     }
     fig, ax = plt.subplots(figsize=(7.12, 3.0))
-    cmap = mpl.colors.LinearSegmentedColormap.from_list("severity", ["#F7FAFC", "#F1D9CF", "#C96868"])
+    cmap = mpl.colors.LinearSegmentedColormap.from_list("severity", ["#F7FBFD", "#A9D2E5", "#1F5F82"])
     im = ax.imshow(matrix, cmap=cmap, vmin=0, vmax=1, aspect="auto")
     ax.set_xticks(np.arange(3), [name.capitalize() for name in severities])
     ax.set_yticks(np.arange(len(operators)), [pretty.get(name, name.replace("_", " ").title()) for name in operators])
