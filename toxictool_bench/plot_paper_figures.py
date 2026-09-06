@@ -46,9 +46,9 @@ COLORS = {
 def configure_matplotlib() -> None:
     mpl.rcParams.update(
         {
-            "font.family": "sans-serif",
-            "font.sans-serif": ["Nimbus Sans", "Liberation Sans", "DejaVu Sans"],
-            "mathtext.fontset": "stixsans",
+            "font.family": "serif",
+            "font.serif": ["Times New Roman", "DejaVu Serif"],
+            "mathtext.fontset": "stix",
             "font.size": 8,
             "axes.titlesize": 9,
             "axes.labelsize": 8,
@@ -394,6 +394,89 @@ def plot_guard_suite_breakdown(results_dir: Path, output_dir: Path, preview_dir:
     save_figure(fig, output_dir / "fig_guard_suite_breakdown.pdf", preview_dir)
 
 
+def plot_capability_gap(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
+    """Show paired clean/toxic performance and the resulting degradation."""
+    rows = [
+        row for row in read_csv(results_dir / "iclr2027_gpt_expanded_cross_agent_combined_summary.csv")
+        if row["adapter"] in EXPANDED_ADAPTERS
+    ]
+    rows.sort(key=lambda row: list(EXPANDED_ADAPTERS).index(row["adapter"]))
+    labels = [EXPANDED_ADAPTERS[row["adapter"]] for row in rows]
+    clean = np.array([float(row["clean_tsr"]) for row in rows])
+    toxic = np.array([float(row["poisoned_tsr"]) for row in rows])
+    gap = clean - toxic
+
+    fig, axes = plt.subplots(1, 2, figsize=(7.12, 2.45), gridspec_kw={"width_ratios": [1.18, 1.0]})
+    ax = axes[0]
+    style_axes(ax, xgrid=True)
+    x = np.arange(len(labels))
+    width = 0.34
+    ax.bar(x - width / 2, clean, width, color=COLORS["clean"], label="Clean TSR")
+    ax.bar(x + width / 2, toxic, width, color=COLORS["toxic"], label="Poisoned TSR")
+    for values, offset in ((clean, -width / 2), (toxic, width / 2)):
+        for i, value in enumerate(values):
+            ax.text(i + offset, value + 0.018, format_rate(value), ha="center", va="bottom", fontsize=7)
+    ax.set_xticks(x, labels)
+    ax.set_ylim(0.45, 1.04)
+    ax.set_ylabel("Task success rate")
+    ax.set_title("Paired performance", pad=7)
+    ax.legend(frameon=False, loc="lower left", ncol=2, handlelength=1.0)
+    panel_label(ax, "a")
+
+    ax = axes[1]
+    style_axes(ax, xgrid=True)
+    colors = [COLORS["risk"] if value >= 0.3 else COLORS["recover"] for value in gap]
+    bars = ax.barh(x, gap, color=colors, height=0.48)
+    ax.set_yticks(x, labels)
+    ax.invert_yaxis()
+    ax.set_xlim(0, max(0.4, float(gap.max()) + 0.08))
+    ax.set_xlabel("Clean TSR - poisoned TSR")
+    ax.set_title("Performance degradation", pad=7)
+    for bar, value in zip(bars, gap):
+        ax.text(value + 0.012, bar.get_y() + bar.get_height() / 2, format_rate(value), va="center", fontsize=7)
+    panel_label(ax, "b")
+    fig.subplots_adjust(left=0.11, right=0.99, top=0.84, bottom=0.18, wspace=0.48)
+    save_figure(fig, output_dir / "fig_capability_gap.pdf", preview_dir)
+
+
+def plot_defense_frontier(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
+    """Plot robustness versus measured latency, with BCR as marker size."""
+    ablation = {row["adapter"]: row for row in read_csv(results_dir / "langgraph_guarded_ablation_summary.csv")}
+    overhead_rows = read_csv(results_dir / "langgraph_guarded_overhead_summary.csv")
+    toxic_latency: dict[str, list[float]] = defaultdict(list)
+    for row in overhead_rows:
+        if row["env"] == "toxic":
+            toxic_latency[row["adapter"]].append(float(row["mean_seconds"]))
+    variants = ["Base", "Caution only", "Expectation only", "Verification only", "Full guard", "Light guard"]
+    labels = ["Base", "Caution", "Expectation", "Verify", "Full", "Light"]
+    colors = [COLORS["neutral"], COLORS["toxic"], COLORS["toxic"], COLORS["verify"], COLORS["clean"], COLORS["recover"]]
+    latency = np.array([np.mean(toxic_latency[name]) for name in variants])
+    tsr = np.array([float(ablation[name]["poisoned_tsr"]) for name in variants])
+    bcr = np.array([float(ablation[name]["bcr"]) for name in variants])
+
+    fig, ax = plt.subplots(figsize=(3.65, 2.8))
+    style_axes(ax)
+    label_offsets = {
+        "Base": (5, -10),
+        "Caution": (5, 5),
+        "Expectation": (5, 8),
+        "Verify": (5, -13),
+        "Full": (5, 7),
+        "Light": (5, -15),
+    }
+    for x, y, size, color, label in zip(latency, tsr, bcr, colors, labels):
+        ax.scatter(x, y, s=70 + 220 * size, color=color, edgecolor="white", linewidth=0.8, label=label, zorder=3)
+        ax.annotate(label, (x, y), xytext=label_offsets[label], textcoords="offset points", fontsize=7)
+    ax.set_xlabel("Toxic-run latency (s)")
+    ax.set_ylabel("Poisoned TSR")
+    ax.set_xlim(0, max(45, float(latency.max()) + 4))
+    ax.set_ylim(0.55, 1.02)
+    ax.set_title("Robustness--cost frontier", pad=8)
+    ax.grid(axis="both", color=COLORS["grid"], linewidth=0.55)
+    fig.subplots_adjust(left=0.17, right=0.98, top=0.86, bottom=0.18)
+    save_figure(fig, output_dir / "fig_defense_frontier.pdf", preview_dir)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results-dir", type=Path, default=Path("toxictool_bench/results"))
@@ -410,6 +493,8 @@ def main() -> None:
     plot_guard_tradeoff(args.results_dir, args.output_dir, args.preview_dir)
     plot_severity(args.results_dir, args.output_dir, args.preview_dir)
     plot_guard_suite_breakdown(args.results_dir, args.output_dir, args.preview_dir)
+    plot_capability_gap(args.results_dir, args.output_dir, args.preview_dir)
+    plot_defense_frontier(args.results_dir, args.output_dir, args.preview_dir)
 
 
 if __name__ == "__main__":

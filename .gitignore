@@ -30,6 +30,7 @@ main.pdf
 # Local OS/editor files
 .DS_Store
 *~
+figures/preview/
 
 # Benchmark runtime caches
 toxictool_bench/cache/
