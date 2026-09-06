@@ -28,17 +28,17 @@ EXPANDED_ADAPTERS = {
 # Restrained, colorblind-safe palette. Blue denotes capability, vermilion risk,
 # and green evidence-based recovery throughout the paper.
 COLORS = {
-    "clean": "#32658A",
-    "toxic": "#D07A4A",
-    "risk": "#B9473E",
-    "verify": "#2F7D6D",
-    "recover": "#5A78A8",
-    "exposure": "#8064A2",
-    "neutral": "#7B858E",
-    "ink": "#202A32",
-    "muted": "#66727C",
-    "grid": "#D9DEE2",
-    "light": "#F3F5F6",
+    "clean": "#6E9FC2",
+    "toxic": "#D99472",
+    "risk": "#C96868",
+    "verify": "#69A99A",
+    "recover": "#829AC7",
+    "exposure": "#9B86B8",
+    "neutral": "#A4AFB8",
+    "ink": "#273746",
+    "muted": "#71808B",
+    "grid": "#DCE5EA",
+    "light": "#F5F8FA",
     "paper": "#FFFFFF",
 }
 
@@ -224,7 +224,7 @@ def plot_operator_profile(results_dir: Path, output_dir: Path, preview_dir: Path
 
     fig, ax = plt.subplots(figsize=(7.12, 3.15))
     cmap = mpl.colors.LinearSegmentedColormap.from_list(
-        "toxicbench_rates", ["#F5F6F7", "#D9E1E5", "#83A9B5", "#265F78"]
+        "toxicbench_rates", ["#F7FAFC", "#D8E9F2", "#9DC5D8", "#5B91AE"]
     )
     im = ax.imshow(values, cmap=cmap, vmin=0, vmax=1, aspect="auto")
     ax.set_xticks(np.arange(len(metrics)), [label for _, label in metrics])
@@ -342,7 +342,7 @@ def plot_severity(results_dir: Path, output_dir: Path, preview_dir: Path | None)
         "stale_metadata": "Stale metadata", "treatment_control_flip": "Treatment/control", "unit_conversion": "Unit conversion",
     }
     fig, ax = plt.subplots(figsize=(7.12, 3.0))
-    cmap = mpl.colors.LinearSegmentedColormap.from_list("severity", ["#F5F6F7", "#E7C7B6", "#B9473E"])
+    cmap = mpl.colors.LinearSegmentedColormap.from_list("severity", ["#F7FAFC", "#F1D9CF", "#C96868"])
     im = ax.imshow(matrix, cmap=cmap, vmin=0, vmax=1, aspect="auto")
     ax.set_xticks(np.arange(3), [name.capitalize() for name in severities])
     ax.set_yticks(np.arange(len(operators)), [pretty.get(name, name.replace("_", " ").title()) for name in operators])

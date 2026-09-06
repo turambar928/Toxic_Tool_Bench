@@ -13,9 +13,9 @@ LABELS = {
     "langgraph_react_guarded": "Generic Guard",
 }
 COLORS = {
-    "langgraph_react_verification_only": "#2C5F8A",
-    "langgraph_react_double_pass": "#B06A2B",
-    "langgraph_react_guarded": "#2F7659",
+    "langgraph_react_verification_only": "#6E9FC2",
+    "langgraph_react_double_pass": "#D99472",
+    "langgraph_react_guarded": "#69A99A",
 }
 MARKERS = {
     "langgraph_react_verification_only": "o",
@@ -32,7 +32,7 @@ def main() -> None:
     rows = list(csv.DictReader(source.open(encoding="utf-8")))
     plt.rcParams.update({
         "font.family": "serif",
-        "font.serif": ["DejaVu Serif"],
+        "font.serif": ["Times New Roman", "DejaVu Serif"],
         "font.size": 8,
         "axes.titlesize": 9,
         "axes.labelsize": 8,
@@ -56,7 +56,7 @@ def main() -> None:
             ax.set_ylim(-0.04, 1.04)
             ax.set_xticks([0.25, 0.50, 0.75, 1.00])
             ax.set_yticks([0.0, 0.5, 1.0])
-            ax.grid(axis="y", color="#D6D6D6", linewidth=0.6)
+            ax.grid(axis="y", color="#DCE5EA", linewidth=0.6)
             ax.spines[["top", "right"]].set_visible(False)
             if row_index == 0:
                 ax.set_title(title, fontweight="bold")
