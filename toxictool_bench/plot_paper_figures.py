@@ -112,13 +112,6 @@ def short_model(model: str) -> str:
 
 
 def plot_cross_agent_model(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
-    expanded = [
-        row
-        for row in read_csv(results_dir / "iclr2027_gpt_expanded_cross_agent_combined_summary.csv")
-        if row["adapter"] in EXPANDED_ADAPTERS
-    ]
-    expanded.sort(key=lambda row: list(EXPANDED_ADAPTERS).index(row["adapter"]))
-
     cross_model: list[dict[str, str]] = []
     for path, suite in (
         ("public_cross_model_numerical_summary.csv", "Numerical"),
@@ -128,78 +121,32 @@ def plot_cross_agent_model(results_dir: Path, output_dir: Path, preview_dir: Pat
     model_order = ["gpt-5.4-mini", "claude-sonnet-4-6", "Qwen3.6-35B-A3B-no-thinking"]
     cross_model.sort(key=lambda row: (["Numerical", "Semantic/schema"].index(row["suite"]), model_order.index(row["model"])))
 
-    blue_clean, blue_toxic = "#2F75A3", "#B9DCEC"
-    blue_dark, blue_light = "#0B3D5A", "#76B9D5"
-    fig, axes = plt.subplots(1, 3, figsize=(7.12, 2.65), gridspec_kw={"width_ratios": [1.08, 1.25, 1.25]})
-
-    def paired_bars(ax, labels, first, second, first_label, second_label, title, xlim, panel):
-        style_axes(ax, xgrid=True)
-        y = np.arange(len(labels))
-        height = 0.31
-        bars_first = ax.barh(y - height / 2, first, height, color=blue_clean, label=first_label, zorder=2)
-        bars_second = ax.barh(y + height / 2, second, height, color=blue_toxic, label=second_label, zorder=2)
-        for bars, values in ((bars_first, first), (bars_second, second)):
-            for bar, value in zip(bars, values):
-                ax.text(value + 0.012, bar.get_y() + bar.get_height() / 2, format_rate(value), va="center", fontsize=6.5)
-        ax.set_yticks(y, labels)
-        ax.invert_yaxis()
-        ax.set_xlim(*xlim)
-        ax.set_xlabel("Task success rate")
-        ax.set_title(title, pad=7)
-        panel_label(ax, panel)
-
-    expanded_labels = [EXPANDED_ADAPTERS[row["adapter"]] for row in expanded]
-    paired_bars(
-        axes[0],
-        expanded_labels,
-        np.array([float(row["clean_tsr"]) for row in expanded]),
-        np.array([float(row["poisoned_tsr"]) for row in expanded]),
-        "Clean TSR",
-        "Poisoned TSR",
-        "Expanded GPT-only (120)",
-        (0.45, 1.06),
-        "a",
-    )
-
+    columns = ["clean_tsr", "poisoned_tsr", "toxic_bcr", "poison_delivery_rate"]
+    column_labels = ["Clean TSR", "Poisoned TSR", "BCR", "PDR"]
     labels = [f"{'Num.' if row['suite'] == 'Numerical' else 'Sem.'} / {short_model(row['model'])}" for row in cross_model]
-    paired_bars(
-        axes[1],
-        labels,
-        np.array([float(row["clean_tsr"]) for row in cross_model]),
-        np.array([float(row["poisoned_tsr"]) for row in cross_model]),
-        "Clean TSR",
-        "Poisoned TSR",
-        "Cross-model mean",
-        (0.42, 1.08),
-        "b",
-    )
-
-    style_axes(axes[2], xgrid=True)
-    y = np.arange(len(cross_model))
-    bcr = np.array([float(row["toxic_bcr"]) for row in cross_model])
-    pdr = np.array([float(row["poison_delivery_rate"]) for row in cross_model])
-    height = 0.31
-    bars_bcr = axes[2].barh(y - height / 2, bcr, height, color=blue_dark, label="BCR", zorder=2)
-    bars_pdr = axes[2].barh(y + height / 2, pdr, height, color=blue_light, edgecolor=blue_dark, linewidth=0.6, label="PDR", zorder=2)
-    for bars, values in ((bars_bcr, bcr), (bars_pdr, pdr)):
-        for bar, value in zip(bars, values):
-            axes[2].text(value + 0.012, bar.get_y() + bar.get_height() / 2, format_rate(value), va="center", fontsize=6.5)
-    axes[2].set_yticks(y, labels)
-    axes[2].invert_yaxis()
-    axes[2].set_xlim(0, 1.08)
-    axes[2].set_xlabel("Rate")
-    axes[2].set_title("Risk conditional on exposure", pad=7)
-    panel_label(axes[2], "c")
-
-    handles = [
-        Patch(facecolor=blue_clean, label="Clean TSR"),
-        Patch(facecolor=blue_toxic, label="Poisoned TSR"),
-        Patch(facecolor=blue_dark, label="BCR"),
-        Patch(facecolor=blue_light, edgecolor=blue_dark, label="PDR"),
-    ]
-    fig.legend(handles=handles, loc="lower center", ncol=4, frameon=False, bbox_to_anchor=(0.5, -0.01), handletextpad=0.35, columnspacing=1.15)
-    fig.subplots_adjust(left=0.10, right=0.99, top=0.84, bottom=0.28, wspace=0.58)
+    matrix = np.array([[float(row[key]) for key in columns] for row in cross_model])
+    fig, ax = plt.subplots(figsize=(5.15, 2.95))
+    cmap = mpl.colors.LinearSegmentedColormap.from_list("cross_blue", ["#F2F8FB", "#9BC9DF", "#2F75A3"])
+    im = ax.imshow(matrix, cmap=cmap, vmin=0, vmax=1, aspect="auto")
+    ax.set_xticks(np.arange(len(columns)), column_labels)
+    ax.set_yticks(np.arange(len(labels)), labels)
+    ax.tick_params(length=0, labelsize=7.4)
+    for i in range(matrix.shape[0]):
+        for j in range(matrix.shape[1]):
+            value = matrix[i, j]
+            ax.text(j, i, format_rate(value), ha="center", va="center", fontsize=7.2,
+                    color="white" if value >= 0.58 else COLORS["ink"])
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    ax.set_title("Cross-model prevalence of capability and trust gaps", pad=8)
+    panel_label(ax, "a")
+    cbar = fig.colorbar(im, ax=ax, fraction=0.035, pad=0.025)
+    cbar.set_label("Rate", fontsize=7.5)
+    cbar.ax.tick_params(length=0, labelsize=7)
+    cbar.outline.set_visible(False)
+    fig.subplots_adjust(left=0.20, right=0.91, top=0.87, bottom=0.16)
     save_figure(fig, output_dir / "fig_cross_agent_model.pdf", preview_dir)
+
 
 
 def plot_operator_profile(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
@@ -272,7 +219,7 @@ def plot_guard_tradeoff(results_dir: Path, output_dir: Path, preview_dir: Path |
             events[row["adapter"]].append(float(row["mean_tool_events"]))
     variants = ["Base", "Caution only", "Expectation only", "Verification only", "Full guard", "Light guard"]
     labels = ["Base", "Caution", "Expectation", "Verify", "Full", "Light"]
-    variant_colors = [COLORS["neutral"], COLORS["toxic"], COLORS["toxic"], COLORS["verify"], COLORS["clean"], COLORS["recover"]]
+    variant_colors = ["#DCEEF5", "#B9DCEC", "#91C4DB", "#68A9C7", "#3E83A8", "#1F5F82"]
 
     fig, axes = plt.subplots(1, 3, figsize=(7.12, 2.55), gridspec_kw={"width_ratios": [1.16, 1.0, 1.0]})
 
@@ -281,16 +228,13 @@ def plot_guard_tradeoff(results_dir: Path, output_dir: Path, preview_dir: Path |
     x = np.arange(len(variants))
     toxic_tsr = np.array([float(ablation[v]["poisoned_tsr"]) for v in variants])
     bcr = np.array([float(ablation[v]["bcr"]) for v in variants])
-    ax.plot(x, toxic_tsr, color=COLORS["clean"], linewidth=1.4, marker="o", markersize=4, label="Poisoned TSR")
-    ax.plot(x, bcr, color=COLORS["risk"], linewidth=1.4, marker="D", markersize=3.8, label="BCR")
-    ax.set_xticks(x, labels, rotation=38, ha="right")
+    ax.scatter(x - 0.12, toxic_tsr, color=COLORS["clean"], s=25, label="Poisoned TSR", zorder=3)
+    ax.scatter(x + 0.12, bcr, color=COLORS["risk"], marker="D", s=22, label="BCR", zorder=3)
+    ax.set_xticks(x, labels, rotation=28, ha="right")
     ax.set_ylim(-0.03, 1.03)
     ax.set_ylabel("Rate")
     ax.set_title("Defense ablation", pad=7)
-    ax.legend(
-        frameon=True, facecolor="white", edgecolor="none", framealpha=0.92,
-        loc="center left", bbox_to_anchor=(0.0, 0.56), handlelength=1.2,
-    )
+    ax.legend(frameon=False, loc="lower right", handlelength=1.0)
     panel_label(ax, "a")
 
     ax = axes[1]
@@ -302,13 +246,15 @@ def plot_guard_tradeoff(results_dir: Path, output_dir: Path, preview_dir: Path |
     p50 = np.array([float(cost[key]["p50_elapsed_seconds"]) for key in keys])
     p90 = np.array([float(cost[key]["p90_elapsed_seconds"]) for key in keys])
     x = np.arange(len(keys))
-    ax.bar(x, means, color=[COLORS["neutral"], COLORS["clean"], COLORS["recover"], COLORS["verify"], COLORS["verify"]], width=0.62)
-    ax.vlines(x, p50, p90, color=COLORS["ink"], linewidth=1.5, zorder=3)
-    ax.scatter(x, p50, facecolor="white", edgecolor=COLORS["ink"], s=13, zorder=4)
-    ax.scatter(x, p90, color=COLORS["ink"], s=11, zorder=4)
-    ax.set_xticks(x, names, rotation=38, ha="right")
-    ax.set_ylim(0, 34)
-    ax.set_ylabel("Seconds / task")
+    ax.hlines(x, p50, p90, color=COLORS["muted"], linewidth=2.0, zorder=2)
+    ax.scatter(means, x, color=COLORS["clean"], s=25, zorder=3, label="Mean")
+    ax.scatter(p50, x, facecolor="white", edgecolor=COLORS["ink"], s=22, zorder=3, label="p50")
+    ax.scatter(p90, x, color=COLORS["ink"], s=20, zorder=3, label="p90")
+    ax.set_yticks(x, names)
+    ax.invert_yaxis()
+    ax.set_xlim(0, max(35, float(p90.max()) + 3))
+    ax.set_ylim(-0.5, len(keys) - 0.5)
+    ax.set_xlabel("Seconds / task")
     ax.set_title("Measured latency", pad=7)
     panel_label(ax, "b")
 
@@ -326,10 +272,7 @@ def plot_guard_tradeoff(results_dir: Path, output_dir: Path, preview_dir: Path |
     ax.set_ylim(-0.03, 1.03)
     ax.set_xlabel("Poison probability $p$\n(eligible observations)")
     ax.set_title("Route-corruption stress test", pad=7)
-    ax.legend(
-        frameon=True, facecolor="white", edgecolor="none", framealpha=0.92,
-        loc="upper right", handlelength=1.2,
-    )
+    ax.legend(frameon=False, loc="lower left", handlelength=1.0)
     panel_label(ax, "c")
 
     fig.subplots_adjust(left=0.07, right=0.995, top=0.84, bottom=0.31, wspace=0.42)
@@ -382,34 +325,27 @@ def plot_guard_suite_breakdown(results_dir: Path, output_dir: Path, preview_dir:
     variants = ["Base", "Caution only", "Expectation only", "Verification only", "Full guard", "Light guard"]
     labels = ["Base", "Caution", "Expectation", "Verify", "Full", "Light"]
     suites = ["numerical", "semantic_schema"]
-    fig, axes = plt.subplots(1, 2, figsize=(7.12, 2.55), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(6.35, 2.55), sharey=True)
     y = np.arange(len(variants))
     for ax, metric, title in zip(axes, ["poisoned_tsr", "bcr"], ["Poisoned task success", "Blind compliance"]):
         style_axes(ax, xgrid=True)
+        suite_colors = {"numerical": "#2F75A3", "semantic_schema": "#A9D2E5"}
         for i, suite in enumerate(suites):
             values = [float(next(row[metric] for row in rows if row["suite"] == suite and row["adapter"] == variant)) for variant in variants]
-            offset = (i - 0.5) * 0.30
-            bars = ax.barh(
-                y + offset,
-                values,
-                height=0.25,
-                color=COLORS["clean"] if i == 0 else COLORS["verify"],
-                alpha=0.92,
-                label="Numerical" if suite == "numerical" else "Semantic/schema",
-                zorder=3,
-            )
-            for bar, value in zip(bars, values):
-                if value > 0.005:
-                    ax.text(value + 0.018, bar.get_y() + bar.get_height() / 2, format_rate(value), va="center", fontsize=6.8)
+            offset = (i - 0.5) * 0.25
+            ax.scatter(values, y + offset, s=24, color=suite_colors[suite], edgecolor=COLORS["ink"], linewidth=0.35,
+                       label="Numerical" if suite == "numerical" else "Semantic/schema", zorder=3)
+            for yi, value in zip(y + offset, values):
+                ax.annotate(format_rate(value), (value, yi), xytext=(5, -5 if i == 0 else 5),
+                            textcoords="offset points", va="center", fontsize=6.8,
+                            color=COLORS["ink"] if value < 0.2 else COLORS["muted"])
         ax.set_xlim(-0.03, 1.03)
         ax.set_xlabel("Rate")
         ax.set_title(title, pad=7)
         ax.set_yticks(y, labels)
     axes[0].invert_yaxis()
-    handles = [
-        Line2D([], [], marker="o", linestyle="none", color=COLORS["clean"], label="Numerical"),
-        Line2D([], [], marker="s", linestyle="none", color=COLORS["verify"], label="Semantic/schema"),
-    ]
+    handles = [Line2D([], [], marker="o", linestyle="none", color="#2F75A3", label="Numerical"),
+               Line2D([], [], marker="o", linestyle="none", color="#A9D2E5", label="Semantic/schema")]
     fig.legend(handles=handles, frameon=False, ncol=2, loc="lower center", bbox_to_anchor=(0.5, 0.005))
     panel_label(axes[0], "a")
     panel_label(axes[1], "b")
@@ -429,36 +365,24 @@ def plot_capability_gap(results_dir: Path, output_dir: Path, preview_dir: Path |
     toxic = np.array([float(row["poisoned_tsr"]) for row in rows])
     gap = clean - toxic
 
-    fig, axes = plt.subplots(1, 2, figsize=(7.12, 2.45), gridspec_kw={"width_ratios": [1.18, 1.0]})
-    ax = axes[0]
+    fig, ax = plt.subplots(figsize=(5.4, 2.35))
     style_axes(ax, xgrid=True)
-    x = np.arange(len(labels))
-    width = 0.34
-    ax.bar(x - width / 2, clean, width, color=COLORS["clean"], label="Clean TSR")
-    ax.bar(x + width / 2, toxic, width, color=COLORS["toxic"], label="Poisoned TSR")
-    for values, offset in ((clean, -width / 2), (toxic, width / 2)):
-        for i, value in enumerate(values):
-            ax.text(i + offset, value + 0.018, format_rate(value), ha="center", va="bottom", fontsize=7)
-    ax.set_xticks(x, labels)
-    ax.set_ylim(0.45, 1.04)
-    ax.set_ylabel("Task success rate")
-    ax.set_title("Paired performance", pad=7)
-    ax.legend(frameon=False, loc="lower left", ncol=2, handlelength=1.0)
-    panel_label(ax, "a")
-
-    ax = axes[1]
-    style_axes(ax, xgrid=True)
-    colors = [COLORS["risk"] if value >= 0.3 else COLORS["recover"] for value in gap]
-    bars = ax.barh(x, gap, color=colors, height=0.48)
-    ax.set_yticks(x, labels)
+    y = np.arange(len(labels))
+    ax.hlines(y, toxic, clean, color=COLORS["grid"], linewidth=2.5, zorder=1)
+    ax.scatter(toxic, y, color=COLORS["risk"], s=28, zorder=3, label="Poisoned TSR")
+    ax.scatter(clean, y, facecolor="white", edgecolor=COLORS["clean"], linewidth=1.5, s=32, zorder=3, label="Clean TSR")
+    for yi, clean_value, toxic_value, gap_value in zip(y, clean, toxic, gap):
+        ax.text(clean_value + 0.018, yi, f"{format_rate(clean_value)}  Δ{format_rate(gap_value)}", va="center", fontsize=7)
+        ax.text(toxic_value - 0.018, yi, format_rate(toxic_value), va="center", ha="right", fontsize=7, color=COLORS["risk"])
+    ax.set_yticks(y, labels)
     ax.invert_yaxis()
-    ax.set_xlim(0, max(0.4, float(gap.max()) + 0.08))
-    ax.set_xlabel("Clean TSR - poisoned TSR")
-    ax.set_title("Performance degradation", pad=7)
-    for bar, value in zip(bars, gap):
-        ax.text(value + 0.012, bar.get_y() + bar.get_height() / 2, format_rate(value), va="center", fontsize=7)
-    panel_label(ax, "b")
-    fig.subplots_adjust(left=0.11, right=0.99, top=0.84, bottom=0.18, wspace=0.48)
+    ax.set_xlim(0.45, 1.05)
+    ax.set_xlabel("Task success rate")
+    ax.set_title("")
+    ax.legend(frameon=False, loc="lower left", bbox_to_anchor=(0.0, 1.01), ncol=2,
+              handlelength=1.0, columnspacing=0.8)
+    panel_label(ax, "a")
+    fig.subplots_adjust(left=0.18, right=0.99, top=0.87, bottom=0.20)
     save_figure(fig, output_dir / "fig_capability_gap.pdf", preview_dir)
 
 
