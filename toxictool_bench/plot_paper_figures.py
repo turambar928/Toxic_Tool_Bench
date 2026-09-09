@@ -90,7 +90,8 @@ def style_axes(ax: mpl.axes.Axes, *, xgrid: bool = False) -> None:
 
 
 def panel_label(ax: mpl.axes.Axes, label: str) -> None:
-    ax.text(-0.14, 1.09, label, transform=ax.transAxes, fontsize=9, weight="bold")
+    ax.text(-0.12, 1.03, f"({label})", transform=ax.transAxes, fontsize=8.5,
+            weight="bold", va="bottom", ha="left")
 
 
 def save_figure(fig: mpl.figure.Figure, output: Path, preview_dir: Path | None) -> None:
@@ -127,8 +128,8 @@ def plot_cross_agent_model(results_dir: Path, output_dir: Path, preview_dir: Pat
     model_order = ["gpt-5.4-mini", "claude-sonnet-4-6", "Qwen3.6-35B-A3B-no-thinking"]
     cross_model.sort(key=lambda row: (["Numerical", "Semantic/schema"].index(row["suite"]), model_order.index(row["model"])))
 
-    blue_clean, blue_toxic = "#4C93B5", "#A9D2E5"
-    blue_dark, blue_light = "#1F5F82", "#C5E2EF"
+    blue_clean, blue_toxic = "#2F75A3", "#B9DCEC"
+    blue_dark, blue_light = "#0B3D5A", "#76B9D5"
     fig, axes = plt.subplots(1, 3, figsize=(7.12, 2.65), gridspec_kw={"width_ratios": [1.08, 1.25, 1.25]})
 
     def paired_bars(ax, labels, first, second, first_label, second_label, title, xlim, panel):
