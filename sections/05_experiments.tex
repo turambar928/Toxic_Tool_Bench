@@ -114,6 +114,8 @@ Generic guard & \textbf{0.93} & \textbf{0.93} & \textbf{0.00} & 0.25 & 0.25 & 0.
 
 The numerical suite accounts for most of the difference (Table~\ref{tab:defense-transfer}). Generic guarding raises numerical poisoned TSR from 0.65 to 0.87 and lowers BCR from 0.24 to 0.00; its poisoned-TSR interval is [0.78, 0.95]. Semantic/schema tasks are easier for this model: Base already reaches 0.98 poisoned TSR, and all three two-route variants reach 1.00. These results support a mechanism claim about enforced evidence collection in LangGraph, not cross-framework universality of the defense. The appropriate comparison is Double-pass versus Generic Guard: it isolates the incremental contribution of generic expectations and evidence gating after the second route has already been paid for. The small difference (0.92 to 0.93 poisoned TSR and 0.01 to 0.00 BCR) should not be read as evidence that the policy explains the full Base-to-Guard gain.
 
+As a cross-framework replication, the same leakage-free verification protocol on AutoGen obtains clean/poisoned TSR of 0.93/0.93 and BCR of 0.00 on the released 120-instance suite. We treat this as replication of the observation-level protocol, not evidence of model-independent defense generality; the AutoGen replication uses the GPT model family and remains subject to the same shared-source limitation.
+
 \begin{table}[t]
 \centering
 \small
