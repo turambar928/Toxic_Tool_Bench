@@ -243,7 +243,7 @@ Multi-table & Verification only & 0.69 & 0.38 & 0.54 & 0.38 & 1.00 \\
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.86\textwidth]{figures/verification_stress_curves}
-\caption{Full repeated-poison stress test. Each column covers a complete suite; rows report poisoned TSR, exposure-conditioned BCR, and RR as the probability of poisoning each eligible route observation increases. No method dominates across suites. Numerical recovery falls sharply, semantic/schema tasks remain more recoverable, and the 13-task multi-table estimates have visibly high variance. The corruption acts on returned observations, not the shared source.}
+\caption{Exposure-conditioned BCR under repeated poisoning for the numerical, semantic/schema, and 13-task multi-table suites. The complete poisoned-TSR and RR values are reported in Table~\ref{tab:appendix-multiroute-stress} and the released CSV. No method dominates across suites, and the small multi-table sample should not be read as a precise population estimate. The corruption acts on returned observations, not the shared source.}
 \label{fig:guard-tradeoff}
 \end{figure*}
 
@@ -416,7 +416,7 @@ Numerical & Base & 0.82 & 0.65 & 0.24 & 0.05 & 0.02 \\
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.86\textwidth]{figures/fig_capability_gap}
-\caption{Paired clean and poisoned task success in the expanded GPT-only cross-agent evaluation. Filled points show poisoned TSR, open points show clean TSR, and the connecting segment shows the paired degradation; this is a prevalence comparison across adapters, not a framework ranking.}
+\caption{Paired clean and poisoned task success in the expanded GPT-only cross-agent evaluation. Filled points show poisoned TSR, open points show clean TSR, and the connecting segment shows the paired degradation. Values are point estimates; adapter-level bootstrap intervals are released separately. This is a prevalence comparison across adapters, not a framework ranking.}
 \label{fig:capability-gap}
 \end{figure*}
 

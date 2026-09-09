@@ -11,7 +11,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
-from matplotlib.patches import Patch
 
 
 PUBLIC_ADAPTERS = {
@@ -40,6 +39,14 @@ COLORS = {
     "grid": "#D8E8F0",
     "light": "#F2F8FB",
     "paper": "#FFFFFF",
+}
+
+METRIC_CMAPS = {
+    "tsr": mpl.colors.LinearSegmentedColormap.from_list("tsr", ["#F2F8FB", "#2F75A3"]),
+    "bcr": mpl.colors.LinearSegmentedColormap.from_list("bcr", ["#FFF6F0", "#C65D36"]),
+    "vr": mpl.colors.LinearSegmentedColormap.from_list("vr", ["#F0F8F7", "#3E8E7E"]),
+    "rr": mpl.colors.LinearSegmentedColormap.from_list("rr", ["#F2F8F2", "#39724B"]),
+    "pdr": mpl.colors.LinearSegmentedColormap.from_list("pdr", ["#F5F7F8", "#788991"]),
 }
 
 
@@ -94,12 +101,36 @@ def panel_label(ax: mpl.axes.Axes, label: str) -> None:
             weight="bold", va="bottom", ha="left")
 
 
+def draw_metric_matrix(
+    ax: mpl.axes.Axes,
+    values: np.ndarray,
+    row_labels: list[str],
+    column_labels: list[str],
+    metric_types: list[str],
+) -> None:
+    for i in range(values.shape[0]):
+        for j in range(values.shape[1]):
+            value = values[i, j]
+            color = METRIC_CMAPS[metric_types[j]](value)
+            ax.add_patch(mpl.patches.Rectangle((j - 0.5, i - 0.5), 1, 1, facecolor=color,
+                                               edgecolor="white", linewidth=0.7))
+            ax.text(j, i, format_rate(value), ha="center", va="center", fontsize=7.2,
+                    color="white" if value >= 0.72 else COLORS["ink"])
+    ax.set_xlim(-0.5, values.shape[1] - 0.5)
+    ax.set_ylim(values.shape[0] - 0.5, -0.5)
+    ax.set_xticks(np.arange(len(column_labels)), column_labels)
+    ax.set_yticks(np.arange(len(row_labels)), row_labels)
+    ax.tick_params(length=0, labelsize=7.4)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+
 def save_figure(fig: mpl.figure.Figure, output: Path, preview_dir: Path | None) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, bbox_inches="tight", pad_inches=0.03)
+    fig.savefig(output)
     if preview_dir is not None:
         preview_dir.mkdir(parents=True, exist_ok=True)
-        fig.savefig(preview_dir / f"{output.stem}.png", dpi=300, bbox_inches="tight", pad_inches=0.03)
+        fig.savefig(preview_dir / f"{output.stem}.png", dpi=300)
     plt.close(fig)
 
 
@@ -122,28 +153,13 @@ def plot_cross_agent_model(results_dir: Path, output_dir: Path, preview_dir: Pat
     cross_model.sort(key=lambda row: (["Numerical", "Semantic/schema"].index(row["suite"]), model_order.index(row["model"])))
 
     columns = ["clean_tsr", "poisoned_tsr", "toxic_bcr", "poison_delivery_rate"]
-    column_labels = ["Clean TSR", "Poisoned TSR", "BCR", "PDR"]
+    column_labels = [r"Clean TSR $\uparrow$", r"Poisoned TSR $\uparrow$", r"BCR $\downarrow$", "PDR"]
     labels = [f"{'Num.' if row['suite'] == 'Numerical' else 'Sem.'} / {short_model(row['model'])}" for row in cross_model]
     matrix = np.array([[float(row[key]) for key in columns] for row in cross_model])
-    fig, ax = plt.subplots(figsize=(5.15, 2.95))
-    cmap = mpl.colors.LinearSegmentedColormap.from_list("cross_blue", ["#F2F8FB", "#9BC9DF", "#2F75A3"])
-    im = ax.imshow(matrix, cmap=cmap, vmin=0, vmax=1, aspect="auto")
-    ax.set_xticks(np.arange(len(columns)), column_labels)
-    ax.set_yticks(np.arange(len(labels)), labels)
-    ax.tick_params(length=0, labelsize=7.4)
-    for i in range(matrix.shape[0]):
-        for j in range(matrix.shape[1]):
-            value = matrix[i, j]
-            ax.text(j, i, format_rate(value), ha="center", va="center", fontsize=7.2,
-                    color="white" if value >= 0.58 else COLORS["ink"])
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-    ax.set_title("Cross-model prevalence of capability and trust gaps", pad=8)
-    panel_label(ax, "a")
-    cbar = fig.colorbar(im, ax=ax, fraction=0.035, pad=0.025)
-    cbar.set_label("Rate", fontsize=7.5)
-    cbar.ax.tick_params(length=0, labelsize=7)
-    cbar.outline.set_visible(False)
+    fig, ax = plt.subplots(figsize=(7.0, 2.95))
+    draw_metric_matrix(ax, matrix, labels, column_labels, ["tsr", "tsr", "bcr", "pdr"])
+    ax.axvline(2.5, color=COLORS["ink"], linewidth=0.8)
+    ax.set_title("Cross-model results", pad=8)
     fig.subplots_adjust(left=0.20, right=0.91, top=0.87, bottom=0.16)
     save_figure(fig, output_dir / "fig_cross_agent_model.pdf", preview_dir)
 
@@ -171,8 +187,8 @@ def plot_operator_profile(results_dir: Path, output_dir: Path, preview_dir: Path
         ("biased_retrieval", "Biased retrieval", "Semantic/schema"),
     ]
     metrics = [
-        ("toxic_tsr", "Poisoned\nTSR"),
-        ("bcr", "BCR"),
+        ("toxic_tsr", r"Poisoned TSR $\uparrow$"),
+        ("bcr", r"BCR $\downarrow$"),
         ("vr", "VR"),
         ("rr", "RR"),
         ("poison_delivery_rate", "PDR"),
@@ -183,30 +199,15 @@ def plot_operator_profile(results_dir: Path, output_dir: Path, preview_dir: Path
         matrix.append([float(source[metric]) for metric, _ in metrics])
     values = np.asarray(matrix)
 
-    fig, ax = plt.subplots(figsize=(7.12, 3.15))
-    cmap = mpl.colors.LinearSegmentedColormap.from_list(
-        "toxicbench_rates", ["#F7FBFD", "#DCEFFA", "#A9D2E5", "#4C93B5"]
+    fig, ax = plt.subplots(figsize=(7.0, 3.05))
+    draw_metric_matrix(
+        ax, values, [label for _, label, _ in order], [label for _, label in metrics],
+        ["tsr", "bcr", "vr", "rr", "pdr"],
     )
-    im = ax.imshow(values, cmap=cmap, vmin=0, vmax=1, aspect="auto")
-    ax.set_xticks(np.arange(len(metrics)), [label for _, label in metrics])
-    ax.set_yticks(np.arange(len(order)), [label for _, label, _ in order])
-    ax.tick_params(length=0, labelsize=8)
-    ax.tick_params(axis="x", pad=5)
-    ax.axhline(2.5, color=COLORS["paper"], linewidth=3.0)
-    ax.text(-0.19, 0.78, "Numerical", transform=ax.transAxes, rotation=90, va="center", ha="center", fontsize=7, color=COLORS["muted"])
-    ax.text(-0.19, 0.31, "Semantic / schema", transform=ax.transAxes, rotation=90, va="center", ha="center", fontsize=7, color=COLORS["muted"])
-    for i in range(values.shape[0]):
-        for j in range(values.shape[1]):
-            color = "white" if values[i, j] >= 0.58 else COLORS["ink"]
-            ax.text(j, i, format_rate(values[i, j]), ha="center", va="center", fontsize=7.4, color=color)
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-    cbar = fig.colorbar(im, ax=ax, fraction=0.024, pad=0.025)
-    cbar.set_label("Rate", fontsize=8)
-    cbar.ax.tick_params(length=0, labelsize=7)
-    cbar.outline.set_visible(False)
-    ax.set_title("Failure and recovery profiles by poisoning operator", pad=9)
-    fig.subplots_adjust(left=0.25, right=0.94, top=0.88, bottom=0.14)
+    ax.axvline(1.5, color=COLORS["ink"], linewidth=0.8)
+    ax.axvline(3.5, color=COLORS["ink"], linewidth=0.8)
+    ax.set_title("Operator profiles", pad=8)
+    fig.subplots_adjust(left=0.20, right=0.99, top=0.87, bottom=0.15)
     save_figure(fig, output_dir / "fig_operator_profile.pdf", preview_dir)
 
 
@@ -287,20 +288,24 @@ def plot_severity(results_dir: Path, output_dir: Path, preview_dir: Path | None)
     operators = sorted({row["poison_type"] for row in rows})
     severities = ["obvious", "plausible", "subtle"]
     matrix = np.full((len(operators), len(severities)), np.nan)
+    counts = np.zeros((len(operators), len(severities)), dtype=int)
     for i, operator in enumerate(operators):
         for j, severity in enumerate(severities):
             group = [row for row in rows if row["poison_type"] == operator and row["severity"] == severity]
             if group:
-                matrix[i, j] = mean(group, "bcr")
+                counts[i, j] = sum(int(row["n_exposed"]) for row in group)
+                if counts[i, j] > 0:
+                    matrix[i, j] = mean(group, "bcr")
     pretty = {
         "aggregate_scale": "Aggregate scale", "biased_retrieval": "Biased retrieval", "column_semantic_swap": "Column swap",
         "denominator_swap": "Denominator swap", "label_swap": "Label swap", "missing_filter": "Missing filter",
         "rank_swap": "Rank swap", "ratio_inversion": "Ratio inversion", "sign_flip": "Sign flip",
         "stale_metadata": "Stale metadata", "treatment_control_flip": "Treatment/control", "unit_conversion": "Unit conversion",
     }
-    fig, ax = plt.subplots(figsize=(7.12, 3.0))
+    fig, ax = plt.subplots(figsize=(7.0, 3.2))
     cmap = mpl.colors.LinearSegmentedColormap.from_list("severity", ["#F7FBFD", "#A9D2E5", "#1F5F82"])
-    im = ax.imshow(matrix, cmap=cmap, vmin=0, vmax=1, aspect="auto")
+    cmap.set_bad("#E9EDF0")
+    im = ax.imshow(np.ma.masked_invalid(matrix), cmap=cmap, vmin=0, vmax=1, aspect="auto")
     ax.set_xticks(np.arange(3), [name.capitalize() for name in severities])
     ax.set_yticks(np.arange(len(operators)), [pretty.get(name, name.replace("_", " ").title()) for name in operators])
     ax.tick_params(length=0, labelsize=8)
@@ -308,14 +313,17 @@ def plot_severity(results_dir: Path, output_dir: Path, preview_dir: Path | None)
         for j in range(matrix.shape[1]):
             if not np.isnan(matrix[i, j]):
                 color = "white" if matrix[i, j] >= 0.58 else COLORS["ink"]
-                ax.text(j, i, format_rate(matrix[i, j]), ha="center", va="center", fontsize=7.2, color=color)
+                ax.text(j, i, f"{format_rate(matrix[i, j])}\n$n={counts[i, j]}$", ha="center", va="center",
+                        fontsize=6.2, color=color, linespacing=1.05)
+            else:
+                ax.text(j, i, "N/A", ha="center", va="center", fontsize=6.5, color=COLORS["muted"])
     for spine in ax.spines.values():
         spine.set_visible(False)
     cbar = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.025)
     cbar.set_label("BCR", fontsize=8)
     cbar.ax.tick_params(length=0, labelsize=7)
     cbar.outline.set_visible(False)
-    ax.set_title("Blind compliance by operator and annotated severity", pad=8)
+    ax.set_title("Blind compliance by severity", pad=8)
     fig.subplots_adjust(left=0.23, right=0.94, top=0.89, bottom=0.12)
     save_figure(fig, output_dir / "fig_severity_heatmap.pdf", preview_dir)
 
@@ -365,15 +373,15 @@ def plot_capability_gap(results_dir: Path, output_dir: Path, preview_dir: Path |
     toxic = np.array([float(row["poisoned_tsr"]) for row in rows])
     gap = clean - toxic
 
-    fig, ax = plt.subplots(figsize=(5.4, 2.35))
+    fig, ax = plt.subplots(figsize=(7.0, 2.35))
     style_axes(ax, xgrid=True)
     y = np.arange(len(labels))
-    ax.hlines(y, toxic, clean, color=COLORS["grid"], linewidth=2.5, zorder=1)
-    ax.scatter(toxic, y, color=COLORS["risk"], s=28, zorder=3, label="Poisoned TSR")
-    ax.scatter(clean, y, facecolor="white", edgecolor=COLORS["clean"], linewidth=1.5, s=32, zorder=3, label="Clean TSR")
+    ax.hlines(y, toxic, clean, color="#9FB7C2", linewidth=2.0, zorder=1)
+    ax.scatter(clean, y, facecolor="white", edgecolor="#4B5E67", linewidth=1.5, s=32, zorder=3, label="Clean TSR")
+    ax.scatter(toxic, y, color=COLORS["clean"], s=28, zorder=3, label="Poisoned TSR")
     for yi, clean_value, toxic_value, gap_value in zip(y, clean, toxic, gap):
-        ax.text(clean_value + 0.018, yi, f"{format_rate(clean_value)}  Δ{format_rate(gap_value)}", va="center", fontsize=7)
-        ax.text(toxic_value - 0.018, yi, format_rate(toxic_value), va="center", ha="right", fontsize=7, color=COLORS["risk"])
+        ax.text(clean_value + 0.018, yi, f"{format_rate(clean_value)}   $\Delta$ = {format_rate(gap_value)}", va="center", fontsize=7)
+        ax.text(toxic_value - 0.018, yi, format_rate(toxic_value), va="center", ha="right", fontsize=7, color=COLORS["clean"])
     ax.set_yticks(y, labels)
     ax.invert_yaxis()
     ax.set_xlim(0.45, 1.05)
@@ -381,13 +389,12 @@ def plot_capability_gap(results_dir: Path, output_dir: Path, preview_dir: Path |
     ax.set_title("")
     ax.legend(frameon=False, loc="lower left", bbox_to_anchor=(0.0, 1.01), ncol=2,
               handlelength=1.0, columnspacing=0.8)
-    panel_label(ax, "a")
     fig.subplots_adjust(left=0.18, right=0.99, top=0.87, bottom=0.20)
     save_figure(fig, output_dir / "fig_capability_gap.pdf", preview_dir)
 
 
 def plot_defense_frontier(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
-    """Plot robustness versus measured latency, with BCR as marker size."""
+    """Plot poisoned-task success versus latency with an explicit Pareto frontier."""
     ablation = {row["adapter"]: row for row in read_csv(results_dir / "langgraph_guarded_ablation_summary.csv")}
     overhead_rows = read_csv(results_dir / "langgraph_guarded_overhead_summary.csv")
     toxic_latency: dict[str, list[float]] = defaultdict(list)
@@ -396,29 +403,37 @@ def plot_defense_frontier(results_dir: Path, output_dir: Path, preview_dir: Path
             toxic_latency[row["adapter"]].append(float(row["mean_seconds"]))
     variants = ["Base", "Caution only", "Expectation only", "Verification only", "Full guard", "Light guard"]
     labels = ["Base", "Caution", "Expectation", "Verify", "Full", "Light"]
-    colors = [COLORS["neutral"], COLORS["toxic"], COLORS["toxic"], COLORS["verify"], COLORS["clean"], COLORS["recover"]]
     latency = np.array([np.mean(toxic_latency[name]) for name in variants])
     tsr = np.array([float(ablation[name]["poisoned_tsr"]) for name in variants])
-    bcr = np.array([float(ablation[name]["bcr"]) for name in variants])
 
-    fig, ax = plt.subplots(figsize=(3.65, 2.8))
+    frontier = []
+    for i in range(len(variants)):
+        dominated = any(
+            latency[j] <= latency[i] and tsr[j] >= tsr[i]
+            and (latency[j] < latency[i] or tsr[j] > tsr[i])
+            for j in range(len(variants))
+        )
+        if not dominated:
+            frontier.append(i)
+    frontier.sort(key=lambda i: latency[i])
+
+    fig, ax = plt.subplots(figsize=(3.25, 2.65))
     style_axes(ax)
-    label_offsets = {
-        "Base": (5, -10),
-        "Caution": (5, 5),
-        "Expectation": (5, 8),
-        "Verify": (5, -13),
-        "Full": (5, 7),
-        "Light": (5, -15),
-    }
-    for x, y, size, color, label in zip(latency, tsr, bcr, colors, labels):
-        ax.scatter(x, y, s=70 + 220 * size, color=color, edgecolor="white", linewidth=0.8, label=label, zorder=3)
-        ax.annotate(label, (x, y), xytext=label_offsets[label], textcoords="offset points", fontsize=7)
+    ax.plot(latency[frontier], tsr[frontier], color=COLORS["clean"], linestyle=(0, (2, 2)),
+            linewidth=1.1, label="Pareto frontier", zorder=1)
+    for i, label in enumerate(labels):
+        is_frontier = i in frontier
+        ax.scatter(latency[i], tsr[i], s=34, color=COLORS["clean"] if is_frontier else COLORS["neutral"],
+                   edgecolor=COLORS["ink"], linewidth=0.45, zorder=3)
+        ax.annotate(label, (latency[i], tsr[i]), xytext=(4, 5 if i % 2 else -10),
+                    textcoords="offset points", fontsize=6.5,
+                    color=COLORS["ink"] if is_frontier else COLORS["muted"])
     ax.set_xlabel("Toxic-run latency (s)")
     ax.set_ylabel("Poisoned TSR")
-    ax.set_xlim(0, max(45, float(latency.max()) + 4))
+    ax.set_xlim(max(0, float(latency.min()) - 2), float(latency.max()) + 2)
     ax.set_ylim(0.55, 1.02)
     ax.set_title("Robustness--cost frontier", pad=8)
+    ax.legend(frameon=False, loc="lower right", fontsize=6.5, handlelength=1.4)
     ax.grid(axis="both", color=COLORS["grid"], linewidth=0.55)
     fig.subplots_adjust(left=0.17, right=0.98, top=0.86, bottom=0.18)
     save_figure(fig, output_dir / "fig_defense_frontier.pdf", preview_dir)
@@ -437,9 +452,7 @@ def main() -> None:
     configure_matplotlib()
     plot_cross_agent_model(args.results_dir, args.output_dir, args.preview_dir)
     plot_operator_profile(args.results_dir, args.output_dir, args.preview_dir)
-    plot_guard_tradeoff(args.results_dir, args.output_dir, args.preview_dir)
     plot_severity(args.results_dir, args.output_dir, args.preview_dir)
-    plot_guard_suite_breakdown(args.results_dir, args.output_dir, args.preview_dir)
     plot_capability_gap(args.results_dir, args.output_dir, args.preview_dir)
     plot_defense_frontier(args.results_dir, args.output_dir, args.preview_dir)
 
