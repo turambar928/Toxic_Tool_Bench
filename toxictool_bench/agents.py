@@ -45,6 +45,10 @@ AGENT_PROFILES = {
         "You are a Reflexion-style data agent. After each observation, critique whether it is consistent with "
         "the task, prior observations, and basic numerical constraints. Revise your approach when needed."
     ),
+    "self_refine": (
+        "You are a standard data analysis agent. Solve the task with the available tools and provide a final answer. "
+        "A separate post-answer self-refinement pass will review your completed answer without using tools."
+    ),
 }
 
 
@@ -105,11 +109,20 @@ def run_llm_agent(
             continue
         messages.append({"role": "assistant", "content": json.dumps(action, ensure_ascii=False)})
         if action.get("action") == "final":
+            final_answer = str(action.get("answer", ""))
+            if profile != "self_refine":
+                return AgentRun(
+                    final_answer=final_answer,
+                    messages=messages,
+                    raw_actions=raw_actions,
+                    parse_errors=parse_errors,
+                )
+            refined = run_self_refine(client, messages, final_answer)
             return AgentRun(
-                final_answer=str(action.get("answer", "")),
-                messages=messages,
-                raw_actions=raw_actions,
-                parse_errors=parse_errors,
+                final_answer=refined.final_answer,
+                messages=refined.messages,
+                raw_actions=raw_actions + refined.raw_actions,
+                parse_errors=parse_errors + refined.parse_errors,
             )
         if action.get("action") == "tool":
             observation = env.call(str(action.get("tool", "")), dict(action.get("args", {})))
@@ -122,6 +135,58 @@ def run_llm_agent(
         messages=messages,
         raw_actions=raw_actions,
         parse_errors=parse_errors,
+    )
+
+
+def run_self_refine(
+    client: ChatClient,
+    transcript: list[dict[str, str]],
+    initial_answer: str,
+) -> AgentRun:
+    """Perform one tool-free post-answer critique using only the existing transcript."""
+    review_messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are a post-answer self-refinement reviewer. Review the candidate answer using only the "
+                "conversation and tool observations already shown below. Do not call tools, recompute from hidden "
+                "data, or assume access to a clean oracle. Correct the answer only if the existing evidence supports "
+                "the correction. Return exactly one JSON object: "
+                '{"action":"final","answer":"..."}'
+            ),
+        },
+        *transcript,
+        {
+            "role": "user",
+            "content": (
+                "Review the candidate answer below for arithmetic, label binding, and consistency with the tool "
+                "observations in the transcript. Return a corrected final answer or retain it if the transcript "
+                "does not support a correction.\n\nCandidate answer:\n" + initial_answer
+            ),
+        },
+    ]
+    review = client.complete(review_messages)
+    action = parse_action(review)
+    if action is None or action.get("action") != "final":
+        review_messages.append({"role": "assistant", "content": review})
+        review_messages.append({"role": "user", "content": 'Return exactly {"action":"final","answer":"..."}'})
+        review = client.complete(review_messages)
+        action = parse_action(review)
+    if action is None or action.get("action") != "final":
+        return AgentRun(
+            final_answer=initial_answer,
+            messages=transcript + [{"role": "assistant", "content": review}],
+            raw_actions=[review],
+            parse_errors=1,
+        )
+    return AgentRun(
+        final_answer=str(action.get("answer", initial_answer)),
+        messages=transcript + [
+            {"role": "user", "content": "Post-answer self-refinement requested without tool access."},
+            {"role": "assistant", "content": json.dumps(action, ensure_ascii=False)},
+        ],
+        raw_actions=[review],
+        parse_errors=0,
     )
 
 
