@@ -92,23 +92,23 @@ Sign flip & \textbf{0.93} & \textbf{0.14} & \textbf{0.22} & \textbf{0.22} & 0.94
 
 \subsection{Guarded Verification as a Controlled Attribution Protocol}
 
-Table~\ref{tab:langgraph-guarded} reports the leakage-free LangGraph ablation on the same 120 instances with Claude Haiku 4.5. The expectation prompt is generic and cannot access poison metadata, expected behavior, or clean answers. Base BCR is 0.11. Running two ordinary, isolated agent passes with the same total route budget raises poisoned TSR from 0.82 to 0.92 and lowers BCR to 0.01. Verification-only reaches 0.93 poisoned TSR with BCR 0.02, while expectation plus verification reaches 0.93 and 0.00. Thus, additional evidence and compute explain most of the gain; the generic guard removes the residual observed blind compliance under \texttt{poison\_once}. Paired task bootstrap intervals put Base BCR at [0.05, 0.17] and guarded BCR at [0.00, 0.00].
+Table~\ref{tab:langgraph-guarded} reports the leakage-free LangGraph ablation on the same 120 instances with Claude Haiku 4.5. The expectation prompt is generic and cannot access poison metadata, expected behavior, or clean answers. Base BCR is 0.11. Running two ordinary, isolated agent passes with the same total route budget raises poisoned TSR from 0.82 to 0.92 and lowers BCR to 0.01. Verification-only reaches 0.93 poisoned TSR with BCR 0.02, while expectation plus verification reaches 0.93 and 0.00. Thus, additional evidence and compute explain most of the gain; the generic guard removes the residual observed blind compliance under \texttt{poison\_once}. We additionally report PAR and VPA: the generic guard has PAR/VPA of 0.25/0.25, so zero BCR does not mean that every poisoned answer was rejected. Paired task bootstrap intervals put Base BCR at [0.05, 0.17] and guarded BCR at [0.00, 0.00].
 
 \begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{4.5pt}
-\begin{tabular}{@{}lrrrrr@{}}
+\begin{tabular}{@{}lrrrrrrr@{}}
 \toprule
-Variant & Clean TSR & Poisoned TSR & BCR & VR & RR \\
+Variant & Clean TSR & Poisoned TSR & BCR & PAR & VPA & VR & RR \\
 \midrule
-Base & 0.91 & 0.82 & 0.11 & 0.47 & 0.46 \\
-Double-pass & 0.91 & 0.92 & 0.01 & \textbf{0.98} & \textbf{0.95} \\
-Verification only & 0.92 & \textbf{0.93} & 0.02 & 0.96 & \textbf{0.95} \\
-Generic guard & \textbf{0.93} & \textbf{0.93} & \textbf{0.00} & 0.97 & 0.94 \\
+Base & 0.91 & 0.82 & 0.11 & 0.27 & 0.15 & 0.47 & 0.46 \\
+Double-pass & 0.91 & 0.92 & 0.01 & 0.17 & 0.16 & \textbf{0.98} & \textbf{0.95} \\
+Verification only & 0.92 & \textbf{0.93} & 0.02 & 0.32 & 0.30 & 0.96 & \textbf{0.95} \\
+Generic guard & \textbf{0.93} & \textbf{0.93} & \textbf{0.00} & 0.25 & 0.25 & 0.97 & 0.94 \\
 \bottomrule
 \end{tabular}
-\caption{Leakage-free LangGraph ReAct defense ablation on 120 task instances with Claude Haiku 4.5. Double-pass is the matched-compute control.}
+\caption{Leakage-free LangGraph ReAct defense ablation on 120 task instances with Claude Haiku 4.5. Double-pass is the matched-compute control. PAR is broad poisoned-answer adoption and VPA is adoption after qualifying validation; both are conditioned on delivered poison.}
 \label{tab:langgraph-guarded}
 \end{table}
 
