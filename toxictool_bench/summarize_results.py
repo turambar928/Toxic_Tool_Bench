@@ -50,6 +50,8 @@ def write_overall(rows: list[dict[str, Any]], path: Path) -> None:
                 "poisoned_tsr",
                 "delta_tsr",
                 "toxic_bcr",
+                "toxic_par",
+                "toxic_vpa",
                 "toxic_adr",
                 "toxic_vr",
                 "toxic_rr",
@@ -74,6 +76,8 @@ def write_overall(rows: list[dict[str, Any]], path: Path) -> None:
                     "poisoned_tsr": fmt(toxic.get("task_success", 0.0)),
                     "delta_tsr": fmt(clean.get("task_success", 0.0) - toxic.get("task_success", 0.0)),
                     "toxic_bcr": fmt(toxic.get("blind_compliance", 0.0)),
+                    "toxic_par": fmt(toxic.get("poison_adoption", 0.0)),
+                    "toxic_vpa": fmt(toxic.get("validated_poison_adoption", 0.0)),
                     "toxic_adr": fmt(toxic.get("anomaly_detection", 0.0)),
                     "toxic_vr": fmt(toxic.get("validation", 0.0)),
                     "toxic_rr": fmt(toxic.get("recovery", 0.0)),
@@ -99,7 +103,7 @@ def write_poison(rows: list[dict[str, Any]], path: Path) -> None:
         writer = csv.DictWriter(
             f,
             fieldnames=[
-                "model", "adapter", "poison_type", "toxic_tsr", "bcr", "adr", "vr", "rr",
+                "model", "adapter", "poison_type", "toxic_tsr", "bcr", "par", "vpa", "adr", "vr", "rr",
                 "poison_delivery_rate", "n_exposed", "n",
             ],
             lineterminator="\n",
@@ -114,6 +118,8 @@ def write_poison(rows: list[dict[str, Any]], path: Path) -> None:
                     "poison_type": poison_type,
                     "toxic_tsr": fmt(metrics.get("task_success", 0.0)),
                     "bcr": fmt(metrics.get("blind_compliance", 0.0)),
+                    "par": fmt(metrics.get("poison_adoption", 0.0)),
+                    "vpa": fmt(metrics.get("validated_poison_adoption", 0.0)),
                     "adr": fmt(metrics.get("anomaly_detection", 0.0)),
                     "vr": fmt(metrics.get("validation", 0.0)),
                     "rr": fmt(metrics.get("recovery", 0.0)),
@@ -139,7 +145,7 @@ def write_severity(rows: list[dict[str, Any]], path: Path) -> None:
         writer = csv.DictWriter(
             f,
             fieldnames=[
-                "model", "adapter", "poison_type", "severity", "toxic_tsr", "bcr", "adr", "vr", "rr",
+                "model", "adapter", "poison_type", "severity", "toxic_tsr", "bcr", "par", "vpa", "adr", "vr", "rr",
                 "poison_delivery_rate", "n_exposed", "n",
             ],
             lineterminator="\n",
@@ -155,6 +161,8 @@ def write_severity(rows: list[dict[str, Any]], path: Path) -> None:
                     "severity": severity,
                     "toxic_tsr": fmt(metrics.get("task_success", 0.0)),
                     "bcr": fmt(metrics.get("blind_compliance", 0.0)),
+                    "par": fmt(metrics.get("poison_adoption", 0.0)),
+                    "vpa": fmt(metrics.get("validated_poison_adoption", 0.0)),
                     "adr": fmt(metrics.get("anomaly_detection", 0.0)),
                     "vr": fmt(metrics.get("validation", 0.0)),
                     "rr": fmt(metrics.get("recovery", 0.0)),
