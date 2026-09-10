@@ -34,28 +34,38 @@ AutoGen & 0.92 & \textbf{0.65} & 0.27 & \textbf{0.23} & 0.43 & 0.86 \\
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
-The smaller suites allow repetition across model families. Table~\ref{tab:cross-model-compact} averages the same four public adapters in every model--suite group: LangGraph, smolagents, PandasAI, and AutoGen. Every group shows a substantial clean-to-poisoned gap and nonzero BCR, as visualized in Figure~\ref{fig:cross-agent-model}. Semantic/schema corruption is especially revealing: GPT and Claude average perfect clean TSR, but poisoned TSR falls to 0.55 and 0.73. We avoid fine-grained model rankings because the suites are modest and poisoning boundaries differ. Adapter-level bootstrap intervals are released; for example, GPT--LangGraph numerical BCR is 0.79 [0.64, 0.93], while semantic poisoned TSR is 0.79 [0.62, 0.92].
+The smaller suites allow repetition across model families. Table~\ref{tab:cross-agent-model-full} reports every completed agent--model run rather than averaging away adapter behavior. All 12 fully crossed public-adapter configurations exhibit a clean-to-poisoned gap in both suites. PandasAI has the highest BCR in five of its six model--suite settings, but its coarser chat-result poisoning boundary prevents interpreting this as a framework ranking. DA-Agent completed the GPT numerical suite only and is reported separately rather than included in cross-model averages. Figure~\ref{fig:cross-agent-model} summarizes the four consistently covered public adapters by model and suite. Adapter-level bootstrap intervals are released; for example, GPT--LangGraph numerical BCR is 0.79 [0.64, 0.93], while its semantic poisoned TSR is 0.79 [0.62, 0.92].
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}llrrrrr@{}}
+\setlength{\tabcolsep}{5.2pt}
+\begin{tabular}{@{}llrrr@{\hspace{10pt}}rrr@{}}
 \toprule
-Suite & Model & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & PDR \\
+& & \multicolumn{3}{c}{Numerical (34)} & \multicolumn{3}{c}{Semantic/schema (24)} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+Model & Agent & Clean TSR & Poisoned TSR & BCR & Clean TSR & Poisoned TSR & BCR \\
 \midrule
-Numerical & GPT & 0.99 & 0.52 & 0.47 & 0.67 & 0.79 \\
- & Claude & 0.94 & 0.68 & 0.26 & 0.36 & 0.88 \\
- & Qwen & 0.94 & 0.53 & 0.42 & 0.57 & 0.76 \\
+GPT & LangGraph ReAct & 1.00 & 0.41 & 0.79 & 1.00 & 0.79 & 0.21 \\
+ & smolagents & 0.97 & 0.62 & 0.52 & 1.00 & 0.46 & 0.60 \\
+ & PandasAI & 1.00 & 0.47 & 0.76 & 1.00 & 0.25 & 1.00 \\
+ & AutoGen & 0.97 & 0.56 & 0.59 & 1.00 & 0.71 & 0.25 \\
+ & DA-Agent & 0.85 & 0.53 & 0.38 & -- & -- & -- \\
 \midrule
-Semantic/schema & GPT & 1.00 & 0.55 & 0.45 & 0.51 & 0.90 \\
- & Claude & 1.00 & 0.73 & 0.27 & 0.42 & 0.93 \\
- & Qwen & 0.96 & 0.55 & 0.41 & 0.49 & 0.87 \\
+Claude & LangGraph ReAct & 0.88 & 0.76 & 0.19 & 1.00 & 0.96 & 0.00 \\
+ & smolagents & 1.00 & 0.82 & 0.14 & 1.00 & 0.71 & 0.26 \\
+ & PandasAI & 0.97 & 0.32 & 0.84 & 1.00 & 0.29 & 1.00 \\
+ & AutoGen & 0.91 & 0.82 & 0.27 & 1.00 & 0.96 & 0.46 \\
+\midrule
+Qwen & LangGraph ReAct & 1.00 & 0.44 & 0.71 & 1.00 & 0.79 & 0.21 \\
+ & smolagents & 0.82 & 0.65 & 0.33 & 1.00 & 0.46 & 0.58 \\
+ & PandasAI & 1.00 & 0.26 & 0.90 & 0.83 & 0.21 & 1.00 \\
+ & AutoGen & 0.94 & 0.76 & 0.34 & 1.00 & 0.75 & 0.38 \\
 \bottomrule
 \end{tabular}
-\caption{Cross-model summary, averaged over completed public adapters. Numerical uses 34 tasks; semantic/schema uses 24.}
-\label{tab:cross-model-compact}
-\end{table}
+\caption{Agent-level benchmark results on the cross-model suites. BCR conditions on delivered poison; Clean and Poisoned TSR use all runs. Dashes denote an unexecuted configuration, not a zero score. Adapter boundaries differ, so the table establishes prevalence rather than a strict framework ranking.}
+\label{tab:cross-agent-model-full}
+\end{table*}
 
 \begin{figure*}[t]
 \centering
