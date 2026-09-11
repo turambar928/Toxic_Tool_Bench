@@ -6,12 +6,10 @@ We ask whether silent poisoning causes blind compliance across agents and models
 \subsection{Setup}
 
 \paragraph{Tasks and agents.}
-The cross-model evaluation uses 34 numerical and 24 semantic/schema instances. A larger \texttt{gpt-5.4-mini}-only evaluation and the defense ablation use 60 instances from each family (120 total). We evaluate LangGraph ReAct, smolagents, PandasAI, DA-Agent, and AutoGen where feasible, using \texttt{gpt-5.4-mini}, \texttt{claude-sonnet-4-6}, and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent is omitted from Claude/Qwen runs because of runtime. LangGraph, smolagents, and AutoGen expose tool observations directly; PandasAI is instrumented at its coarser chat-result boundary. We therefore interpret results as end-to-end adapter measurements, not pure model rankings.
+The cross-model evaluation uses 34 numerical and 24 semantic/schema instances; the larger \texttt{gpt-5.4-mini}-only evaluation and defense ablation use 60 instances per family. We evaluate LangGraph ReAct, smolagents, PandasAI, DA-Agent, and AutoGen where feasible with \texttt{gpt-5.4-mini}, \texttt{claude-sonnet-4-6}, and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent is omitted from Claude/Qwen runs because of runtime. Direct observation adapters expose tool outputs, whereas PandasAI is instrumented at its coarser chat-result boundary; results are therefore a prevalence study, not pure model or framework rankings.
 
 \paragraph{Protocol.}
-Every task is run in paired clean and toxic environments. We report clean and poisoned TSR over all environment runs, PDR over toxic-environment runs, and BCR/ADR/VR/RR only over runs in which poison was delivered. Confidence intervals use task-level nonparametric bootstrap resampling. Full adapter-level results, confidence intervals, trajectories, timing logs, and the immutable run manifest are released with the benchmark.
-
-Because adapters expose different observation boundaries and have unequal model coverage, these cross-framework results are a prevalence study of silent poisoning rather than a strict ranking of agent frameworks or models.
+Every task is run in paired clean and toxic environments. We report clean and poisoned TSR over all runs, PDR over toxic runs, and BCR/ADR/VR/RR conditional on delivered poison; confidence intervals use task-level bootstrap resampling. Full trajectories, timing logs, confidence intervals, and the immutable run manifest are released with the benchmark.
 
 \subsection{Blind Compliance Across Agents and Models}
 
@@ -34,13 +32,14 @@ AutoGen & 0.92 & \best{0.65} & 0.27 & \best{0.23} & 0.43 & 0.86 \\
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
-The smaller suites allow repetition across model families. Table~\ref{tab:cross-agent-model-full} reports every completed agent--model run rather than averaging away adapter behavior. All 12 fully crossed public-adapter configurations exhibit a clean-to-poisoned gap in both suites. PandasAI has the highest BCR in five of its six model--suite settings, but its coarser chat-result poisoning boundary prevents interpreting this as a framework ranking. DA-Agent completed the \texttt{gpt-5.4-mini} numerical suite only and is reported separately rather than included in cross-model averages. The corresponding heatmap is provided in Appendix~\ref{fig:cross-agent-model}. Adapter-level bootstrap intervals are released; for example, \texttt{gpt-5.4-mini}--LangGraph numerical BCR is 0.79 [0.64, 0.93], while its semantic poisoned TSR is 0.79 [0.62, 0.92].
+The smaller suites permit repetition across model families. Table~\ref{tab:cross-agent-model-full} reports completed agent--model runs without averaging away adapter behavior. All 12 fully crossed public-adapter configurations show a clean-to-poisoned gap in both suites. DA-Agent completed only the \texttt{gpt-5.4-mini} numerical suite; PandasAI's coarser boundary prevents framework ranking. The heatmap and released bootstrap intervals appear in Appendix~\ref{fig:cross-agent-model}; for example, \texttt{gpt-5.4-mini}--LangGraph numerical BCR is 0.79 [0.64, 0.93].
 
 \begin{table*}[t]
 \centering
 \small
 \setlength{\tabcolsep}{5.2pt}
-\begin{tabular}{@{}llrrr@{\hspace{10pt}}rrr@{}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llccc@{\hspace{10pt}}ccc@{}}
 \toprule
 & & \multicolumn{3}{c}{Numerical (34)} & \multicolumn{3}{c}{Semantic/schema (24)} \\
 \cmidrule(lr){3-5}\cmidrule(lr){6-8}
@@ -54,7 +53,7 @@ GPT-5.4-mini & LangGraph ReAct & 1.00 & 0.41 & 0.79 & 1.00 & 0.79 & 0.21 \\
 \midrule
 Claude Sonnet 4.6 & LangGraph ReAct & 0.88 & 0.76 & 0.19 & 1.00 & 0.96 & 0.00 \\
  & smolagents & 1.00 & 0.82 & 0.14 & 1.00 & 0.71 & 0.26 \\
- & PandasAI & 0.97 & 0.32 & 0.84 & 1.00 & 0.29 & 1.00 \\
+ & PandasAI & 0.97 & 0.32 & 0.84 & 1.00 & 0.29 &  1.00 \\
  & AutoGen & 0.91 & 0.82 & 0.27 & 1.00 & 0.96 & 0.46 \\
 \midrule
 Qwen3.6-35B & LangGraph ReAct & 1.00 & 0.44 & 0.71 & 1.00 & 0.79 & 0.21 \\
@@ -62,8 +61,9 @@ Qwen3.6-35B & LangGraph ReAct & 1.00 & 0.44 & 0.71 & 1.00 & 0.79 & 0.21 \\
  & PandasAI & 1.00 & 0.26 & 0.90 & 0.83 & 0.21 & 1.00 \\
  & AutoGen & 0.94 & 0.76 & 0.34 & 1.00 & 0.75 & 0.38 \\
 \bottomrule
-\end{tabular}
-\caption{Agent-level benchmark results on the cross-model suites. The displayed model labels correspond to the exact IDs \texttt{gpt-5.4-mini}, \texttt{claude-sonnet-4-6}, and \texttt{Qwen3.6-35B-A3B-no-thinking}, respectively. BCR conditions on delivered poison; Clean and Poisoned TSR use all runs. Dashes denote an unexecuted configuration, not a zero score. Adapter boundaries differ, so the table establishes prevalence rather than a strict framework ranking.}
+\end{tabular}%
+}
+\caption{Agent-level benchmark results. Exact model IDs are \texttt{gpt-5.4-mini}, \texttt{claude-sonnet-4-6}, and \texttt{Qwen3.6-35B-A3B-no-thinking}; BCR conditions on delivered poison. Dashes indicate unexecuted configurations. Because adapter boundaries differ, the table reports prevalence rather than a strict ranking.}
 \label{tab:cross-agent-model-full}
 \end{table*}
 
@@ -106,14 +106,9 @@ As a cross-framework replication, the same leakage-free verification protocol on
 The repeated-poison matrix contains all 60 numerical, 60 semantic/schema, and 13 multi-table tasks at $p\in\{0.25,0.50,0.75,1.00\}$ for Double-pass, Verification-only, and Generic Guard. At $p=1$, Generic Guard obtains TSR/BCR/RR of 0.73/0.24/0.24 on numerical tasks, 0.87/0.10/0.87 on semantic/schema tasks, and 0.54/0.00/0.46 on the 13 joins. Double-pass and Verification-only also degrade. These results replace the earlier small-subset stress test: zero BCR is a \texttt{poison\_once} result, not a robust guarantee when verification observations can also be corrupted. Appendix Figure~\ref{fig:guard-tradeoff} shows the complete probability curves.
 
 \paragraph{Cost and selectivity.}
-Always-on verification has a measurable cost. Across the two 60-task suites, Base averages 17.55/16.98 seconds and 2.27/2.36 tool events on clean/toxic runs. Generic Guard averages 39.02/39.90 seconds and 4.65/4.86 events; Double-pass is similar at 37.66/36.16 seconds, while Verification-only costs 32.38/34.02 seconds. The matched control shows that this overhead is largely the cost of collecting a second route, not expectation elicitation alone. The API gateway does not expose reliable token billing, so we report wall-clock and tool-event proxies rather than fabricated dollar estimates. Appendix~\ref{sec:appendix-guard} provides p50/p90 latency, confidence intervals, and machine-readable logs.
+Always-on verification approximately doubles latency and tool events: Base averages 17.55/16.98 seconds and 2.27/2.36 events on clean/toxic runs, versus 39.02/39.90 seconds and 4.65/4.86 events for Generic Guard. Double-pass is similar (37.66/36.16 seconds), while Verification-only costs 32.38/34.02 seconds. Thus, most gains come from collecting a second route rather than expectation elicitation alone. Since the API gateway exposes no reliable token billing, we report wall-clock and tool-event proxies; p50/p90 values and logs are in Appendix~\ref{sec:appendix-guard}.
 
 \subsection{Qualitative Evidence}
 
-\paragraph{Plausible answers hide binding errors.}
-In a treatment/control task, the poisoned observation reports \texttt{Control--0.145}. The rate is copied from the clean computation and remains plausible; only the group binding is wrong. The base trajectory repeats this pair in the final answer without checking the underlying rows. Similar failures occur in ranking tasks, where the value is correct but attached to the wrong entity. These cases explain why rank and label swaps produce higher BCR than sign flips: magnitude checks do not reveal a corrupted association.
-
-\paragraph{Recovery requires new evidence.}
-On the same treatment task, the guarded trajectory re-inspects the dataframe, recomputes rates by group, and returns \texttt{Treatment--0.145}. In a multi-table customer-spend task, the base agent adopts a poisoned joined summary, whereas the guard reconstructs the join from the customer and order tables before finalizing. Generic statements that a result ``may need verification'' receive neither VR nor RR; ADR requires an explicit conflict or corruption claim tied to the returned result. The contrast grounds the aggregate finding: recovery comes from a post-poison evidence-producing action, not from skeptical language alone.
-
-Overall, the experiments establish three points: blind compliance persists across agent and model families; binding-preserving corruptions are harder than conspicuous sign errors; and a second evidence route greatly improves trust calibration under an explicit clean-route assumption. The Generic Guard comparison further measures, rather than assumes, the smaller incremental effect of expectation and evidence gating.
+\paragraph{Qualitative evidence.}
+In a treatment/control task, the poisoned observation reports \texttt{Control--0.145}: the value is copied from the clean computation but attached to the wrong group, so the base trajectory repeats it without checking the rows. The guarded trajectory re-inspects the dataframe and returns \texttt{Treatment--0.145}; in a multi-table task it similarly reconstructs the join before finalizing. These cases explain why binding-preserving swaps have higher BCR than sign flips: magnitude checks do not reveal a corrupted association. Generic statements that a result ``may need verification'' receive neither VR nor RR, so recovery requires a post-poison evidence-producing action rather than skeptical language alone.
