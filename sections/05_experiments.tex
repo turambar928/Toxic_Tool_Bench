@@ -6,7 +6,7 @@ We ask whether silent poisoning causes blind compliance across agents and models
 \subsection{Setup}
 
 \paragraph{Tasks and agents.}
-The cross-model evaluation uses 34 numerical and 24 semantic/schema instances. A larger GPT-only evaluation and the defense ablation use 60 instances from each family (120 total). We evaluate LangGraph ReAct, smolagents, PandasAI, DA-Agent, and AutoGen where feasible, using \texttt{gpt-5.4-mini}, \texttt{claude-sonnet-4-6}, and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent is omitted from Claude/Qwen runs because of runtime. LangGraph, smolagents, and AutoGen expose tool observations directly; PandasAI is instrumented at its coarser chat-result boundary. We therefore interpret results as end-to-end adapter measurements, not pure model rankings.
+The cross-model evaluation uses 34 numerical and 24 semantic/schema instances. A larger \texttt{gpt-5.4-mini}-only evaluation and the defense ablation use 60 instances from each family (120 total). We evaluate LangGraph ReAct, smolagents, PandasAI, DA-Agent, and AutoGen where feasible, using \texttt{gpt-5.4-mini}, \texttt{claude-sonnet-4-6}, and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent is omitted from Claude/Qwen runs because of runtime. LangGraph, smolagents, and AutoGen expose tool observations directly; PandasAI is instrumented at its coarser chat-result boundary. We therefore interpret results as end-to-end adapter measurements, not pure model rankings.
 
 \paragraph{Protocol.}
 Every task is run in paired clean and toxic environments. We report clean and poisoned TSR over all environment runs, PDR over toxic-environment runs, and BCR/ADR/VR/RR only over runs in which poison was delivered. Confidence intervals use task-level nonparametric bootstrap resampling. Full adapter-level results, confidence intervals, trajectories, timing logs, and the immutable run manifest are released with the benchmark.
@@ -15,7 +15,7 @@ Because adapters expose different observation boundaries and have unequal model 
 
 \subsection{Blind Compliance Across Agents and Models}
 
-Table~\ref{tab:gpt-expanded-cross-agent-120} reports the expanded 120-instance GPT-only evaluation. All adapters solve most clean instances, yet poisoned TSR falls by 0.27--0.36 and exposure-conditioned BCR remains nonzero. PDR varies because not every trajectory calls a poison-eligible tool. Thus, strong clean performance does not imply calibrated trust, and apparent robustness must be interpreted jointly with exposure.
+Table~\ref{tab:gpt-expanded-cross-agent-120} reports the expanded 120-instance \texttt{gpt-5.4-mini}-only evaluation. All adapters solve most clean instances, yet poisoned TSR falls by 0.27--0.36 and exposure-conditioned BCR remains nonzero. PDR varies because not every trajectory calls a poison-eligible tool. Thus, strong clean performance does not imply calibrated trust, and apparent robustness must be interpreted jointly with exposure.
 
 \begin{table}[t]
 \centering
@@ -30,11 +30,11 @@ smolagents & 0.91 & 0.55 & \best{0.36} & 0.52 & 0.20 & 0.74 \\
 AutoGen & 0.92 & \best{0.65} & 0.27 & \best{0.23} & 0.43 & 0.86 \\
 \bottomrule
 \end{tabular}
-\caption{Expanded GPT-only results on 120 task instances. Behavioral rates condition on delivered poison; PDR reports exposure.}
+\caption{Expanded \texttt{gpt-5.4-mini}-only results on 120 task instances. Behavioral rates condition on delivered poison; PDR reports exposure.}
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
-The smaller suites allow repetition across model families. Table~\ref{tab:cross-agent-model-full} reports every completed agent--model run rather than averaging away adapter behavior. All 12 fully crossed public-adapter configurations exhibit a clean-to-poisoned gap in both suites. PandasAI has the highest BCR in five of its six model--suite settings, but its coarser chat-result poisoning boundary prevents interpreting this as a framework ranking. DA-Agent completed the GPT numerical suite only and is reported separately rather than included in cross-model averages. The corresponding heatmap is provided in Appendix~\ref{fig:cross-agent-model}. Adapter-level bootstrap intervals are released; for example, GPT--LangGraph numerical BCR is 0.79 [0.64, 0.93], while its semantic poisoned TSR is 0.79 [0.62, 0.92].
+The smaller suites allow repetition across model families. Table~\ref{tab:cross-agent-model-full} reports every completed agent--model run rather than averaging away adapter behavior. All 12 fully crossed public-adapter configurations exhibit a clean-to-poisoned gap in both suites. PandasAI has the highest BCR in five of its six model--suite settings, but its coarser chat-result poisoning boundary prevents interpreting this as a framework ranking. DA-Agent completed the \texttt{gpt-5.4-mini} numerical suite only and is reported separately rather than included in cross-model averages. The corresponding heatmap is provided in Appendix~\ref{fig:cross-agent-model}. Adapter-level bootstrap intervals are released; for example, \texttt{gpt-5.4-mini}--LangGraph numerical BCR is 0.79 [0.64, 0.93], while its semantic poisoned TSR is 0.79 [0.62, 0.92].
 
 \begin{table*}[t]
 \centering
@@ -46,24 +46,24 @@ The smaller suites allow repetition across model families. Table~\ref{tab:cross-
 \cmidrule(lr){3-5}\cmidrule(lr){6-8}
 Model & Agent & Clean TSR & Poisoned TSR & BCR & Clean TSR & Poisoned TSR & BCR \\
 \midrule
-GPT & LangGraph ReAct & 1.00 & 0.41 & 0.79 & 1.00 & 0.79 & 0.21 \\
+GPT-5.4-mini & LangGraph ReAct & 1.00 & 0.41 & 0.79 & 1.00 & 0.79 & 0.21 \\
  & smolagents & 0.97 & 0.62 & 0.52 & 1.00 & 0.46 & 0.60 \\
  & PandasAI & 1.00 & 0.47 & 0.76 & 1.00 & 0.25 & 1.00 \\
  & AutoGen & 0.97 & 0.56 & 0.59 & 1.00 & 0.71 & 0.25 \\
  & DA-Agent & 0.85 & 0.53 & 0.38 & -- & -- & -- \\
 \midrule
-Claude & LangGraph ReAct & 0.88 & 0.76 & 0.19 & 1.00 & 0.96 & 0.00 \\
+Claude Sonnet 4.6 & LangGraph ReAct & 0.88 & 0.76 & 0.19 & 1.00 & 0.96 & 0.00 \\
  & smolagents & 1.00 & 0.82 & 0.14 & 1.00 & 0.71 & 0.26 \\
  & PandasAI & 0.97 & 0.32 & 0.84 & 1.00 & 0.29 & 1.00 \\
  & AutoGen & 0.91 & 0.82 & 0.27 & 1.00 & 0.96 & 0.46 \\
 \midrule
-Qwen & LangGraph ReAct & 1.00 & 0.44 & 0.71 & 1.00 & 0.79 & 0.21 \\
+Qwen3.6-35B & LangGraph ReAct & 1.00 & 0.44 & 0.71 & 1.00 & 0.79 & 0.21 \\
  & smolagents & 0.82 & 0.65 & 0.33 & 1.00 & 0.46 & 0.58 \\
  & PandasAI & 1.00 & 0.26 & 0.90 & 0.83 & 0.21 & 1.00 \\
  & AutoGen & 0.94 & 0.76 & 0.34 & 1.00 & 0.75 & 0.38 \\
 \bottomrule
 \end{tabular}
-\caption{Agent-level benchmark results on the cross-model suites. BCR conditions on delivered poison; Clean and Poisoned TSR use all runs. Dashes denote an unexecuted configuration, not a zero score. Adapter boundaries differ, so the table establishes prevalence rather than a strict framework ranking.}
+\caption{Agent-level benchmark results on the cross-model suites. The displayed model labels correspond to the exact IDs \texttt{gpt-5.4-mini}, \texttt{claude-sonnet-4-6}, and \texttt{Qwen3.6-35B-A3B-no-thinking}, respectively. BCR conditions on delivered poison; Clean and Poisoned TSR use all runs. Dashes denote an unexecuted configuration, not a zero score. Adapter boundaries differ, so the table establishes prevalence rather than a strict framework ranking.}
 \label{tab:cross-agent-model-full}
 \end{table*}
 
