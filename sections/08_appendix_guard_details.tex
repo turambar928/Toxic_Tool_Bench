@@ -186,7 +186,7 @@ Numerical-20 & Selective & 0.75 & 0.50 & 0.33 & 0.50 & 0.50 & 0.60 \\
 \midrule
 Semantic-10 & Abstain & 1.00 & 0.60 & 0.00 & 0.90 & 0.60 & 1.00 \\
 Semantic-10 & Randomized & 1.00 & 0.80 & 0.20 & 0.80 & 0.80 & 1.00 \\
-Semantic-10 & Selective & 1.00 & \textbf{1.00} & \textbf{0.00} & \textbf{1.00} & \textbf{1.00} & 1.00 \\
+Semantic-10 & Selective & 1.00 & \best{1.00} & \best{0.00} & \best{1.00} & \best{1.00} & 1.00 \\
 \bottomrule
 \end{tabular}
 \caption{LangGraph alternative verification policies on fixed stratified subsets. Behavior rates use only poison-exposed runs; PDR gives the exposed fraction.}
@@ -278,8 +278,8 @@ Adapter & Poisoned TSR & BCR & Sem. events & Num. events \\
 \midrule
 Base & 0.82 & 0.11 & 2.40 & 2.32 \\
 Double-pass & 0.92 & 0.01 & 4.77 & 4.45 \\
-Verification only & \textbf{0.93} & 0.02 & 4.57 & 4.30 \\
-Generic guard & \textbf{0.93} & \textbf{0.00} & 5.10 & 4.62 \\
+Verification only & \best{0.93} & 0.02 & 4.57 & 4.30 \\
+Generic guard & \best{0.93} & \best{0.00} & 5.10 & 4.62 \\
 \bottomrule
 \end{tabular}
 \caption{Cost--robustness tradeoff for the expanded 120-task LangGraph ReAct defense ablation. Event columns report average tool events per poisoned run.}
@@ -405,6 +405,13 @@ Numerical & Base & 0.82 & 0.65 & 0.24 & 0.05 & 0.02 \\
 \caption{Suite-level LangGraph ReAct defense results on the expanded 120-instance evaluation.}
 \label{tab:appendix-guard-suite-breakdown}
 \end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.86\textwidth]{figures/fig_cross_agent_model}
+\caption{Cross-model prevalence of capability and trust gaps. Rows are numerical (Num.) or semantic/schema (Sem.) suites paired with a model; cells report clean TSR, poisoned TSR, exposure-conditioned BCR, and poison delivery rate (PDR). This is a prevalence comparison, not a framework or model ranking.}
+\label{fig:cross-agent-model}
+\end{figure*}
 
 \begin{figure*}[t]
 \centering

@@ -25,16 +25,16 @@ Table~\ref{tab:gpt-expanded-cross-agent-120} reports the expanded 120-instance G
 \toprule
 Adapter & Clean TSR & Poisoned TSR & $\Delta$TSR & BCR & RR & PDR \\
 \midrule
-LangGraph ReAct & \textbf{0.93} & 0.60 & 0.33 & 0.39 & \textbf{0.50} & 0.86 \\
-smolagents & 0.91 & 0.55 & \textbf{0.36} & 0.52 & 0.20 & 0.74 \\
-AutoGen & 0.92 & \textbf{0.65} & 0.27 & \textbf{0.23} & 0.43 & 0.86 \\
+LangGraph ReAct & \best{0.93} & 0.60 & 0.33 & 0.39 & \best{0.50} & 0.86 \\
+smolagents & 0.91 & 0.55 & \best{0.36} & 0.52 & 0.20 & 0.74 \\
+AutoGen & 0.92 & \best{0.65} & 0.27 & \best{0.23} & 0.43 & 0.86 \\
 \bottomrule
 \end{tabular}
 \caption{Expanded GPT-only results on 120 task instances. Behavioral rates condition on delivered poison; PDR reports exposure.}
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
-The smaller suites allow repetition across model families. Table~\ref{tab:cross-agent-model-full} reports every completed agent--model run rather than averaging away adapter behavior. All 12 fully crossed public-adapter configurations exhibit a clean-to-poisoned gap in both suites. PandasAI has the highest BCR in five of its six model--suite settings, but its coarser chat-result poisoning boundary prevents interpreting this as a framework ranking. DA-Agent completed the GPT numerical suite only and is reported separately rather than included in cross-model averages. Figure~\ref{fig:cross-agent-model} summarizes the four consistently covered public adapters by model and suite. Adapter-level bootstrap intervals are released; for example, GPT--LangGraph numerical BCR is 0.79 [0.64, 0.93], while its semantic poisoned TSR is 0.79 [0.62, 0.92].
+The smaller suites allow repetition across model families. Table~\ref{tab:cross-agent-model-full} reports every completed agent--model run rather than averaging away adapter behavior. All 12 fully crossed public-adapter configurations exhibit a clean-to-poisoned gap in both suites. PandasAI has the highest BCR in five of its six model--suite settings, but its coarser chat-result poisoning boundary prevents interpreting this as a framework ranking. DA-Agent completed the GPT numerical suite only and is reported separately rather than included in cross-model averages. The corresponding heatmap is provided in Appendix~\ref{fig:cross-agent-model}. Adapter-level bootstrap intervals are released; for example, GPT--LangGraph numerical BCR is 0.79 [0.64, 0.93], while its semantic poisoned TSR is 0.79 [0.62, 0.92].
 
 \begin{table*}[t]
 \centering
@@ -67,31 +67,7 @@ Qwen & LangGraph ReAct & 1.00 & 0.44 & 0.71 & 1.00 & 0.79 & 0.21 \\
 \label{tab:cross-agent-model-full}
 \end{table*}
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig_cross_agent_model}
-\caption{Cross-model prevalence of capability and trust gaps. Rows are numerical (Num.) or semantic/schema (Sem.) suites paired with a model; cells report clean TSR, poisoned TSR, exposure-conditioned BCR, and poison delivery rate (PDR). This is a prevalence comparison, not a framework or model ranking.}
-\label{fig:cross-agent-model}
-\end{figure*}
-
 Operator-level results clarify the mechanism. Across the 12 common model--adapter groups, aggregate scaling and rank swaps cause the highest exposure-conditioned BCR (0.69 and 0.61); sign flips are more visible and produce BCR 0.14. Figure~\ref{fig:operator-profile} compares these numerical failures with semantic/schema corruption. The difficult operators preserve plausible structure while changing the substantive answer, motivating evidence auditing rather than numeric tolerance alone.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{@{}lrrrrr@{}}
-\toprule
-Poison type & Poisoned TSR & BCR & VR & RR & PDR \\
-\midrule
-Aggregate scaling & 0.46 & \textbf{0.69} & 0.16 & 0.15 & 0.70 \\
-Rank swap & 0.53 & 0.61 & 0.13 & 0.13 & 0.93 \\
-Sign flip & \textbf{0.93} & \textbf{0.14} & \textbf{0.22} & \textbf{0.22} & 0.94 \\
-\bottomrule
-\end{tabular}
-\caption{Numerical poison-type behavior averaged over the 12 common cross-model groups.}
-\label{tab:poison-type-breakdown}
-\end{table}
 
 \begin{figure*}[t]
 \centering
@@ -113,40 +89,18 @@ Table~\ref{tab:langgraph-guarded} reports the leakage-free LangGraph ablation on
 Variant & Clean TSR & Poisoned TSR & BCR & PAR & VPA & VR & RR \\
 \midrule
 Base & 0.91 & 0.82 & 0.11 & 0.27 & 0.15 & 0.47 & 0.46 \\
-Double-pass & 0.91 & 0.92 & 0.01 & 0.17 & 0.16 & \textbf{0.98} & \textbf{0.95} \\
-Verification only & 0.92 & \textbf{0.93} & 0.02 & 0.32 & 0.30 & 0.96 & \textbf{0.95} \\
-Generic guard & \textbf{0.93} & \textbf{0.93} & \textbf{0.00} & 0.25 & 0.25 & 0.97 & 0.94 \\
+Double-pass & 0.91 & 0.92 & 0.01 & 0.17 & 0.16 & \best{0.98} & \best{0.95} \\
+Verification only & 0.92 & \best{0.93} & 0.02 & 0.32 & 0.30 & 0.96 & \best{0.95} \\
+Generic guard & \best{0.93} & \best{0.93} & \best{0.00} & 0.25 & 0.25 & 0.97 & 0.94 \\
 \bottomrule
 \end{tabular}
 \caption{Leakage-free LangGraph ReAct defense ablation on 120 task instances with Claude Haiku 4.5. Double-pass is the matched-compute control. PAR is broad poisoned-answer adoption and VPA is adoption after qualifying validation; both are conditioned on delivered poison.}
 \label{tab:langgraph-guarded}
 \end{table}
 
-The numerical suite accounts for most of the difference (Table~\ref{tab:defense-transfer}). Generic guarding raises numerical poisoned TSR from 0.65 to 0.87 and lowers BCR from 0.24 to 0.00; its poisoned-TSR interval is [0.78, 0.95]. Semantic/schema tasks are easier for this model: Base already reaches 0.98 poisoned TSR, and all three two-route variants reach 1.00. These results support a mechanism claim about enforced evidence collection in LangGraph, not cross-framework universality of the defense. The appropriate comparison is Double-pass versus Generic Guard: it isolates the incremental contribution of generic expectations and evidence gating after the second route has already been paid for. The small difference (0.92 to 0.93 poisoned TSR and 0.01 to 0.00 BCR) should not be read as evidence that the policy explains the full Base-to-Guard gain.
+The numerical suite accounts for most of the difference: Generic guarding raises numerical poisoned TSR from 0.65 to 0.87 and lowers BCR from 0.24 to 0.00; its poisoned-TSR interval is [0.78, 0.95]. Semantic/schema tasks are easier for this model, with Base already reaching 0.98 poisoned TSR. The full suite-level breakdown is reported in Appendix~\ref{tab:appendix-guard-suite-breakdown}. These results support a mechanism claim about enforced evidence collection in LangGraph, not cross-framework universality of the defense. The appropriate comparison is Double-pass versus Generic Guard: it isolates the incremental contribution of generic expectations and evidence gating after the second route has already been paid for. The small difference (0.92 to 0.93 poisoned TSR and 0.01 to 0.00 BCR) should not be read as evidence that the policy explains the full Base-to-Guard gain.
 
 As a cross-framework replication, the same leakage-free verification protocol on AutoGen obtains clean/poisoned TSR of 0.93/0.93 and BCR of 0.00 on the released 120-instance suite. We treat this as replication of the observation-level protocol, not evidence of model-independent defense generality; the AutoGen replication uses the GPT model family and remains subject to the same shared-source limitation.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{3.8pt}
-\begin{tabular}{@{}llrrrr@{}}
-\toprule
-Setting & Variant & Clean TSR & Poisoned TSR & BCR & RR \\
-\midrule
-Numerical-60 & Base & 0.82 & 0.65 & 0.24 & 0.02 \\
- & Double-pass & 0.82 & 0.83 & 0.02 & 0.88 \\
- & Verification only & 0.83 & 0.85 & 0.02 & \textbf{0.91} \\
- & Generic guard & \textbf{0.87} & \textbf{0.87} & \textbf{0.00} & 0.87 \\
-Semantic/schema-60 & Base & \textbf{1.00} & 0.98 & 0.02 & 0.76 \\
- & Double-pass & \textbf{1.00} & \textbf{1.00} & \textbf{0.00} & \textbf{1.00} \\
- & Verification only & \textbf{1.00} & \textbf{1.00} & 0.02 & 0.98 \\
- & Generic guard & \textbf{1.00} & \textbf{1.00} & \textbf{0.00} & \textbf{1.00} \\
-\bottomrule
-\end{tabular}
-\caption{Post-fix defense results by task family. Behavioral rates condition on delivered poison.}
-\label{tab:defense-transfer}
-\end{table}
 
 \paragraph{Harder workflows and adversaries.}
 The repeated-poison matrix contains all 60 numerical, 60 semantic/schema, and 13 multi-table tasks at $p\in\{0.25,0.50,0.75,1.00\}$ for Double-pass, Verification-only, and Generic Guard. At $p=1$, Generic Guard obtains TSR/BCR/RR of 0.73/0.24/0.24 on numerical tasks, 0.87/0.10/0.87 on semantic/schema tasks, and 0.54/0.00/0.46 on the 13 joins. Double-pass and Verification-only also degrade. These results replace the earlier small-subset stress test: zero BCR is a \texttt{poison\_once} result, not a robust guarantee when verification observations can also be corrupted. Appendix Figure~\ref{fig:guard-tradeoff} shows the complete probability curves.
