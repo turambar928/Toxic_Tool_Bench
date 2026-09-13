@@ -54,7 +54,7 @@ We score final answers against the clean oracle and compute behavior labels from
     \item \textbf{Poison Adoption Rate (PAR):} the fraction of exposed runs whose final answer matches the poisoned oracle, regardless of whether the agent detected or validated the observation.
     \item \textbf{Validated Poison Adoption (VPA):} the fraction of exposed runs that both obtain qualifying VR and still match the poisoned oracle. VPA captures validated-but-still-wrong trust, which BCR intentionally excludes.
     \item \textbf{Anomaly Detection Rate (ADR):} the fraction of exposed runs whose final response explicitly identifies a discrepancy, implausibility, conflict, or possible corruption.
-    \item \textbf{Validation Rate (VR):} the fraction of exposed runs with a fresh, non-poisoned evidence-producing tool event after the poisoned observation.
+    \item \textbf{Validation Rate (VR):} the fraction of exposed runs with a fresh, task-relevant evidence-producing tool event after the poisoned observation. The event may itself be corrupted under repeated poisoning; VPA records cases that still adopt the poisoned answer after such validation.
     \item \textbf{Recovery Rate (RR):} the fraction of exposed runs that produce an accepted clean answer after ADR or VR.
     \item \textbf{Poison Delivery Rate (PDR):} the fraction of toxic-environment runs in which the proxy actually modifies at least one eligible observation.
 \end{itemize}

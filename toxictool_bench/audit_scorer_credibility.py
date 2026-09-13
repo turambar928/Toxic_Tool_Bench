@@ -74,6 +74,26 @@ def load_tasks(manifest_rows: list[dict[str, str]]) -> dict[str, dict[str, Any]]
     return tasks
 
 
+def rescore_audit_rows(rows: list[dict[str, str]], tasks: dict[str, dict[str, Any]]) -> list[dict[str, str]]:
+    """Replace legacy scorer columns with labels from the current evaluator."""
+    cache: dict[str, list[dict[str, Any]]] = {}
+    for index, row in enumerate(rows):
+        source = row["source_file"]
+        if source not in cache:
+            cache[source] = read_jsonl(ROOT / source)
+        trajectory = next(item for item in cache[source] if item["task_id"] == row["task_id"])
+        metrics = evaluate_run(
+            tasks[row["task_id"]], trajectory.get("final_answer", ""), trajectory.get("tool_events", [])
+        )
+        updated = dict(row)
+        updated["scorer_bcr"] = str(int(metrics["blind_compliance"]))
+        updated["scorer_adr"] = str(int(metrics["anomaly_detection"]))
+        updated["scorer_vr"] = str(int(metrics["validation"]))
+        updated["scorer_rr"] = str(int(metrics["recovery"]))
+        rows[index] = updated
+    return rows
+
+
 def audit_manifest(
     manifest_rows: list[dict[str, str]], tasks: dict[str, dict[str, Any]], mixed_path: Path
 ) -> dict[str, Any]:
@@ -136,14 +156,17 @@ def main() -> None:
     args = parser.parse_args()
     audit_rows = read_csv(args.audit)
     manifest_rows = read_csv(args.manifest)
+    tasks = load_tasks(manifest_rows)
+    audit_rows = rescore_audit_rows(audit_rows, tasks)
     report = {
         "audit_file": str(args.audit.relative_to(ROOT)),
         "manifest_file": str(args.manifest.relative_to(ROOT)),
         "human_consensus_note": "Precision/recall/F1 use all 120 rows: pre-adjudication agreements are retained and disputed label cells use the completed third-party adjudication. Pre-adjudication kappa remains unchanged.",
+        "scorer_version": "current evaluator.py; audit scorer columns recomputed from source trajectories",
         "scorer_vs_human_consensus": {
             label: classification_report(audit_rows, label) for label in LABELS
         },
-        "manifest_mixed_hit_audit": audit_manifest(manifest_rows, load_tasks(manifest_rows), args.mixed_output),
+            "manifest_mixed_hit_audit": audit_manifest(manifest_rows, tasks, args.mixed_output),
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
