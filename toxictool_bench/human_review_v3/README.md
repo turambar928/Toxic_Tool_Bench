@@ -7,7 +7,7 @@
 1. `adjudication_cases.csv`：12 条两位标注者意见不一致的轨迹，进行最终裁决。
 2. `vr_audit_cases.csv`：18 条自动判定为 VR 的轨迹，检查验证动作是否真正检查了任务关键结论。
 
-当前仓库只提供待填写的模板。人工复核完成前，不得把结果描述为“已完成裁决”，也不得据此改写论文中的最终统计结果。
+人工复核已于 2026-09-13 回传并完成格式校验。空白模板仍保留用于复核协议复现；完成文件为 `adjudication_labels_completed_2026-09-13.csv` 和 `vr_audit_labels_completed_2026-09-13.csv`。最终合并结果位于 `../human_audit_v2/adjudicated_labels.csv`，VR 汇总位于 `vr_audit_summary.json`。
 
 ## 分发规则
 
@@ -50,7 +50,7 @@
 
 本包不能证明验证动作一定正确，也不能单独证明 scorer 正确。VR 审查只回答“该次动作是否检查了任务相关目标”；它不替代完整的人工标签裁决。共享数据源和共享后端仍然存在，因此这些检查也不能支持“source-independent coverage”或全路径投毒已被解决的结论。
 
-## 重新生成
+## 重新生成与合并
 
 管理员可在仓库根目录执行：
 
@@ -59,3 +59,12 @@ python3 toxictool_bench/build_human_review_packet.py
 ```
 
 脚本从 `human_audit_v2/evidence.csv` 和 `adjudication.csv` 提取分歧样本，并从未分歧且 scorer 判定为 VR 的样本中按 suite 轮转抽样。它不会复制 key 或自动标签到本目录。
+
+要校验完成文件并重建最终共识与 VR 汇总，执行：
+
+```bash
+python3 toxictool_bench/finalize_human_review.py
+python3 toxictool_bench/audit_scorer_credibility.py
+```
+
+合并时，仅由第三方标签替换原始 A/B 有分歧的标签单元；A/B 已一致的单元保留原始共识。预裁决 Cohen's kappa 不会重算。
