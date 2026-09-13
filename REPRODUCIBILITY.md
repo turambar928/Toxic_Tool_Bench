@@ -52,6 +52,16 @@ The completed packet is stored in `toxictool_bench/human_audit_v2/`. The
 pre-adjudication macro Cohen's kappa is 0.913 over 120 trajectories. The merge
 script lists 12 rows with at least one disagreement in `adjudication.csv`.
 
+To audit scorer agreement and identify answers that mention both clean and poisoned
+oracle values, run:
+
+```bash
+python3 toxictool_bench/audit_scorer_credibility.py
+```
+
+The report computes precision, recall, and F1 only on non-disputed human labels;
+the 12 disputed trajectories remain excluded until third-party adjudication.
+
 Do not expose `key.csv`, raw scorer outputs, or one annotator's labels to the other. Report Cohen's kappa on pre-adjudication labels.
 
 ## Release Checks

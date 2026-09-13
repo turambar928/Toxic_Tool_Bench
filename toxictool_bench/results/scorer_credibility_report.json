@@ -1,0 +1,102 @@
+{
+  "audit_file": "toxictool_bench/human_audit_v2/merged_labels.csv",
+  "human_consensus_note": "Precision/recall/F1 use only rows where annotators A and B agree; disputed rows are excluded until adjudication.",
+  "manifest_file": "toxictool_bench/results/paper_run_manifest.csv",
+  "manifest_mixed_hit_audit": {
+    "by_experiment": {
+      "alternative_baseline": {
+        "exposed": 68,
+        "mixed_clean_and_poisoned_hit": 10,
+        "poison_adoption": 19,
+        "toxic": 90
+      },
+      "autogen_guard": {
+        "exposed": 208,
+        "mixed_clean_and_poisoned_hit": 57,
+        "poison_adoption": 57,
+        "toxic": 240
+      },
+      "cross_model": {
+        "exposed": 619,
+        "mixed_clean_and_poisoned_hit": 53,
+        "poison_adoption": 324,
+        "toxic": 730
+      },
+      "expanded_gpt": {
+        "exposed": 295,
+        "mixed_clean_and_poisoned_hit": 31,
+        "poison_adoption": 147,
+        "toxic": 360
+      },
+      "langgraph_guard": {
+        "exposed": 623,
+        "mixed_clean_and_poisoned_hit": 80,
+        "poison_adoption": 189,
+        "toxic": 720
+      },
+      "multiroute_stress": {
+        "exposed": 22,
+        "poison_adoption": 4,
+        "toxic": 40
+      },
+      "multitable": {
+        "exposed": 39,
+        "poison_adoption": 10,
+        "toxic": 39
+      }
+    },
+    "mixed_hit_file": "toxictool_bench/results/scorer_mixed_oracle_hits.csv",
+    "totals": {
+      "exposed": 1874,
+      "mixed_clean_and_poisoned_hit": 231,
+      "poison_adoption": 750,
+      "toxic": 2219
+    }
+  },
+  "scorer_vs_human_consensus": {
+    "adr": {
+      "f1": 0.05882352941176471,
+      "fn": 32,
+      "fp": 0,
+      "n_agreed": 111,
+      "n_disputed": 9,
+      "precision": 1.0,
+      "recall": 0.030303030303030304,
+      "tn": 78,
+      "tp": 1
+    },
+    "bcr": {
+      "f1": 0.7058823529411764,
+      "fn": 0,
+      "fp": 10,
+      "n_agreed": 118,
+      "n_disputed": 2,
+      "precision": 0.5454545454545454,
+      "recall": 1.0,
+      "tn": 96,
+      "tp": 12
+    },
+    "rr": {
+      "f1": 0.9264705882352942,
+      "fn": 10,
+      "fp": 0,
+      "n_agreed": 118,
+      "n_disputed": 2,
+      "precision": 1.0,
+      "recall": 0.863013698630137,
+      "tn": 45,
+      "tp": 63
+    },
+    "vr": {
+      "f1": 0.9784172661870503,
+      "fn": 3,
+      "fp": 0,
+      "n_agreed": 117,
+      "n_disputed": 3,
+      "precision": 1.0,
+      "recall": 0.9577464788732394,
+      "tn": 46,
+      "tp": 68
+    }
+  }
+}

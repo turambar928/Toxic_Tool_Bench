@@ -25,6 +25,7 @@ def sha256(path: Path) -> str:
 def main() -> None:
     paths = {
         ROOT / "toxictool_bench/evaluator.py",
+        ROOT / "toxictool_bench/audit_scorer_credibility.py",
         ROOT / "toxictool_bench/poisoners.py",
         MANIFEST,
     }
@@ -35,6 +36,7 @@ def main() -> None:
             paths.add(ROOT / row["source"])
             paths.update(ROOT / task for task in row["tasks"].split(";"))
     paths.update(RESULTS.glob("*.csv"))
+    paths.add(RESULTS / "scorer_credibility_report.json")
     paths.discard(OUTPUT)
 
     with OUTPUT.open("w", newline="", encoding="utf-8") as handle:

@@ -88,9 +88,12 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/audit_agreement.py` | Human-audit agreement utility. |
 | `toxictool_bench/rebuild_paper_results.py` | Rebuild paper-facing summaries and CIs from the immutable run manifest. |
 | `toxictool_bench/recalibrate_author_audit.py` | Compare the strict scorer with the earlier single-author labels. |
+| `toxictool_bench/audit_scorer_credibility.py` | Compare scorer labels with independent-audit consensus and enumerate mixed clean/poison oracle hits. |
 | `toxictool_bench/results/iclr2027_manual_audit_completed_stratified80.csv` | Historical 80-run single-author audit sheet; repeated passes are not independent IAA. |
 | `toxictool_bench/results/strict_scorer_author_audit_comparison.csv` | Run-level strict-scorer versus single-author diagnostic comparison. |
 | `toxictool_bench/results/strict_scorer_author_audit_agreement.json` | Agreement summary for that diagnostic comparison; not inter-annotator agreement. |
+| `toxictool_bench/results/scorer_credibility_report.json` | Scorer precision/recall/F1 on non-disputed audit rows and the paper-manifest mixed-hit audit. |
+| `toxictool_bench/results/scorer_mixed_oracle_hits.csv` | Toxic runs where the broad matcher finds both clean success and poisoned-answer adoption. |
 | `toxictool_bench/human_audit_v2/evidence.csv` | Blinded evidence for 120 exposed trajectories. |
 | `toxictool_bench/human_audit_v2/annotator_{a,b}.csv` | Completed independent label sheets. |
 | `toxictool_bench/human_audit_v2/agreement.json` | Pre-adjudication agreement and Cohen's kappa. |
