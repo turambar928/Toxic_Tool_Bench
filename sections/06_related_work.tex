@@ -7,5 +7,24 @@ Tool-augmented language models interleave reasoning with API calls and program e
 \paragraph{Closest work and positioning.}
 Closest efforts differ in attack position, domain, error type, metric granularity, and defense. \emph{Tools Fail} studies silent-tool error detection and recovery, but lacks ToxicBench's paired data-analysis suites and decomposition into compliance, anomaly detection, validation, and recovery \citep{sun2024toolsfail}. ToolBench-X studies broader unreliable environments such as output drift, whereas ToxicBench targets successful, task-relevant numerical and semantic corruption \citep{tian2026toolbenchx}. AgentDojo focuses on prompt-injection defenses in dynamic tool environments \citep{debenedetti2024agentdojo}; PoisonedRAG corrupts retrieval corpora \citep{zou2024poisonedrag}. ToxicBench instead standardizes post-execution corruption at the agent--tool observation boundary, scores temporally ordered behavior, and treats evidence collection as a controlled defense factor. We therefore claim a measurable data-analysis manifestation and trust-calibration protocol, not a new silent-error family in general.
 
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{0.18\linewidth}p{0.17\linewidth}p{0.18\linewidth}p{0.19\linewidth}p{0.18\linewidth}@{}}
+\toprule
+Work & Attack position & Domain / error & Metrics & Defense view \\
+\midrule
+Tools Fail & Faulty tool output & Calculator and embodied planning; silent errors & Detection and recovery & Error detection/recovery \\
+ToolBench-X & Tool environment & General agents; output drift and other hazards & Environment-level reliability & Broader hazard coverage \\
+AgentDojo & Dynamic tool environment & Prompt injection and malicious data & Attack/defense success & Security defenses \\
+PoisonedRAG & Retrieval corpus & Knowledge-base poisoning & Retrieval QA attack success & Corpus/source protection \\
+ToxicBench & Returned observation & Data analysis; numerical and semantic corruption & Paired TSR, BCR, PAR/VPA, ADR, VR, RR, PDR & Matched-budget evidence attribution \\
+\bottomrule
+\end{tabular}
+\caption{Closest-work positioning. ToxicBench's increment is the data-analysis observation boundary and temporally decomposed trust protocol, not a claim to introduce silent tool errors as a general threat.}
+\label{tab:closest-work}
+\end{table}
+
 \paragraph{Data quality and verification defenses.}
 Data-validation and table-reasoning benchmarks address imperfect inputs and schema/quality issues \citep{schelter2018automating,breck2019data,gu2025radar}. Existing defenses filter or constrain evidence via provenance/credibility ranking, sanitization, runtime policies, output contracts, or claim checking \citep{dekel2026sdag,jia2025ragrank,patil2026ragshield,hamad2025toolcritic}. These are adjacent but do not directly provide a drop-in baseline for arbitrary dataframe/schema observations under silent corruption. Guarded Verification instead enforces a fresh evidence-producing action at the observation boundary; it relates to self-refinement and metacognitive verification \citep{shinn2023reflexion,madaan2023selfrefine,zhou2024metarag,zhang2025cosight,ma2025pou}, and can be combined with confidence-aware triggering and calibration methods \citep{xuan2026confidence,wang2026mirror,subramani2025mice,gurram2026agentprop}.

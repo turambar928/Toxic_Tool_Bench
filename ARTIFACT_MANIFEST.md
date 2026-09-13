@@ -50,6 +50,8 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/results/leakage_free_defense_{numerical_iclr2027,semantic_schema_iclr2027}_summary.csv` | Suite-level post-fix defense results. |
 | `toxictool_bench/results/leakage_free_defense_overhead.csv` | Mean, p50, and p90 latency plus tool-event overhead. |
 | `toxictool_bench/results/leakage_free_defense_{combined,numerical_iclr2027,semantic_schema_iclr2027}_{poison,severity}_summary.csv` | Poison-type and severity breakdowns. |
+| `toxictool_bench/results/leakage_free_defense_exposure_denominators.csv` | Suite/adapter PDR, exposed counts, and exposure-conditioned behavior rates. |
+| `toxictool_bench/results/leakage_free_defense_paired_ci.csv` | Task-paired Generic Guard versus Double-pass differences with bootstrap intervals. |
 | `toxictool_bench/results/leakage_free_defense_manifest.csv` | Immutable mapping from post-fix result groups to raw logs. |
 | `toxictool_bench/results/verification_stress_summary.csv` | Full repeated-poison probability matrix with bootstrap intervals. |
 | `toxictool_bench/results/verification_stress_manifest.csv` | Complete repeated-poison chunk manifest. |
@@ -104,6 +106,7 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/build_blind_audit_packet.py` / `merge_blind_audit.py` | Fixed-seed packet builder and strict pre-adjudication IAA merger. |
 | `toxictool_bench/build_human_review_packet.py` | Rebuild the sanitized third-party adjudication and VR-audit packet. |
 | `toxictool_bench/finalize_human_review.py` | Validate completed review sheets and build final-consensus and VR-validity summaries. |
+| `toxictool_bench/build_defense_paired_analysis.py` | Build paired defense deltas and exposure-denominator tables from the immutable defense manifest. |
 
 ## Reproduction Commands
 

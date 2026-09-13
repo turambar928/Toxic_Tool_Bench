@@ -290,9 +290,34 @@ python3 toxictool_bench/run_full_bench.py \
   --poison-probability 1.00
 \end{verbatim}
 
-\paragraph{Matched-compute interpretation.}
+\paragraph{Matched-budget interpretation.}
 
-Double-pass runs two ordinary routes with no expectation policy, no primary-answer handoff, and the same maximum route budget as the verification variants. Its combined poisoned TSR/BCR of \texttt{0.92}/\texttt{0.01}, compared with \texttt{0.93}/\texttt{0.00} for Generic Guard, shows that a second evidence route explains most of the improvement. We therefore do not attribute the full Base-to-Guard delta to expectation elicitation or gating.
+Double-pass runs two ordinary routes with no expectation policy, no primary-answer handoff, and the same maximum route budget as the verification variants. The released runs use two independent LangGraph calls, each with \texttt{--max-steps 10}, \texttt{--max-tokens 3072}, and temperature 0; the second route's final response is selected verbatim. Verification-only also uses two calls with the same per-route cap, passes the first answer only as an untrusted claim, and selects the second route's response. Generic Guard uses a deterministic generic expectation string inside the primary prompt, then runs the same two-call structure; its verification response is selected verbatim and prefixed with a guard label. Thus ``matched'' means matched per-route step/token budget and route count, not equal realized token usage or latency. Its combined poisoned TSR/BCR of \texttt{0.92}/\texttt{0.01}, compared with \texttt{0.93}/\texttt{0.00} for Generic Guard, shows that a second evidence route explains most of the improvement. We therefore do not attribute the full Base-to-Guard delta to expectation elicitation or gating.
+
+Table~\ref{tab:appendix-paired-defense-ci} reports task-level paired differences between Generic Guard and Double-pass. Numerical-suite intervals include zero for TSR, BCR, VR, and RR; the semantic-suite estimates are zero except for small Verification-only differences. This is why the guard-specific increment is reported as uncertain rather than as a statistically established improvement.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Suite & Metric & $n_{\mathrm{paired}}$ & $\Delta$ (Guard$-$DP) & 95\% CI \\
+\midrule
+Numerical & Poisoned TSR & 60 & +0.033 & [0.000, 0.083] \\
+ & BCR & 43 & -0.023 & [-0.070, 0.000] \\
+ & VR & 60 & +0.033 & [-0.033, 0.100] \\
+ & RR & 60 & +0.033 & [0.000, 0.083] \\
+\midrule
+Semantic/schema & Poisoned TSR & 60 & +0.000 & [0.000, 0.000] \\
+ & BCR & 60 & +0.000 & [0.000, 0.000] \\
+ & VR & 60 & +0.000 & [0.000, 0.000] \\
+ & RR & 60 & +0.000 & [0.000, 0.000] \\
+\bottomrule
+\end{tabular}
+\caption{Task-paired bootstrap differences between Generic Guard and the matched Double-pass (DP). BCR uses tasks exposed in both variants; other metrics use all shared tasks. Bootstrap resamples task IDs with replacement (5,000 iterations, seed 13).}
+\label{tab:appendix-paired-defense-ci}
+\end{table}
 
 \section{Overhead and Confidence Intervals}
 
@@ -436,6 +461,29 @@ Numerical & Base & 0.82 & 0.65 & 0.24 & 0.05 & 0.02 \\
 \end{tabular}
 \caption{Suite-level LangGraph ReAct defense results on the expanded 120-instance evaluation.}
 \label{tab:appendix-guard-suite-breakdown}
+\end{table}
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Suite & Variant & $n_{\mathrm{toxic}}$ & $n_{\mathrm{exposed}}$ & PDR & BCR \\
+\midrule
+Numerical & Base & 60 & 42 & 0.700 & 0.238 \\
+ & Double-pass & 60 & 43 & 0.717 & 0.023 \\
+ & Verification-only & 60 & 43 & 0.717 & 0.023 \\
+ & Generic Guard & 60 & 46 & 0.767 & 0.000 \\
+\midrule
+Semantic/schema & Base & 60 & 59 & 0.983 & 0.017 \\
+ & Double-pass & 60 & 60 & 1.000 & 0.000 \\
+ & Verification-only & 60 & 60 & 1.000 & 0.017 \\
+ & Generic Guard & 60 & 60 & 1.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Exposure denominators for the leakage-free defense ablation. PDR is $n_{\mathrm{exposed}}/n_{\mathrm{toxic}}$; BCR is conditioned on the exposed denominator. The full table, including PAR, VPA, ADR, VR, and RR, is released as \path{leakage_free_defense_exposure_denominators.csv}.}
+\label{tab:appendix-defense-exposure}
 \end{table}
 
 \begin{figure*}[t]

@@ -1,0 +1,9 @@
+suite,adapter,model,n_toxic,n_exposed,pdr,bcr,par,vpa,adr,vr,rr
+numerical_iclr2027,langgraph_react_double_pass,claude-haiku-4-5-20251001,60,43,0.7167,0.0233,0.0233,0.0000,0.0000,0.9535,0.8837
+numerical_iclr2027,langgraph_react_full,claude-haiku-4-5-20251001,60,42,0.7000,0.2381,0.2619,0.0000,0.0238,0.0476,0.0238
+numerical_iclr2027,langgraph_react_guarded,claude-haiku-4-5-20251001,60,46,0.7667,0.0000,0.1739,0.1739,0.0000,0.9348,0.8696
+numerical_iclr2027,langgraph_react_verification_only,claude-haiku-4-5-20251001,60,43,0.7167,0.0233,0.2558,0.2326,0.0000,0.9302,0.9070
+semantic_schema_iclr2027,langgraph_react_double_pass,claude-haiku-4-5-20251001,60,60,1.0000,0.0000,0.2667,0.2667,0.0000,1.0000,1.0000
+semantic_schema_iclr2027,langgraph_react_full,claude-haiku-4-5-20251001,60,59,0.9833,0.0169,0.2712,0.2542,0.0000,0.7627,0.7627
+semantic_schema_iclr2027,langgraph_react_guarded,claude-haiku-4-5-20251001,60,60,1.0000,0.0000,0.3000,0.3000,0.0333,1.0000,1.0000
+semantic_schema_iclr2027,langgraph_react_verification_only,claude-haiku-4-5-20251001,60,60,1.0000,0.0167,0.3667,0.3500,0.0333,0.9833,0.9833

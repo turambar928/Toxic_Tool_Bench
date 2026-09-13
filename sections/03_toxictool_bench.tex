@@ -4,25 +4,11 @@
 
 ToxicBench tests whether data agents can distinguish successful tool execution from trustworthy evidence. For a query $q$, an agent calls a tool $f$ with input $x$ and receives $o=f(x)$. In the poisoned environment, a proxy returns $\tilde{o}=P(f,x,o;\theta)$. We call the poisoning \emph{silent} when $\tilde{o}$ preserves the expected interface, reports successful execution, and remains relevant enough to support a plausible answer. The same agent, task, data, and model are evaluated once with $o$ and once with $\tilde{o}$, isolating trust calibration from ordinary task difficulty.
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{figures/figure1.png}
-    \caption{Silent tool poisoning can yield plausible but wrong tool outputs. In a revenue query, the clean CSV tool returns Store B (\$450{,}000), while a proxy swaps labels and returns Store A (\$450{,}000) without any warning.}
-    \label{fig:silent-tool-poisoning}
-\end{figure}
-
 \subsection{Benchmark Design}
 
 Each item contains a query, one or more datasets, a clean oracle or rubric, and a poisoning specification. Poisoned outputs preserve schema, type, and formatting, and never expose an exception or warning. Each task also retains an operational verification path, such as recomputation from raw rows or inspection of source metadata. This path is independent of the returned observation but may share its upstream table and tool backend. The design avoids reducing the benchmark to parsing robustness while making that redundancy assumption explicit.
 
 The cross-model evaluation contains 34 numerical task instances over 11 CSV datasets and 24 semantic/schema instances over 17 datasets. The expanded cross-agent evaluation uses GPT, while the post-fix defense evaluation uses Claude Haiku on 60 instances from each family. A separate 13-instance extension requires multi-table joins. We distinguish instances from unique query--dataset--poison templates: repeated instances test stability but do not increase semantic diversity. Appendix~\ref{sec:appendix-benchmark-details} reports both counts. Together, the suites cover arithmetic trust, value--entity binding, schema interpretation, metadata use, retrieval grounding, and join-based analysis.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{figures/figure2.png}
-    \caption{Overview of the ToxicBench evaluation framework: task suite, paired clean vs. proxy-poisoned runs, and behavior metrics. We also evaluate Guarded Verification, which reduces blind compliance to zero in our experiments.}
-    \label{fig:toxicbench-overview}
-\end{figure}
 
 \subsection{Poisoning Operators and Metrics}
 

@@ -34,4 +34,10 @@ At poisoning probability 1.00, Generic Guard BCR is 0.24 on numerical tasks, 0.1
 
 The two-annotator audit has 0.967 macro percent agreement and 0.913 macro Cohen's kappa over 120 trajectories. Per-label kappa is 0.914 for BCR, 0.826 for ADR, 0.948 for VR, and 0.965 for RR. Separate blind review resolved all 16 disputed label cells across 12 trajectories. Against the final 120-row consensus, scorer F1 is 0.667 for BCR, 0.059 for ADR, 0.971 for VR, and 0.913 for RR. A targeted audit of 18 non-disputed scorer-positive VR cases found 18/18 task-relevant target checks with substantive evidence; this conditional sample is not an overall accuracy estimate.
 
+The defense analysis now includes task-paired Generic Guard versus Double-pass
+bootstrap differences and suite-level PDR/`n_exposed` denominators. No new
+factorial same-task/different-operator run was added; operator comparisons in the
+paper are explicitly descriptive because the current task construction does not
+support a causal operator estimate.
+
 The final PDF must be compiled and visually checked on Overleaf because no local TeX toolchain is installed.

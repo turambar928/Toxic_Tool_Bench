@@ -142,6 +142,7 @@ manifest, then regenerate compact public summaries and the scorer diagnostic:
 ```bash
 python3 toxictool_bench/rebuild_paper_results.py
 bash toxictool_bench/rebuild_leakage_free_defense_results.sh
+python3 toxictool_bench/build_defense_paired_analysis.py
 python3 toxictool_bench/summarize_verification_stress.py
 python3 toxictool_bench/plot_verification_stress.py
 python3 toxictool_bench/build_artifact_checksums.py
