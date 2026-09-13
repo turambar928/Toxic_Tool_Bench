@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from bootstrap_ci import METRICS as BOOTSTRAP_METRICS, bootstrap, summarize as bootstrap_summary, was_exposed
+from evaluator import evaluate_run
 from run_bench import load_tasks, select_tasks
 from summarize_results import read_jsonl, write_overall, write_poison, write_severity
 
@@ -83,6 +84,12 @@ def main() -> None:
                     missing.append(f"{suite}:{adapter}:start{start}:limit{limit}")
                     continue
                 rows = read_jsonl(selection.path)
+                tasks = {task["task_id"]: task for task in load_tasks(task_path)}
+                for row in rows:
+                    task = tasks.get(row.get("task_id"))
+                    if task is None:
+                        raise ValueError(f"Task {row.get('task_id')!r} missing from {task_path}")
+                    row["metrics"] = evaluate_run(task, row.get("final_answer", ""), row.get("tool_events", []))
                 selections.append(selection)
                 suite_rows.extend(rows)
                 all_rows.extend(rows)

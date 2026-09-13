@@ -80,8 +80,8 @@ claude-haiku-4-5-20251001,langgraph_react_guarded,stale_metadata,plausible,1.00,
 claude-haiku-4-5-20251001,langgraph_react_guarded,stale_metadata,subtle,1.00,0.00,0.33,0.33,0.67,1.00,1.00,1.00,3,3
 claude-haiku-4-5-20251001,langgraph_react_guarded,treatment_control_flip,plausible,1.00,0.00,0.00,0.00,0.00,1.00,1.00,1.00,3,3
 claude-haiku-4-5-20251001,langgraph_react_guarded,unit_conversion,obvious,1.00,0.00,0.00,0.00,0.00,1.00,1.00,1.00,1,1
-claude-haiku-4-5-20251001,langgraph_react_verification_only,aggregate_scale,obvious,1.00,0.00,0.14,0.14,0.00,1.00,1.00,0.64,7,11
-claude-haiku-4-5-20251001,langgraph_react_verification_only,aggregate_scale,plausible,0.91,0.00,0.29,0.29,0.00,1.00,1.00,0.64,7,11
+claude-haiku-4-5-20251001,langgraph_react_verification_only,aggregate_scale,obvious,1.00,0.00,0.00,0.00,0.00,1.00,1.00,0.64,7,11
+claude-haiku-4-5-20251001,langgraph_react_verification_only,aggregate_scale,plausible,0.91,0.00,0.00,0.00,0.00,1.00,1.00,0.64,7,11
 claude-haiku-4-5-20251001,langgraph_react_verification_only,aggregate_scale,subtle,0.75,0.00,0.00,0.00,0.00,1.00,1.00,0.25,1,4
 claude-haiku-4-5-20251001,langgraph_react_verification_only,biased_retrieval,obvious,1.00,0.00,1.00,1.00,0.00,1.00,1.00,1.00,2,2
 claude-haiku-4-5-20251001,langgraph_react_verification_only,biased_retrieval,plausible,1.00,0.00,0.27,0.27,0.00,1.00,1.00,1.00,11,11
