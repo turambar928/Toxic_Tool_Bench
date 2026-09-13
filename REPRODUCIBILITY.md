@@ -64,6 +64,27 @@ the 12 disputed trajectories remain excluded until third-party adjudication.
 
 Do not expose `key.csv`, raw scorer outputs, or one annotator's labels to the other. Report Cohen's kappa on pre-adjudication labels.
 
+### Third-party follow-up review
+
+The repository also contains a sanitized handoff packet in
+`toxictool_bench/human_review_v3/`. It has 12 disputed trajectories for final
+adjudication and 18 non-disputed trajectories for auditing whether scorer-marked
+VR actions checked the task-relevant target. The packet deliberately omits oracle
+answers, poison markers, scorer labels, keys, raw JSONL, and prior annotator
+labels. It is therefore suitable for an external reviewer to work independently.
+
+Regenerate it with:
+
+```bash
+python3 toxictool_bench/build_human_review_packet.py
+```
+
+The returned label templates must be validated and versioned by the administrator.
+No adjudicated result is claimed until a human completes the templates. After
+return, recompute scorer precision/recall/F1 against the adjudicated consensus
+and separately summarize `relevant_vr`, `checked_target`, and
+`independent_evidence`; do not silently overwrite the pre-adjudication report.
+
 ## Release Checks
 
 ```bash

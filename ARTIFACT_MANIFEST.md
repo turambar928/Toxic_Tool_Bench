@@ -99,7 +99,9 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/human_audit_v2/agreement.json` | Pre-adjudication agreement and Cohen's kappa. |
 | `toxictool_bench/human_audit_v2/merged_labels.csv` | Merged labels for the audit sample. |
 | `toxictool_bench/human_audit_v2/adjudication.csv` | Twelve trajectories with at least one annotator disagreement. |
+| `toxictool_bench/human_review_v3/` | External third-party packet for the 12 disputed adjudication cases and 18 blinded VR-validity audit cases; contains no oracle, key, scorer, or prior annotator labels. |
 | `toxictool_bench/build_blind_audit_packet.py` / `merge_blind_audit.py` | Fixed-seed packet builder and strict pre-adjudication IAA merger. |
+| `toxictool_bench/build_human_review_packet.py` | Rebuild the sanitized third-party adjudication and VR-audit packet. |
 
 ## Reproduction Commands
 
