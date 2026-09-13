@@ -92,16 +92,18 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/results/iclr2027_manual_audit_completed_stratified80.csv` | Historical 80-run single-author audit sheet; repeated passes are not independent IAA. |
 | `toxictool_bench/results/strict_scorer_author_audit_comparison.csv` | Run-level strict-scorer versus single-author diagnostic comparison. |
 | `toxictool_bench/results/strict_scorer_author_audit_agreement.json` | Agreement summary for that diagnostic comparison; not inter-annotator agreement. |
-| `toxictool_bench/results/scorer_credibility_report.json` | Scorer precision/recall/F1 on non-disputed audit rows and the paper-manifest mixed-hit audit. |
+| `toxictool_bench/results/scorer_credibility_report.json` | Scorer precision/recall/F1 on the adjudicated 120-row consensus and the paper-manifest mixed-hit audit. |
 | `toxictool_bench/results/scorer_mixed_oracle_hits.csv` | Toxic runs where the broad matcher finds both clean success and poisoned-answer adoption. |
 | `toxictool_bench/human_audit_v2/evidence.csv` | Blinded evidence for 120 exposed trajectories. |
 | `toxictool_bench/human_audit_v2/annotator_{a,b}.csv` | Completed independent label sheets. |
 | `toxictool_bench/human_audit_v2/agreement.json` | Pre-adjudication agreement and Cohen's kappa. |
 | `toxictool_bench/human_audit_v2/merged_labels.csv` | Merged labels for the audit sample. |
 | `toxictool_bench/human_audit_v2/adjudication.csv` | Twelve trajectories with at least one annotator disagreement. |
-| `toxictool_bench/human_review_v3/` | External third-party packet for the 12 disputed adjudication cases and 18 blinded VR-validity audit cases; contains no oracle, key, scorer, or prior annotator labels. |
+| `toxictool_bench/human_audit_v2/adjudicated_labels.csv` | Final 120-row consensus; only disputed label cells use the separate adjudication. |
+| `toxictool_bench/human_review_v3/` | External third-party packet and completed labels for the 12 disputed adjudication cases and 18 blinded VR-validity audit cases. |
 | `toxictool_bench/build_blind_audit_packet.py` / `merge_blind_audit.py` | Fixed-seed packet builder and strict pre-adjudication IAA merger. |
 | `toxictool_bench/build_human_review_packet.py` | Rebuild the sanitized third-party adjudication and VR-audit packet. |
+| `toxictool_bench/finalize_human_review.py` | Validate completed review sheets and build final-consensus and VR-validity summaries. |
 
 ## Reproduction Commands
 

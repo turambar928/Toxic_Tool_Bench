@@ -1,0 +1,22 @@
+{
+  "audit_file": "toxictool_bench/human_review_v3/vr_audit_labels_completed_2026-09-13.csv",
+  "labels": {
+    "checked_target": {
+      "negative": 0,
+      "positive": 18,
+      "rate": 1.0
+    },
+    "independent_evidence": {
+      "negative": 0,
+      "positive": 18,
+      "rate": 1.0
+    },
+    "relevant_vr": {
+      "negative": 0,
+      "positive": 18,
+      "rate": 1.0
+    }
+  },
+  "n": 18,
+  "selection": "Deterministic suite-rotating sample of non-disputed scorer-positive VR cases."
+}

@@ -1,6 +1,6 @@
 {
-  "audit_file": "toxictool_bench/human_audit_v2/merged_labels.csv",
-  "human_consensus_note": "Precision/recall/F1 use only rows where annotators A and B agree; disputed rows are excluded until adjudication.",
+  "audit_file": "toxictool_bench/human_audit_v2/adjudicated_labels.csv",
+  "human_consensus_note": "Precision/recall/F1 use all 120 rows: pre-adjudication agreements are retained and disputed label cells use the completed third-party adjudication. Pre-adjudication kappa remains unchanged.",
   "manifest_file": "toxictool_bench/results/paper_run_manifest.csv",
   "manifest_mixed_hit_audit": {
     "by_experiment": {
@@ -58,44 +58,44 @@
       "f1": 0.05882352941176471,
       "fn": 32,
       "fp": 0,
-      "n_agreed": 111,
-      "n_disputed": 9,
+      "n_disputed": 0,
+      "n_evaluated": 120,
       "precision": 1.0,
       "recall": 0.030303030303030304,
-      "tn": 78,
+      "tn": 87,
       "tp": 1
     },
     "bcr": {
-      "f1": 0.7058823529411764,
+      "f1": 0.6666666666666666,
       "fn": 0,
-      "fp": 10,
-      "n_agreed": 118,
-      "n_disputed": 2,
-      "precision": 0.5454545454545454,
+      "fp": 12,
+      "n_disputed": 0,
+      "n_evaluated": 120,
+      "precision": 0.5,
       "recall": 1.0,
       "tn": 96,
       "tp": 12
     },
     "rr": {
-      "f1": 0.9264705882352942,
-      "fn": 10,
+      "f1": 0.9130434782608696,
+      "fn": 12,
       "fp": 0,
-      "n_agreed": 118,
-      "n_disputed": 2,
+      "n_disputed": 0,
+      "n_evaluated": 120,
       "precision": 1.0,
-      "recall": 0.863013698630137,
+      "recall": 0.84,
       "tn": 45,
       "tp": 63
     },
     "vr": {
-      "f1": 0.9784172661870503,
-      "fn": 3,
+      "f1": 0.9714285714285714,
+      "fn": 4,
       "fp": 0,
-      "n_agreed": 117,
-      "n_disputed": 3,
+      "n_disputed": 0,
+      "n_evaluated": 120,
       "precision": 1.0,
-      "recall": 0.9577464788732394,
-      "tn": 46,
+      "recall": 0.9444444444444444,
+      "tn": 48,
       "tp": 68
     }
   }

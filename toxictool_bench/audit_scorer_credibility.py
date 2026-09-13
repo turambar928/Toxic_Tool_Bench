@@ -14,7 +14,7 @@ from evaluator import evaluate_run
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_AUDIT = ROOT / "toxictool_bench/human_audit_v2/merged_labels.csv"
+DEFAULT_AUDIT = ROOT / "toxictool_bench/human_audit_v2/adjudicated_labels.csv"
 DEFAULT_MANIFEST = ROOT / "toxictool_bench/results/paper_run_manifest.csv"
 DEFAULT_REPORT = ROOT / "toxictool_bench/results/scorer_credibility_report.json"
 DEFAULT_MIXED = ROOT / "toxictool_bench/results/scorer_mixed_oracle_hits.csv"
@@ -36,8 +36,15 @@ def binary(value: Any) -> int:
 
 
 def classification_report(rows: list[dict[str, str]], label: str) -> dict[str, Any]:
-    agreed = [row for row in rows if row[f"human_a_{label}"] == row[f"human_b_{label}"]]
-    pairs = [(binary(row[f"scorer_{label}"]), binary(row[f"human_a_{label}"])) for row in agreed]
+    consensus_key = f"human_consensus_{label}"
+    if consensus_key in rows[0]:
+        evaluated = rows
+        pairs = [(binary(row[f"scorer_{label}"]), binary(row[consensus_key])) for row in evaluated]
+        n_disputed = 0
+    else:
+        evaluated = [row for row in rows if row[f"human_a_{label}"] == row[f"human_b_{label}"]]
+        pairs = [(binary(row[f"scorer_{label}"]), binary(row[f"human_a_{label}"])) for row in evaluated]
+        n_disputed = len(rows) - len(evaluated)
     tp = sum(s == h == 1 for s, h in pairs)
     fp = sum(s == 1 and h == 0 for s, h in pairs)
     fn = sum(s == 0 and h == 1 for s, h in pairs)
@@ -46,8 +53,8 @@ def classification_report(rows: list[dict[str, str]], label: str) -> dict[str, A
     recall = tp / (tp + fn) if tp + fn else None
     f1 = 2 * precision * recall / (precision + recall) if precision and recall else None
     return {
-        "n_agreed": len(pairs),
-        "n_disputed": len(rows) - len(pairs),
+        "n_evaluated": len(pairs),
+        "n_disputed": n_disputed,
         "tp": tp,
         "fp": fp,
         "fn": fn,
@@ -132,7 +139,7 @@ def main() -> None:
     report = {
         "audit_file": str(args.audit.relative_to(ROOT)),
         "manifest_file": str(args.manifest.relative_to(ROOT)),
-        "human_consensus_note": "Precision/recall/F1 use only rows where annotators A and B agree; disputed rows are excluded until adjudication.",
+        "human_consensus_note": "Precision/recall/F1 use all 120 rows: pre-adjudication agreements are retained and disputed label cells use the completed third-party adjudication. Pre-adjudication kappa remains unchanged.",
         "scorer_vs_human_consensus": {
             label: classification_report(audit_rows, label) for label in LABELS
         },

@@ -59,8 +59,10 @@ oracle values, run:
 python3 toxictool_bench/audit_scorer_credibility.py
 ```
 
-The report computes precision, recall, and F1 only on non-disputed human labels;
-the 12 disputed trajectories remain excluded until third-party adjudication.
+The report computes precision, recall, and F1 against all 120 final-consensus
+rows. Cells on which the original annotators agreed retain that label; the 16
+disputed label cells across 12 trajectories use the completed third-party
+adjudication.
 
 Do not expose `key.csv`, raw scorer outputs, or one annotator's labels to the other. Report Cohen's kappa on pre-adjudication labels.
 
@@ -79,11 +81,20 @@ Regenerate it with:
 python3 toxictool_bench/build_human_review_packet.py
 ```
 
-The returned label templates must be validated and versioned by the administrator.
-No adjudicated result is claimed until a human completes the templates. After
-return, recompute scorer precision/recall/F1 against the adjudicated consensus
-and separately summarize `relevant_vr`, `checked_target`, and
-`independent_evidence`; do not silently overwrite the pre-adjudication report.
+The completed, versioned label sheets are stored beside the templates. Validate
+and merge them with:
+
+```bash
+python3 toxictool_bench/finalize_human_review.py
+python3 toxictool_bench/audit_scorer_credibility.py
+```
+
+The first command writes `human_audit_v2/adjudicated_labels.csv` and
+`human_review_v3/vr_audit_summary.json`. The second recomputes scorer
+precision/recall/F1 against the final consensus. The original pre-adjudication
+agreement report remains unchanged. The 18-case VR review is conditioned on
+non-disputed scorer-positive VR cases and must not be reported as an overall
+trajectory-level accuracy estimate.
 
 ## Release Checks
 

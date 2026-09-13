@@ -26,6 +26,7 @@ def main() -> None:
     paths = {
         ROOT / "toxictool_bench/evaluator.py",
         ROOT / "toxictool_bench/audit_scorer_credibility.py",
+        ROOT / "toxictool_bench/finalize_human_review.py",
         ROOT / "toxictool_bench/poisoners.py",
         MANIFEST,
     }

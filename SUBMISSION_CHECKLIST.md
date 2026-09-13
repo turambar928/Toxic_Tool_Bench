@@ -12,7 +12,7 @@ Last updated: 2026-08-31
 | `poison_once` assumption | A full 1,596-run matrix covers 60 numerical, 60 semantic/schema, and 13 multi-table tasks at route-poison probabilities 0.25, 0.50, 0.75, and 1.00. BCR returns and RR falls under repeated poisoning. |
 | Route independence | The paper distinguishes observation, execution-route, and source independence. Source-independent coverage is 0/133; no Byzantine-source guarantee is claimed. |
 | Deterministic scoring | Main text gives compact BCR/ADR/VR/RR rules. The appendix gives temporal requirements, borderline cases, and the conservative lexical ADR limitation. |
-| Human audit / IAA | A blinded 120-trajectory audit is complete. Pre-adjudication macro agreement is 0.967 and macro Cohen's kappa is 0.913; 12 trajectories are released for separate adjudication. |
+| Human audit / IAA | A blinded 120-trajectory audit is complete. Pre-adjudication macro agreement is 0.967 and macro Cohen's kappa is 0.913. Separate blind review resolves all 16 disputed label cells, and a targeted VR audit checks 18 scorer-positive cases. |
 | Cost and latency | Main text and appendix report mean, p50, and p90 latency plus tool-event counts. Dollar cost is omitted because the gateway does not provide consistent token accounting. |
 | Stronger baselines | Results include Base, matched Double-pass, Verification-only, Generic Guard, plus fixed-subset abstain, randomized, and keyword-selective policies. |
 | Stronger adversary | Complete repeated-observation poisoning results and confidence intervals are released. Shared-source, parser, and cache corruption remain outside the measured threat model. |
@@ -21,9 +21,9 @@ Last updated: 2026-08-31
 | Artifact reproducibility | Requirements, code/data licenses, fixed seeds, raw logs, manifests, checksums, scorer, and rebuild scripts are present. |
 | References and labels | `check_paper_static.py` passes with all cited keys resolved and no missing labels. |
 
-## Remaining External Step
+## Completed External Review
 
-The two independent annotators completed `toxictool_bench/human_audit_v2/annotator_a.csv` and `annotator_b.csv`. The merge output is in the same directory. Remaining work is optional adjudication of the 12 disagreement rows; Cohen's kappa must remain based on the pre-adjudication labels.
+The two independent annotators completed `toxictool_bench/human_audit_v2/annotator_a.csv` and `annotator_b.csv`. A separate reviewer completed all 12 disagreement cases and 18 targeted VR-validity cases under `toxictool_bench/human_review_v3/`. The final consensus is `human_audit_v2/adjudicated_labels.csv`. Cohen's kappa remains based on the two pre-adjudication sheets.
 
 ## Final PDF Checks
 
