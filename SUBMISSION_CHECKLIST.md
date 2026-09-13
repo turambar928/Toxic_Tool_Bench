@@ -19,7 +19,7 @@ Last updated: 2026-08-31
 | Cross-framework boundaries | Paper distinguishes tool-observation adapters from PandasAI's coarser chat-result boundary and avoids strict framework rankings. |
 | Task breadth | Numerical, semantic/schema, retrieval, and a 13-task multi-table join extension are included. Large databases, live APIs, and notebooks remain future work. |
 | Artifact reproducibility | Requirements, code/data licenses, fixed seeds, raw logs, manifests, checksums, scorer, and rebuild scripts are present. |
-| References and labels | All cited keys and labels resolve after the latest edits; the two removed missing overview graphics are no longer referenced. |
+| References and labels | All cited keys and labels resolve after the latest edits. `figure1.png` and `figure2.png` are maintained in the Overleaf figure bundle and are not present in this local checkout. |
 
 ## Completed External Review
 
