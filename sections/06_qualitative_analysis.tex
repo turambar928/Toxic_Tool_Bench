@@ -11,7 +11,7 @@ The same pattern appears in semantic tasks. In a treatment/control label-flip ca
 
 \subsection{Validation Must Recompute Evidence}
 
-Successful recovery requires evidence, not just cautionary language. In the same join task family, the guarded LangGraph ReAct adapter performs an independent verification pass, re-inspects the relevant tables, recomputes the join, and returns the clean entity--value binding. In the treatment/control task, it re-inspects the dataframe and returns \texttt{Treatment -- 0.145}. These trajectories explain why the full guard drives BCR to zero in both the numerical and semantic/schema ablations: the final answer is grounded in a second observation after the first corrupted observation.
+Successful recovery requires evidence, not just cautionary language. In the same join task family, the guarded LangGraph ReAct adapter performs an independent verification pass, re-inspects the relevant tables, recomputes the join, and returns the clean entity--value binding. In the treatment/control task, it re-inspects the dataframe and returns \texttt{Treatment -- 0.145}. These trajectories illustrate how a second observation can recover a clean binding after the first observation is corrupted; aggregate zero BCR remains a scorer-detected operational result rather than proof that human-judged blind compliance is absent.
 
 This behavior differs from simply adding a caution instruction. The useful signal is not that the agent says tool outputs may be unreliable; it is that the agent obtains fresh evidence and bases the final answer on the recomputation. This motivates reporting VR and RR separately from ADR. Detection without correction is not enough for data-analysis workflows.
 

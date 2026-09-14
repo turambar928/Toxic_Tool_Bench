@@ -78,7 +78,7 @@ Operator-level results clarify the observed failure pattern, but are not a causa
 
 \subsection{Guarded Verification as a Controlled Attribution Protocol}
 
-Table~\ref{tab:langgraph-guarded} reports the leakage-free LangGraph ablation on the same 120 instances with Claude Haiku 4.5. The expectation prompt is generic and cannot access poison metadata, expected behavior, or clean answers. Under the frozen revised scorer, all four variants have a point-estimate BCR of 0.00 on the combined suite; this is a scorer-detected result, not evidence that human-judged blind compliance is absent. The matched Double-pass and Generic Guard both reach poisoned TSR 0.82, while Verification-only reaches 0.77 and Generic Guard 0.87 in the regenerated aggregate. PAR and VPA are reported with the same exposed denominators and are zero in this aggregate; the holdout audit required to validate these comparisons remains future work. Paired task intervals put the guard-specific differences in the appendix and include zero.
+Table~\ref{tab:langgraph-guarded} reports the leakage-free LangGraph ablation on the same 120 instances with Claude Haiku 4.5. The expectation prompt is generic and cannot access poison metadata, expected behavior, or clean answers. Under the frozen revised scorer, the combined point estimates are reported in Table~\ref{tab:langgraph-guarded}; zero BCR/PAR/VPA entries are scorer detections, not evidence that human-judged blind compliance is absent. The matched Double-pass and Verification-only controls both reach poisoned TSR 0.78, while Generic Guard reaches 0.91. The development audit used to revise the scorer is not an independent holdout, so the method-level adoption comparisons remain provisional. Paired task intervals for Guard versus Double-pass include zero for the guard-specific metrics.
 
 \begin{table}[t]
 \centering
@@ -88,17 +88,17 @@ Table~\ref{tab:langgraph-guarded} reports the leakage-free LangGraph ablation on
 \toprule
 Variant & Clean TSR & Poisoned TSR & BCR & PAR & VPA & VR & RR \\
 \midrule
-Base & 0.82 & 0.82 & 0.00 & 0.00 & 0.00 & 0.95 & 0.88 \\
-Double-pass & 0.82 & 0.82 & 0.00 & 0.00 & 0.00 & \best{0.95} & \best{0.88} \\
-Verification only & 0.80 & 0.77 & 0.00 & 0.00 & 0.00 & 0.93 & 0.81 \\
-Generic guard & \best{0.83} & \best{0.87} & \best{0.00} & 0.00 & 0.00 & 0.93 & 0.87 \\
+Base & 0.78 & 0.67 & 0.10 & 0.10 & 0.00 & 0.47 & 0.30 \\
+Double-pass & 0.78 & 0.78 & 0.00 & 0.00 & 0.00 & \best{0.98} & 0.80 \\
+Verification only & 0.78 & 0.78 & 0.00 & 0.00 & 0.00 & 0.96 & 0.80 \\
+Generic guard & \best{0.88} & \best{0.91} & \best{0.00} & 0.00 & 0.00 & 0.97 & \best{0.92} \\
 \bottomrule
 \end{tabular}
 \caption{Leakage-free LangGraph ReAct defense ablation on 120 task instances with Claude Haiku 4.5. Double-pass is the matched-budget control. PAR is broad poisoned-answer adoption and VPA is adoption after qualifying validation; both are conditioned on delivered poison.}
 \label{tab:langgraph-guarded}
 \end{table}
 
-The numerical suite accounts for most of the difference: Generic Guard reaches poisoned TSR 0.87 and BCR 0.00 (0/46 exposed runs; exact 95\% upper bound 0.06), compared with 0.65 and 0.21 for Base. Semantic/schema tasks are easier for this model, with Generic Guard reaching 1.00 poisoned TSR and 0.00 BCR. The full suite-level breakdown is reported in Appendix~\ref{tab:appendix-guard-suite-breakdown}, including PDR and exposure denominators. These results support a mechanism claim about enforced evidence collection in LangGraph, not cross-framework universality of the defense. The appropriate comparison is Double-pass versus Generic Guard: it isolates the incremental contribution of generic expectations and evidence gating after the second route has already been paid for. The task-paired bootstrap intervals for their differences include zero, so the guard-specific increment should not be read as statistically established.
+The suite-level breakdown shows a heterogeneous pattern: Generic Guard improves poisoned TSR over Double-pass in the numerical suite (0.87 vs. 0.82) and in the semantic/schema suite (0.95 vs. 0.73), but its paired intervals do not establish a general guard-specific advantage. Base has the highest detected BCR in both suites (0.21 numerical and 0.02 semantic/schema), whereas all three two-route variants have zero detected BCR in the revised scorer. These are operational proxy results because the scorer development audit has limited BCR recall. The appropriate comparison is Double-pass versus Generic Guard: it isolates the incremental contribution of generic expectations and evidence gating after the second route has already been paid for. The task-paired bootstrap intervals include zero for the guard-specific metrics, so this increment should not be read as statistically established.
 
 As a cross-framework replication, the same leakage-free verification protocol on AutoGen obtains clean/poisoned TSR of 0.93/0.93 and BCR of 0.00 on the released 120-instance suite. We treat this as replication of the observation-level protocol, not evidence of model-independent defense generality; the AutoGen replication uses the GPT model family and remains subject to the same shared-source limitation.
 

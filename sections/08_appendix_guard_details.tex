@@ -112,13 +112,15 @@ uses the third adjudicator only for disputed label cells. This same audit also
 served as the development set for the revised final-answer and validation rules;
 it is not an independent holdout. The scorer has limited BCR recall and ADR
 recall; automated BCR can therefore miss blind compliance, while ADR should be
-treated as a lower bound. VR and RR are also imperfect. A frozen-scorer holdout
+treated as a lower bound. VR and RR are also imperfect. PAR and VPA were not
+separately human-labeled in this audit, so no independent precision/recall claim
+is made for those adoption measures. A frozen-scorer holdout
 audit is required before using these metrics as precise estimates of method
 differences. In a separate, conditionally sampled review of 18
 non-disputed scorer-positive VR cases, reviewers judged 18/18 to be task relevant,
 to check the target, and to use substantive evidence; this is a targeted validity
-check, not an estimate over all trajectories. The broad answer matcher also
-Under the legacy broad matcher, both clean and poisoned oracle matches appeared in
+check, not an estimate over all trajectories. Under the legacy broad matcher,
+both clean and poisoned oracle matches appeared in
 231 of 1,874 exposed toxic runs
 in the paper manifest. Those cases are released in
 \path{scorer_mixed_oracle_hits.csv} and should be distinguished from an answer
@@ -199,7 +201,7 @@ The current implementation passes the primary candidate to the verification prom
 
 Generic Guard gives priority to independently verified evidence. If the primary route and verification route disagree, the final answer is drawn from the verification route when it produces a task-specific value, label, or evidence binding. If verification is inconclusive, the guarded adapter returns a qualified answer rather than copying the primary result. This policy is intentionally conservative: it can convert blind compliance into abstention or under-recovery when the verification budget is too small.
 
-We estimate false-override risk by pairing clean outcomes task by task, rather than relying only on aggregate clean TSR. In the leakage-free 120-instance ablation, Generic Guard changes one base-correct numerical task to an incorrect answer and repairs four base errors; no semantic/schema clean outcome changes. Clean TSR therefore rises from 0.91 to 0.93. Double-pass has one false override and one repair, while Verification-only has no false override and one repair. These observations rule out indiscriminate abstention as the explanation for the aggregate result, but also show that additional routes can introduce ordinary reasoning errors. The task-level outcomes are recoverable from the released manifest and raw logs.
+We estimate false-override risk by pairing clean outcomes task by task, rather than relying only on aggregate clean TSR. The regenerated aggregate changes across variants, but the current release does not yet include a frozen, independently adjudicated task-level false-override audit. We therefore do not use the earlier false-override counts as a quantitative claim. The task-level outcomes are recoverable from the released manifest and raw logs.
 
 \subsection{Alternative Verification Baselines}
 
@@ -234,7 +236,7 @@ Semantic-10 & Selective & 1.00 & \best{1.00} & \best{0.00} & \best{1.00} & \best
 
 We add \path{langgraph_react_verification_only} to isolate the independent-verification mechanism from the rest of Guarded Verification. The adapter first runs the ordinary LangGraph ReAct route, then starts a second LangGraph route whose prompt treats the primary answer as an untrusted claim and asks for recomputation from the loaded dataframe or auxiliary tables. The final answer is taken from the verification route. This mirrors the evidence-selection idea used by Guarded Verification, but it does not include expectation generation or explicit tie-breaking.
 
-On the leakage-free 120-instance ablation, Verification-only obtains clean/poisoned TSR \texttt{0.92}/\texttt{0.93}, BCR \texttt{0.00}, VR \texttt{0.96}, and RR \texttt{0.95}. Generic Guard obtains \texttt{0.93}/\texttt{0.93}, BCR \texttt{0.00}, VR \texttt{0.97}, and RR \texttt{0.94}. The matched Double-pass control reaches poisoned TSR \texttt{0.91} and BCR \texttt{0.01}, so most of the gain comes from running a second evidence route.
+On the leakage-free 120-instance ablation, Verification-only obtains clean/poisoned TSR \texttt{0.78}/\texttt{0.78}, detected BCR \texttt{0.00}, VR \texttt{0.96}, and RR \texttt{0.80}. Generic Guard obtains \texttt{0.88}/\texttt{0.91}, detected BCR \texttt{0.00}, VR \texttt{0.97}, and RR \texttt{0.92}. The matched Double-pass control obtains \texttt{0.78}/\texttt{0.78}, detected BCR \texttt{0.00}, VR \texttt{0.98}, and RR \texttt{0.80}. These values do not establish a statistically significant guard-specific gain; they show that the two-route variants have different outcome profiles under the revised operational scorer.
 
 The command template is:
 \begin{verbatim}
@@ -296,7 +298,7 @@ python3 toxictool_bench/run_full_bench.py \
 
 \paragraph{Matched-budget interpretation.}
 
-Double-pass runs two ordinary routes with no expectation policy, no primary-answer handoff, and the same maximum route budget as the verification variants. The released runs use two independent LangGraph calls, each with \texttt{--max-steps 10}, \texttt{--max-tokens 3072}, and temperature 0; the second route's final response is selected verbatim. Verification-only also uses two calls with the same per-route cap, passes the first answer only as an untrusted claim, and selects the second route's response. Generic Guard uses a deterministic generic expectation string inside the primary prompt, then runs the same two-call structure; its verification response is selected verbatim and prefixed with a guard label. Thus ``matched'' means matched per-route step/token budget and route count, not equal realized token usage or latency. Its combined poisoned TSR/BCR of \texttt{0.92}/\texttt{0.01}, compared with \texttt{0.93}/\texttt{0.00} for Generic Guard, shows that a second evidence route explains most of the improvement. We therefore do not attribute the full Base-to-Guard delta to expectation elicitation or gating.
+Double-pass runs two ordinary routes with no expectation policy, no primary-answer handoff, and the same maximum route budget as the verification variants. The released runs use two independent LangGraph calls, each with \texttt{--max-steps 10}, \texttt{--max-tokens 3072}, and temperature 0; the second route's final response is selected verbatim. Verification-only also uses two calls with the same per-route cap, passes the first answer only as an untrusted claim, and selects the second route's response. Generic Guard uses a deterministic generic expectation string inside the primary prompt, then runs the same two-call structure; its verification response is selected verbatim and prefixed with a guard label. Thus ``matched'' means matched per-route step/token budget and route count, not equal realized token usage or latency. On the regenerated combined suite, Double-pass and Verification-only both reach poisoned TSR \texttt{0.78}, while Generic Guard reaches \texttt{0.91}; the paired confidence intervals do not establish that the difference is caused by the guard policy. We therefore avoid attributing the Base-to-Guard change to expectation elicitation or gating alone.
 
 Table~\ref{tab:appendix-paired-defense-ci} reports task-level paired differences between Generic Guard and Double-pass. Numerical-suite intervals include zero for TSR, BCR, VR, and RR; the semantic-suite estimates are zero except for small Verification-only differences. This is why the guard-specific increment is reported as uncertain rather than as a statistically established improvement.
 
@@ -327,7 +329,7 @@ Semantic/schema & Poisoned TSR & 60 & +0.000 & [0.000, 0.000] \\
 
 \subsection{Tool-Event Overhead}
 
-The guard increases routing work because it adds a second route. Table~\ref{tab:appendix-cost-robustness} summarizes the leakage-free 120-instance ablation. Generic Guard more than doubles toxic-run events while reducing BCR from \texttt{0.10} to \texttt{0.00}; Double-pass has nearly the same event count and reaches BCR \texttt{0.01}. This matched comparison prevents us from crediting gains caused only by additional compute to the guard policy.
+The guard increases routing work because it adds a second route. Table~\ref{tab:appendix-cost-robustness} summarizes the leakage-free 120-instance ablation. Generic Guard more than doubles toxic-run events relative to Base; Double-pass and Verification-only have comparable route counts. Because the revised BCR is an imperfect operational proxy and the paired confidence intervals include zero, this matched comparison does not isolate a statistically established policy effect.
 
 \begin{table}[t]
 \centering
@@ -337,10 +339,10 @@ The guard increases routing work because it adds a second route. Table~\ref{tab:
 \toprule
 Adapter & Poisoned TSR & BCR & Sem. events & Num. events \\
 \midrule
-Base & 0.77 & 0.10 & 2.27 & 2.36 \\
-Double-pass & 0.91 & 0.01 & 4.55 & 4.61 \\
-Verification only & \best{0.93} & 0.00 & 4.40 & 4.44 \\
-Generic guard & \best{0.93} & \best{0.00} & 4.65 & 4.86 \\
+Base & 0.67 & 0.10 & 2.40 & 2.32 \\
+Double-pass & 0.78 & 0.00 & 4.77 & 4.45 \\
+Verification only & 0.78 & 0.00 & 4.57 & 4.30 \\
+Generic guard & \best{0.91} & \best{0.00} & 5.10 & 4.62 \\
 \bottomrule
 \end{tabular}
 \caption{Cost--robustness tradeoff for the expanded 120-task LangGraph ReAct defense ablation. Event columns report average tool events per poisoned run.}
@@ -389,15 +391,15 @@ We compute nonparametric bootstrap confidence intervals by resampling task IDs w
 \toprule
 Suite & Adapter & Poisoned TSR 95\% CI & BCR 95\% CI \\
 \midrule
-Semantic/schema & Base & [0.95, 1.00] & [0.00, 0.05] \\
-Semantic/schema & Double-pass & [1.00, 1.00] & [0.00, 0.05] \\
-Semantic/schema & Verification only & [1.00, 1.00] & [0.00, 0.05] \\
-Semantic/schema & Generic guard & [1.00, 1.00] & [0.00, 0.05] \\
+Semantic/schema & Base & [0.60, 0.83] & [0.00, 0.05] \\
+Semantic/schema & Double-pass & [0.62, 0.85] & [0.00, 0.05] \\
+Semantic/schema & Verification only & [0.70, 0.90] & [0.00, 0.05] \\
+Semantic/schema & Generic guard & [0.88, 1.00] & [0.00, 0.05] \\
 \addlinespace[2pt]
 \midrule
-Numerical & Base & [0.53, 0.77] & [0.12, 0.38] \\
-Numerical & Double-pass & [0.73, 0.92] & [0.00, 0.08] \\
-Numerical & Verification only & [0.75, 0.93] & [0.00, 0.08] \\
+Numerical & Base & [0.50, 0.73] & [0.10, 0.35] \\
+Numerical & Double-pass & [0.72, 0.90] & [0.00, 0.08] \\
+Numerical & Verification only & [0.65, 0.87] & [0.00, 0.08] \\
 Numerical & Generic guard & [0.78, 0.95] & [0.00, 0.06] \\
 \bottomrule
 \end{tabular}
@@ -442,7 +444,7 @@ Third, guarded recovery follows concrete recomputation. The guarded treatment tr
 
 \subsection{Suite-Level Defense Breakdown}
 
-Table~\ref{tab:appendix-guard-suite-breakdown} expands the post-fix ablation in the main text. The numerical suite has lower base validation and recovery, while semantic/schema tasks more often expose a source row or metadata route that the agent can inspect. Generic Guard yields no observed BCR under \texttt{poison\_once} in each suite, but the matched Double-pass result shows that the second route is the main active ingredient. Figure~\ref{fig:severity-heatmap} provides a complementary severity-level view for the expanded public cross-agent runs.
+Table~\ref{tab:appendix-guard-suite-breakdown} expands the leakage-free ablation in the main text. The numerical suite has lower base validation and recovery, while semantic/schema tasks more often expose a source row or metadata route that the agent can inspect. Generic Guard yields no BCR detected by the revised scorer under \texttt{poison\_once} in either suite. Given the development-audit recall limitation, this does not establish absence of human-judged blind compliance; the paired results do not isolate a statistically established guard-specific effect. Figure~\ref{fig:severity-heatmap} provides a complementary severity-level view for the expanded public cross-agent runs.
 
 \begin{table}[t]
 \centering
@@ -452,15 +454,15 @@ Table~\ref{tab:appendix-guard-suite-breakdown} expands the post-fix ablation in 
 \toprule
 Suite & Variant & Clean TSR & Poisoned TSR & BCR & VR & RR \\
 \midrule
-Semantic/schema & Base & 0.93 & 0.88 & 0.02 & 0.76 & 0.66 \\
- & Double-pass & 1.00 & 1.00 & 0.00 & 1.00 & 1.00 \\
- & Verification only & 1.00 & 1.00 & 0.00 & 0.98 & 0.98 \\
- & Generic guard & 1.00 & 1.00 & 0.00 & 1.00 & 1.00 \\
+Semantic/schema & Base & 0.75 & 0.72 & 0.02 & 0.76 & 0.51 \\
+ & Double-pass & 0.73 & 0.73 & 0.00 & 1.00 & 0.73 \\
+ & Verification only & 0.75 & 0.80 & 0.00 & 0.98 & 0.78 \\
+ & Generic guard & 0.93 & 0.95 & 0.00 & 1.00 & 0.95 \\
 \midrule
-Numerical & Base & 0.82 & 0.65 & 0.21 & 0.05 & 0.02 \\
- & Double-pass & 0.82 & 0.82 & 0.02 & 0.95 & 0.88 \\
- & Verification only & 0.83 & 0.85 & 0.00 & 0.93 & 0.91 \\
- & Generic guard & 0.87 & 0.87 & 0.00 & 0.93 & 0.87 \\
+Numerical & Base & 0.82 & 0.62 & 0.21 & 0.05 & 0.00 \\
+ & Double-pass & 0.82 & 0.82 & 0.00 & 0.95 & 0.88 \\
+ & Verification only & 0.80 & 0.77 & 0.00 & 0.93 & 0.81 \\
+ & Generic guard & 0.83 & 0.87 & 0.00 & 0.93 & 0.87 \\
 \bottomrule
 \end{tabular}
 \caption{Suite-level LangGraph ReAct defense results on the expanded 120-instance evaluation.}
@@ -476,13 +478,13 @@ Numerical & Base & 0.82 & 0.65 & 0.21 & 0.05 & 0.02 \\
 Suite & Variant & $n_{\mathrm{toxic}}$ & $n_{\mathrm{exposed}}$ & PDR & BCR \\
 \midrule
 Numerical & Base & 60 & 42 & 0.700 & 0.210 \\
- & Double-pass & 60 & 43 & 0.717 & 0.023 \\
+ & Double-pass & 60 & 43 & 0.717 & 0.000 \\
  & Verification-only & 60 & 43 & 0.717 & 0.000 \\
  & Generic Guard & 60 & 46 & 0.767 & 0.000 \\
 \midrule
 Semantic/schema & Base & 60 & 59 & 0.983 & 0.017 \\
  & Double-pass & 60 & 60 & 1.000 & 0.000 \\
- & Verification-only & 60 & 60 & 1.000 & 0.017 \\
+ & Verification-only & 60 & 60 & 1.000 & 0.000 \\
  & Generic Guard & 60 & 60 & 1.000 & 0.000 \\
 \bottomrule
 \end{tabular}
