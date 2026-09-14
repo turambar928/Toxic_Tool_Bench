@@ -1,0 +1,44 @@
+{
+  "scope": "Bounded text restoration, simpler prose, bibliography correction, and figure edit instructions; scorer and experimental numbers unchanged.",
+  "reference_entries": 42,
+  "reference_entries_corrected": 13,
+  "reference_note": "12 substantive corrections and one fuller author name; accent/capitalization protection and URLs also standardized.",
+  "official_template": "https://github.com/ICLR/Master-Template/tree/master/iclr2027",
+  "figure_1_2_status": "Original images preserved for the user to edit using FIGURE_REVISION_GUIDE.md.",
+  "checks": {
+    "bibliography_keys": "42 unique entries; all 42 cited keys resolve; no unused entries",
+    "table_numbers": "Numeric table rows in benchmark, experiments, and appendix unchanged from the start of this editing pass",
+    "cross_references": "41 unique labels; all 35 references resolve",
+    "pdf": {
+      "total_pages": 25,
+      "main_text_pages": 9,
+      "references_start_page": 10,
+      "page_9_last_body_text_bottom_pt": 717.34,
+      "review": "Rendered main pages 1-9, reference start, and resized appendix tables; no clipping or overlap found. Figures 1 and 2 still await author edits.",
+      "fonts": "Embedded Nimbus Roman (Times family), including bold and italic; no Latin Modern fallback in body text",
+      "tex_warnings": "No overfull boxes, undefined citations, or undefined references; underfull spacing warnings remain"
+    }
+  },
+  "input_sha256": {
+    "main.tex": "4b71ca939fde16a7bd8751149dcbe550b154694d3b79044567cf47bbced852a3",
+    "references.bib": "23cffb51b1a65e6ecc3173824d70b555e96231a02ae83975ef290db30ff30be7",
+    "iclr2027_conference.sty": "797deef41724e93761426ac0cbcca46279a91cc650dd1f0ce76a4f08d2098ea6",
+    "iclr2027_conference.bst": "2d67552db7ed38ccfccb5957b52f95656e25c249724761d3cf5f7922ad1844c5",
+    "sections/00_abstract.tex": "e598e3057249a08262a9006c0b9b873b9be6bf9cd7bc64dde1fc89dd70dba81a",
+    "sections/01_introduction.tex": "a6c6c3b5de99284f3d5eb2b0be6ef928afac37a0cef1153e9ea894c5e8726c29",
+    "sections/02_problem_setup.tex": "745cb08beeb9547ce2946dd072a437867105490ff8545491a93c8dde6c03b0d6",
+    "sections/03_toxictool_bench.tex": "da535e2956358161b2f1214ad738b51a645263d3c6e18f9594c18fa0c73ec39f",
+    "sections/04_method_ibf.tex": "8a5175da5fc9fd52050367536014d7f37c99d23dccf91875b599a2fb9f9403ad",
+    "sections/05_experiments.tex": "0ee41fdf569ffef5d7392f79f3ecf73557e764f378087a85b54e44166532eca6",
+    "sections/06_qualitative_analysis.tex": "42fcbf3d16403b93de4f47d27ea9ddd29d85dfd69c2684e2ebc9c7631afd824b",
+    "sections/06_related_work.tex": "8bbaf662a49de8518cef289664b093a868a40e3f06dc73fb3822f0f80a733a3a",
+    "sections/07_discussion_limitations.tex": "3d33c9be79c02ac13f0e1f0ee093085e75a1671e7ff27149c57bf94c855ae7f4",
+    "sections/08_appendix_guard_details.tex": "648cda46f4ec7ed5f586d3473c3cf9743c2227e0a360eea896d92fa58e53c7ac"
+  },
+  "compiler": "Tectonic 0.17.0 with official ICLR 2027 template and explicit T1 encoding",
+  "figure_sha256": {
+    "figures/figure1.png": "c515767424bb3d8ca397ade669f499bb03c6c6d59c242ba1ded84efc4d199bde",
+    "figures/figure2.png": "d9e82fd51b667d213fc74e88061719b8a373e44f95dd2b34a85266f81902abe1"
+  },
+  "output_pdf_sha256": "671c1ab9df30dd4c4624dd27b42aa946f4d43b2fe151d7119d61ff2ec1c6645e"
+}

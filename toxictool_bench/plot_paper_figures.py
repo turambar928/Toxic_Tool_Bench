@@ -371,7 +371,7 @@ def plot_capability_gap(results_dir: Path, output_dir: Path, preview_dir: Path |
     labels = [EXPANDED_ADAPTERS[row["adapter"]] for row in rows]
     clean = np.array([float(row["clean_tsr"]) for row in rows])
     toxic = np.array([float(row["poisoned_tsr"]) for row in rows])
-    gap = clean - toxic
+    gap = np.array([float(row["delta_tsr"]) for row in rows])
 
     fig, ax = plt.subplots(figsize=(7.0, 2.35))
     style_axes(ax, xgrid=True)
@@ -380,7 +380,7 @@ def plot_capability_gap(results_dir: Path, output_dir: Path, preview_dir: Path |
     ax.scatter(clean, y, facecolor="white", edgecolor="#4B5E67", linewidth=1.5, s=32, zorder=3, label="Clean TSR")
     ax.scatter(toxic, y, color=COLORS["clean"], s=28, zorder=3, label="Poisoned TSR")
     for yi, clean_value, toxic_value, gap_value in zip(y, clean, toxic, gap):
-        ax.text(clean_value + 0.018, yi, f"{format_rate(clean_value)}   $\Delta$ = {format_rate(gap_value)}", va="center", fontsize=7)
+        ax.text(clean_value + 0.018, yi, rf"{format_rate(clean_value)}   $\Delta$ = {format_rate(gap_value)}", va="center", fontsize=7)
         ax.text(toxic_value - 0.018, yi, format_rate(toxic_value), va="center", ha="right", fontsize=7, color=COLORS["clean"])
     ax.set_yticks(y, labels)
     ax.invert_yaxis()
@@ -395,15 +395,10 @@ def plot_capability_gap(results_dir: Path, output_dir: Path, preview_dir: Path |
 
 def plot_defense_frontier(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
     """Plot poisoned-task success versus latency with an explicit Pareto frontier."""
-    ablation = {row["adapter"]: row for row in read_csv(results_dir / "langgraph_guarded_ablation_summary.csv")}
-    overhead_rows = read_csv(results_dir / "langgraph_guarded_overhead_summary.csv")
-    toxic_latency: dict[str, list[float]] = defaultdict(list)
-    for row in overhead_rows:
-        if row["env"] == "toxic":
-            toxic_latency[row["adapter"]].append(float(row["mean_seconds"]))
-    variants = ["Base", "Caution only", "Expectation only", "Verification only", "Full guard", "Light guard"]
-    labels = ["Base", "Caution", "Expectation", "Verify", "Full", "Light"]
-    latency = np.array([np.mean(toxic_latency[name]) for name in variants])
+    ablation = {row["adapter"]: row for row in read_csv(results_dir / "leakage_free_defense_combined_summary.csv")}
+    variants = ["langgraph_react_full", "langgraph_react_double_pass", "langgraph_react_verification_only", "langgraph_react_guarded"]
+    labels = ["Base", "Double-pass", "Verification", "Generic Guard"]
+    latency = np.array([float(ablation[name]["avg_elapsed_toxic"]) for name in variants])
     tsr = np.array([float(ablation[name]["poisoned_tsr"]) for name in variants])
 
     frontier = []
@@ -425,8 +420,9 @@ def plot_defense_frontier(results_dir: Path, output_dir: Path, preview_dir: Path
         is_frontier = i in frontier
         ax.scatter(latency[i], tsr[i], s=34, color=COLORS["clean"] if is_frontier else COLORS["neutral"],
                    edgecolor=COLORS["ink"], linewidth=0.45, zorder=3)
-        ax.annotate(label, (latency[i], tsr[i]), xytext=(4, 5 if i % 2 else -10),
-                    textcoords="offset points", fontsize=6.5,
+        offsets = [(4, -10), (-3, 8), (-3, -15), (-5, 7)]
+        ax.annotate(label, (latency[i], tsr[i]), xytext=offsets[i],
+                    textcoords="offset points", fontsize=6.5, ha="left" if i == 0 else "right",
                     color=COLORS["ink"] if is_frontier else COLORS["muted"])
     ax.set_xlabel("Toxic-run latency (s)")
     ax.set_ylabel("Poisoned TSR")
@@ -444,12 +440,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--results-dir", type=Path, default=Path("toxictool_bench/results"))
     parser.add_argument("--output-dir", type=Path, default=Path("figures"))
     parser.add_argument("--preview-dir", type=Path)
+    parser.add_argument("--defense-only", action="store_true")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     configure_matplotlib()
+    if args.defense_only:
+        plot_defense_frontier(args.results_dir, args.output_dir, args.preview_dir)
+        return
     plot_cross_agent_model(args.results_dir, args.output_dir, args.preview_dir)
     plot_operator_profile(args.results_dir, args.output_dir, args.preview_dir)
     plot_severity(args.results_dir, args.output_dir, args.preview_dir)

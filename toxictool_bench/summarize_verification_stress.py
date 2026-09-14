@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from bootstrap_ci import bootstrap, summarize, was_exposed
+from evaluator import evaluate_run
 
 
 SUITES = {
@@ -48,11 +49,33 @@ def main() -> None:
     parser.add_argument("--manifest", type=Path, default=Path("toxictool_bench/results/verification_stress_manifest.csv"))
     parser.add_argument("--iterations", type=int, default=5000)
     parser.add_argument("--seed", type=int, default=20260830)
+    parser.add_argument("--discover", action="store_true", help="Explicitly replace the fixed manifest by discovering completed chunks.")
     args = parser.parse_args()
 
     groups: list[tuple[str, float, str, list[dict[str, Any]]]] = []
     selected: list[tuple[str, float, str, int, int, Path]] = []
     missing: list[str] = []
+    if not args.discover:
+        from collections import defaultdict
+        grouped = defaultdict(list)
+        with args.manifest.open(encoding="utf-8", newline="") as handle:
+            for spec in csv.DictReader(handle):
+                path = Path(spec['path'])
+                rows = read_rows(path)
+                if len(rows) != int(spec['limit']):
+                    raise ValueError(f"Missing or incomplete fixed stress source: {path}")
+                grouped[(spec['suite'], float(spec['poison_probability']), spec['adapter'])].extend(rows)
+        if len(grouped) != len(SUITES) * len(ADAPTERS) * len(PROBABILITIES):
+            raise ValueError("Incomplete fixed stress matrix")
+        for (suite, probability, adapter), rows in sorted(grouped.items()):
+            if len(rows) != SUITES[suite] or len({r['task_id'] for r in rows}) != len(rows):
+                raise ValueError(f"Missing or duplicated stress tasks: {suite}/{adapter}/{probability}")
+            if any(r['adapter'] != adapter or r['model'] != args.model or r['environment'] != 'toxic' for r in rows):
+                raise ValueError("Stress trajectory identity does not match manifest")
+            groups.append((suite, probability, adapter, rescore_rows(suite, rows)))
+        write_summary(groups, args.output, args.iterations, args.seed)
+        print(args.output)
+        return
     for suite, total in SUITES.items():
         for tag, probability in PROBABILITIES:
             directory = args.root / suite / tag
@@ -68,7 +91,7 @@ def main() -> None:
                     rows.extend(chunk_rows)
                     selected.append((suite, probability, adapter, start, limit, path))
                 if len(rows) == total:
-                    groups.append((suite, probability, adapter, rows))
+                    groups.append((suite, probability, adapter, rescore_rows(suite, rows)))
     if missing:
         raise SystemExit("Missing complete stress chunks:\n" + "\n".join(missing))
 
@@ -76,11 +99,19 @@ def main() -> None:
     write_manifest(selected, args.manifest)
 
 
+def rescore_rows(suite: str, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    task_path = Path(__file__).resolve().parent / "tasks" / f"{suite}.jsonl"
+    tasks = {t['task_id']: t for t in read_rows(task_path)}
+    for row in rows:
+        row['metrics'] = evaluate_run(tasks[row['task_id']], row['final_answer'], row['tool_events'])
+    return rows
+
+
 def write_summary(groups, path: Path, iterations: int, seed: int) -> None:
     fields = [
         "suite", "poison_probability", "adapter", "n", "n_exposed", "poison_delivery_rate",
         "toxic_tsr", "toxic_tsr_lo", "toxic_tsr_hi", "bcr", "bcr_lo", "bcr_hi",
-        "vr", "rr", "rr_lo", "rr_hi", "mean_elapsed_seconds",
+        "par", "vpa", "vr", "rr", "rr_lo", "rr_hi", "mean_elapsed_seconds",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
@@ -103,6 +134,8 @@ def write_summary(groups, path: Path, iterations: int, seed: int) -> None:
                 "bcr": f"{point['toxic_bcr']:.4f}",
                 "bcr_lo": f"{intervals['toxic_bcr'][0]:.4f}",
                 "bcr_hi": f"{intervals['toxic_bcr'][1]:.4f}",
+                "par": f"{point['toxic_par']:.4f}",
+                "vpa": f"{point['toxic_vpa']:.4f}",
                 "vr": f"{point['toxic_vr']:.4f}",
                 "rr": f"{point['toxic_rr']:.4f}",
                 "rr_lo": f"{intervals['toxic_rr'][0]:.4f}",

@@ -50,7 +50,7 @@ def main() -> None:
                 key=lambda row: float(row["poison_probability"]),
             )
             x = [float(row["poison_probability"]) for row in selected]
-            y = [float(row["bcr"]) for row in selected]
+            y = [float(row["vpa"]) for row in selected]
             ax.plot(x, y, color=COLORS[adapter], marker=MARKERS[adapter], linewidth=1.35,
                     markersize=4.5, label=LABELS[adapter])
         ax.set_ylim(-0.04, 1.04)
@@ -63,8 +63,8 @@ def main() -> None:
         ax.set_title(title, fontweight="semibold", pad=6)
         ax.text(-0.12, 1.03, f"({chr(97 + column)})", transform=ax.transAxes,
                 fontsize=8.5, fontweight="bold", va="bottom")
-    axes[0].set_ylabel("Blind compliance rate")
-    fig.supxlabel("Verification-route poison probability", fontsize=8, y=0.04)
+    axes[0].set_ylabel("Validated poison adoption (VPA)")
+    fig.supxlabel("Eligible-observation poison probability", fontsize=8, y=0.04)
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper center", ncol=3, frameon=False,
                bbox_to_anchor=(0.5, 1.02), handlelength=1.8, columnspacing=1.2)

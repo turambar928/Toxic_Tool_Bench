@@ -17,7 +17,7 @@ from evaluator import evaluate_run
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "toxictool_bench/results/leakage_free_defense_manifest.csv"
 ADAPTERS = ("langgraph_react_full", "langgraph_react_double_pass", "langgraph_react_guarded", "langgraph_react_verification_only")
-METRICS = ("task_success", "blind_compliance", "validation", "recovery")
+METRICS = ("task_success", "blind_compliance", "poison_adoption", "validated_poison_adoption", "validation", "recovery")
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -51,8 +51,8 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
-def load_toxic(manifest: Path) -> dict[tuple[str, str], dict[str, dict[str, Any]]]:
-    grouped: dict[tuple[str, str], dict[str, dict[str, Any]]] = defaultdict(dict)
+def load_runs(manifest: Path) -> dict[tuple[str, str, str], dict[str, dict[str, Any]]]:
+    grouped: dict[tuple[str, str, str], dict[str, dict[str, Any]]] = defaultdict(dict)
     task_defs: dict[str, dict[str, Any]] = {}
     for spec in read_csv(manifest):
         task_paths = {
@@ -70,16 +70,30 @@ def load_toxic(manifest: Path) -> dict[tuple[str, str], dict[str, dict[str, Any]
                         task_defs[task["task_id"]] = task
         suite, adapter = spec["suite"], spec["adapter"]
         for row in read_jsonl(ROOT / spec["path"]):
-            if row.get("environment") != "toxic":
-                continue
+            environment = row.get("environment")
+            if environment not in {"clean", "toxic"} or row.get("adapter") != adapter:
+                raise ValueError(f"Run identity disagrees with manifest: {spec['path']}")
             task_id = str(row["task_id"])
-            if task_id in grouped[(suite, adapter)]:
-                raise ValueError(f"duplicate toxic task {suite}/{adapter}/{task_id}")
+            key = (suite, adapter, environment)
+            if task_id in grouped[key]:
+                raise ValueError(f"duplicate task {key}/{task_id}")
             row["metrics"] = evaluate_run(
                 task_defs[task_id], row.get("final_answer", ""), row.get("tool_events", [])
             )
-            grouped[(suite, adapter)][task_id] = row
+            row["source_file"] = spec["path"]
+            grouped[key][task_id] = row
+    models = {row["model"] for tasks in grouped.values() for row in tasks.values()}
+    if len(models) != 1:
+        raise ValueError(f"Expected one model in the defense manifest, got {models}")
+    for suite in {key[0] for key in grouped}:
+        task_sets = [set(grouped[(suite, adapter, env)]) for adapter in ADAPTERS for env in ("clean", "toxic")]
+        if not task_sets[0] or any(ids != task_sets[0] for ids in task_sets):
+            raise ValueError(f"Incomplete method/environment pairing for {suite}")
     return grouped
+
+
+def load_toxic(manifest: Path) -> dict[tuple[str, str], dict[str, dict[str, Any]]]:
+    return {(suite, adapter): rows for (suite, adapter, env), rows in load_runs(manifest).items() if env == "toxic"}
 
 
 def metric(row: dict[str, Any], name: str) -> float:
@@ -103,6 +117,7 @@ def build_exposure(rows: dict[tuple[str, str], dict[str, dict[str, Any]]]) -> li
             "model": next(iter(tasks.values())).get("model", "") if tasks else "",
             "n_toxic": len(tasks),
             "n_exposed": len(exposed),
+            "bcr_events": sum(int(metric(row, "blind_compliance")) for row in exposed),
             "pdr": f"{len(exposed) / len(tasks):.4f}" if tasks else "0.0000",
             "bcr": f"{mean([metric(row, 'blind_compliance') for row in exposed]):.4f}",
             "par": f"{mean([metric(row, 'poison_adoption') for row in exposed]):.4f}",
@@ -123,7 +138,7 @@ def build_paired(rows: dict[tuple[str, str], dict[str, dict[str, Any]]], seed: i
             common = sorted(set(left) & set(right))
             for name in METRICS:
                 ids = common
-                if name == "blind_compliance":
+                if name != "task_success":
                     ids = [task_id for task_id in common if left[task_id].get("metrics", {}).get("poison_exposed") and right[task_id].get("metrics", {}).get("poison_exposed")]
                 deltas = [metric(left[task_id], name) - metric(right[task_id], name) for task_id in ids]
                 lo, hi = bootstrap(deltas, seed + len(output))
@@ -133,11 +148,47 @@ def build_paired(rows: dict[tuple[str, str], dict[str, dict[str, Any]]], seed: i
                     "control": control,
                     "metric": "BCR" if name == "blind_compliance" else name,
                     "estimand": "treatment-minus-control",
+                    "population": "all-shared-tasks" if name == "task_success" else "exposed-in-both-variants",
                     "n_paired": len(ids),
                     "mean_delta": f"{mean(deltas):.4f}",
                     "ci95_lo": f"{lo:.4f}",
                     "ci95_hi": f"{hi:.4f}",
                 })
+    return output
+
+
+def paired_success(runs: dict, seed: int, rounds: int = 5000) -> list[dict[str, Any]]:
+    """Pair all four outcomes; keep suite sizes fixed in the combined bootstrap."""
+    output = []
+    suites = sorted({key[0] for key in runs})
+    guard, control = "langgraph_react_guarded", "langgraph_react_double_pass"
+    blocks = {}
+    for suite in suites:
+        groups = [runs[(suite, adapter, env)] for adapter, env in
+                  ((guard, "clean"), (control, "clean"), (guard, "toxic"), (control, "toxic"))]
+        ids = sorted(groups[0])
+        if any(set(group) != set(ids) for group in groups):
+            raise ValueError(f"Incomplete four-outcome pairing for {suite}")
+        blocks[suite] = []
+        for task_id in ids:
+            gc, dc, gt, dt = [metric(group[task_id], "task_success") for group in groups]
+            blocks[suite].append((gc - dc, gt - dt, (gt - dt) - (gc - dc)))
+    for suite in [*suites, "combined"]:
+        selected = [blocks[s] for s in (suites if suite == "combined" else [suite])]
+        n = sum(map(len, selected))
+        point = [sum(row[i] for block in selected for row in block) / n for i in range(3)]
+        rng = random.Random(seed)
+        samples = [[], [], []]
+        for _ in range(rounds):
+            draw = [rng.choice(block) for block in selected for _ in block]
+            for i in range(3):
+                samples[i].append(sum(row[i] for row in draw) / n)
+        for i, name in enumerate(("clean_tsr", "poisoned_tsr", "clean_adjusted_tsr_delta")):
+            values = sorted(samples[i])
+            output.append({"suite": suite, "treatment": guard, "control": control,
+                           "metric": name, "n_paired": n, "mean_delta": f"{point[i]:.4f}",
+                           "ci95_lo": f"{values[int(.025 * rounds)]:.4f}",
+                           "ci95_hi": f"{values[int(.975 * rounds) - 1]:.4f}"})
     return output
 
 
@@ -147,10 +198,13 @@ def main() -> None:
     parser.add_argument("--output-exposure", type=Path, default=ROOT / "toxictool_bench/results/leakage_free_defense_exposure_denominators.csv")
     parser.add_argument("--output-paired", type=Path, default=ROOT / "toxictool_bench/results/leakage_free_defense_paired_ci.csv")
     parser.add_argument("--seed", type=int, default=13)
+    parser.add_argument("--output-interaction", type=Path, default=ROOT / "toxictool_bench/results/leakage_free_defense_success_interaction.csv")
     args = parser.parse_args()
-    rows = load_toxic(args.manifest)
+    runs = load_runs(args.manifest)
+    rows = {(suite, adapter): values for (suite, adapter, env), values in runs.items() if env == "toxic"}
     write_csv(args.output_exposure, build_exposure(rows))
     write_csv(args.output_paired, build_paired(rows, args.seed))
+    write_csv(args.output_interaction, paired_success(runs, args.seed))
     print(args.output_exposure)
     print(args.output_paired)
 

@@ -10,6 +10,7 @@
     }
 }
 
+\usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{array}
@@ -31,13 +32,16 @@
 
 \maketitle
 
+\begin{abstract}
 \input{sections/00_abstract}
+\end{abstract}
 \input{sections/01_introduction}
 \input{sections/06_related_work}
 \input{sections/03_toxictool_bench}
 \input{sections/05_experiments}
 \input{sections/07_discussion_limitations}
 
+\clearpage
 \IfFileExists{iclr2027_conference.bst}{
     \bibliographystyle{iclr2027_conference}
 }{

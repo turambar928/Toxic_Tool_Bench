@@ -1,0 +1,947 @@
+[
+  {
+    "key": "qin2023toolllm",
+    "url": "https://arxiv.org/abs/2307.16789",
+    "metadata": {
+      "citation_title": [
+        "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs"
+      ],
+      "citation_author": [
+        "Qin, Yujia",
+        "Liang, Shihao",
+        "Ye, Yining",
+        "Zhu, Kunlun",
+        "Yan, Lan",
+        "Lu, Yaxi",
+        "Lin, Yankai",
+        "Cong, Xin",
+        "Tang, Xiangru",
+        "Qian, Bill",
+        "Zhao, Sihan",
+        "Hong, Lauren",
+        "Tian, Runchu",
+        "Xie, Ruobing",
+        "Zhou, Jie",
+        "Gerstein, Mark",
+        "Li, Dahai",
+        "Liu, Zhiyuan",
+        "Sun, Maosong"
+      ],
+      "citation_date": [
+        "2023/07/31"
+      ],
+      "citation_online_date": [
+        "2023/10/03"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2307.16789"
+      ],
+      "citation_arxiv_id": [
+        "2307.16789"
+      ]
+    }
+  },
+  {
+    "key": "li2023apibank",
+    "url": "https://arxiv.org/abs/2304.08244",
+    "metadata": {
+      "citation_title": [
+        "API-Bank: A Comprehensive Benchmark for Tool-Augmented LLMs"
+      ],
+      "citation_author": [
+        "Li, Minghao",
+        "Zhao, Yingxiu",
+        "Yu, Bowen",
+        "Song, Feifan",
+        "Li, Hangyu",
+        "Yu, Haiyang",
+        "Li, Zhoujun",
+        "Huang, Fei",
+        "Li, Yongbin"
+      ],
+      "citation_date": [
+        "2023/04/14"
+      ],
+      "citation_online_date": [
+        "2023/10/25"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2304.08244"
+      ],
+      "citation_arxiv_id": [
+        "2304.08244"
+      ]
+    }
+  },
+  {
+    "key": "liu2023agentbench",
+    "url": "https://arxiv.org/abs/2308.03688",
+    "metadata": {
+      "citation_title": [
+        "AgentBench: Evaluating LLMs as Agents"
+      ],
+      "citation_author": [
+        "Liu, Xiao",
+        "Yu, Hao",
+        "Zhang, Hanchen",
+        "Xu, Yifan",
+        "Lei, Xuanyu",
+        "Lai, Hanyu",
+        "Gu, Yu",
+        "Ding, Hangliang",
+        "Men, Kaiwen",
+        "Yang, Kejuan",
+        "Zhang, Shudan",
+        "Deng, Xiang",
+        "Zeng, Aohan",
+        "Du, Zhengxiao",
+        "Zhang, Chenhui",
+        "Shen, Sheng",
+        "Zhang, Tianjun",
+        "Su, Yu",
+        "Sun, Huan",
+        "Huang, Minlie",
+        "Dong, Yuxiao",
+        "Tang, Jie"
+      ],
+      "citation_date": [
+        "2023/08/07"
+      ],
+      "citation_online_date": [
+        "2025/10/04"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2308.03688"
+      ],
+      "citation_arxiv_id": [
+        "2308.03688"
+      ]
+    }
+  },
+  {
+    "key": "zhou2023webarena",
+    "url": "https://arxiv.org/abs/2307.13854",
+    "metadata": {
+      "citation_title": [
+        "WebArena: A Realistic Web Environment for Building Autonomous Agents"
+      ],
+      "citation_author": [
+        "Zhou, Shuyan",
+        "Xu, Frank F.",
+        "Zhu, Hao",
+        "Zhou, Xuhui",
+        "Lo, Robert",
+        "Sridhar, Abishek",
+        "Cheng, Xianyi",
+        "Ou, Tianyue",
+        "Bisk, Yonatan",
+        "Fried, Daniel",
+        "Alon, Uri",
+        "Neubig, Graham"
+      ],
+      "citation_date": [
+        "2023/07/25"
+      ],
+      "citation_online_date": [
+        "2024/04/16"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2307.13854"
+      ],
+      "citation_arxiv_id": [
+        "2307.13854"
+      ]
+    }
+  },
+  {
+    "key": "perez2022ignore",
+    "url": "https://arxiv.org/abs/2211.09527",
+    "metadata": {
+      "citation_title": [
+        "Ignore Previous Prompt: Attack Techniques For Language Models"
+      ],
+      "citation_author": [
+        "Perez, Fábio",
+        "Ribeiro, Ian"
+      ],
+      "citation_date": [
+        "2022/11/17"
+      ],
+      "citation_online_date": [
+        "2022/11/17"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2211.09527"
+      ],
+      "citation_arxiv_id": [
+        "2211.09527"
+      ]
+    }
+  },
+  {
+    "key": "liang2025saferag",
+    "url": "https://arxiv.org/abs/2501.18636",
+    "metadata": {
+      "citation_title": [
+        "SafeRAG: Benchmarking Security in Retrieval-Augmented Generation of Large Language Model"
+      ],
+      "citation_author": [
+        "Liang, Xun",
+        "Niu, Simin",
+        "Li, Zhiyu",
+        "Zhang, Sensen",
+        "Wang, Hanyu",
+        "Xiong, Feiyu",
+        "Fan, Jason Zhaoxin",
+        "Tang, Bo",
+        "Song, Shichao",
+        "Wang, Mengwei",
+        "Yang, Jiawei"
+      ],
+      "citation_date": [
+        "2025/01/28"
+      ],
+      "citation_online_date": [
+        "2025/02/23"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2501.18636"
+      ],
+      "citation_arxiv_id": [
+        "2501.18636"
+      ]
+    }
+  },
+  {
+    "key": "chen2025poisonarena",
+    "url": "https://arxiv.org/abs/2505.12574",
+    "metadata": {
+      "citation_title": [
+        "Uncovering Competing Poisoning Attacks in Retrieval-Augmented Generation"
+      ],
+      "citation_author": [
+        "Chen, Liuji",
+        "Yang, Xiaofang",
+        "Lu, Yuanzhuo",
+        "Zhang, Jinghao",
+        "Sun, Xin",
+        "Liu, Qiang",
+        "Wu, Shu",
+        "Dong, Jing",
+        "Wang, Liang"
+      ],
+      "citation_date": [
+        "2025/05/18"
+      ],
+      "citation_online_date": [
+        "2026/06/02"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2505.12574"
+      ],
+      "citation_arxiv_id": [
+        "2505.12574"
+      ]
+    }
+  },
+  {
+    "key": "li2025cparag",
+    "url": "https://arxiv.org/abs/2505.19864",
+    "metadata": {
+      "citation_title": [
+        "CPA-RAG:Covert Poisoning Attacks on Retrieval-Augmented Generation in Large Language Models"
+      ],
+      "citation_author": [
+        "Li, Chunyang",
+        "Zhang, Junwei",
+        "Cheng, Anda",
+        "Ma, Zhuo",
+        "Li, Xinghua",
+        "Ma, Jianfeng"
+      ],
+      "citation_date": [
+        "2025/05/26"
+      ],
+      "citation_online_date": [
+        "2025/05/26"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2505.19864"
+      ],
+      "citation_arxiv_id": [
+        "2505.19864"
+      ]
+    }
+  },
+  {
+    "key": "dekel2026sdag",
+    "url": "https://arxiv.org/abs/2602.04711",
+    "metadata": {
+      "citation_title": [
+        "Addressing Corpus Knowledge Poisoning Attacks on RAG Using Sparse Attention"
+      ],
+      "citation_author": [
+        "Dekel, Sagie",
+        "Tennenholtz, Moshe",
+        "Kurland, Oren"
+      ],
+      "citation_date": [
+        "2026/02/04"
+      ],
+      "citation_online_date": [
+        "2026/08/26"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2602.04711"
+      ],
+      "citation_arxiv_id": [
+        "2602.04711"
+      ]
+    }
+  },
+  {
+    "key": "xuan2026confidence",
+    "url": "https://arxiv.org/abs/2601.07264",
+    "metadata": {
+      "citation_title": [
+        "The Confidence Dichotomy: Analyzing and Mitigating Miscalibration in Tool-Use Agents"
+      ],
+      "citation_author": [
+        "Xuan, Weihao",
+        "Zeng, Qingcheng",
+        "Qi, Heli",
+        "Xiao, Yunze",
+        "Wang, Junjue",
+        "Yokoya, Naoto"
+      ],
+      "citation_date": [
+        "2026/01/12"
+      ],
+      "citation_online_date": [
+        "2026/01/12"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2601.07264"
+      ],
+      "citation_arxiv_id": [
+        "2601.07264"
+      ]
+    }
+  },
+  {
+    "key": "subramani2025mice",
+    "url": "https://arxiv.org/abs/2504.20168",
+    "metadata": {
+      "citation_title": [
+        "MICE for CATs: Model-Internal Confidence Estimation for Calibrating Agents with Tools"
+      ],
+      "citation_author": [
+        "Subramani, Nishant",
+        "Eisner, Jason",
+        "Svegliato, Justin",
+        "Van Durme, Benjamin",
+        "Su, Yu",
+        "Thomson, Sam"
+      ],
+      "citation_date": [
+        "2025/04/28"
+      ],
+      "citation_online_date": [
+        "2025/04/28"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2504.20168"
+      ],
+      "citation_arxiv_id": [
+        "2504.20168"
+      ]
+    }
+  },
+  {
+    "key": "gu2025radar",
+    "url": "https://arxiv.org/abs/2506.08249",
+    "metadata": {
+      "citation_title": [
+        "RADAR: Benchmarking Language Models on Imperfect Tabular Data"
+      ],
+      "citation_author": [
+        "Gu, Ken",
+        "Zhang, Zhihan",
+        "Lin, Kate",
+        "Zhang, Yuwei",
+        "Paruchuri, Akshay",
+        "Yu, Hong",
+        "Kazemi, Mehran",
+        "Ayush, Kumar",
+        "Heydari, A. Ali",
+        "Xu, Maxwell A.",
+        "Narayanswamy, Girish",
+        "Liu, Yun",
+        "Poh, Ming-Zher",
+        "Yang, Yuzhe",
+        "Malhotra, Mark",
+        "Patel, Shwetak",
+        "Palangi, Hamid",
+        "Xu, Xuhai",
+        "McDuff, Daniel",
+        "Althoff, Tim",
+        "Liu, Xin"
+      ],
+      "citation_date": [
+        "2025/06/09"
+      ],
+      "citation_online_date": [
+        "2025/10/30"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2506.08249"
+      ],
+      "citation_arxiv_id": [
+        "2506.08249"
+      ]
+    }
+  },
+  {
+    "key": "li2026mcpitp",
+    "url": "https://arxiv.org/abs/2601.07395",
+    "metadata": {
+      "citation_title": [
+        "MCP-ITP: An Automated Framework for Implicit Tool Poisoning in MCP"
+      ],
+      "citation_author": [
+        "Li, Ruiqi",
+        "Wang, Zhiqiang",
+        "Yao, Yunhao",
+        "Li, Xiang-Yang"
+      ],
+      "citation_date": [
+        "2026/01/12"
+      ],
+      "citation_online_date": [
+        "2026/01/12"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2601.07395"
+      ],
+      "citation_arxiv_id": [
+        "2601.07395"
+      ]
+    }
+  },
+  {
+    "key": "ye2026trustdesc",
+    "url": "https://arxiv.org/abs/2604.07536",
+    "metadata": {
+      "citation_title": [
+        "TRUSTDESC: Preventing Tool Poisoning in LLM Applications via Trusted Description Generation"
+      ],
+      "citation_author": [
+        "Ye, Hengkai",
+        "Zhang, Zhechang",
+        "Jia, Jinyuan",
+        "Hu, Hong"
+      ],
+      "citation_date": [
+        "2026/04/08"
+      ],
+      "citation_online_date": [
+        "2026/04/08"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2604.07536"
+      ],
+      "citation_arxiv_id": [
+        "2604.07536"
+      ]
+    }
+  },
+  {
+    "key": "li2026agentcanary",
+    "url": "https://arxiv.org/abs/2606.10484",
+    "metadata": {
+      "citation_title": [
+        "AgentCanary: A Security Evaluation Framework for Autonomous AI Agents in Real Executable Environments"
+      ],
+      "citation_author": [
+        "Li, Peiyang",
+        "Wang, Songping",
+        "Huang, Yi",
+        "Shi, Yanhua",
+        "Zhang, Chenhao",
+        "Li, Qi",
+        "Lyu, Yueming",
+        "Shan, Caifeng",
+        "Li, Fengting",
+        "Feng, Chao",
+        "Zhu, Chuanqun",
+        "Chen, Liang"
+      ],
+      "citation_date": [
+        "2026/06/09"
+      ],
+      "citation_online_date": [
+        "2026/06/09"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2606.10484"
+      ],
+      "citation_arxiv_id": [
+        "2606.10484"
+      ]
+    }
+  },
+  {
+    "key": "vuddanti2025paladin",
+    "url": "https://arxiv.org/abs/2509.25238",
+    "metadata": {
+      "citation_title": [
+        "PALADIN: Self-Correcting Language Model Agents to Cure Tool-Failure Cases"
+      ],
+      "citation_author": [
+        "Vuddanti, Sri Vatsa",
+        "Shah, Aarav",
+        "Chittiprolu, Satwik Kumar",
+        "Song, Tony",
+        "Dev, Sunishchal",
+        "Zhu, Kevin",
+        "Chaudhary, Maheep"
+      ],
+      "citation_date": [
+        "2025/09/25"
+      ],
+      "citation_online_date": [
+        "2025/09/25"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2509.25238"
+      ],
+      "citation_arxiv_id": [
+        "2509.25238"
+      ]
+    }
+  },
+  {
+    "key": "mazaheri2026agentatlas",
+    "url": "https://arxiv.org/abs/2605.20530",
+    "metadata": {
+      "citation_title": [
+        "AgentAtlas: Beyond Outcome Leaderboards for LLM Agents"
+      ],
+      "citation_author": [
+        "Mazaheri, Parsa",
+        "Mazaheri, Kasra"
+      ],
+      "citation_date": [
+        "2026/05/19"
+      ],
+      "citation_online_date": [
+        "2026/05/26"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2605.20530"
+      ],
+      "citation_arxiv_id": [
+        "2605.20530"
+      ]
+    }
+  },
+  {
+    "key": "vuddanti2026err",
+    "url": "https://arxiv.org/abs/2601.22352",
+    "metadata": {
+      "citation_title": [
+        "Recoverability Has a Law: The ERR Measure for Tool-Augmented Agents"
+      ],
+      "citation_author": [
+        "Vuddanti, Sri Vatsa",
+        "Chittiprolu, Satwik Kumar"
+      ],
+      "citation_date": [
+        "2026/01/29"
+      ],
+      "citation_online_date": [
+        "2026/01/29"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2601.22352"
+      ],
+      "citation_arxiv_id": [
+        "2601.22352"
+      ]
+    }
+  },
+  {
+    "key": "zhou2024metarag",
+    "url": "https://arxiv.org/abs/2402.11626",
+    "metadata": {
+      "citation_title": [
+        "Metacognitive Retrieval-Augmented Large Language Models"
+      ],
+      "citation_author": [
+        "Zhou, Yujia",
+        "Liu, Zheng",
+        "Jin, Jiajie",
+        "Nie, Jian-Yun",
+        "Dou, Zhicheng"
+      ],
+      "citation_date": [
+        "2024/02/18"
+      ],
+      "citation_online_date": [
+        "2024/02/18"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2402.11626"
+      ],
+      "citation_arxiv_id": [
+        "2402.11626"
+      ]
+    }
+  },
+  {
+    "key": "jia2025ragrank",
+    "url": "https://arxiv.org/abs/2510.20768",
+    "metadata": {
+      "citation_title": [
+        "RAGRank: Using PageRank to Counter Poisoning in CTI LLM Pipelines"
+      ],
+      "citation_author": [
+        "Jia, Austin",
+        "Ramesh, Avaneesh",
+        "Shamsi, Zain",
+        "Zhang, Daniel",
+        "Liu, Alex"
+      ],
+      "citation_date": [
+        "2025/10/23"
+      ],
+      "citation_online_date": [
+        "2025/12/15"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2510.20768"
+      ],
+      "citation_arxiv_id": [
+        "2510.20768"
+      ]
+    }
+  },
+  {
+    "key": "wang2026mirror",
+    "url": "https://arxiv.org/abs/2604.19809",
+    "metadata": {
+      "citation_title": [
+        "MIRROR: A Hierarchical Benchmark for Metacognitive Calibration in Large Language Models"
+      ],
+      "citation_author": [
+        "Wang, Jason Z"
+      ],
+      "citation_date": [
+        "2026/04/15"
+      ],
+      "citation_online_date": [
+        "2026/04/15"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2604.19809"
+      ],
+      "citation_arxiv_id": [
+        "2604.19809"
+      ]
+    }
+  },
+  {
+    "key": "kohl2026structural",
+    "url": "https://arxiv.org/abs/2601.18827",
+    "metadata": {
+      "citation_title": [
+        "Automated structural testing of LLM-based agents: methods, framework, and case studies"
+      ],
+      "citation_author": [
+        "Kohl, Jens",
+        "Kruse, Otto",
+        "Mostafa, Youssef",
+        "Luckow, Andre",
+        "Schroer, Karsten",
+        "Riedl, Thomas",
+        "French, Ryan",
+        "Katz, David",
+        "Luitz, Manuel P.",
+        "Takher, Tanrajbir",
+        "Friedl, Ken E.",
+        "Laurent-Winter, Céline"
+      ],
+      "citation_date": [
+        "2026/01/25"
+      ],
+      "citation_online_date": [
+        "2026/01/25"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2601.18827"
+      ],
+      "citation_arxiv_id": [
+        "2601.18827"
+      ]
+    }
+  },
+  {
+    "key": "wu2026agentdrift",
+    "url": "https://arxiv.org/abs/2603.12564",
+    "metadata": {
+      "citation_title": [
+        "Sell Me This Stock: Unsafe Recommendation Drift in LLM Agents"
+      ],
+      "citation_author": [
+        "Wu, Zekun",
+        "Koshiyama, Adriano",
+        "Bulathwela, Sahan",
+        "Perez-Ortiz, Maria"
+      ],
+      "citation_date": [
+        "2026/03/13"
+      ],
+      "citation_online_date": [
+        "2026/05/25"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2603.12564"
+      ],
+      "citation_arxiv_id": [
+        "2603.12564"
+      ]
+    }
+  },
+  {
+    "key": "zhang2026agentsentry",
+    "url": "https://arxiv.org/abs/2602.22724",
+    "metadata": {
+      "citation_title": [
+        "AgentSentry: Mitigating Indirect Prompt Injection in LLM Agents via Temporal Causal Diagnostics and Context Purification"
+      ],
+      "citation_author": [
+        "Zhang, Tian",
+        "Xu, Yiwei",
+        "Wang, Juan",
+        "Guo, Keyan",
+        "Xu, Xiaoyang",
+        "Xiao, Bowen",
+        "Guan, Quanlong",
+        "Fan, Jinlin",
+        "Liu, Jiawei",
+        "Liu, Zhiquan",
+        "Hu, Hongxin"
+      ],
+      "citation_date": [
+        "2026/02/26"
+      ],
+      "citation_online_date": [
+        "2026/02/26"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2602.22724"
+      ],
+      "citation_arxiv_id": [
+        "2602.22724"
+      ]
+    }
+  },
+  {
+    "key": "zhang2025cosight",
+    "url": "https://arxiv.org/abs/2510.21557",
+    "metadata": {
+      "citation_title": [
+        "Co-Sight: Enhancing LLM-Based Agents via Conflict-Aware Meta-Verification and Trustworthy Reasoning with Structured Facts"
+      ],
+      "citation_author": [
+        "Zhang, Hongwei",
+        "Lu, Ji",
+        "Jiang, Shiqing",
+        "Zhu, Chenxiang",
+        "Xie, Li",
+        "Zhong, Chen",
+        "Chen, Haoran",
+        "Zhu, Yurui",
+        "Du, Yongsheng",
+        "Gao, Yanqin",
+        "Huang, Lingjun",
+        "Wang, Baoli",
+        "Tan, Fang",
+        "Zou, Peng"
+      ],
+      "citation_date": [
+        "2025/10/24"
+      ],
+      "citation_online_date": [
+        "2025/10/24"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2510.21557"
+      ],
+      "citation_arxiv_id": [
+        "2510.21557"
+      ]
+    }
+  },
+  {
+    "key": "ma2025pou",
+    "url": "https://arxiv.org/abs/2510.10931",
+    "metadata": {
+      "citation_title": [
+        "Proof-of-Use: Mitigating Tool-Call Hacking in Deep Research Agents"
+      ],
+      "citation_author": [
+        "Ma, SHengjie",
+        "Deng, Chenlong",
+        "Mao, Jiaxin",
+        "Huang, Jiadeng",
+        "Wang, Teng",
+        "Wu, Junjie",
+        "Zhang, Changwang",
+        "wang, Jun"
+      ],
+      "citation_date": [
+        "2025/10/13"
+      ],
+      "citation_online_date": [
+        "2026/01/23"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2510.10931"
+      ],
+      "citation_arxiv_id": [
+        "2510.10931"
+      ]
+    }
+  },
+  {
+    "key": "gurram2026agentprop",
+    "url": "https://arxiv.org/abs/2604.16706",
+    "metadata": {
+      "citation_title": [
+        "Auditing Automated Evaluation, Error Propagation, and Runtime Mitigation in Tool-Using Language Agents"
+      ],
+      "citation_author": [
+        "Gurram, Bhaskar"
+      ],
+      "citation_date": [
+        "2026/04/17"
+      ],
+      "citation_online_date": [
+        "2026/08/10"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2604.16706"
+      ],
+      "citation_arxiv_id": [
+        "2604.16706"
+      ]
+    }
+  },
+  {
+    "key": "hamad2025toolcritic",
+    "url": "https://arxiv.org/abs/2510.17052",
+    "metadata": {
+      "citation_title": [
+        "ToolCritic: Detecting and Correcting Tool-Use Errors in Dialogue Systems"
+      ],
+      "citation_author": [
+        "Hamad, Hassan",
+        "Xu, Yingru",
+        "Zhao, Liang",
+        "Yan, Wenbo",
+        "Gyanchandani, Narendra"
+      ],
+      "citation_date": [
+        "2025/10/19"
+      ],
+      "citation_online_date": [
+        "2025/10/19"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2510.17052"
+      ],
+      "citation_arxiv_id": [
+        "2510.17052"
+      ]
+    }
+  },
+  {
+    "key": "patil2026ragshield",
+    "url": "https://arxiv.org/abs/2604.00387",
+    "metadata": {
+      "citation_title": [
+        "RAGShield: Detecting Numerical Claim Manipulation in Government RAG Systems"
+      ],
+      "citation_author": [
+        "Patil, KrishnaSaiReddy"
+      ],
+      "citation_date": [
+        "2026/04/01"
+      ],
+      "citation_online_date": [
+        "2026/04/04"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2604.00387"
+      ],
+      "citation_arxiv_id": [
+        "2604.00387"
+      ]
+    }
+  },
+  {
+    "key": "zou2024poisonedrag",
+    "url": "https://arxiv.org/abs/2402.07867",
+    "metadata": {
+      "citation_title": [
+        "PoisonedRAG: Knowledge Corruption Attacks to Retrieval-Augmented Generation of Large Language Models"
+      ],
+      "citation_author": [
+        "Zou, Wei",
+        "Geng, Runpeng",
+        "Wang, Binghui",
+        "Jia, Jinyuan"
+      ],
+      "citation_date": [
+        "2024/02/12"
+      ],
+      "citation_online_date": [
+        "2024/08/13"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2402.07867"
+      ],
+      "citation_arxiv_id": [
+        "2402.07867"
+      ]
+    }
+  },
+  {
+    "key": "tian2026toolbenchx",
+    "url": "https://arxiv.org/abs/2606.25819",
+    "metadata": {
+      "citation_title": [
+        "Beyond Function Calling: Benchmarking Tool-Using Agents under Tool-Environment Unreliability"
+      ],
+      "citation_author": [
+        "Tian, Yang",
+        "Shi, Zhengpeng",
+        "Zhou, Yu",
+        "Zhao, Bo"
+      ],
+      "citation_date": [
+        "2026/06/24"
+      ],
+      "citation_online_date": [
+        "2026/06/27"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2606.25819"
+      ],
+      "citation_arxiv_id": [
+        "2606.25819"
+      ]
+    }
+  }
+]

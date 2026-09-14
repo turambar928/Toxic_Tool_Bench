@@ -1,0 +1,51 @@
+{
+  "scorer_sha256": "782667a232b1dd74c64aa5df68fb5955547d805e7ffb339c5d5cf1644c5b917d",
+  "n": 120,
+  "independent_holdout": false,
+  "metrics": {
+    "bcr": {
+      "n_evaluated": 120,
+      "n_disputed": 0,
+      "tp": 3,
+      "fp": 1,
+      "fn": 9,
+      "tn": 107,
+      "precision": 0.75,
+      "recall": 0.25,
+      "f1": 0.375
+    },
+    "adr": {
+      "n_evaluated": 120,
+      "n_disputed": 0,
+      "tp": 1,
+      "fp": 0,
+      "fn": 32,
+      "tn": 87,
+      "precision": 1.0,
+      "recall": 0.030303030303030304,
+      "f1": 0.05882352941176471
+    },
+    "vr": {
+      "n_evaluated": 120,
+      "n_disputed": 0,
+      "tp": 69,
+      "fp": 32,
+      "fn": 3,
+      "tn": 16,
+      "precision": 0.6831683168316832,
+      "recall": 0.9583333333333334,
+      "f1": 0.7976878612716762
+    },
+    "rr": {
+      "n_evaluated": 120,
+      "n_disputed": 0,
+      "tp": 47,
+      "fp": 12,
+      "fn": 28,
+      "tn": 33,
+      "precision": 0.7966101694915254,
+      "recall": 0.6266666666666667,
+      "f1": 0.701492537313433
+    }
+  }
+}

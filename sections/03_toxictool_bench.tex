@@ -1,4 +1,4 @@
-\section{ToxicBench and Guarded Verification}
+\section{ToxicBench}
 \label{sec:benchmark}
 \label{sec:problem}
 
@@ -9,18 +9,26 @@
     \label{fig:silent-tool-poisoning}
 \end{figure}
 
-ToxicBench tests whether data agents can distinguish successful tool execution from trustworthy evidence. For a query $q$, an agent calls a tool $f$ with input $x$ and receives $o=f(x)$. In the poisoned environment, a proxy returns $\tilde{o}=P(f,x,o;\theta)$. We call the poisoning \emph{silent} when $\tilde{o}$ preserves the expected interface, reports successful execution, and remains relevant enough to support a plausible answer. The same agent, task, data, and model are evaluated once with $o$ and once with $\tilde{o}$, isolating trust calibration from ordinary task difficulty.
+ToxicBench tests whether data agents can distinguish successful tool execution from trustworthy evidence. For a query $q$, an agent calls a tool $f$ with input $x$ and receives $o=f(x)$. In the poisoned environment, a proxy returns $\tilde{o}=P(f,x,o;\theta)$. We call the poisoning \emph{silent} when $\tilde{o}$ preserves the expected interface, reports successful execution, and remains relevant enough to support a plausible answer. The same agent, task, data, and model are evaluated once with $o$ and once with $\tilde{o}$, allowing us to measure the effect of the corrupted observation on the same task.
 
 \subsection{Benchmark Design}
 
-Each item contains a query, one or more datasets, a clean oracle or rubric, and a poisoning specification. Poisoned outputs preserve schema, type, and formatting, and never expose an exception or warning. Each task also retains an operational verification path, such as recomputation from raw rows or inspection of source metadata. This path is independent of the returned observation but may share its upstream table and tool backend. The design avoids reducing the benchmark to parsing robustness while making that redundancy assumption explicit.
+Each item contains a query, one or more datasets, a clean oracle or rubric, and a poisoning specification. Poisoned outputs preserve schema, type, and formatting, and never expose an exception or warning. Each task also retains a path for checking the answer, such as recomputation from raw rows or inspection of source metadata. This path can share the upstream table and tool backend.
 
-The cross-model evaluation contains 34 numerical task instances over 11 CSV datasets and 24 semantic/schema instances over 17 datasets. The expanded cross-agent evaluation uses GPT, while the post-fix defense evaluation uses Claude Haiku on 60 instances from each family. A separate 13-instance extension requires multi-table joins. We distinguish instances from unique query--dataset--poison templates: repeated instances test stability but do not increase semantic diversity. Appendix~\ref{sec:appendix-benchmark-details} reports both counts. Together, the suites cover arithmetic trust, value--entity binding, schema interpretation, metadata use, retrieval grounding, and join-based analysis.
+The cross-model evaluation contains 34 numerical task instances over 11 CSV datasets and 24 semantic/schema instances over 17 datasets. The expanded cross-agent evaluation uses GPT, while the verification study uses Claude Haiku on 60 instances from each family. A separate 13-instance extension requires multi-table joins. Appendix~\ref{sec:appendix-benchmark-details} lists the query--dataset--poison templates behind these instances.
+
+\paragraph{Building a task pair.}
+We start from a query and its source table, compute the clean answer, and specify a changed value or claim that would alter that answer. The proxy runs the original tool before editing the returned observation. It records both versions for scoring; only the returned version enters the agent context. The source table remains available for later checks. For example, a label swap can attach the largest revenue to the wrong store while leaving the amount and output format intact. Recomputing the maximum from source rows reveals the correct store.
+
+The poisoning specification names the target tool and the value or text to change. The proxy applies the operator to eligible observations and logs whether the returned text actually changed. A call to another tool, or a response that the operator cannot change, can leave the trajectory unexposed. The delivery log separates an agent that never receives the planned poison from one that receives it and reaches the clean answer. Keeping both observations also lets a reviewer trace an adopted value back to the injected change.
+
+The expanded numerical suite has 60 instances from 56 templates over 14 datasets. The semantic/schema suite has 60 instances from 41 templates over 22 datasets. Templates cover different queries, datasets, and poison settings; repeated instances test the stability of a setting. The 13-task extension adds table discovery and joins on customer, team, clinic, and product keys.
+
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figures/figure2.png}
-    \caption{Overview of the ToxicBench evaluation framework: task suite, paired clean vs. proxy-poisoned runs, and behavior metrics. We also evaluate Guarded Verification; the automated scorer detects no BCR-positive run in the primary poison-once setting, but this does not establish the absence of human-judged blind compliance.}
+    \caption{ToxicBench pairs clean and poisoned tool environments and measures answer adoption, verification, and recovery. Verification protocols probe how an additional evidence route changes the outcome.}
     \label{fig:toxicbench-overview}
 \end{figure}
 
@@ -33,12 +41,10 @@ Numerical operators target computation outputs from Python, pandas, SQL, or data
     \item \textbf{Sign flip:} reverse the sign of a change, growth rate, or delta while keeping the magnitude plausible.
     \item \textbf{Rank/label swap:} swap the entity label attached to a statistic or ranking result while leaving the value format intact.
 \end{itemize}
-These operators test both arithmetic checking and preservation of value--entity bindings.
-
-The 34-instance cross-model suite uses these three core operators. The expanded numerical suite additionally includes ratio inversion, denominator swap, omitted-filter corruption, and unit conversion. This split keeps the cross-model comparison controlled while testing broader analytical failures in the larger evaluation.
+The 34-instance cross-model suite uses these three core operators. The expanded numerical suite additionally includes ratio inversion, denominator swap, omitted-filter corruption, and unit conversion.
 
 \paragraph{Semantic and schema poisoning.}
-These operators corrupt evidence binding rather than numeric magnitude:
+These operators change how evidence is linked to an entity or claim:
 \begin{itemize}
     \item \textbf{Label swap:} replace an entity label associated with an otherwise plausible result.
     \item \textbf{Treatment/control flip:} invert experimental group semantics while preserving outcome values.
@@ -46,22 +52,22 @@ These operators corrupt evidence binding rather than numeric magnitude:
     \item \textbf{Stale metadata:} return outdated data-dictionary or source-of-truth metadata.
     \item \textbf{Biased retrieval:} return evidence rows or snippets that support the wrong conclusion while appearing relevant.
 \end{itemize}
-We score final answers against the clean oracle and compute behavior labels from the logged trajectory. The released deterministic scorer reports:
+We score final answers against the clean oracle and compute behavior labels from the logged trajectory. The scorer reports the following metrics:
 \begin{itemize}
     \item \textbf{Task Success Rate (TSR):} the fraction of tasks that satisfy the clean reference answer or rubric.
     \item \textbf{Poisoned Degradation ($\Delta$TSR):} the drop from clean TSR to poisoned TSR.
     \item \textbf{Blind Compliance Rate (BCR):} the fraction of exposed runs whose final answer matches the poisoned oracle without ADR or VR.
     \item \textbf{Poison Adoption Rate (PAR):} the fraction of exposed runs whose final answer matches the poisoned oracle, regardless of whether the agent detected or validated the observation.
-    \item \textbf{Validated Poison Adoption (VPA):} the fraction of exposed runs that both obtain qualifying VR and still match the poisoned oracle. VPA captures validated-but-still-wrong trust, which BCR intentionally excludes.
+    \item \textbf{Validated Poison Adoption (VPA):} the fraction of exposed runs that both obtain qualifying VR and still match the poisoned oracle. VPA records adoption after a check.
     \item \textbf{Anomaly Detection Rate (ADR):} the fraction of exposed runs whose final response explicitly identifies a discrepancy, implausibility, conflict, or possible corruption.
     \item \textbf{Validation Rate (VR):} the fraction of exposed runs with a fresh, task-relevant evidence-producing tool event after the poisoned observation. The event may itself be corrupted under repeated poisoning; VPA records cases that still adopt the poisoned answer after such validation.
     \item \textbf{Recovery Rate (RR):} the fraction of exposed runs that produce an accepted clean answer after ADR or VR.
     \item \textbf{Poison Delivery Rate (PDR):} the fraction of toxic-environment runs in which the proxy actually modifies at least one eligible observation.
 \end{itemize}
 
-BCR, PAR, VPA, ADR, VR, and RR are conditioned on delivered poison; clean and poisoned TSR retain all runs in their respective environments. PAR is the broad adoption measure, whereas BCR isolates unexamined adoption and VPA isolates adoption after qualifying validation. This distinction matters because an adapter may never issue an eligible call, so a toxic environment does not guarantee exposure. Final-answer claims such as ``validated'' do not create VR, and RR requires an accepted clean answer rather than unsupported qualification. An earlier 80-run repeated-author diagnostic motivated stricter rules. We then audited 120 blinded trajectories with two independent annotators; agreement statistics are reported in Appendix~\ref{sec:appendix-metric-protocol}.
+All methods use the same scorer after removing known adapter-added display labels. The scorer excludes rejected oracle matches and prioritizes explicit final conclusions; competing matches are marked ambiguous. Ambiguous or unresolved answers remain in the denominator and receive neither TSR nor PAR credit. Behavioral rates condition on delivered poison, whereas TSR uses all runs. Thus PAR=0 does not by itself establish rejection of the poisoned answer.
 
-Table~\ref{tab:metric-scoring-rules} states the core decision rules. The scorer first confirms that the proxy returned a poisoned observation, then matches the final answer against clean and poisoned numeric tolerances, aliases, or categorical rubrics. It checks the final response for explicit anomaly language and inspects ordered post-poison tool events for fresh evidence. The temporal requirement prevents an agent from receiving validation credit for generic caution or a tool call made before the corruption appears.
+A blinded development audit of 120 trajectories gives BCR precision/recall of 0.75/0.25, so BCR remains a proxy for human-judged blind compliance. Appendix~\ref{sec:appendix-metric-protocol} reports the full audit and scoring rules. Table~\ref{tab:metric-scoring-rules} summarizes the decisions.
 
 \begin{table}[t]
 \centering
@@ -74,18 +80,24 @@ Metric & Positive decision & Excluded behavior \\
 BCR & Final answer adopts the poisoned value, label, schema meaning, or conclusion without ADR or a qualifying post-poison evidence event. & Merely observing poison when later evidence rejects it. \\
 ADR & The final response explicitly identifies a conflict, implausibility, stale source, or possible tool error. & Generic caution that does not identify an anomaly. \\
 VR & A post-poison action recomputes raw rows, checks source metadata, or queries an independent route. & Paraphrasing the same result or requesting a second explanation from the same cached summary. \\
-RR & The final answer uses a clean alternative or rejects the poisoned conclusion after detection or validation. & Flagging an anomaly while still returning the poisoned answer. \\
+RR & The final answer matches an accepted clean answer after detection or validation. & Flagging an anomaly while still returning the poisoned answer. \\
 \bottomrule
 \end{tabular}
 \caption{Operational rules for trajectory-level behavior metrics. Full edge cases appear in Appendix~\ref{sec:appendix-metric-protocol}.}
 \label{tab:metric-scoring-rules}
 \end{table}
 
-\subsection{Guarded Verification}
+\subsection{Verification Protocols}
 \label{sec:method}
 
-Guarded Verification changes how observations enter the final answer without retraining the model. Given query $q$, it (1) records coarse expectations or invariants, (2) runs the ordinary primary tool route, (3) obtains fresh evidence through a new post-observation route, and (4) gives verified evidence priority when the two routes disagree. Expectations need not predict the answer; they capture constraints such as valid ranges, entity--value bindings, schema meanings, units, and source support. Verification may recompute raw rows, re-read a table rather than copy a summary, check labels against source data, or query another tool route. We call this \emph{operational independence}: it excludes reuse of the poisoned return, but not a shared source, cache, or backend.
+We compare a base LangGraph agent with three protocols that use two routes. A route is one agent call that can inspect data, run tools, and return an answer.
 
-We operationalize independence in the guard by separating the verification prompt and evidence route from the primary returned summary. In scoring, VR records whether a fresh, task-relevant evidence-producing action occurred after the poison; whether that action's returned evidence was itself poisoned is recorded separately. This separates verification behavior from evidence correctness, especially under repeated poisoning. The scorer cannot prove that two tools do not share an upstream cache or source. When routes conflict, verified evidence takes priority; if verification is inconclusive, the guard must qualify or abstain rather than silently select the primary result. This protocol makes the BCR reduction interpretable only as a scorer-based proxy under the stated route-separation assumption, while RR measures whether the additional route recovers the task answer.
+\textbf{Base} uses one ordinary route. \textbf{Double-pass} runs two ordinary routes with the same task query and selects the second answer. The second route receives no answer from the first. This control measures the effect of another chance to solve the task and access evidence. \textbf{Verification-only} passes the first answer to the second route as an untrusted claim and asks it to check the source data. It also selects the second answer. \textbf{Generic Guard} adds a fixed expectation prompt to the primary and verification routes. The prompt asks the agent to consider valid ranges, entity--value bindings, and source evidence. The verifier is responsible for correcting or qualifying its answer; the wrapper returns that response directly.
 
-The main ablation uses \texttt{poison\_once}: the first eligible observation can be corrupted, while a later operational route can access clean evidence. This controlled threat model tests whether the agent uses redundancy when it exists; it does not protect against corruption of the underlying source or every route. The verifier sees the primary candidate marked as untrusted, so anchoring remains possible. The post-fix comparison includes the base route, a budget-matched pair of ordinary routes, verification-only, and a generic expectation-plus-verification guard. None reads poison type, expected behavior, or clean oracle values. We additionally poison every eligible route observation with probabilities from 0.25 to 1.00 over numerical, semantic/schema, and multi-table suites. Full definitions and threat-model results appear in Appendix~\ref{sec:appendix-guard}.
+In an aggregate query, these expectations direct attention to the requested filters, units, and denominator. In a ranking query, they direct attention to the link between the returned number and the named entity. For schema and retrieval tasks, the checks concern column meanings, timestamps, and source support. The prompt asks for a fresh tool action and for literal labels to be preserved in the final answer. The same checklist is supplied for every task, and the agent chooses which checks apply. This keeps the protocol consistent across task families and makes its evidence use visible in the tool trace.
+
+All two-route methods use the same model, temperature, route count, and per-route limits: ten steps and 3,072 output tokens. They do not receive poison metadata or clean oracle values. The comparison tests whether a verification prompt and generic expectations help beyond an ordinary second pass. Passing the primary answer may help direct the check, but can also anchor the verifier on an earlier mistake. The paired clean runs reveal whether these prompt changes affect ordinary task solving as well as recovery from poison.
+
+The comparisons separate three choices in evidence use. Base versus Double-pass tests adding another route. Double-pass versus Verification-only tests giving that route the first answer to inspect. Verification-only versus Generic Guard tests adding expectations to the prompts. We retain the final answer and the tool events from both routes, so a run can be inspected from the first corrupted observation through the selected conclusion.
+
+The primary \texttt{poison\_once} setting corrupts the first eligible observation. The poisoning state is shared across both routes. Once a qualifying observation has been changed, later calls can inspect clean source rows or metadata. The ordinary second pass has access to this later evidence as well as the explicit verification methods. The two routes run separately over the same tables and tool backend. Repeated-poison experiments then corrupt each eligible observation with probabilities 0.25--1.00. VR records a check after poison has been seen; VPA records continued adoption of the poisoned answer after that check. This design tests both the use of available clean evidence and the effect of corrupting later checks. Appendix~\ref{sec:appendix-langgraph-replication} gives the implementation details.

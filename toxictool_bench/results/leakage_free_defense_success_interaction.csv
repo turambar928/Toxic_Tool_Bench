@@ -1,0 +1,10 @@
+suite,treatment,control,metric,n_paired,mean_delta,ci95_lo,ci95_hi
+numerical_iclr2027,langgraph_react_guarded,langgraph_react_double_pass,clean_tsr,60,-0.0667,-0.1500,0.0167
+numerical_iclr2027,langgraph_react_guarded,langgraph_react_double_pass,poisoned_tsr,60,-0.1000,-0.2000,0.0000
+numerical_iclr2027,langgraph_react_guarded,langgraph_react_double_pass,clean_adjusted_tsr_delta,60,-0.0333,-0.1000,0.0333
+semantic_schema_iclr2027,langgraph_react_guarded,langgraph_react_double_pass,clean_tsr,60,-0.0667,-0.1333,-0.0167
+semantic_schema_iclr2027,langgraph_react_guarded,langgraph_react_double_pass,poisoned_tsr,60,-0.0333,-0.1000,0.0333
+semantic_schema_iclr2027,langgraph_react_guarded,langgraph_react_double_pass,clean_adjusted_tsr_delta,60,0.0333,-0.0333,0.1167
+combined,langgraph_react_guarded,langgraph_react_double_pass,clean_tsr,120,-0.0667,-0.1250,-0.0083
+combined,langgraph_react_guarded,langgraph_react_double_pass,poisoned_tsr,120,-0.0667,-0.1250,-0.0083
+combined,langgraph_react_guarded,langgraph_react_double_pass,clean_adjusted_tsr_delta,120,0.0000,-0.0500,0.0500

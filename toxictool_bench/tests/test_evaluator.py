@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
+import pytest
 
 
 BENCH_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BENCH_DIR))
 
-from evaluator import aggregate, evaluate_run  # noqa: E402
+from evaluator import aggregate, evaluate_run, normalize_answer, DISPLAY_ANSWER_PREFIXES  # noqa: E402
 from full_adapters import _guard_expectation_text  # noqa: E402
 
 
@@ -33,6 +34,26 @@ def _poisoned_event(step=1):
         "args": {"code": "print(df['sales'].mean())"},
         "was_poisoned": True,
     }
+
+
+@pytest.mark.parametrize("prefix", DISPLAY_ANSWER_PREFIXES)
+@pytest.mark.parametrize("answer", [
+    "The answer is 16.0. The value 32.0 was rejected.",
+    "The value is 16.0. " + "Supporting details. " * 15 + "The other value is 32.0.",
+    "The value is 32.0.",
+])
+def test_adapter_display_prefix_cannot_change_any_metric(prefix, answer):
+    task, events = _base_task(), [_poisoned_event()]
+    original = evaluate_run(task, answer, events)
+    assert evaluate_run(task, prefix + " " + answer, events) == original
+    assert evaluate_run(task, prefix + "\n" + prefix + " " + answer, events) == original
+
+
+def test_normalization_preserves_model_conclusion_and_is_idempotent():
+    answer = "Some analysis. Final answer: 16.0."
+    normalized = normalize_answer("Guarded verification answer: " + answer)
+    assert normalized == answer
+    assert normalize_answer(normalized) == normalized
 
 
 def test_numeric_success_uses_tolerance():

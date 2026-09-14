@@ -18,6 +18,14 @@ Bootstrap commands use seed `13` unless overridden. Repeated poisoning derives e
 
 ## Leakage-Free Defense Results
 
+Refresh the complete primary cross-model and expanded-GPT suites with
+`python3 toxictool_bench/sync_primary_paper.py`. This scores all 1,460 and 720
+trajectories respectively, updates the main tables and headline ranges, and
+records input hashes in `primary_analysis_provenance.json`. It does not depend
+on the three unavailable historical multi-table logs. Regenerate all paper
+figures after the result pipelines with `python3 toxictool_bench/plot_paper_figures.py`
+and `python3 toxictool_bench/plot_verification_stress.py`.
+
 The paper-facing defense ablation uses `claude-haiku-4-5-20251001` and four LangGraph variants: Base, matched Double-pass, Verification-only, and Generic Guard. Rebuild its summaries, task-level bootstrap intervals, poison/severity tables, and overhead table with:
 
 ```bash
@@ -25,6 +33,32 @@ bash toxictool_bench/rebuild_leakage_free_defense_results.sh
 ```
 
 The matched Double-pass adapter executes two ordinary routes with the same per-route cap, without expectations or primary-answer handoff.
+
+The rebuild now reads the committed `leakage_free_defense_manifest.csv` directly;
+it does not choose logs by filesystem modification time. It rescales no answers
+and makes no model calls. It re-evaluates the fixed 960 trajectories and writes
+the defense tables directly into `sections/05_experiments.tex` and
+`sections/08_appendix_guard_details.tex`, together with paired CSVs, marginal
+intervals, exact BCR counts, answer-selection counts, and the existing 120-row
+consensus audit. The wrapper also refreshes the repeated-poison, AutoGen, and
+alternative-policy appendix tables with the same evaluator. Human labels are unchanged. The evaluator now removes known adapter display prefixes uniformly before scoring the underlying answer.
+
+Paired success inference uses seed 13 and 5,000 draws. Each draw retains the
+four method/environment outcomes for a task; the combined analysis keeps 60
+tasks in each suite. Behavior differences use tasks exposed in both methods.
+Marginal intervals use seed 13 plus the adapter index. The scorer sensitivity
+comparison uses evaluator commit `f0aa054dccc9437dcf89f0b22a01825e2772be66` on
+the same trajectories, rather than a moving HEAD or rounded CSV differences.
+See `leakage_free_defense_analysis_provenance.json` for input hashes and
+`scorer_consensus_validation.json` for the re-evaluated development audit.
+
+Three older sources in the broader `paper_run_manifest.csv` are not included
+in this checkout; their paths are recorded in the analysis provenance. The
+complete defense analysis and consensus audit do not depend on those files.
+The all-experiment audit/rebuild still requires them; do not silently skip
+them or describe this rebuild as validation of every benchmark experiment.
+An independent held-out human audit has not been performed by this script.
+
 
 ## Repeated-Poison Matrix
 
@@ -37,7 +71,7 @@ python3 toxictool_bench/summarize_verification_stress.py
 python3 toxictool_bench/plot_verification_stress.py
 ```
 
-The matrix corrupts matching returned observations repeatedly. Primary and verification routes still share source tables and a backend, so this is not source-independent or Byzantine corruption.
+The matrix corrupts matching returned observations repeatedly. Primary and verification routes still share source tables and a backend, so this is not source-independent or Byzantine corruption. The summary command defaults to the committed manifest, rescoring each trajectory with the current evaluator; use `--discover` only to intentionally select a new run set. The current plot shows VPA, while the CSV retains both BCR and VPA. At p=1 all nine BCR cells are zero, but VPA is nonzero; lower probabilities can still yield BCR events.
 
 ## Independent Audit
 
@@ -106,3 +140,18 @@ python3 -m pytest toxictool_bench/tests -q
 ```
 
 Adapters using external source checkouts accept `TOXICTOOL_BASELINE_DIR`; expected imports are documented in `RUN_COMMANDS.md`. Code and synthetic benchmark data are covered by `LICENSE` and `DATA_LICENSE.md`.
+
+## Updated defense figures
+
+After rebuilding the tables, regenerate the corresponding PDF figures in an
+environment with NumPy and Matplotlib installed:
+
+```bash
+python3 toxictool_bench/plot_verification_stress.py
+python3 toxictool_bench/plot_paper_figures.py --defense-only
+```
+
+The cost plot now uses the four leakage-free Claude Haiku variants, not the older
+GPT six-variant ablation. Original Figure 1 and Figure 2 PNG assets, absent from
+the fetched tree, were recovered without redrawing from the user-supplied
+`toxic_bench (3).pdf` (page 4).

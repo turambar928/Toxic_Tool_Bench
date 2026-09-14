@@ -1,0 +1,96 @@
+[
+  {
+    "key": "schick2023toolformer",
+    "changes": [
+      "authors: add Eric Hambro"
+    ],
+    "source": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/d842425e4bf79ba039352da0f658a906-Abstract-Conference.html"
+  },
+  {
+    "key": "zhou2023webarena",
+    "changes": [
+      "authors"
+    ],
+    "source": "https://arxiv.org/abs/2307.13854"
+  },
+  {
+    "key": "greshake2023indirect",
+    "changes": [
+      "venue: AISec workshop, not CCS main proceedings"
+    ],
+    "source": "https://doi.org/10.1145/3605764.3623985"
+  },
+  {
+    "key": "breck2019data",
+    "changes": [
+      "author: full name from PDF; preserve PDF author order"
+    ],
+    "source": "https://proceedings.mlsys.org/paper_files/paper/2019/file/928f1160e52192e3e0017fb63ab65391-Paper.pdf"
+  },
+  {
+    "key": "shinn2023reflexion",
+    "changes": [
+      "authors: remove Edward Berman (not in proceedings)"
+    ],
+    "source": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/1b44b878bb782e6954cd888628510e90-Abstract-Conference.html"
+  },
+  {
+    "key": "zhou2024metarag",
+    "changes": [
+      "title",
+      "authors"
+    ],
+    "source": "https://arxiv.org/abs/2402.11626"
+  },
+  {
+    "key": "jia2025ragrank",
+    "changes": [
+      "title",
+      "authors"
+    ],
+    "source": "https://arxiv.org/abs/2510.20768"
+  },
+  {
+    "key": "wang2026mirror",
+    "changes": [
+      "title",
+      "authors"
+    ],
+    "source": "https://arxiv.org/abs/2604.19809"
+  },
+  {
+    "key": "kohl2026structural",
+    "changes": [
+      "authors"
+    ],
+    "source": "https://arxiv.org/abs/2601.18827"
+  },
+  {
+    "key": "zhang2026agentsentry",
+    "changes": [
+      "authors"
+    ],
+    "source": "https://arxiv.org/abs/2602.22724"
+  },
+  {
+    "key": "zhang2025cosight",
+    "changes": [
+      "authors"
+    ],
+    "source": "https://arxiv.org/abs/2510.21557"
+  },
+  {
+    "key": "gurram2026agentprop",
+    "changes": [
+      "title"
+    ],
+    "source": "https://arxiv.org/abs/2604.16706"
+  },
+  {
+    "key": "tian2026toolbenchx",
+    "changes": [
+      "authors"
+    ],
+    "source": "https://arxiv.org/abs/2606.25819"
+  }
+]

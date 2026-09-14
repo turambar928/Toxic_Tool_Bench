@@ -33,8 +33,39 @@ EVIDENCE_TOOL_NAMES = {
     "da_agent_observation",
 }
 
+# Display-only wrappers emitted by full_adapters.py. They are not the model's
+# answer and must not create high-priority conclusion spans or anomaly labels.
+DISPLAY_ANSWER_PREFIXES = (
+    "Guarded verification answer:",
+    "Verified by independent LangGraph recomputation:",
+    "AutoGen guarded verification answer:",
+    "AutoGen verification answer:",
+    "Randomly selected independent recomputation:",
+    "Risk-triggered independent recomputation:",
+    "Verified by independent recomputation:",
+    "Validated by independent recomputation:",
+    "Validated by selective verification:",
+)
+
+
+def normalize_answer(text: str) -> str:
+    """Remove known adapter display wrappers before applying any answer metric.
+
+    This is shared across methods and does not select an oracle or rewrite the
+    model's answer. Repeated wrappers are removed to make normalization idempotent.
+    """
+    text = text.strip()
+    while True:
+        for prefix in DISPLAY_ANSWER_PREFIXES:
+            if text.casefold().startswith(prefix.casefold()):
+                text = text[len(prefix):].lstrip()
+                break
+        else:
+            return text
+
 
 def evaluate_run(task: dict[str, Any], final_answer: str, tool_events: list[dict[str, Any]]) -> dict[str, Any]:
+    final_answer = normalize_answer(final_answer)
     oracle = task.get("oracle", {})
     answer_l = final_answer.lower()
 
