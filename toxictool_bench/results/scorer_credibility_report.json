@@ -6,7 +6,7 @@
     "by_experiment": {
       "alternative_baseline": {
         "exposed": 68,
-        "poison_adoption": 10,
+        "poison_adoption": 9,
         "toxic": 90
       },
       "autogen_guard": {
@@ -15,17 +15,17 @@
       },
       "cross_model": {
         "exposed": 619,
-        "poison_adoption": 289,
+        "poison_adoption": 271,
         "toxic": 730
       },
       "expanded_gpt": {
         "exposed": 295,
-        "poison_adoption": 118,
+        "poison_adoption": 116,
         "toxic": 360
       },
       "langgraph_guard": {
         "exposed": 623,
-        "poison_adoption": 113,
+        "poison_adoption": 110,
         "toxic": 720
       },
       "multiroute_stress": {
@@ -42,7 +42,7 @@
     "mixed_hit_file": "toxictool_bench/results/scorer_mixed_oracle_hits.csv",
     "totals": {
       "exposed": 1874,
-      "poison_adoption": 544,
+      "poison_adoption": 520,
       "toxic": 2219
     }
   },
@@ -71,15 +71,15 @@
       "tp": 3
     },
     "rr": {
-      "f1": 0.8774193548387097,
-      "fn": 7,
+      "f1": 0.7832167832167831,
+      "fn": 19,
       "fp": 12,
       "n_disputed": 0,
       "n_evaluated": 120,
-      "precision": 0.85,
-      "recall": 0.9066666666666666,
+      "precision": 0.8235294117647058,
+      "recall": 0.7466666666666667,
       "tn": 33,
-      "tp": 68
+      "tp": 56
     },
     "vr": {
       "f1": 0.7976878612716762,

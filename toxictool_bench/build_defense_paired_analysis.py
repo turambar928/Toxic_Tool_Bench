@@ -11,6 +11,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from evaluator import evaluate_run
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "toxictool_bench/results/leakage_free_defense_manifest.csv"
@@ -51,7 +53,21 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 
 def load_toxic(manifest: Path) -> dict[tuple[str, str], dict[str, dict[str, Any]]]:
     grouped: dict[tuple[str, str], dict[str, dict[str, Any]]] = defaultdict(dict)
+    task_defs: dict[str, dict[str, Any]] = {}
     for spec in read_csv(manifest):
+        task_paths = {
+            "numerical_iclr2027": "toxictool_bench/tasks/numerical_iclr2027.jsonl",
+            "semantic_schema_iclr2027": "toxictool_bench/tasks/semantic_schema_iclr2027.jsonl",
+            "realistic_extension_iclr2027": "toxictool_bench/tasks/realistic_extension_iclr2027.jsonl",
+        }.get(spec["suite"])
+        if task_paths is None:
+            raise ValueError(f"No task definition mapping for suite {spec['suite']}")
+        for task_path in task_paths.split(";"):
+            with (ROOT / task_path).open(encoding="utf-8") as handle:
+                for line in handle:
+                    if line.strip():
+                        task = json.loads(line)
+                        task_defs[task["task_id"]] = task
         suite, adapter = spec["suite"], spec["adapter"]
         for row in read_jsonl(ROOT / spec["path"]):
             if row.get("environment") != "toxic":
@@ -59,6 +75,9 @@ def load_toxic(manifest: Path) -> dict[tuple[str, str], dict[str, dict[str, Any]
             task_id = str(row["task_id"])
             if task_id in grouped[(suite, adapter)]:
                 raise ValueError(f"duplicate toxic task {suite}/{adapter}/{task_id}")
+            row["metrics"] = evaluate_run(
+                task_defs[task_id], row.get("final_answer", ""), row.get("tool_events", [])
+            )
             grouped[(suite, adapter)][task_id] = row
     return grouped
 
@@ -66,9 +85,11 @@ def load_toxic(manifest: Path) -> dict[tuple[str, str], dict[str, dict[str, Any]
 def metric(row: dict[str, Any], name: str) -> float:
     metrics = row.get("metrics", {})
     if name == "poison_adoption":
-        return float(bool(metrics.get("poison_exposed") and metrics.get("poisoned_answer_used")))
+        return float(bool(metrics.get("poison_exposed") and metrics.get("poison_adoption")))
     if name == "validated_poison_adoption":
-        return float(bool(metrics.get("poison_exposed") and metrics.get("poisoned_answer_used") and metrics.get("validation")))
+        return float(bool(
+            metrics.get("poison_exposed") and metrics.get("validated_poison_adoption")
+        ))
     return float(bool(metrics.get(name)))
 
 

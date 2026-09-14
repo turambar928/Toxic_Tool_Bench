@@ -16,7 +16,7 @@ FILES = (
     "iclr2027_gpt_expanded_cross_agent_combined_summary.csv",
     "leakage_free_defense_combined_summary.csv",
 )
-KEYS = ("clean_tsr", "poisoned_tsr", "toxic_bcr", "toxic_par", "toxic_vpa", "toxic_vr", "toxic_rr")
+KEYS = ("clean_tsr", "poisoned_tsr", "delta_tsr", "toxic_bcr", "toxic_par", "toxic_vpa", "toxic_adr", "toxic_vr", "toxic_rr")
 
 
 def rows_from_text(text: str) -> list[dict[str, str]]:
