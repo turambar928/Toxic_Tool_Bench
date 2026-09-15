@@ -107,12 +107,14 @@ def make_html(rows):
                 chunks.append(f"<h3>{esc(key)}</h3><pre>{esc(str(value))}</pre>")
             chunks.append("</details>")
         chunks.append('</article>')
-    return "\n".join(chunks) + "</html>\n"
+    return ("\n".join(chunks) + "</html>\n").replace("70 条轨迹", f"{len(rows)} 条轨迹")
 
 
-def prepare(destination=DESTINATION):
+def prepare(destination=DESTINATION, remaining=False):
     cases, status = load_cases()
-    disputed = [c for c in cases if c["requires_adjudication"]]
+    disputed = [c for c in cases if c["requires_adjudication"] and (not remaining or c["adjudication_pending"])]
+    if not disputed:
+        raise ValueError("No adjudication cases remain")
     if destination.exists():
         raise ValueError(f"Refusing to overwrite an existing reviewer packet: {destination}")
     destination.mkdir(parents=True)
@@ -124,12 +126,16 @@ def prepare(destination=DESTINATION):
     fields = ["sample_id", "pair_id", *FIELDS, "notes"]
     labels = [{f: c[f] if f in {"sample_id", "pair_id"} else "" for f in fields} for c in disputed]
     write_csv(destination / "adjudication_to_fill.csv", labels, fields)
-    (destination / "README_CN.md").write_text(GUIDE, encoding="utf-8")
+    guide = GUIDE.replace("70 条", f"{len(rows)} 条").replace("70 行", f"{len(rows)} 行")
+    if remaining:
+        guide += "\n本补包仅包含尚未返回的 10 条，不需要重新判断此前完成的 60 条。请返回本包的完整 10 行。\n"
+    (destination / "README_CN.md").write_text(guide, encoding="utf-8")
     (destination / "cases.html").write_text(make_html(rows), encoding="utf-8")
     checksums = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(destination.iterdir())}
     (destination / "checksums.json").write_text(json.dumps(checksums, indent=2) + "\n")
     # Administrator-only hashes stay outside the packet sent to the reviewer.
-    (PACKET / "analysis/adjudication_release.json").write_text(json.dumps({
+    release_name = "adjudication_supplement_release.json" if remaining else "adjudication_release.json"
+    (PACKET / "analysis" / release_name).write_text(json.dumps({
         "n_cases": len(rows), "reviewer_packet_sha256": checksums,
         "source_input_sha256": status["input_sha256"],
         "adjudication_rule": status["adjudication_rule"],
@@ -138,7 +144,7 @@ def prepare(destination=DESTINATION):
     print(f"Prepared {len(rows)} cases: {destination}\n{archive}")
 
 
-def import_completed(path):
+def import_completed(path, allow_partial=False):
     cases, status = load_cases()
     release = json.loads((PACKET / "analysis/adjudication_release.json").read_text())
     for name, expected in release["source_input_sha256"].items():
@@ -147,28 +153,46 @@ def import_completed(path):
         if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != expected:
             raise ValueError(f"Input changed since adjudication release: {name}")
     disputed = [c for c in cases if c["requires_adjudication"]]
-    returned = labels_by_id(path, [c["evidence"] for c in disputed])
+    submitted_ids = {r["sample_id"] for r in read_csv(path)}
+    expected_ids = {c["sample_id"] for c in disputed}
+    if not submitted_ids <= expected_ids:
+        raise ValueError("Returned file contains unrequested adjudication IDs")
+    if not allow_partial and submitted_ids != expected_ids:
+        raise ValueError("Incomplete adjudication return; use --allow-partial to preserve a verified subset")
+    if not submitted_ids:
+        raise ValueError("No returned adjudication labels")
+    returned = labels_by_id(path, [c["evidence"] for c in disputed if c["sample_id"] in submitted_ids])
     if any(not r["notes"].strip() for r in returned.values()):
         raise ValueError("Every adjudicated case needs a note")
     original = read_csv(PACKET / "adjudication.csv")
-    if any(any(r[f].strip() for f in FIELDS) for r in original):
-        raise ValueError("Refusing to overwrite existing adjudication labels")
     for row in original:
         if row["sample_id"] in returned:
+            if any(str(row[f]).strip() for f in FIELDS):
+                if any(str(row[f]).strip() != str(returned[row["sample_id"]][f]) for f in (*FIELDS, "notes")):
+                    raise ValueError(f"Refusing to overwrite existing adjudication: {row['sample_id']}")
             row.update(returned[row["sample_id"]])
     write_csv(PACKET / "adjudication.csv", original)
-    print("Imported third-rater labels. Run analyze_human_holdout.py and then update manuscript claims from consensus results.")
+    receipts_path = PACKET / "analysis/adjudication_imports.json"
+    receipts = json.loads(receipts_path.read_text()) if receipts_path.exists() else []
+    receipt = {"source_path": str(path.resolve()), "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+               "n_rows": len(returned), "sample_ids": sorted(returned), "partial_return_allowed": allow_partial}
+    if receipt not in receipts:
+        receipts.append(receipt)
+    receipts_path.write_text(json.dumps(receipts, indent=2) + "\n")
+    print(f"Imported {len(returned)} third-rater rows. Run analyze_human_holdout.py; missing rows remain unresolved.")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=DESTINATION)
     parser.add_argument("--completed", type=Path, help="Validate/import the returned 70-row file; does not create a packet")
+    parser.add_argument("--allow-partial", action="store_true", help="Import only supplied requested IDs, leaving all missing cases unresolved")
+    parser.add_argument("--remaining", action="store_true", help="Prepare a supplementary packet containing only missing adjudication rows")
     args = parser.parse_args()
     if args.completed:
-        import_completed(args.completed)
+        import_completed(args.completed, allow_partial=args.allow_partial)
     else:
-        prepare(args.output)
+        prepare(args.output, remaining=args.remaining)
 
 
 if __name__ == "__main__":

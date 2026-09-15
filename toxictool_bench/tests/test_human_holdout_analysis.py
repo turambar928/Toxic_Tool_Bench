@@ -6,12 +6,13 @@ import tempfile
 import unittest
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 
 from analyze_human_holdout import (
     FIELDS, PACKET, ROOT, agreement_tables, bootstrap, confusion, human_metrics,
     keyed, labels_by_id, load_cases, method_rates, paired_comparisons, write_csv,
 )
-from prepare_holdout_adjudication import make_html
+from prepare_holdout_adjudication import make_html, import_completed
 
 
 class HoldoutUnitTests(unittest.TestCase):
@@ -69,6 +70,29 @@ class HoldoutUnitTests(unittest.TestCase):
         self.assertNotIn("<script>", page)
         self.assertIn("&lt;script&gt;", page)
 
+    def test_partial_import_preserves_previous_rows_and_rejects_overwrite(self):
+        fields = ["sample_id", "pair_id", *FIELDS, "notes"]
+        first = {"sample_id": "S1", "pair_id": "P", **dict.fromkeys(FIELDS, "0"), "notes": "synthetic original"}
+        blank = {"sample_id": "S2", "pair_id": "P", **dict.fromkeys(FIELDS, ""), "notes": ""}
+        incoming = {**blank, **dict.fromkeys(FIELDS, "0"), "notes": "synthetic supplement"}
+        cases = [{"sample_id": r["sample_id"], "requires_adjudication": True, "evidence": r} for r in (first, blank)]
+        with tempfile.TemporaryDirectory() as tmp:
+            packet = Path(tmp)
+            (packet / "analysis").mkdir()
+            (packet / "analysis/adjudication_release.json").write_text('{"source_input_sha256": {}}')
+            write_csv(packet / "adjudication.csv", [first, blank], fields)
+            submitted = packet / "submitted.csv"
+            write_csv(submitted, [incoming], fields)
+            with patch("prepare_holdout_adjudication.PACKET", packet), patch("prepare_holdout_adjudication.load_cases", return_value=(cases, {})):
+                import_completed(submitted, allow_partial=True)
+                with (packet / "adjudication.csv").open() as handle:
+                    rows = list(csv.DictReader(handle))
+                self.assertEqual(rows, [first, incoming])
+                incoming["final_correct"] = "1"
+                write_csv(submitted, [incoming], fields)
+                with self.assertRaises(ValueError):
+                    import_completed(submitted, allow_partial=True)
+
 
 class ReturnedHoldoutTests(unittest.TestCase):
     @classmethod
@@ -95,12 +119,25 @@ class ReturnedHoldoutTests(unittest.TestCase):
         self.assertEqual(validation["agreement"], 1)
         for r in accuracy:
             if r["split"] == "all":
-                self.assertEqual(r["n"], 240 if r["metric"] == "TSR" else 94)
+                self.assertEqual(r["n_eligible"], 240 if r["metric"] == "TSR" else 94)
+                self.assertEqual(r["n"] + r["n_pending"] + r["n_ambiguous"], r["n_eligible"])
                 if r["metric"] == "VR":
                     self.assertEqual((r["tp"], r["fp"], r["fn"], r["tn"]), (80, 0, 1, 13))
         shared_vpa = [c for c in self.cases if c["split"] == "repeated_p1" and
                       all(c["ratings"][r]["VPA"] for r in ("annotator_a", "annotator_b"))]
         self.assertEqual(len(shared_vpa), 3)
+
+    def test_final_reference_is_complete_and_preserves_label_provenance(self):
+        self.assertTrue(self.status["consensus_available"])
+        self.assertEqual(self.status["n_received_adjudication"], 70)
+        self.assertEqual(self.status["n_reference_available"], 240)
+        self.assertEqual(self.status["n_pending_adjudication"], 0)
+        self.assertEqual(sum(c["ratings"]["consensus"]["TSR"] for c in self.cases), 193)
+        _, accuracy = agreement_tables(self.cases)
+        rows = {r["metric"]: r for r in accuracy if r["split"] == "all" and r["rater"] == "consensus"}
+        self.assertEqual((rows["TSR"]["tp"], rows["TSR"]["fp"], rows["TSR"]["fn"], rows["TSR"]["tn"]), (129, 3, 64, 44))
+        self.assertTrue(all(r["n_pending"] == r["n_ambiguous"] == 0 for r in rows.values()))
+        self.assertEqual((rows["VPA"]["n"], rows["VPA"]["tp"], rows["VPA"]["fp"], rows["VPA"]["fn"]), (94, 4, 0, 0))
 
     def test_sample_comparison_does_not_claim_unchanged_ranking(self):
         comparisons = paired_comparisons(self.cases)
@@ -109,7 +146,7 @@ class ReturnedHoldoutTests(unittest.TestCase):
         self.assertEqual(rows["auto"]["difference"], -.1)
         self.assertEqual(rows["annotator_a"]["difference"], .05)
         self.assertEqual(rows["annotator_b"]["difference"], 0)
-        for r in rows.values():
+        for r in (rows[k] for k in ("auto", "annotator_a", "annotator_b")):
             self.assertEqual(r["n_paired_tasks"], 20)
             self.assertLessEqual(r["ci95_lo"], 0)
             self.assertGreaterEqual(r["ci95_hi"], 0)
@@ -122,7 +159,7 @@ class ReturnedHoldoutTests(unittest.TestCase):
                               ("repeated_p1", "Double-pass"), ("repeated_p1", "Generic Guard")):
             selected = {r["rater"]: r for r in rates if r["split"] == split and r["method"] == method
                         and r["environment"] == "toxic" and r["metric"] == "TSR"}
-            cells = " & ".join(f'{selected[r]["rate"]:.2f}' for r in ("auto", "annotator_a", "annotator_b"))
+            cells = " & ".join(f'{selected[r]["rate"]:.2f}' for r in ("auto", "consensus"))
             self.assertIn(f"{method} & 20 & {cells}", paper)
 
     def test_reviewer_zip_has_only_blinded_evidence_and_empty_labels(self):
@@ -137,6 +174,28 @@ class ReturnedHoldoutTests(unittest.TestCase):
             self.assertEqual({r["sample_id"] for r in evidence}, {c["sample_id"] for c in self.cases if c["requires_adjudication"]})
             self.assertTrue(all(r[f] == "" for r in labels for f in FIELDS))
             self.assertTrue(set(evidence[0]).isdisjoint({"method", "adapter", "model", "source", "run_slot", "split", "disputed_fields"}))
+
+    def test_remaining_packet_contains_only_ten_unexposed_protocol_checks(self):
+        path = ROOT / "output/human_holdout_adjudication_remaining_10.zip"
+        with zipfile.ZipFile(path) as z:
+            names = {Path(n).name: n for n in z.namelist() if not n.endswith("/")}
+            rows = list(csv.DictReader(z.read(names["evidence.csv"]).decode().splitlines()))
+            labels = list(csv.DictReader(z.read(names["adjudication_to_fill.csv"]).decode().splitlines()))
+            selected = set(json.loads((PACKET / "adjudication_selection.json").read_text())["additional_sample_ids"])
+            self.assertEqual({r["sample_id"] for r in rows}, selected)
+            self.assertEqual(len(rows), 10)
+            self.assertTrue(all(not c["exposed"] for c in self.cases if c["sample_id"] in selected))
+            self.assertTrue(all(r[f] == "" for r in labels for f in FIELDS))
+
+    def test_adjudicated_paper_precision_recall_and_counts(self):
+        _, accuracy = agreement_tables(self.cases)
+        paper = (ROOT / "sections/08_appendix_guard_details.tex").read_text()
+        final = [r for r in accuracy if r["rater"] == "consensus" and r["split"] == "all"]
+        self.assertEqual(len(final), 7)
+        for r in final:
+            if r["split"] == "all":
+                cells = f'{r["metric"]} & {r["n"]} & {r["tp"] + r["fn"]} & {r["precision"]:.3f} & {r["recall"]:.3f} & {r["f1"]:.3f}'
+                self.assertIn(cells, paper)
 
 
 if __name__ == "__main__":

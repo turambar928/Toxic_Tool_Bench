@@ -150,9 +150,17 @@ def load_cases(packet=PACKET):
                    "annotator_a": human_metrics(a[sid]), "annotator_b": human_metrics(b[sid])}
         if final_ready:
             ratings["consensus"] = human_metrics(adjudicated[sid] if sid in required else a[sid])
+        elif adjudicated:
+            ratings["adjudicated_available"] = (
+                human_metrics(adjudicated[sid] if sid in required else a[sid])
+                if sid not in required or sid in adjudicated else {m: None for m in METRICS}
+            )
+        pending = sid in required and sid not in adjudicated
         cases.append({**k, "method": METHODS[k["adapter"]], "exposed": exposed,
                       "ratings": ratings, "a": a[sid], "b": b[sid], "evidence": e,
-                      "task": task, "disputed": sid in disputed, "requires_adjudication": sid in required})
+                      "task": task, "disputed": sid in disputed, "requires_adjudication": sid in required,
+                      "adjudication_pending": pending,
+                      "reference_ambiguous": bool((adjudicated[sid] if sid in required else a[sid])["ambiguous"]) if not pending else False})
     pairs = defaultdict(list)
     for c in cases:
         pairs[c["pair_id"]].append(c)
@@ -173,6 +181,10 @@ def load_cases(packet=PACKET):
               "n_exposed": sum(c["exposed"] for c in cases), "n_pairs": len(pairs),
               "n_disputed_trajectories": len(disputed), "n_additional_protocol_checks": len(additional - disputed),
               "n_adjudication_trajectories": len(required), "n_pending_adjudication": len(required - adjudicated.keys()),
+              "n_received_adjudication": len(required & adjudicated.keys()),
+              "n_reference_available": sum(not c["adjudication_pending"] for c in cases),
+              "n_pending_exposed": sum(c["adjudication_pending"] and c["exposed"] for c in cases),
+              "behavior_reference_complete": all(not c["adjudication_pending"] for c in cases if c["exposed"]),
               "consensus_available": final_ready,
               "n_development_task_ids_excluded": len(prior),
               "split_counts": dict(Counter(c["split"] for c in cases)),
@@ -215,9 +227,11 @@ def agreement_tables(cases):
             eligible = [c for c in rows if m == "TSR" or c["exposed"]]
             for rater in [r for r in cases[0]["ratings"] if r != "auto"]:
                 selected = [c for c in eligible if c["ratings"][rater][m] is not None]
+                pending = sum(c["adjudication_pending"] for c in eligible) if rater == "adjudicated_available" else 0
                 stats = confusion([c["ratings"]["auto"][m] for c in selected], [c["ratings"][rater][m] for c in selected])
                 accuracy.append({"split": split, "rater": rater, "metric": m,
-                                 "n_eligible": len(eligible), "n_ambiguous": len(eligible) - len(selected), **stats})
+                                 "n_eligible": len(eligible), "n_pending": pending,
+                                 "n_ambiguous": len(eligible) - len(selected) - pending, **stats})
     return agreement, accuracy
 
 
@@ -230,9 +244,11 @@ def method_rates(cases):
             for m in METRICS:
                 eligible = [c for c in rows if m == "TSR" or c["exposed"]]
                 values = [c["ratings"][rater][m] for c in eligible if c["ratings"][rater][m] is not None]
+                pending = sum(c["adjudication_pending"] for c in eligible) if rater == "adjudicated_available" else 0
                 out.append({"split": split, "method": method, "environment": env, "rater": rater,
                             "metric": m, "n_runs": len(rows), "n_exposed": sum(c["exposed"] for c in rows),
-                            "n": len(values), "n_ambiguous": len(eligible) - len(values),
+                            "n": len(values), "n_pending": pending,
+                            "n_ambiguous": len(eligible) - len(values) - pending,
                             "positives": sum(values), "rate": safe_div(sum(values), len(values))})
     return out
 
@@ -258,6 +274,9 @@ def paired_comparisons(cases):
         for rater in cases[0]["ratings"]:
             for metric in [*METRICS, *(["clean_TSR", "interaction_TSR"] if split == "core" else [])]:
                 blocks = defaultdict(list)
+                n_eligible_tasks = 0
+                n_pending_tasks = 0
+                n_ambiguous_tasks = 0
                 for tid in tasks:
                     l, r = idx[(tid, left, "toxic")], idx[(tid, right, "toxic")]
                     key = metric if metric in METRICS else "TSR"
@@ -268,8 +287,13 @@ def paired_comparisons(cases):
                         needed += [idx[(tid, left, "clean")], idx[(tid, right, "clean")]]
                     if key != "TSR" and not all(c["exposed"] for c in needed):
                         continue
+                    n_eligible_tasks += 1
                     values = [c["ratings"][rater][key] for c in needed]
                     if any(v is None for v in values):
+                        if rater == "adjudicated_available" and any(c["adjudication_pending"] for c in needed):
+                            n_pending_tasks += 1
+                        else:
+                            n_ambiguous_tasks += 1
                         continue
                     delta = values[0] - values[1]
                     if metric == "interaction_TSR":
@@ -278,6 +302,8 @@ def paired_comparisons(cases):
                 point, lo, hi = bootstrap(list(blocks.values()))
                 out.append({"split": split, "treatment": left, "control": right, "rater": rater,
                             "metric": metric, "n_paired_tasks": sum(map(len, blocks.values())),
+                            "n_eligible_tasks": n_eligible_tasks, "n_pending_tasks": n_pending_tasks,
+                            "n_ambiguous_tasks": n_ambiguous_tasks,
                             "difference": point, "ci95_lo": lo, "ci95_hi": hi})
     return out
 
@@ -301,6 +327,11 @@ def main():
                "method": c["method"], "environment": c["environment"], "exposed": int(c["exposed"]),
                "rater": rater, **ratings} for c in cases for rater, ratings in c["ratings"].items()]
     write_csv(args.output / "case_metrics.csv", labels)
+    reference_rows = [{"sample_id": c["sample_id"], "pair_id": c["pair_id"],
+                       "status": "pending" if c["adjudication_pending"] else "ambiguous" if c["reference_ambiguous"] else "available",
+                       "label_source": "pending" if c["adjudication_pending"] else "third_rater" if c["requires_adjudication"] else "two_rater_agreement"}
+                      for c in cases]
+    write_csv(args.output / "reference_status.csv", reference_rows)
     (args.output / "analysis_status.json").write_text(json.dumps(status, indent=2) + "\n")
     print(json.dumps({k: v for k, v in status.items() if k != "input_sha256"}, indent=2))
 

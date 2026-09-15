@@ -90,9 +90,9 @@ python3 toxictool_bench/build_independent_holdout_packet.py
 ```
 
 After distribution, do not rerun the generator with a changed seed. The
-automatic scorer is intentionally absent from `evidence.csv`. The returned two-rater analysis reports each annotator separately while
-adjudication is pending. It must not be described as a completed consensus
-validation or used to assert that all method rankings were confirmed.
+automatic scorer is intentionally absent from `evidence.csv`. The completed analysis reports the original annotators separately and the final
+reference after third-rater adjudication. Method comparisons are evaluated on
+the same selected tasks under each label source.
 
 ## Returned annotations and adjudication
 
@@ -127,3 +127,20 @@ to overwrite existing adjudication labels. Consensus results are generated
 only after every selected trajectory is resolved; manuscript tables must then
 be synchronized to the final results. Ambiguous final labels are counted and
 excluded from point comparisons, not converted to negative labels.
+
+## Completed adjudication returns
+
+The 60 disputed trajectories were imported from
+`human_holdout_adjudication_v1/adjudication_completed.csv`. The directory name
+refers to the earlier 60-case package, not the 70-case v2 release. Evidence for
+all returned sample IDs was checked against the v2 packet and matches.
+The remaining ten ROAS tolerance checks were imported from
+`human_holdout_adjudication_remaining_10/adjudication_completed.csv`; all ten
+were judged correct under the task's existing tolerance. The supplement's
+distributed evidence and instructions match the recorded release hashes.
+
+All 70 third-rater rows are complete. Together with 170 original agreed rows,
+they give a complete 240-row human reference, with no pending or ambiguous
+cases. Analysis preserves the original sheets, both returned files, import
+receipts, and per-case label provenance. See `analysis/README.md` for final
+results and limitations.

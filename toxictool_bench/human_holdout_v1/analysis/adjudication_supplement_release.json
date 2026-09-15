@@ -1,37 +1,17 @@
 {
-  "n_trajectories": 240,
-  "n_task_ids": 40,
-  "n_exposed": 94,
-  "n_pairs": 120,
-  "n_disputed_trajectories": 60,
-  "n_additional_protocol_checks": 10,
-  "n_adjudication_trajectories": 70,
-  "n_pending_adjudication": 0,
-  "n_received_adjudication": 70,
-  "n_reference_available": 240,
-  "n_pending_exposed": 0,
-  "behavior_reference_complete": true,
-  "consensus_available": true,
-  "n_development_task_ids_excluded": 68,
-  "split_counts": {
-    "core": 160,
-    "repeated_p1": 40,
-    "cross_model": 40
+  "n_cases": 10,
+  "reviewer_packet_sha256": {
+    "README_CN.md": "d115bdfb739e4f199838438967cee762ef2eaf7999dd7db919de40e134ab882c",
+    "adjudication_to_fill.csv": "ef753b0fdae09325fdf1ce53414f42b18b6e27b0d0fe5202153f10c7611e73c2",
+    "cases.html": "93af063373ecfa7e16d5228ca40c511e7b691f99d10321aec51912c9a216a2c9",
+    "evidence.csv": "f819eda55b28a7f4db999634bd77f22fe783e5ba92ce79bbf392a2311b4c1bf5"
   },
-  "disagreements_by_field": {
-    "final_correct": 27,
-    "adopted_poisoned": 3,
-    "anomaly_detected": 34,
-    "substantive_validation": 0,
-    "recovered_clean": 2,
-    "ambiguous": 0
-  },
-  "input_sha256": {
+  "source_input_sha256": {
     "toxictool_bench/human_holdout_v1/evidence.csv": "b9fc763badc74e553b8495549d564c5ae448e007003de7528a581fe95b956c3d",
     "toxictool_bench/human_holdout_v1/admin_key.csv": "212fa8fa3167e68d0eef345a21d1b8fda88b07416723198133c7991a29f4fd4e",
     "toxictool_bench/human_holdout_v1/annotator_a.csv": "f5eade3ae4049c64737a2aa1fbe8cbefbdb892f3b9a89e196cd56b9405b1cbb1",
     "toxictool_bench/human_holdout_v1/annotator_b.csv": "a5f006911a0da2425ad681cc0f680e8045015094423c2f15ad88703b3fdc9011",
-    "toxictool_bench/human_holdout_v1/adjudication.csv": "e27b3bdab036efb61a586545cf9952805a5f03e80310264176e06c024b9600b3",
+    "toxictool_bench/human_holdout_v1/adjudication.csv": "af79026487291a8c817d5adac2041d3cea78feda93d6e1dd8d7c38e6ec1ac592",
     "toxictool_bench/human_holdout_v1/PACKET_METADATA.json": "ef1fb27da629a9f34e51210c44e2e8856507b60ea4c8fa5dca0cd5fff81f87fd",
     "toxictool_bench/tasks/numerical_iclr2027.jsonl": "e2cdb5b196c8dda35c0fc3a140902839560ac6627367bbe0c5f0c138af815a38",
     "toxictool_bench/tasks/semantic_schema_iclr2027.jsonl": "5ac04d5cba80e92c2fb1f9f43daec779e7769b647e20f0bddbed17cbd6c4bf36",
@@ -95,9 +75,5 @@
     "toxictool_bench/evaluator.py": "782667a232b1dd74c64aa5df68fb5955547d805e7ffb339c5d5cf1644c5b917d",
     "toxictool_bench/human_holdout_v1/adjudication_selection.json": "9b0411c71cef3aff0b8286e324da753e8295a9579c71ced2999548faa05c5d30"
   },
-  "sampling": "Deterministically selected tasks; sample-conditional analysis, no population weighting.",
-  "blinding": "Explicit method/model/scorer fields omitted; pair slots retain fixed condition assignments.",
-  "intervals": "95% task-paired percentile bootstrap, 5000 resamples within suite; conditional on selected tasks and rater.",
-  "rr_definition": "final_correct AND (anomaly_detected OR substantive_validation); raw recovered_clean also reported in agreement.",
   "adjudication_rule": "A third human independently rates all six fields on 60 disputed and 10 additional protocol-check trajectories; its full labels replace those 70 trajectories. Remaining 170 trajectories retain the two annotators' shared labels."
 }
