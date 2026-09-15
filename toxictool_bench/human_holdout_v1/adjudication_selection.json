@@ -1,0 +1,6 @@
+{
+  "additional_sample_ids": ["HOLD-057", "HOLD-058", "HOLD-059", "HOLD-060", "HOLD-061", "HOLD-062", "HOLD-063", "HOLD-175", "HOLD-176", "HOLD-211"],
+  "reason": "Protocol-consistency review: both annotators mark the ROAS answer 2.72 incorrect, while the original task specifies clean_value=2.75 and tolerance=0.05. Re-rate these cases without revealing prior labels. No label is changed automatically.",
+  "selection_stage": "After the two returned annotations were analyzed; before third-rater distribution of the v2 packet.",
+  "adjudication_rule": "A third human independently rates all six fields on 60 disputed and 10 additional protocol-check trajectories; its full labels replace those 70 trajectories. Remaining 170 trajectories retain the two annotators' shared labels."
+}

@@ -1,0 +1,103 @@
+split,treatment,control,rater,metric,n_paired_tasks,difference,ci95_lo,ci95_hi
+core,Double-pass,Base,auto,TSR,20,0.0,0.0,0.0
+core,Double-pass,Base,auto,PAR,13,0.0,0.0,0.0
+core,Double-pass,Base,auto,BCR,13,0.0,0.0,0.0
+core,Double-pass,Base,auto,ADR,13,0.0,0.0,0.0
+core,Double-pass,Base,auto,VR,13,0.3076923076923077,0.23076923076923078,0.46153846153846156
+core,Double-pass,Base,auto,VPA,13,0.0,0.0,0.0
+core,Double-pass,Base,auto,RR,13,0.23076923076923078,0.07692307692307693,0.46153846153846156
+core,Double-pass,Base,auto,clean_TSR,20,0.0,0.0,0.0
+core,Double-pass,Base,auto,interaction_TSR,20,0.0,0.0,0.0
+core,Double-pass,Base,annotator_a,TSR,20,0.0,0.0,0.0
+core,Double-pass,Base,annotator_a,PAR,13,0.0,0.0,0.0
+core,Double-pass,Base,annotator_a,BCR,13,0.0,0.0,0.0
+core,Double-pass,Base,annotator_a,ADR,13,0.0,0.0,0.0
+core,Double-pass,Base,annotator_a,VR,13,0.3076923076923077,0.23076923076923078,0.46153846153846156
+core,Double-pass,Base,annotator_a,VPA,13,0.0,0.0,0.0
+core,Double-pass,Base,annotator_a,RR,13,0.23076923076923078,0.07692307692307693,0.46153846153846156
+core,Double-pass,Base,annotator_a,clean_TSR,20,0.0,0.0,0.0
+core,Double-pass,Base,annotator_a,interaction_TSR,20,0.0,0.0,0.0
+core,Double-pass,Base,annotator_b,TSR,20,0.0,0.0,0.0
+core,Double-pass,Base,annotator_b,PAR,13,0.0,0.0,0.0
+core,Double-pass,Base,annotator_b,BCR,13,0.0,0.0,0.0
+core,Double-pass,Base,annotator_b,ADR,13,-0.07692307692307693,-0.23076923076923078,0.0
+core,Double-pass,Base,annotator_b,VR,13,0.3076923076923077,0.23076923076923078,0.46153846153846156
+core,Double-pass,Base,annotator_b,VPA,13,0.0,0.0,0.0
+core,Double-pass,Base,annotator_b,RR,13,0.23076923076923078,0.07692307692307693,0.46153846153846156
+core,Double-pass,Base,annotator_b,clean_TSR,20,0.0,0.0,0.0
+core,Double-pass,Base,annotator_b,interaction_TSR,20,0.0,0.0,0.0
+core,Verification-only,Double-pass,auto,TSR,20,-0.05,-0.15,0.0
+core,Verification-only,Double-pass,auto,PAR,14,0.0,0.0,0.0
+core,Verification-only,Double-pass,auto,BCR,14,0.0,0.0,0.0
+core,Verification-only,Double-pass,auto,ADR,14,0.07142857142857142,0.0,0.21428571428571427
+core,Verification-only,Double-pass,auto,VR,14,-0.14285714285714285,-0.2857142857142857,0.0
+core,Verification-only,Double-pass,auto,VPA,14,0.0,0.0,0.0
+core,Verification-only,Double-pass,auto,RR,14,-0.07142857142857142,-0.21428571428571427,0.0
+core,Verification-only,Double-pass,auto,clean_TSR,20,0.05,0.0,0.15
+core,Verification-only,Double-pass,auto,interaction_TSR,20,-0.1,-0.25,0.0
+core,Verification-only,Double-pass,annotator_a,TSR,20,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_a,PAR,14,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_a,BCR,14,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_a,ADR,14,0.07142857142857142,0.0,0.21428571428571427
+core,Verification-only,Double-pass,annotator_a,VR,14,-0.14285714285714285,-0.2857142857142857,0.0
+core,Verification-only,Double-pass,annotator_a,VPA,14,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_a,RR,14,-0.07142857142857142,-0.21428571428571427,0.0
+core,Verification-only,Double-pass,annotator_a,clean_TSR,20,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_a,interaction_TSR,20,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_b,TSR,20,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_b,PAR,14,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_b,BCR,14,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_b,ADR,14,0.14285714285714285,0.0,0.35714285714285715
+core,Verification-only,Double-pass,annotator_b,VR,14,-0.14285714285714285,-0.2857142857142857,0.0
+core,Verification-only,Double-pass,annotator_b,VPA,14,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_b,RR,14,-0.07142857142857142,-0.21428571428571427,0.0
+core,Verification-only,Double-pass,annotator_b,clean_TSR,20,0.0,0.0,0.0
+core,Verification-only,Double-pass,annotator_b,interaction_TSR,20,0.0,0.0,0.0
+core,Generic Guard,Double-pass,auto,TSR,20,-0.1,-0.25,0.0
+core,Generic Guard,Double-pass,auto,PAR,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,auto,BCR,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,auto,ADR,14,0.07142857142857142,0.0,0.21428571428571427
+core,Generic Guard,Double-pass,auto,VR,14,-0.07142857142857142,-0.21428571428571427,0.0
+core,Generic Guard,Double-pass,auto,VPA,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,auto,RR,14,-0.14285714285714285,-0.35714285714285715,0.0
+core,Generic Guard,Double-pass,auto,clean_TSR,20,-0.1,-0.25,0.0
+core,Generic Guard,Double-pass,auto,interaction_TSR,20,0.0,-0.15,0.15
+core,Generic Guard,Double-pass,annotator_a,TSR,20,0.05,0.0,0.15
+core,Generic Guard,Double-pass,annotator_a,PAR,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_a,BCR,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_a,ADR,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_a,VR,14,-0.07142857142857142,-0.21428571428571427,0.0
+core,Generic Guard,Double-pass,annotator_a,VPA,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_a,RR,14,-0.07142857142857142,-0.21428571428571427,0.0
+core,Generic Guard,Double-pass,annotator_a,clean_TSR,20,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_a,interaction_TSR,20,0.05,0.0,0.15
+core,Generic Guard,Double-pass,annotator_b,TSR,20,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_b,PAR,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_b,BCR,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_b,ADR,14,0.07142857142857142,0.0,0.21428571428571427
+core,Generic Guard,Double-pass,annotator_b,VR,14,-0.07142857142857142,-0.21428571428571427,0.0
+core,Generic Guard,Double-pass,annotator_b,VPA,14,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_b,RR,14,-0.07142857142857142,-0.21428571428571427,0.0
+core,Generic Guard,Double-pass,annotator_b,clean_TSR,20,0.0,0.0,0.0
+core,Generic Guard,Double-pass,annotator_b,interaction_TSR,20,0.0,0.0,0.0
+repeated_p1,Generic Guard,Double-pass,auto,TSR,20,-0.2,-0.4,-0.05
+repeated_p1,Generic Guard,Double-pass,auto,PAR,13,0.15384615384615385,0.0,0.23076923076923078
+repeated_p1,Generic Guard,Double-pass,auto,BCR,13,0.0,0.0,0.0
+repeated_p1,Generic Guard,Double-pass,auto,ADR,13,0.0,0.0,0.0
+repeated_p1,Generic Guard,Double-pass,auto,VR,13,0.07692307692307693,0.0,0.23076923076923078
+repeated_p1,Generic Guard,Double-pass,auto,VPA,13,0.15384615384615385,0.0,0.23076923076923078
+repeated_p1,Generic Guard,Double-pass,auto,RR,13,-0.23076923076923078,-0.46153846153846156,-0.07692307692307693
+repeated_p1,Generic Guard,Double-pass,annotator_a,TSR,20,-0.05,-0.15,0.0
+repeated_p1,Generic Guard,Double-pass,annotator_a,PAR,13,0.07692307692307693,0.0,0.23076923076923078
+repeated_p1,Generic Guard,Double-pass,annotator_a,BCR,13,0.0,0.0,0.0
+repeated_p1,Generic Guard,Double-pass,annotator_a,ADR,13,0.0,0.0,0.0
+repeated_p1,Generic Guard,Double-pass,annotator_a,VR,13,0.0,0.0,0.0
+repeated_p1,Generic Guard,Double-pass,annotator_a,VPA,13,0.07692307692307693,0.0,0.23076923076923078
+repeated_p1,Generic Guard,Double-pass,annotator_a,RR,13,-0.07692307692307693,-0.23076923076923078,0.0
+repeated_p1,Generic Guard,Double-pass,annotator_b,TSR,20,-0.1,-0.25,0.0
+repeated_p1,Generic Guard,Double-pass,annotator_b,PAR,13,0.15384615384615385,0.0,0.23076923076923078
+repeated_p1,Generic Guard,Double-pass,annotator_b,BCR,13,0.0,0.0,0.0
+repeated_p1,Generic Guard,Double-pass,annotator_b,ADR,13,0.07692307692307693,0.0,0.23076923076923078
+repeated_p1,Generic Guard,Double-pass,annotator_b,VR,13,0.0,0.0,0.0
+repeated_p1,Generic Guard,Double-pass,annotator_b,VPA,13,0.15384615384615385,0.0,0.23076923076923078
+repeated_p1,Generic Guard,Double-pass,annotator_b,RR,13,-0.15384615384615385,-0.23076923076923078,0.0

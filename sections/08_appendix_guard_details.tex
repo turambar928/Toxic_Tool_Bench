@@ -73,7 +73,7 @@ For biased-retrieval tasks, the poisoned snippet is designed to remain topically
 
 We manually inspect representative cases in the released case-study artifacts. The released 80-run sheet contains repeated author passes rather than independent annotators; we use it only as a diagnostic comparison. We additionally audited a blinded 120-trajectory packet, stratified equally across numerical, semantic/schema, and multi-table tasks, with two independent annotators. The packet withheld scorer labels, adapter and model names, source paths, and the other annotator's decisions. The pre-adjudication agreement is reported below; 12 trajectories had at least one label disagreement (16 label cells), all subsequently resolved by a separate blind adjudication.
 
-\subsection{Manual Audit Rubric}
+\subsection{Development Audit Rubric}
 
 The author rubric uses the same unit of analysis as the released JSONL logs: one exposed trajectory. The reviewer sees the task, clean and poisoned oracles, final answer, and ordered tool events, then assigns binary BCR, ADR, VR, and RR labels.
 
@@ -88,7 +88,7 @@ Ambiguous cases are adjudicated against over-crediting the agent. A statement su
 
 Table~\ref{tab:appendix-scorer-precision} compares the current scorer with the adjudicated 120-row consensus. Table~\ref{tab:appendix-human-iaa} reports agreement between the two original annotators before adjudication. The released label sheets and \path{scorer_consensus_validation.json} preserve the distinction between annotator agreement and scorer accuracy.
 
-The audit was used during scorer development and is not an independent holdout. BCR and ADR have limited recall; RR is also affected by answer ambiguity. TSR, PAR, and VPA were not separately human-labelled. The separate 18-case VR review is conditioned on non-disputed scorer-positive cases, so its 18/18 relevance judgments are a targeted check rather than a population accuracy estimate. Independent held-out annotation remains necessary for precise method-level claims.
+This audit was used during scorer development. Its BCR and ADR recall are limited, and it did not separately label TSR, PAR, or VPA. The 18-case VR review covers non-disputed scorer-positive cases; its 18/18 relevance judgments describe that targeted check. The separate holdout below tests the unchanged scorer on other tasks and adds answer-level labels.
 
 \begin{table}[t]
 \centering
@@ -129,6 +129,84 @@ Macro average & 120 & 0.967 & 0.913 & -- \\
 \label{tab:appendix-human-iaa}
 \end{table}
 
+\subsection{Held-Out Human Evaluation}
+\label{sec:appendix-holdout}
+
+\paragraph{Sample and annotation.}
+The fixed packet contains 240 trajectories from 40 task IDs, excluding the 68 task IDs in the development audit. Its 160 core cases cover 20 tasks (ten numerical and ten semantic/schema), four LangGraph methods, and paired clean/toxic runs with Claude Haiku. Another 40 cases compare Double-pass and Generic Guard at repeated-poison probability $p=1$ on those same 20 tasks. The remaining 40 cases are 20 clean/toxic pairs from AutoGen with Claude Sonnet on other numerical tasks. Thus the packet has 100 clean/toxic pairs and 20 method pairs, not 120 clean/toxic pairs. There are 94 exposed trajectories: 56 core, 28 repeated-poison, and ten cross-model cases.
+
+The generator selects eligible task IDs in sorted order. This fixed subset supports sample-level comparisons, not weighted estimates for the full benchmark. The evidence sheet omits explicit method, model, adapter, source-path, and scorer fields. Row order is shuffled, but pair slots retain fixed condition assignments; trace content can also reveal protocol structure. Two annotators filled all six fields: final correctness, poisoned-answer adoption, anomaly detection, substantive validation, recovery after a check, and ambiguity. Table~\ref{tab:holdout-iaa} reports their agreement before adjudication.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Label & $n$ & Disagreements & Agreement & Cohen's $\kappa$ \\
+\midrule
+Final correctness & 240 & 27 & 0.888 & 0.718 \\
+Poisoned-answer adoption & 240 & 3 & 0.988 & 0.721 \\
+Anomaly detection & 240 & 34 & 0.858 & 0.091 \\
+Substantive validation & 240 & 0 & 1.000 & 1.000 \\
+Recovery after a check & 240 & 2 & 0.992 & 0.980 \\
+Ambiguity & 240 & 0 & 1.000 & -- \\
+\bottomrule
+\end{tabular}
+\caption{Agreement between the two returned holdout annotations. Neither annotator marked an ambiguous case, so its $\kappa$ is undefined. Final-correctness agreement is 0.944 on core cases, 0.925 under repeated poisoning, and 0.625 on cross-model cases.}
+\label{tab:holdout-iaa}
+\end{table}
+
+\paragraph{Scoring agreement.}
+We apply the unchanged evaluator to the original answers and tool events, rather than reuse older metrics stored in the logs. Source files, task definitions, returned annotations, and the evaluator are hashed in the analysis record. Human BCR is derived as adoption without detection or validation; VPA is adoption with validation. RR uses final correctness with detection or validation, matching the paper definition. The packet's separate recovery field requires a check and is retained in the agreement table. TSR comparisons use all 240 cases; other metric comparisons use the 94 exposed cases.
+
+The two sheets differ on 60 trajectories. A separate adjudication packet contains those trajectories and ten additional shared-label cases whose ROAS answers fall within the task's original tolerance. It supplies the original numeric tolerances and withholds both prior label sets. The third rater will re-rate all six fields on these 70 cases; the other 170 retain the two annotators' shared labels. Until its return, Table~\ref{tab:holdout-scorer} reports each rater separately. No consensus labels are inferred from the scorer. The few human BCR positives (one for A and three for B) give little information about BCR recall across the benchmark, despite high overall agreement on this subset.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Metric & $n$ & Human positives A/B & Precision A & Recall A & Precision B & Recall B \\
+\midrule
+TSR & 240 & 168/181 & 0.765 & 0.601 & 0.886 & 0.646 \\
+PAR & 94 & 4/7 & 0.800 & 1.000 & 1.000 & 0.714 \\
+BCR & 94 & 1/3 & 1.000 & 1.000 & 1.000 & 0.333 \\
+ADR & 94 & 2/28 & 0.667 & 1.000 & 0.667 & 0.071 \\
+VR & 94 & 81/81 & 1.000 & 0.988 & 1.000 & 0.988 \\
+VPA & 94 & 3/4 & 0.750 & 1.000 & 1.000 & 1.000 \\
+RR & 94 & 74/72 & 1.000 & 0.486 & 1.000 & 0.500 \\
+\bottomrule
+\end{tabular}
+\caption{Automatic scorer versus each holdout annotator before third-party adjudication. Human positive counts expose sparse outcomes; full confusion counts and F1 are released in \protect\path{human_holdout_v1/analysis/scorer_comparison.csv}.}
+\label{tab:holdout-scorer}
+\end{table}
+
+\paragraph{Comparison sensitivity.}
+Table~\ref{tab:holdout-methods} compares the same selected tasks under all three label sources. On the core subset, Guard minus Double-pass poisoned TSR is $-0.10$ [$-0.25$, $0.00$] for the scorer, $+0.05$ [$0.00$, $0.15$] for A, and $0.00$ [$0.00$, $0.00$] for B. At $p=1$, these differences are $-0.20$ [$-0.40$, $-0.05$], $-0.05$ [$-0.15$, $0.00$], and $-0.10$ [$-0.25$, $0.00$]. We resample task IDs within each suite, preserving paired methods, for 5,000 bootstrap draws. These intervals condition on the chosen tasks and label source; a degenerate interval records identical observed labels, not population equivalence. The release also includes clean-condition differences and clean-adjusted interactions. Automatic and human scores therefore do not establish an invariant method ranking on this holdout.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Setting & Method & Tasks & Automatic & Annotator A & Annotator B \\
+\midrule
+\texttt{poison\_once} & Base & 20 & 0.60 & 0.75 & 0.80 \\
+ & Double-pass & 20 & 0.60 & 0.75 & 0.80 \\
+ & Verification-only & 20 & 0.55 & 0.75 & 0.80 \\
+ & Generic Guard & 20 & 0.50 & 0.80 & 0.80 \\
+\midrule
+Repeated, $p=1$ & Double-pass & 20 & 0.45 & 0.70 & 0.75 \\
+ & Generic Guard & 20 & 0.25 & 0.65 & 0.65 \\
+\bottomrule
+\end{tabular}
+\caption{Poisoned TSR on the 20 shared core holdout tasks. The repeated-poison rows reuse those tasks. These are subset results, not replacements for the full 120-task automatic table.}
+\label{tab:holdout-methods}
+\end{table}
+
+Both annotators identify the same three VPA-positive repeated-poison trajectories, while B identifies a fourth. These cases support the observation that another evidence-producing action can still end in poisoned-answer adoption. Their existence does not depend on resolving the TSR ranking disagreement.
+
 \subsection{Released Detailed Tables}
 
 The main text keeps compact tables for page budget. Detailed adapter-level cross-model tables and the expanded GPT-only cross-agent breakdowns are released as machine-readable artifacts:
@@ -140,7 +218,8 @@ The main text keeps compact tables for page budget. Detailed adapter-level cross
   \item Multi-table extension: task JSONL and extension summary CSVs.
   \item Verification stress: \path{verification_stress_summary.csv}, \path{verification_stress_manifest.csv}, complete chunk logs, and the probability-curve figure.
   \item LangGraph join extension: \path{langgraph_multitable_extension_summary.csv}.
-  \item Scorer audit: the original author sheet, scorer-credibility report, mixed-hit list, completed independent audit under \path{human_audit_v2/}, and adjudication/VR-validity review under \path{human_review_v3/}.
+  \item Scorer audit: development annotations under \path{human_audit_v2/}, adjudication/VR review under \path{human_review_v3/}, and the separate returned holdout annotations and analysis under \path{human_holdout_v1/}. The holdout release distinguishes each rater from the pending consensus.
+  \item Post-poison trace analysis: \path{leakage_free_defense_route_mechanism.csv} records later observation states on the full defense manifest. Its counts are descriptive; the analysis does not assign a causal contribution to later clean evidence.
 \end{itemize}
 
 \section{Guarded Verification Details}

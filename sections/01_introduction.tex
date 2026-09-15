@@ -9,11 +9,11 @@ ToxicBench asks whether agents detect, verify, or adopt this corrupted evidence.
 
 We evaluate complete framework adapters for LangGraph, smolagents, PandasAI, DA-Agent, and AutoGen where feasible. The cross-model suite contains 34 numerical and 24 semantic/schema instances; an expanded GPT-only evaluation uses 120 instances. Across these settings, high clean-task success coexists with substantial poisoned-task degradation. The experiments track this failure across several ways of connecting models to data tools.
 
-We further compare a matched-budget Double-pass control, Verification-only, and Generic Guard on 120 LangGraph instances, followed by repeated poisoning over numerical, semantic/schema, and multi-table workflows. These protocols test how agents use redundant evidence when it is available. A second ordinary pass improves task success, while the extra guard prompt gives no further gain. Repeated poisoning exposes a different failure: the agent may perform a check but still adopt the wrong conclusion.
+We further compare a matched-budget Double-pass control, Verification-only, and Generic Guard on 120 LangGraph instances, followed by repeated poisoning over numerical, semantic/schema, and multi-table workflows. These protocols distinguish another attempt at the task from an explicit request to verify the first answer. Trace analysis records whether later evidence remains clean. A separate 240-trajectory, two-annotator holdout checks both individual scoring decisions and method comparisons. Repeated poisoning exposes a failure identified by both annotators: an agent may perform a check but still adopt the wrong conclusion.
 
 Our contributions are:
 \begin{itemize}
     \item A data-analysis benchmark with paired clean and poisoned runs, seven numerical operators, five semantic/schema operators, and a multi-table extension.
-    \item A trajectory scoring protocol that separates poisoned-answer adoption, evidence checking, and recovery, supported by exposure counts and a blinded human audit.
-    \item Experiments across agent frameworks and model families, with matched-budget verification controls and 1,596 repeated-poison trajectories showing how checking can fail to produce a correct answer.
+    \item A trajectory scoring protocol that separates poisoned-answer adoption, evidence checking, and recovery, with exposure counts and a 240-trajectory human holdout that tests scoring and comparison sensitivity.
+    \item Experiments across agent frameworks and model families, with matched-budget verification controls, post-poison trace analysis, and 1,596 repeated-poison trajectories that expose failures after checking.
 \end{itemize}
