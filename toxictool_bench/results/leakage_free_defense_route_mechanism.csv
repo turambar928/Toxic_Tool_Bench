@@ -1,0 +1,14 @@
+suite,adapter,post_poison_evidence_state,n_exposed,poisoned_tsr,poison_adoption,validated_poison_adoption,recovery,validation
+numerical_iclr2027,langgraph_react_double_pass,no_post_poison_event,2,0.0000,0.0000,0.0000,0.0000,0.0000
+numerical_iclr2027,langgraph_react_double_pass,post_poison_clean_observation,41,0.9268,0.0000,0.0000,0.9268,1.0000
+numerical_iclr2027,langgraph_react_full,no_post_poison_event,40,0.6750,0.2250,0.0000,0.0000,0.0000
+numerical_iclr2027,langgraph_react_full,post_poison_clean_observation,2,0.0000,0.0000,0.0000,0.0000,1.0000
+numerical_iclr2027,langgraph_react_guarded,no_post_poison_event,3,0.3333,0.0000,0.0000,0.0000,0.0000
+numerical_iclr2027,langgraph_react_guarded,post_poison_clean_observation,43,0.7442,0.0000,0.0000,0.7442,1.0000
+numerical_iclr2027,langgraph_react_verification_only,no_post_poison_event,3,0.0000,0.0000,0.0000,0.0000,0.0000
+numerical_iclr2027,langgraph_react_verification_only,post_poison_clean_observation,40,0.8000,0.0000,0.0000,0.8000,1.0000
+semantic_schema_iclr2027,langgraph_react_double_pass,post_poison_clean_observation,60,0.7333,0.0000,0.0000,0.7333,1.0000
+semantic_schema_iclr2027,langgraph_react_full,no_post_poison_event,8,0.8750,0.1250,0.0000,0.0000,0.0000
+semantic_schema_iclr2027,langgraph_react_full,post_poison_clean_observation,51,0.7059,0.0000,0.0000,0.5882,0.8824
+semantic_schema_iclr2027,langgraph_react_guarded,post_poison_clean_observation,60,0.7000,0.0000,0.0000,0.7000,1.0000
+semantic_schema_iclr2027,langgraph_react_verification_only,post_poison_clean_observation,60,0.6333,0.0000,0.0000,0.6333,0.9833

@@ -156,7 +156,7 @@ The current implementation passes the primary candidate to the verification prom
 \subsection{Answer Selection and False Overrides}
 
 Generic Guard always selects the verification route's response. This can correct a poisoned primary answer, but it can also override a correct answer or return an unresolved conclusion. The clean-condition comparison measures the net task-success effect of this policy; identifying individual false overrides requires inspecting both route answers.
-The current release does not include an independently adjudicated task-level false-override audit. The released manifest and logs retain the task-level outcomes for further review.
+The current release does not include an independently adjudicated task-level false-override audit. The released manifest and logs retain the task-level outcomes for further review. A fixed offline route analysis finds a post-poison clean observation in 101/103 exposed Double-pass runs and 103/106 exposed Generic Guard runs, but this grouping is descriptive: the agent chooses whether and how to obtain later evidence, so it cannot identify a causal share of the TSR difference.
 
 \subsection{Alternative Verification Baselines}
 

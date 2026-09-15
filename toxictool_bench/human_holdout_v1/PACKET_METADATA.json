@@ -1,0 +1,20 @@
+{
+  "packet": "human_holdout_v1",
+  "seed": 20260915,
+  "n_trajectories": 240,
+  "n_pairs": 120,
+  "composition": {
+    "core": 160,
+    "repeated_p1": 40,
+    "cross_model": 40
+  },
+  "excluded_prior_task_ids": 68,
+  "independent_holdout": true,
+  "scorer_labels_in_evidence": false,
+  "method_and_model_labels_in_evidence": false,
+  "source_manifests": [
+    "toxictool_bench/results/leakage_free_defense_manifest.csv",
+    "toxictool_bench/results/verification_stress_manifest.csv",
+    "toxictool_bench/results/iclr2027_claude-sonnet-4-6_expanded_cross_agent_manifest.csv"
+  ]
+}
