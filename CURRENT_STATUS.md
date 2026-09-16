@@ -4,7 +4,23 @@ Last updated: 2026-09-16
 
 ## Submission revision
 
-Non-human submission revision V3 is documented in
+The V4 field-bound, matched-parent experiment is complete: 264/264 trajectories
+on 24 tasks across three public datasets. Primary correctness is 24/24 clean,
+20/24 partial corruption, and 0/24 full-target corruption. With clean second-stage
+evidence, retry is 48/48 and review 47/48; both are 0/48 under full corruption.
+All 120 full-target events change every result alias, leaving no clean target
+alias. One budget-exhausted model outcome is retained as a failure; one API
+failure was recovered without replacing completed answers. See
+[EVIDENCE_CONTROLS_V4_CN.md](EVIDENCE_CONTROLS_V4_CN.md). It is a separate
+structured-tool interface, not a replacement for historical framework results
+or independent validation of the free-text scorer. The current 156 tests pass.
+
+Real human annotations remain pending (0/200 independent, 0/40 errata).
+[HUMAN_VALIDATION_HANDOFF_CN.md](HUMAN_VALIDATION_HANDOFF_CN.md) provides
+distribution instructions and a source/return validator. All 240 packet entries
+have passed read-only source verification; no human labels were generated.
+
+Previous non-human submission revision V3 is documented in
 [SUBMISSION_REVISION_V3_CN.md](SUBMISSION_REVISION_V3_CN.md). The injector now
 targets complete, unambiguous scalar values and does not consume one-shot
 eligibility on no-ops or tool errors. The historical delivery audit flags 204
@@ -54,8 +70,10 @@ The protocol contains 200 trajectories: 90 reused semantic trajectories and 110 
 ## Paper status
 
 - Main text ends on page 9; references start on page 10.
+- The V4 build is 32 pages including references and appendices; new evidence
+  controls are in Appendix I and do not expand the main-text limit.
 - The manuscript distinguishes development recheck, reference re-review, and pending independent validation.
 - It no longer claims Generic Guard superiority or that every VPA case ignored sufficient correct evidence.
-- Test suite: 116 passed.
+- V2 checkpoint test suite: 116 passed; current test count is reported above.
 
 The paper is materially repaired but not final: two-person validation annotation and the 40-row reference re-review remain required submission work.

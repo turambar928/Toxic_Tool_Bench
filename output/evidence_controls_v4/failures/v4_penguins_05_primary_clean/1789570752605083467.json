@@ -1,0 +1,5 @@
+{
+  "job": "v4_penguins_05_primary_clean",
+  "exception_type": "RuntimeError",
+  "completed_requests": 0
+}

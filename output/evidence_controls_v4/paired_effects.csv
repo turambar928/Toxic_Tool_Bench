@@ -1,0 +1,9 @@
+stage,policy,metric,contrast,n_tasks,difference,ci95_lo,ci95_hi,effect_penguins,effect_auto_mpg,effect_bike
+primary,base,task_success,full-minus-clean,24,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0
+primary,base,poison_adoption,full-minus-clean,24,1.0,1.0,1.0,1.0,1.0,1.0
+primary,base,task_success,full-minus-partial,24,-0.8333333333333334,-0.9583333333333334,-0.7083333333333334,-1.0,-0.875,-0.625
+primary,base,poison_adoption,full-minus-partial,24,0.875,0.75,1.0,1.0,0.875,0.75
+branch,retry,task_success,clean-minus-full,24,1.0,1.0,1.0,1.0,1.0,1.0
+branch,retry,poison_adoption,clean-minus-full,24,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0
+branch,verify,task_success,clean-minus-full,24,0.9791666666666666,0.9375,1.0,1.0,1.0,0.9375
+branch,verify,poison_adoption,clean-minus-full,24,-0.9583333333333334,-1.0,-0.875,-1.0,-1.0,-0.875

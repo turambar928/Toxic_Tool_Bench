@@ -10,6 +10,13 @@ For the current submission revision, see the
 [current status](CURRENT_STATUS.md). The execution report separates completed
 offline repairs from the still-pending independent human validation.
 
+The [V4 evidence-control report](EVIDENCE_CONTROLS_V4_CN.md) documents a separate
+field-bound intervention and matched-parent experiment across three public
+datasets. The [human validation handoff](HUMAN_VALIDATION_HANDOFF_CN.md) explains
+how two independent raters and a third adjudicator return the frozen 200-case
+validation and 40-case reference review. Automated experiments do not substitute
+for these real human annotations.
+
 ## Repository Layout
 
 ```text

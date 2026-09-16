@@ -97,13 +97,21 @@ def collect_tex_files(main: Path, root: Path) -> list[Path]:
 
 
 def referenced_inputs(main: Path, root: Path) -> list[Path]:
-    text = main.read_text(encoding="utf-8")
-    paths = []
-    for raw in COMMAND_RE.findall(text):
-        path = root / raw
-        if path.suffix == "":
-            path = path.with_suffix(".tex")
-        paths.append(path)
+    paths: list[Path] = []
+    def visit(source: Path, ancestors: set[Path]) -> None:
+        source = source.resolve()
+        if source in ancestors:
+            raise ValueError(f"Cyclic TeX input: {source}")
+        if not source.exists():
+            return
+        text = source.read_text(encoding="utf-8")
+        for raw in COMMAND_RE.findall(text):
+            path = root / raw
+            if path.suffix == "":
+                path = path.with_suffix(".tex")
+            paths.append(path)
+            visit(path, ancestors | {source})
+    visit(main, set())
     return paths
 
 
