@@ -29,3 +29,19 @@ Rebuild from the repository root (Pillow and macOS Arial fonts required):
 ```sh
 python3 output/imagegen/figure_revision_20260916/edit_original_figures.py
 ```
+
+## Figure 2 correction: preserve the original four-step artwork
+
+The user rejected the first revision because it changed too much of the
+original layout. The current paper references `figures/figure2_revised_v2.png`
+(5504 × 3072), edited directly from the original `figures/figure2.png`.
+It preserves the task/operator illustrations, six metric cards, and the
+four-step Generic Guard sequence. Only local text regions and inaccurate
+status labels are replaced. The previous Figure 2 remains for provenance and
+is no longer referenced by the paper. Figure 1 is unchanged by this correction.
+
+Rebuild the current Figure 2 alone:
+
+```sh
+python3 output/imagegen/figure_revision_20260916/edit_figure2_minimal.py
+```

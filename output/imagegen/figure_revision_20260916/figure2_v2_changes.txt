@@ -1,0 +1,39 @@
+(560, 19, 1491, 63): Figure 2 | ToxicBench and Evidence Verification
+(16, 101, 267, 128): A  Task Suites
+(888, 92, 1343, 128): Cross-model Tasks
+(40, 216, 336, 243): Operator examples across suites:
+(1069, 216, 1395, 243): Operator examples across suites:
+(751, 260, 914, 289): Rank Swap
+(866, 367, 1235, 398): Same Query and Source Data
+(787, 433, 951, 458): Paired Task
+(984, 533, 1068, 578): Matched
+Settings
+(1007, 485, 1042, 514): =
+(1290, 533, 1622, 566): Tool-output Proxy
+(1283, 484, 1390, 516): o′ = P(o; q)
+(17, 608, 325, 636): C  Evaluation Metrics
+(905, 600, 1170, 636): Evaluation Metrics
+(28, 751, 89, 774): 
+(465, 661, 559, 697): PAR / VPA
+(442, 729, 655, 767): 
+(39, 809, 522, 843): D  Generic Guard: Four-step Protocol
+(885, 807, 1164, 845): Evidence Verification
+(1213, 813, 1966, 842): Check Evidence and Select the Final Answer
+(95, 882, 300, 939): Generic
+Expectation
+(219, 1082, 283, 1127): Plausible
+Values
+(44, 1094, 150, 1127): Prompt
+(547, 1068, 795, 1128): Run the agent
+with tools.
+(1054, 958, 1259, 1010): Additional tool evidence
+from the same source
+(1058, 1088, 1305, 1128): Returns a second answer
+(1601, 882, 1792, 939): Answer
+Selection
+(1570, 959, 1656, 987): Select
+(1725, 959, 1814, 987): answer
+(1836, 960, 2027, 1076): Use the
+Route 2
+answer
+(1822, 1087, 2012, 1118): Route 2 answer selected
