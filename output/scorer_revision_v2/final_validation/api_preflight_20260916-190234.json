@@ -1,0 +1,7 @@
+[
+  {
+    "model": "gpt-5.4-mini",
+    "ok": false,
+    "status": "LLM HTTP 503: {\"error\":{\"code\":\"model_not_found\",\"message\":\"No available channel for model gpt-5.4-mini under group default (distributor) (request id: 202609161102349215931738268d9d6ogZYrYHC)\",\"type\":\"new_api_error\"}}"
+  }
+]

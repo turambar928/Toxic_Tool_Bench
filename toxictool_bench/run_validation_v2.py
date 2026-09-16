@@ -26,13 +26,18 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--api-file',type=Path,default=ROOT/'api')
     parser.add_argument('--run',action='store_true')
+    parser.add_argument('--scope',choices=['all','core','cross_model'],default='all',
+                        help='Run all jobs, the Haiku core/repeated jobs, or the GPT cross-model jobs.')
     args=parser.parse_args()
     protocol=json.loads((OUT/'protocol.json').read_text())
     for name,digest in protocol['parser_sha256'].items():
         if sha(ROOT/'toxictool_bench'/name)!=digest:raise SystemExit('Parser freeze mismatch')
     config=load_api_config(args.api_file)
     results=[]
-    for model in [protocol['core_model'],protocol['cross_model']]:
+    models=[]
+    if args.scope in {'all','core'}:models.append(protocol['core_model'])
+    if args.scope in {'all','cross_model'}:models.append(protocol['cross_model'])
+    for model in models:
         try:
             answer=ChatClient(args.api_file,model,max_tokens=8,max_retries=0).complete([{'role':'user','content':'Reply OK.'}])
             result={'model':model,'ok':bool(answer),'status':'response_received'}
@@ -51,11 +56,13 @@ def main():
     for spec in manifest['completed']:
         if sha(ROOT/spec['source'])!=spec['sha256']:raise SystemExit('Completed source hash changed')
     jobs=[]
-    for adapter in ['langgraph_react_full','langgraph_react_double_pass','langgraph_react_verification_only','langgraph_react_guarded']:
-        for index in range(10):jobs.append(('core',adapter,protocol['core_model'],index,'both',False))
-    for adapter in ['langgraph_react_double_pass','langgraph_react_guarded']:
-        for index in range(5):jobs.append(('repeated_p1',adapter,protocol['core_model'],index,'toxic',True))
-    for index in range(10):jobs.append(('cross_model','autogen_tool_agent',protocol['cross_model'],index,'both',False))
+    if args.scope in {'all','core'}:
+        for adapter in ['langgraph_react_full','langgraph_react_double_pass','langgraph_react_verification_only','langgraph_react_guarded']:
+            for index in range(10):jobs.append(('core',adapter,protocol['core_model'],index,'both',False))
+        for adapter in ['langgraph_react_double_pass','langgraph_react_guarded']:
+            for index in range(5):jobs.append(('repeated_p1',adapter,protocol['core_model'],index,'toxic',True))
+    if args.scope in {'all','cross_model'}:
+        for index in range(10):jobs.append(('cross_model','autogen_tool_agent',protocol['cross_model'],index,'both',False))
     done={r['job'] for r in manifest['completed']}
     for split,adapter,model,index,environment,repeated in jobs:
         job=f'{split}-{adapter}-{index:02d}'

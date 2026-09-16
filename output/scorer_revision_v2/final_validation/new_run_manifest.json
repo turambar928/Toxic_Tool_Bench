@@ -1,0 +1,356 @@
+{
+  "protocol_sha256": "80c7375d9cfa8cdd4b2b2b8f5d256d6eede50f38f89b9255afe78a54a5ebd966",
+  "completed": [
+    {
+      "job": "core-langgraph_react_full-00",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-00/20260916-181922/20260916-181923_langgraph_react_full_claude-haiku-4-5-20251001_both_start0_limit1.jsonl",
+      "sha256": "1c8827c6299153e02f10eec2c2c178932fad55d24e76f462942a7be194b0ff49",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_full-01",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-01/20260916-182001/20260916-182001_langgraph_react_full_claude-haiku-4-5-20251001_both_start1_limit1.jsonl",
+      "sha256": "a2f3d62e2c7a6a5e0cc8f8c71af85a43c719db465ad31c1a8e146729da689e19",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_full-02",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-02/20260916-182050/20260916-182050_langgraph_react_full_claude-haiku-4-5-20251001_both_start2_limit1.jsonl",
+      "sha256": "6f544cbd75448b25aaedb8d88b513c2d8ac26d4ae7a7949b7e7b51c39f010253",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_full-03",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-03/20260916-182117/20260916-182118_langgraph_react_full_claude-haiku-4-5-20251001_both_start3_limit1.jsonl",
+      "sha256": "925f0d42a76d5f2502568dac8600c9169ae7c6483e1c961551f84a9f41c4333d",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_full-04",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-04/20260916-182143/20260916-182143_langgraph_react_full_claude-haiku-4-5-20251001_both_start4_limit1.jsonl",
+      "sha256": "73a2c0fd9f03f9b0829c4823373353f5c89cb04650418009616cef7b3c5a0490",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_full-05",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-05/20260916-182208/20260916-182209_langgraph_react_full_claude-haiku-4-5-20251001_both_start5_limit1.jsonl",
+      "sha256": "d5847450a01e8cb03a7513d4cfe8eccb09dacae857615d7702419c93d2ce25cc",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_full-06",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-06/20260916-182237/20260916-182237_langgraph_react_full_claude-haiku-4-5-20251001_both_start6_limit1.jsonl",
+      "sha256": "6be5b990044a7ffa973eead4b63920c85d452f37f12656f9c3fb6b9c7bfa8f8e",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_full-07",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-07/20260916-182305/20260916-182306_langgraph_react_full_claude-haiku-4-5-20251001_both_start7_limit1.jsonl",
+      "sha256": "b6fe6e2cf0f83174ff9f88a254b5a53a74e446628b8fd55128adae092965dc86",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_full-08",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-08/20260916-182333/20260916-182333_langgraph_react_full_claude-haiku-4-5-20251001_both_start8_limit1.jsonl",
+      "sha256": "e92b940ab5437a79cc4f56932d9882d76fe087fdf5b283d328c6c4f07271bff5",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_full-09",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_full-09/20260916-182400/20260916-182401_langgraph_react_full_claude-haiku-4-5-20251001_both_start9_limit1.jsonl",
+      "sha256": "31fd2c95b2e2c60b99c18ac9328a53c688bc09c4c83ac01334b027784c71cd6c",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-00",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-00/20260916-182435/20260916-182435_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start0_limit1.jsonl",
+      "sha256": "079a36b71d0e462890a23aac093dd8281bfc9a442a76e35f4a13fb218362ae27",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-01",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-01/20260916-182530/20260916-182530_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start1_limit1.jsonl",
+      "sha256": "5342859f5a0c03cb6cfe6bf4d4da8321352b8b62835dbebc1e1f82f822c1214f",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-02",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-02/20260916-182620/20260916-182620_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start2_limit1.jsonl",
+      "sha256": "643797413c80ca3c8019fdaf836266d19762fbd6ebf9b4b1ac67d3008668f08c",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-03",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-03/20260916-182713/20260916-182713_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start3_limit1.jsonl",
+      "sha256": "acc9feea2ac5132a4d3a2e5ac4826e4c81f94a4fd089219f066a0ced3a4eff4b",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-04",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-04/20260916-182756/20260916-182756_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start4_limit1.jsonl",
+      "sha256": "918d24f5c31cacc10e9fddba6e2ce2299c816f0a73217b615629809ab9c11c9b",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-05",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-05/20260916-182850/20260916-182850_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start5_limit1.jsonl",
+      "sha256": "04f1add457059b8d0fde6fb33ba9eaa9194e2ecc623a7cfc782c8e405767c49e",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-06",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-06/20260916-182944/20260916-182944_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start6_limit1.jsonl",
+      "sha256": "5940260d1cbd00050e13094949a4888c5d6481a005ef6acf48ba1ee1364e63cd",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-07",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-07/20260916-183028/20260916-183028_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start7_limit1.jsonl",
+      "sha256": "e10945d9e6830cb94df4939262581867d9e40d2a384270535fe6dbad1f0d2d19",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-08",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-08/20260916-183129/20260916-183130_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start8_limit1.jsonl",
+      "sha256": "891bf5950d60ff8de8029b65d1fae6cc7cffbfb80d0670d9f446abc3ca523972",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_double_pass-09",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_double_pass-09/20260916-183211/20260916-183212_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start9_limit1.jsonl",
+      "sha256": "f0cf8a0afedaa19067596a7acd844d4f258a77991414ff458ef7379216489a87",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-00",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-00/20260916-183259/20260916-183300_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start0_limit1.jsonl",
+      "sha256": "eab9cdca3f3ba7f9ff4d6b182d7f45c971ff459477f538a8ab705160843ad3a1",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-01",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-01/20260916-183403/20260916-183403_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start1_limit1.jsonl",
+      "sha256": "0b22b365d43cde0eeb1f02fadb2fa0a42cec5149f19ffd6c4574710809a1bb83",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-02",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-02/20260916-183454/20260916-183454_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start2_limit1.jsonl",
+      "sha256": "6a4a459a88a0fc048ef9658e0945a3bfd3778cf89c09d2a4bfe81b57d38e946d",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-03",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-03/20260916-183540/20260916-183540_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start3_limit1.jsonl",
+      "sha256": "f95720014706ce1b732dd81a1724d98cebfd175dc7e960247ed17cbe0d0eef38",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-04",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-04/20260916-183634/20260916-183635_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start4_limit1.jsonl",
+      "sha256": "fcc68af855b5c8ef545a1d7cd0accc5747c9421c70235171c0a212628e7a49ec",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-05",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-05/20260916-183719/20260916-183720_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start5_limit1.jsonl",
+      "sha256": "09bdb93774834b90376dfb7f3557e9ebd1b11db8b00f64192060d27f07309198",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-06",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-06/20260916-183813/20260916-183814_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start6_limit1.jsonl",
+      "sha256": "36d264f2b24537adfab4a168da9ba84115ed0e56b3597fa85eeb1a7d12a08f6b",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-07",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-07/20260916-183929/20260916-183930_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start7_limit1.jsonl",
+      "sha256": "8f19cb0e0af37fb1ed65cf4d5a37f8da80be9be65cd1e9188bab080261bc9507",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-08",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-08/20260916-184030/20260916-184030_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start8_limit1.jsonl",
+      "sha256": "7f80af556d8334b5b9cc52cfe550542708b018d0b2cdc939e8e2e816f7bf9110",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_verification_only-09",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_verification_only-09/20260916-184119/20260916-184119_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start9_limit1.jsonl",
+      "sha256": "03fb8bafb1d35d47a736e1f002a3eaa63337254d737458c47b6c08249b90ef8f",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-00",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-00/20260916-184204/20260916-184205_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start0_limit1.jsonl",
+      "sha256": "20f8e98029ff0fbc9e99c1c27ab0a70bf2416d906304f0b779864f0f2cb9ec07",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-01",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-01/20260916-184302/20260916-184303_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start1_limit1.jsonl",
+      "sha256": "76163128ddb9ad936b5fe36e8b4190d970b43cec454ea0a7bd60e23f112675d9",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-02",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-02/20260916-184406/20260916-184406_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start2_limit1.jsonl",
+      "sha256": "d388e41d121974190c3e85093504e3d70fe7e0b9e1d583b30c64b8696bde12d6",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-03",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-03/20260916-184459/20260916-184459_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start3_limit1.jsonl",
+      "sha256": "59e5f9ed4b207ebc29d2841f4213d370162435d93c9b01fcf12389d96b021018",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-04",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-04/20260916-184741/20260916-184742_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start4_limit1.jsonl",
+      "sha256": "8cb90ffdacdf10e815d0a38627f6c70932b6e084acdb7f15cda5b95079bed806",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-05",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-05/20260916-184854/20260916-184854_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start5_limit1.jsonl",
+      "sha256": "e86c5c82185905d740c78050510537c1e67f4afdfe19c473c9788166eb97f94b",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-06",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-06/20260916-185001/20260916-185002_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start6_limit1.jsonl",
+      "sha256": "14fde8cece1aee03efdfc842ba598567e15dbeac28a371eafd11ac7c3ea66b8c",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-07",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-07/20260916-185103/20260916-185104_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start7_limit1.jsonl",
+      "sha256": "86a0b0fb9ddde7dc98640d209d0781905ea0d4e173bb163e2245ebf316dc6f15",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-08",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-08/20260916-185212/20260916-185212_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start8_limit1.jsonl",
+      "sha256": "23aa6e2529e7b86d30d66c57adb8dd83427d696bbaf3680243dd790d64aa11c1",
+      "n": 2
+    },
+    {
+      "job": "core-langgraph_react_guarded-09",
+      "split": "core",
+      "source": "output/scorer_revision_v2/final_validation/runs/core-langgraph_react_guarded-09/20260916-185304/20260916-185304_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start9_limit1.jsonl",
+      "sha256": "d100e4d30751a01f9bb68e8817739d6e9b4e1ecbc012fd87447072766d914b40",
+      "n": 2
+    },
+    {
+      "job": "repeated_p1-langgraph_react_double_pass-00",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_double_pass-00/20260916-185351/20260916-185352_langgraph_react_double_pass_claude-haiku-4-5-20251001_toxic_start0_limit1.jsonl",
+      "sha256": "120541b449bb933ae935b4053103402431057ba29df5b66595a12655c63783c7",
+      "n": 1
+    },
+    {
+      "job": "repeated_p1-langgraph_react_double_pass-01",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_double_pass-01/20260916-185431/20260916-185431_langgraph_react_double_pass_claude-haiku-4-5-20251001_toxic_start1_limit1.jsonl",
+      "sha256": "58134f87765c215e46e8469e03a94988a09422585174eb82adde0f2016b062b5",
+      "n": 1
+    },
+    {
+      "job": "repeated_p1-langgraph_react_double_pass-02",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_double_pass-02/20260916-185457/20260916-185458_langgraph_react_double_pass_claude-haiku-4-5-20251001_toxic_start2_limit1.jsonl",
+      "sha256": "95d86aed8823265c3c813c535a4fd49a1e7cb1f15f7d8af414836de34e716679",
+      "n": 1
+    },
+    {
+      "job": "repeated_p1-langgraph_react_double_pass-03",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_double_pass-03/20260916-185527/20260916-185527_langgraph_react_double_pass_claude-haiku-4-5-20251001_toxic_start3_limit1.jsonl",
+      "sha256": "d032eee13d55509058cccc37ae7b45d9df585e7d9b10956d0b5347f8149ca90e",
+      "n": 1
+    },
+    {
+      "job": "repeated_p1-langgraph_react_double_pass-04",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_double_pass-04/20260916-185603/20260916-185604_langgraph_react_double_pass_claude-haiku-4-5-20251001_toxic_start4_limit1.jsonl",
+      "sha256": "a2eed25e7651dc955b8850ffbaa676c10ae3bf2a1c5a188536fd82efbf5646a3",
+      "n": 1
+    },
+    {
+      "job": "repeated_p1-langgraph_react_guarded-00",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_guarded-00/20260916-185630/20260916-185630_langgraph_react_guarded_claude-haiku-4-5-20251001_toxic_start0_limit1.jsonl",
+      "sha256": "b3db0e0ec149298ff33eddcc7a6e4ed6992121e6d4dc9f0ffbbcd9b00e1be73f",
+      "n": 1
+    },
+    {
+      "job": "repeated_p1-langgraph_react_guarded-01",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_guarded-01/20260916-185704/20260916-185705_langgraph_react_guarded_claude-haiku-4-5-20251001_toxic_start1_limit1.jsonl",
+      "sha256": "e0acdd0c83c8ec24bbb0a23ac6c0adf7c08c0e054142dae82b2380d12761ee87",
+      "n": 1
+    },
+    {
+      "job": "repeated_p1-langgraph_react_guarded-02",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_guarded-02/20260916-185732/20260916-185733_langgraph_react_guarded_claude-haiku-4-5-20251001_toxic_start2_limit1.jsonl",
+      "sha256": "1aed59b704e5bc4324d28dee0c20e6713db6d4a58410d764c23f810ac3b012b7",
+      "n": 1
+    },
+    {
+      "job": "repeated_p1-langgraph_react_guarded-03",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_guarded-03/20260916-185913/20260916-185913_langgraph_react_guarded_claude-haiku-4-5-20251001_toxic_start3_limit1.jsonl",
+      "sha256": "f449d19a36a8999e85070222bd24466b37c40a16e4771730e41b1ccdf3c58ad3",
+      "n": 1
+    },
+    {
+      "job": "repeated_p1-langgraph_react_guarded-04",
+      "split": "repeated_p1",
+      "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_guarded-04/20260916-190056/20260916-190057_langgraph_react_guarded_claude-haiku-4-5-20251001_toxic_start4_limit1.jsonl",
+      "sha256": "8d295f5543187be4874993b00cb688f83dce036a90c0babcbed92539b236338d",
+      "n": 1
+    }
+  ],
+  "failures": []
+}

@@ -82,8 +82,10 @@ claim that a specialized guard is uniquely effective.
 
 The revised scorer reaches 238/240 TSR agreement on the audit-informed
 development set, but that is not independent validation. A frozen 200-case
-protocol is prepared; only 90 reused trajectories are currently available
-because the fixed-model API preflight fails. Human validation has not started.
+protocol is prepared. The 90 reused trajectories and all 90 fixed-Haiku new
+trajectories are available; 20 fixed-GPT trajectories remain blocked because
+the gateway currently advertises no route for that model. Human validation has
+not started, so no independent scorer result is claimed.
 
 ## Important Artifacts
 

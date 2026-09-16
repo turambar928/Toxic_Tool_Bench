@@ -1,0 +1,12 @@
+[
+  {
+    "model": "claude-haiku-4-5-20251001",
+    "ok": true,
+    "status": "response_received"
+  },
+  {
+    "model": "gpt-5.4-mini",
+    "ok": false,
+    "status": "LLM HTTP 503: {\"error\":{\"code\":\"model_not_found\",\"message\":\"No available channel for model gpt-5.4-mini under group default (distributor) (request id: 202609161018273213796128268d9d6Q7jsCUqg)\",\"type\":\"new_api_error\"}}"
+  }
+]

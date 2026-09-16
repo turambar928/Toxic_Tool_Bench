@@ -6,7 +6,7 @@
 
 计划中的离线修复已经完成：冻结新版答案选择器、审计数值参考答案、对 5,396 条历史轨迹做三版本重评分、刷新论文表格和图、加入任务依赖敏感性分析，并将正文压到 ICLR 初投要求的 9 页以内。原始轨迹、原始任务和人工标签没有被覆盖。
 
-尚未完成的是冻结后的 110 条新模型轨迹和随后的双人盲审。当前配置中的 Claude Haiku 与 GPT-5.4-mini 均在 API 预检阶段返回 HTTP 502；绕过环境代理的诊断返回 HTTP 503。因此程序按协议停止，没有替换模型，也没有把传输失败计成 agent 失败。当前 90/200 的包只能用于检查标注流程，不能作为独立验证结果。
+冻结后的模型运行已完成 90/110 条：绕过服务器本地代理后，Claude Haiku 的 50 个作业、90 条 core/repeated 轨迹全部成功且零失败。直连网关当前公开的模型列表不包含冻结协议指定的 GPT-5.4-mini，并对它返回 `model_not_found / no available channel`，因此剩余 20 条 cross-model 轨迹没有被其他模型替代。当前盲审包为 180/200，且双人人工标注尚未开始，所以仍不能作为独立验证结果。
 
 ## 已完成的修复
 
@@ -49,16 +49,19 @@ Repeated-poison 中有 101 条修订后 VPA 轨迹：78 条的所有合格后续
 
 当前状态：
 
-- 模型轨迹：90/200；新 110 条未开始；
+- 模型轨迹：180/200；其中 90 条复用 semantic，90 条为新 Haiku numerical；
+- 新运行：50 个作业全部成功，失败数为 0；
 - 人工标注：未开始；
-- API：两个固定模型预检均为 HTTP 502；
+- API：绕过本地代理后 Haiku 可用；固定 GPT-5.4-mini 未被直连网关路由；
 - reviewer packet：明确标为 incomplete；
 - 40 条参考勘误：单独复核，不混入独立验证。
 
-API 恢复后执行：
+GPT-5.4-mini 路由恢复后执行：
 
 ```bash
-python3 toxictool_bench/run_validation_v2.py --api-file api --run
+env -u HTTP_PROXY -u HTTPS_PROXY -u http_proxy -u https_proxy \
+  NO_PROXY='*' no_proxy='*' \
+  python3 toxictool_bench/run_validation_v2.py --api-file api --scope cross_model --run
 python3 toxictool_bench/build_validation_v2_packet.py
 ```
 
@@ -92,7 +95,7 @@ tectonic main.tex --outdir output/scorer_revision_v2/pdf --keep-logs
 
 ## 投稿前必须补完
 
-1. 恢复可用的固定模型 API，跑完 110 条新轨迹并重建 200 条包。
+1. 恢复 GPT-5.4-mini 的网关路由，跑完剩余 20 条并重建 200 条包。
 2. 两名人工独立完成 200 条 validation 标注，第三人裁决分歧。
 3. 单独复核 40 条 reference errata；若标签变化，重新同步论文数字。
 4. 只在上述结果完成后，将“pending independent validation”替换为真实结果；如果无法及时完成，保留当前限制表述，不能把 development recheck 写成独立验证。
