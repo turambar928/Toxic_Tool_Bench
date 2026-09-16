@@ -74,8 +74,10 @@ def main():
     if len(rows)!=90:raise ValueError(f'Expected exactly 90 reused trajectories, got {len(rows)}')
     # New logs are accepted only from an explicit successful-run receipt.
     receipt=OUT/'new_run_manifest.json'
+    receipt_data=None
     if receipt.exists():
-        for spec in json.loads(receipt.read_text())['completed']:
+        receipt_data=json.loads(receipt.read_text())
+        for spec in receipt_data['completed']:
             path=ROOT/spec['source']
             if sha(path)!=spec['sha256']:raise ValueError('New source hash changed')
             for row in read_jsonl(path):rows.append((spec['split'],row,spec['source']))
@@ -95,6 +97,10 @@ def main():
     status=f'当前 {len(rows)}/200 条轨迹；'+('完整，等待人工参考审查和双人标注。' if complete else '不完整：缺少新数值模型轨迹，不可作为完整独立验证结果。')
     write_packet(OUT/'reviewer_packet',evidence,admin,status)
     (OUT/'packet_status.json').write_text(json.dumps({'n':len(rows),'expected':200,'complete':complete,'human_annotation':'pending',
+        'protocol_sha256':sha(OUT/'protocol.json'),
+        'execution_manifest_sha256':sha(receipt) if receipt_data else None,
+        'execution_amendments':receipt_data.get('amendments',[]) if receipt_data else [],
+        'recorded_excluded_failures':len(receipt_data.get('failures',[])) if receipt_data else 0,
         'source_hashes':{s:sha(ROOT/s) for _,_,s in rows},'blinding':'Independent shuffled case and pair IDs; no method slots. Trace style may identify methods.'},indent=2)+'\n')
     # Separate errata review: do not mix this with independent validation.
     cases,_=load_cases();evidence=[];admin=[]

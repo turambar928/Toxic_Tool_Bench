@@ -81,11 +81,11 @@ outperform Double-pass. This supports the value of another evidence pass, not a
 claim that a specialized guard is uniquely effective.
 
 The revised scorer reaches 238/240 TSR agreement on the audit-informed
-development set, but that is not independent validation. A frozen 200-case
-protocol is prepared. The 90 reused trajectories and all 90 fixed-Haiku new
-trajectories are available; 20 fixed-GPT trajectories remain blocked because
-the gateway currently advertises no route for that model. Human validation has
-not started, so no independent scorer result is claimed.
+development set, but that is not independent validation. All 200 trajectories
+in the post-freeze packet are now prepared: 90 reused semantic trajectories,
+90 new Haiku core/repeated trajectories, and 20 new AutoGen trajectories run
+with Claude Sonnet 4.6 after a documented pre-run model-availability amendment.
+Human validation has not started, so no independent scorer result is claimed.
 
 ## Important Artifacts
 

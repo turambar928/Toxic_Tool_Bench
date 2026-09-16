@@ -34,7 +34,13 @@ def test_validation_packet_is_disjoint_blinded_and_explicitly_incomplete():
     protocol=json.loads((root/'protocol.json').read_text())
     assert not set(protocol['semantic_task_ids'])&set(protocol['excluded_task_ids'])
     status=json.loads((root/'packet_status.json').read_text())
-    assert status['complete']==(status['n']==200)
+    assert status['complete'] and status['n']==200
+    manifest=json.loads((root/'new_run_manifest.json').read_text())
+    cross=[r for r in manifest['completed'] if r['split']=='cross_model']
+    assert len(cross)==10 and sum(r['n'] for r in cross)==20
+    assert {r['model'] for r in cross}=={'claude-sonnet-4-6'}
+    assert [r['amendment_id'] for r in manifest['amendments']]==[
+        'cross_model_route_20260916_gpt56','cross_model_route_20260916_sonnet46']
     with zipfile.ZipFile(root/'reviewer_packet.zip') as z:
         assert not any('admin' in name for name in z.namelist())
         evidence=list(csv.DictReader(z.read('evidence.csv').decode().splitlines()))

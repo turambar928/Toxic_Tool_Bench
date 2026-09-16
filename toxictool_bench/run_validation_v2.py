@@ -28,15 +28,28 @@ def main():
     parser.add_argument('--run',action='store_true')
     parser.add_argument('--scope',choices=['all','core','cross_model'],default='all',
                         help='Run all jobs, the Haiku core/repeated jobs, or the GPT cross-model jobs.')
+    parser.add_argument('--amendment',type=Path,
+                        help='Documented protocol amendment; currently restricted to cross-model replacement.')
     args=parser.parse_args()
     protocol=json.loads((OUT/'protocol.json').read_text())
     for name,digest in protocol['parser_sha256'].items():
         if sha(ROOT/'toxictool_bench'/name)!=digest:raise SystemExit('Parser freeze mismatch')
+    cross_model=protocol['cross_model']
+    amendment=None
+    amendment_path=None
+    if args.amendment:
+        amendment_path=args.amendment.resolve()
+        amendment=json.loads(amendment_path.read_text())
+        if args.scope!='cross_model':raise SystemExit('Protocol amendment is restricted to --scope cross_model')
+        if amendment.get('scope')!='cross_model':raise SystemExit('Unsupported amendment scope')
+        if amendment.get('original_model')!=protocol['cross_model']:raise SystemExit('Amendment original model mismatch')
+        if not amendment.get('replacement_model'):raise SystemExit('Amendment replacement model missing')
+        cross_model=amendment['replacement_model']
     config=load_api_config(args.api_file)
     results=[]
     models=[]
     if args.scope in {'all','core'}:models.append(protocol['core_model'])
-    if args.scope in {'all','cross_model'}:models.append(protocol['cross_model'])
+    if args.scope in {'all','cross_model'}:models.append(cross_model)
     for model in models:
         try:
             answer=ChatClient(args.api_file,model,max_tokens=8,max_retries=0).complete([{'role':'user','content':'Reply OK.'}])
@@ -55,6 +68,19 @@ def main():
     if manifest['protocol_sha256']!=sha(OUT/'protocol.json'):raise SystemExit('Protocol changed')
     for spec in manifest['completed']:
         if sha(ROOT/spec['source'])!=spec['sha256']:raise SystemExit('Completed source hash changed')
+    amendments=manifest.setdefault('amendments',[])
+    if amendment:
+        if any(spec['split']=='cross_model' for spec in manifest['completed']):
+            raise SystemExit('Refusing amendment after cross-model trajectories exist')
+        record={'amendment_id':amendment['amendment_id'],
+                'path':str(amendment_path.relative_to(ROOT)),'sha256':sha(amendment_path)}
+        existing={x['amendment_id']:x for x in amendments}
+        if amendment['amendment_id'] in existing and existing[amendment['amendment_id']]!=record:
+            raise SystemExit('Amendment record changed')
+        if amendment['amendment_id'] not in existing:
+            amendments.append(record);receipt.write_text(json.dumps(manifest,indent=2)+'\n')
+    elif args.scope in {'all','cross_model'} and amendments:
+        raise SystemExit('Cross-model amendment exists; pass its immutable file explicitly')
     jobs=[]
     if args.scope in {'all','core'}:
         for adapter in ['langgraph_react_full','langgraph_react_double_pass','langgraph_react_verification_only','langgraph_react_guarded']:
@@ -62,7 +88,7 @@ def main():
         for adapter in ['langgraph_react_double_pass','langgraph_react_guarded']:
             for index in range(5):jobs.append(('repeated_p1',adapter,protocol['core_model'],index,'toxic',True))
     if args.scope in {'all','cross_model'}:
-        for index in range(10):jobs.append(('cross_model','autogen_tool_agent',protocol['cross_model'],index,'both',False))
+        for index in range(10):jobs.append(('cross_model','autogen_tool_agent',cross_model,index,'both',False))
     done={r['job'] for r in manifest['completed']}
     for split,adapter,model,index,environment,repeated in jobs:
         job=f'{split}-{adapter}-{index:02d}'
@@ -83,7 +109,8 @@ def main():
             manifest['failures'].append({'job':job,'returncode':result.returncode,'log':str((run_dir/'run.log').relative_to(ROOT))})
             receipt.write_text(json.dumps(manifest,indent=2)+'\n')
             raise SystemExit(f'Job {job} failed; partial source preserved and excluded from packet')
-        manifest['completed'].append({'job':job,'split':split,'source':str(paths[0].relative_to(ROOT)),'sha256':sha(paths[0]),'n':expected})
+        manifest['completed'].append({'job':job,'split':split,'model':model,
+                                      'source':str(paths[0].relative_to(ROOT)),'sha256':sha(paths[0]),'n':expected})
         receipt.write_text(json.dumps(manifest,indent=2)+'\n')
         print('Completed',job,flush=True)
     print('Completed new trajectories:',sum(s['n'] for s in manifest['completed']))

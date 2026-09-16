@@ -1,0 +1,18 @@
+{
+  "amendment_id": "cross_model_route_20260916_gpt56",
+  "date": "2026-09-16",
+  "scope": "cross_model",
+  "original_model": "gpt-5.4-mini",
+  "replacement_model": "gpt-5.6-sol",
+  "prior_cross_model_trajectories": 0,
+  "reason": "The proxy-free gateway model listing did not advertise gpt-5.4-mini and repeated preflights returned model_not_found; gpt-5.6-sol was advertised as available.",
+  "authorization": "The user explicitly approved this replacement before any cross-model validation trajectory was run.",
+  "unchanged": [
+    "task IDs and datasets",
+    "adapter and clean/toxic pairing",
+    "step, token, and temperature budgets",
+    "frozen parser and scoring references",
+    "blinding and human annotation protocol"
+  ],
+  "selection_independence": "The replacement was chosen from gateway availability, not from validation answers or scores."
+}

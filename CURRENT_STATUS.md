@@ -29,7 +29,7 @@ Double-pass minus Base poisoned TSR is +0.110. Its template-cluster 95% interval
 
 ## Frozen independent validation
 
-The protocol targets 200 trajectories: 90 reused semantic trajectories and 110 new numerical trajectories on task instances excluded from parser development. After bypassing the server's local proxy, all 90 fixed-Haiku core/repeated trajectories completed with zero failed jobs. The packet is now 180/200. The direct gateway model listing does not advertise the fixed GPT-5.4-mini model and returns `model_not_found` for it, so the remaining 20 trajectories were not silently replaced with another model. Human annotation has not started.
+The protocol contains 200 trajectories: 90 reused semantic trajectories and 110 new numerical trajectories on task instances excluded from parser development. After bypassing the server's local proxy, all 90 fixed-Haiku core/repeated trajectories completed with zero failed jobs. The original GPT model was unavailable, and the first approved replacement accepted chat but rejected function tools; both events were recorded before any cross-model trajectory completed. A second user-authorized amendment selected tool-compatible Claude Sonnet 4.6, and all 20 AutoGen trajectories completed. The packet is now 200/200, with source hashes and both amendments preserved. Human annotation has not started.
 
 ## Paper status
 
@@ -38,4 +38,4 @@ The protocol targets 200 trajectories: 90 reused semantic trajectories and 110 n
 - It no longer claims Generic Guard superiority or that every VPA case ignored sufficient correct evidence.
 - Test suite: 116 passed.
 
-The paper is materially repaired but not final: 20 fixed-GPT trajectories, two-person validation annotation, and the 40-row reference re-review remain required submission work.
+The paper is materially repaired but not final: two-person validation annotation and the 40-row reference re-review remain required submission work.

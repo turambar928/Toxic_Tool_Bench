@@ -40,6 +40,7 @@ output/scorer_revision_v2/api_smoke/
 output/scorer_revision_v2/final_validation/runs/**
 !output/scorer_revision_v2/final_validation/runs/**/
 !output/scorer_revision_v2/final_validation/runs/**/*.jsonl
+!output/scorer_revision_v2/final_validation/runs/**/run.log
 output/scorer_revision_v2/final_validation/reviewer_packet/
 output/scorer_revision_v2/final_validation/reference_errata_review/
 output/scorer_revision_v2/final_validation/*admin*

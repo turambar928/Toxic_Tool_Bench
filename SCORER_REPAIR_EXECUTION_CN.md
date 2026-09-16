@@ -6,7 +6,7 @@
 
 计划中的离线修复已经完成：冻结新版答案选择器、审计数值参考答案、对 5,396 条历史轨迹做三版本重评分、刷新论文表格和图、加入任务依赖敏感性分析，并将正文压到 ICLR 初投要求的 9 页以内。原始轨迹、原始任务和人工标签没有被覆盖。
 
-冻结后的模型运行已完成 90/110 条：绕过服务器本地代理后，Claude Haiku 的 50 个作业、90 条 core/repeated 轨迹全部成功且零失败。直连网关当前公开的模型列表不包含冻结协议指定的 GPT-5.4-mini，并对它返回 `model_not_found / no available channel`，因此剩余 20 条 cross-model 轨迹没有被其他模型替代。当前盲审包为 180/200，且双人人工标注尚未开始，所以仍不能作为独立验证结果。
+冻结后的 110 条新模型轨迹已经全部完成。绕过服务器本地代理后，Claude Haiku 的 50 个作业、90 条 core/repeated 轨迹全部成功且零失败。原指定的 GPT-5.4-mini 没有可用路由；第一次获批替换的 GPT-5.6-sol 能普通对话但 function tools 返回 404，因此没有产生完整 cross-model 轨迹。所有 cross-model 答案产生前又记录了第二份用户授权 amendment，改用通过 tool-call 预检的 Claude Sonnet 4.6，随后 10 个 AutoGen 作业、20 条轨迹全部成功。当前盲审包为 200/200，但双人人工标注尚未开始，所以模型执行完成仍不等于独立验证完成。
 
 ## 已完成的修复
 
@@ -49,19 +49,16 @@ Repeated-poison 中有 101 条修订后 VPA 轨迹：78 条的所有合格后续
 
 当前状态：
 
-- 模型轨迹：180/200；其中 90 条复用 semantic，90 条为新 Haiku numerical；
-- 新运行：50 个作业全部成功，失败数为 0；
+- 模型轨迹：200/200；其中 90 条复用 semantic、90 条新 Haiku numerical、20 条新 Sonnet--AutoGen numerical；
+- 有效新运行：60 个作业、110 条轨迹，全部完成；另有 1 次 GPT-5.6 tool-call 不兼容尝试被 manifest 排除；
 - 人工标注：未开始；
-- API：绕过本地代理后 Haiku 可用；固定 GPT-5.4-mini 未被直连网关路由；
-- reviewer packet：明确标为 incomplete；
+- API：绕过本地代理；两个 model amendment 均在 cross-model 答案产生前记录；
+- reviewer packet：200/200，完整但仍是空白人工标注表；
 - 40 条参考勘误：单独复核，不混入独立验证。
 
-GPT-5.4-mini 路由恢复后执行：
+模型轨迹已经完成；若只需验证包完整性，可重新执行：
 
 ```bash
-env -u HTTP_PROXY -u HTTPS_PROXY -u http_proxy -u https_proxy \
-  NO_PROXY='*' no_proxy='*' \
-  python3 toxictool_bench/run_validation_v2.py --api-file api --scope cross_model --run
 python3 toxictool_bench/build_validation_v2_packet.py
 ```
 
@@ -90,12 +87,14 @@ tectonic main.tex --outdir output/scorer_revision_v2/pdf --keep-logs
 - `output/scorer_revision_v2/cluster_sensitivity.csv`
 - `output/scorer_revision_v2/development_recheck/`
 - `output/scorer_revision_v2/final_validation/protocol.json`
+- `output/scorer_revision_v2/final_validation/protocol_amendment_gpt56.json`
+- `output/scorer_revision_v2/final_validation/protocol_amendment_sonnet46.json`
+- `output/scorer_revision_v2/final_validation/new_run_manifest.json`
 - `output/scorer_revision_v2/final_validation/reference_errata_review.zip`
-- `output/scorer_revision_v2/final_validation/reviewer_packet.zip`（当前不完整）
+- `output/scorer_revision_v2/final_validation/reviewer_packet.zip`（200/200，待人工标注）
 
 ## 投稿前必须补完
 
-1. 恢复 GPT-5.4-mini 的网关路由，跑完剩余 20 条并重建 200 条包。
-2. 两名人工独立完成 200 条 validation 标注，第三人裁决分歧。
-3. 单独复核 40 条 reference errata；若标签变化，重新同步论文数字。
-4. 只在上述结果完成后，将“pending independent validation”替换为真实结果；如果无法及时完成，保留当前限制表述，不能把 development recheck 写成独立验证。
+1. 两名人工独立完成 200 条 validation 标注，第三人裁决分歧。
+2. 单独复核 40 条 reference errata；若标签变化，重新同步论文数字。
+3. 只在上述人工结果完成后，将“pending independent validation”替换为真实结果；不能把 development recheck 或仅完成模型调用写成独立验证。

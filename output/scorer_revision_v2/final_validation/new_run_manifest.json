@@ -350,7 +350,105 @@
       "source": "output/scorer_revision_v2/final_validation/runs/repeated_p1-langgraph_react_guarded-04/20260916-190056/20260916-190057_langgraph_react_guarded_claude-haiku-4-5-20251001_toxic_start4_limit1.jsonl",
       "sha256": "8d295f5543187be4874993b00cb688f83dce036a90c0babcbed92539b236338d",
       "n": 1
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-00",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-00/20260916-192433/20260916-192434_autogen_tool_agent_claude-sonnet-4-6_both_start0_limit1.jsonl",
+      "sha256": "4af2cc76e14d79cb24eb1d908679a4eb502d754275976221b13fae4fc9e70655",
+      "n": 2
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-01",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-01/20260916-192507/20260916-192508_autogen_tool_agent_claude-sonnet-4-6_both_start1_limit1.jsonl",
+      "sha256": "0edab9a8f40c11d3b43e201911a21af6a835e51c00a6c9cfaf9f73f3a28b861e",
+      "n": 2
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-02",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-02/20260916-192541/20260916-192541_autogen_tool_agent_claude-sonnet-4-6_both_start2_limit1.jsonl",
+      "sha256": "30c8d6075a363b295c3517a0b4f8a7d4a7c72a02b1079a91908225458338d68f",
+      "n": 2
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-03",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-03/20260916-192614/20260916-192614_autogen_tool_agent_claude-sonnet-4-6_both_start3_limit1.jsonl",
+      "sha256": "32b6a80cf806f3339101a2ad2b7a5db56500e508945cfb81a9fa0a07749f98b6",
+      "n": 2
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-04",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-04/20260916-193153/20260916-193153_autogen_tool_agent_claude-sonnet-4-6_both_start4_limit1.jsonl",
+      "sha256": "e255acbfc624093833f3aa770f178ab65d65d0868cfad5d5b9d2fbb2d3a0e335",
+      "n": 2
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-05",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-05/20260916-193242/20260916-193243_autogen_tool_agent_claude-sonnet-4-6_both_start5_limit1.jsonl",
+      "sha256": "14061b55659210100b8da773bf615ec8ce2011a01517a667786fba03745e7e94",
+      "n": 2
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-06",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-06/20260916-193317/20260916-193317_autogen_tool_agent_claude-sonnet-4-6_both_start6_limit1.jsonl",
+      "sha256": "24f29d99f6e7e6a6282275dbc75d7ff851cb777e52efa6596c33540fc5b4ac83",
+      "n": 2
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-07",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-07/20260916-193403/20260916-193403_autogen_tool_agent_claude-sonnet-4-6_both_start7_limit1.jsonl",
+      "sha256": "e5089c188099db4f16cffc32a515d3aa2d0742e2bc4b1d5f86a5eef6b7cf94dc",
+      "n": 2
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-08",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-08/20260916-193439/20260916-193439_autogen_tool_agent_claude-sonnet-4-6_both_start8_limit1.jsonl",
+      "sha256": "e6963627b846f86f4b482f2028c02eb8a7ce7a6b5121804f73369b1887798ca9",
+      "n": 2
+    },
+    {
+      "job": "cross_model-autogen_tool_agent-09",
+      "split": "cross_model",
+      "model": "claude-sonnet-4-6",
+      "source": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-09/20260916-193517/20260916-193517_autogen_tool_agent_claude-sonnet-4-6_both_start9_limit1.jsonl",
+      "sha256": "83fabe6b7c420295ad0c7332c6a23812a36bb92e18fc8367154ce7a416928973",
+      "n": 2
     }
   ],
-  "failures": []
+  "failures": [
+    {
+      "job": "cross_model-autogen_tool_agent-00",
+      "returncode": 1,
+      "log": "output/scorer_revision_v2/final_validation/runs/cross_model-autogen_tool_agent-00/20260916-192016/run.log"
+    }
+  ],
+  "amendments": [
+    {
+      "amendment_id": "cross_model_route_20260916_gpt56",
+      "path": "output/scorer_revision_v2/final_validation/protocol_amendment_gpt56.json",
+      "sha256": "76989d36590278fc8ddf6c1ea601d665b01b2d5397843151864078d4f8307782"
+    },
+    {
+      "amendment_id": "cross_model_route_20260916_sonnet46",
+      "path": "output/scorer_revision_v2/final_validation/protocol_amendment_sonnet46.json",
+      "sha256": "be0d5476930a61346777872ddbe17b5b78c1e553d86b73646862790e10fd69ad"
+    }
+  ]
 }
