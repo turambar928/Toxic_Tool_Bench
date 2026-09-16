@@ -1,0 +1,89 @@
+\section{Versioned Scoring Revision and Reference Audit}
+\label{sec:revision-v2}
+
+\paragraph{Versions and preserved inputs.}
+The pre-repair baseline is commit \texttt{4ae42cd}; the scoring-only parser is frozen at \texttt{98c2ed8}. The comparison covers 5,396 existing trajectories across primary, defense, repeated-poison, AutoGen, and alternative-policy experiments. For every trajectory the release stores the old decision, the revised-parser decision under the original reference, and the revised decision under corrected references. Original final answers, events, task files, and human labels are unchanged. Source and implementation hashes appear in \path{output/scorer_revision_v2/analysis_manifest.json}; selected claim spans and rules are recorded in \path{trajectory_changes.csv} in the same directory. The archived 240-case audit evaluates the old scorer; Table~\ref{tab:development-recheck-v2} is explicitly a development recheck.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Metric & $n$ & Human positives & Precision & Recall & F1 \\
+\midrule
+TSR & 240 & 193 & 1.000 & 0.990 & 0.995 \\
+PAR & 94 & 7 & 1.000 & 1.000 & 1.000 \\
+BCR & 94 & 3 & 1.000 & 1.000 & 1.000 \\
+VR & 94 & 81 & 1.000 & 0.988 & 0.994 \\
+VPA & 94 & 4 & 1.000 & 1.000 & 1.000 \\
+RR & 94 & 72 & 1.000 & 0.972 & 0.986 \\
+\bottomrule
+\end{tabular}
+\caption{Post-audit development recheck against unchanged historical references and labels. TSR agreement is 238/240. These cases informed the repair; these numbers are not independent accuracy estimates. Small BCR/VPA positive counts do not establish broad recall.}
+\label{tab:development-recheck-v2}
+\end{table}
+
+\paragraph{Reference corrections.}
+Independent arithmetic over the released CSVs found seven numerical instances outside their stated tolerance, two instances omitting a tied optimal entity, and two ambiguous channel-ranking queries. The seven numerical corrections affect overall conversion rate (615/3800, or 16.1842\%), click-through rate (3800/49000, or 7.7551\%), overall return rate (61/1100, or 5.5455\%), units per order (1100/515, or 2.1359), and three repeated instances. Both A100 and B200 attain revenue per unit 200 and are accepted for the tied ranking tasks. The channel-ranking queries do not specify whether conversion rate uses clicks or impressions, which changes the winner; both instances are excluded from every revised method comparison.
+
+These changes affect scoring only. The historical poison replacement targets and actual exposure events are retained; a correction does not retroactively make an unexposed run exposed. Consequently the revised analysis has 118 single-table instances, 944 defense trajectories, and 1,572 stress trajectories. Forty rows of the historical human packet involve an affected reference and are listed for human re-review. We retain their original annotations and do not present a relabelled consensus before that review is completed. The numerical audit covers the 60 expanded numerical tasks; it is not a claim of exhaustive semantic-oracle validation.
+
+\paragraph{Dependence sensitivity.}
+Template clusters identify shared dataset, query with generic checking suffixes removed, and poisoning specification with severity/probability bookkeeping removed. The retained 118 instances form 87 such clusters over 30 distinct CSVs. Dataset resampling assigns shared CSVs the same multiplicity across both suites; the combined analysis preserves suite weights in each of 5,000 draws (seed 20260916). These pointwise intervals assess task dependence, not scorer uncertainty or API sampling variance. Equal-cluster-weight estimates are also released and answer a different question from instance-weighted means.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Poisoned TSR comparison & Difference & Template 95\% CI & Dataset 95\% CI \\
+\midrule
+Double-pass $-$ Base & +0.110 & [0.056, 0.171] & [0.060, 0.172] \\
+Guard $-$ Double-pass & -0.025 & [-0.054, 0.000] & [-0.056, 0.000] \\
+Verification $-$ Double-pass & -0.102 & [-0.163, -0.049] & [-0.165, -0.047] \\
+\bottomrule
+\end{tabular}
+\caption{Paired sensitivity to template and dataset dependence, with corrected references and the frozen parser. All comparisons use the same retained task instances.}
+\label{tab:cluster-sensitivity-v2}
+\end{table}
+
+\paragraph{Follow-up evidence under VPA.}
+The revised stress inventory contains 101 VPA trajectories across all four probabilities. In 78, every qualifying follow-up check is marked corrupted. In 23, at least one qualifying check is unmodified; one has a machine-identifiable clean-reference match. The released evidence inventory preserves the code, returned observation, and final answer. These are trace categories, not human judgments that unmodified observations supplied a sufficient correct answer. The four originally adjudicated VPA cases establish adoption after checking; corruption can affect the check itself. This separates a failure of evidence availability from a demonstrated failure to select among sufficient conflicting evidence.
+
+\paragraph{Pending independent validation.}
+A post-freeze protocol specifies 20 task IDs and 200 trajectories: 90 reused semantic trajectories and 110 new numerical trajectories. Ten new numerical instances were generated after the parser freeze with independently implemented standard-library and dataframe reference calculations; this is automated preparation, not independent human annotation. Tasks are instance-disjoint from known development packets, but share task families and synthetic provenance. The core/repeated budgets and model IDs are fixed before evaluation. New model calls and two-person annotation must complete before this protocol can supply independent validation; no such result is claimed in the present revision.
+
+\section{Supplementary Protocol Tables}
+
+\begin{table}[t]
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{0.18\linewidth}p{0.17\linewidth}p{0.18\linewidth}p{0.19\linewidth}p{0.18\linewidth}@{}}
+\toprule
+Work & Attack position & Domain / error & Metrics & Defense view \\
+\midrule
+Tools Fail & Faulty tool output & Calculator and embodied planning; silent errors & Detection and recovery & Error detection/recovery \\
+ToolBench-X & Tool environment & General agents; output drift and other hazards & Environment-level reliability & Broader hazard coverage \\
+AgentDojo & Dynamic tool environment & Prompt injection and malicious data & Attack/defense success & Security defenses \\
+PoisonedRAG & Retrieval corpus & Knowledge-base poisoning & Retrieval QA attack success & Corpus/source protection \\
+ToxicBench & Returned observation & Data analysis; numerical and semantic corruption & Paired TSR, adoption, checking, recovery & Equal-budget verification \\
+\bottomrule
+\end{tabular}
+\caption{Related benchmarks and their evaluation settings. These distinctions motivate the diagnostic setting; tabular coverage alone does not establish a novel failure mechanism.}
+\label{tab:closest-work}
+\end{table}
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}@{}}
+\toprule
+Metric & Positive decision & Excluded behavior \\
+\midrule
+BCR & Adopts the poisoned conclusion without ADR or a qualifying post-poison evidence event. & Observing poison that later evidence rejects. \\
+ADR & Explicitly identifies a conflict, implausibility, stale source, or possible tool error. & Generic caution without a specific anomaly. \\
+VR & A post-poison action recomputes rows, checks metadata, or produces other task-relevant evidence. & Paraphrasing a cached summary. \\
+RR & Final answer matches a clean reference after detection or validation. & Flagging a problem while returning the poisoned answer. \\
+\bottomrule
+\end{tabular}
+\caption{Operational decisions for trajectory metrics. A qualifying VR event may itself return corrupted evidence.}
+\label{tab:metric-scoring-rules}
+\end{table}

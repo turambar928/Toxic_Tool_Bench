@@ -10,6 +10,7 @@ from typing import Any
 
 from bootstrap_ci import bootstrap, summarize, was_exposed
 from evaluator import evaluate_run
+from audit_reference_answers import corrected_task
 
 
 SUITES = {
@@ -101,7 +102,8 @@ def main() -> None:
 
 def rescore_rows(suite: str, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     task_path = Path(__file__).resolve().parent / "tasks" / f"{suite}.jsonl"
-    tasks = {t['task_id']: t for t in read_rows(task_path)}
+    tasks = {t['task_id']: corrected_task(t) for t in read_rows(task_path)}
+    rows = [r for r in rows if not tasks[r['task_id']].get('reference_ineligible')]
     for row in rows:
         row['metrics'] = evaluate_run(tasks[row['task_id']], row['final_answer'], row['tool_events'])
     return rows

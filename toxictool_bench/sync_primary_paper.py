@@ -32,14 +32,14 @@ def main():
     specs = [s for s in load_manifest(DEFAULT_MANIFEST) if s['experiment'] in {'cross_model', 'expanded_gpt'}]
     scored = [(s, rescore(s)) for s in specs]
     counts = {e: sum(len(rs) for s, rs in scored if s['experiment'] == e) for e in ('cross_model', 'expanded_gpt')}
-    if counts != {'cross_model': 1460, 'expanded_gpt': 720}:
+    if counts != {'cross_model': 1460, 'expanded_gpt': 708}:
         raise ValueError(f'Incomplete primary suite: {counts}')
     grouped = defaultdict(list)
     for s, rs in scored:
         for r in rs:
             grouped[s['experiment'], s['suite'], r['model'], r['adapter']].append(r)
     for key, rs in grouped.items():
-        expected = 60 if key[0] == 'expanded_gpt' else (34 if key[1] == 'numerical' else 24)
+        expected = (58 if key[1] == 'numerical' else 60) if key[0] == 'expanded_gpt' else (34 if key[1] == 'numerical' else 24)
         ids = [[r['task_id'] for r in rs if r['environment'] == env] for env in ('clean', 'toxic')]
         if any(len(x) != expected or len(set(x)) != expected for x in ids) or set(ids[0]) != set(ids[1]):
             raise ValueError(f'Incomplete or duplicate task pairs: {key}')
@@ -64,7 +64,7 @@ def main():
         t = aggregate([r for r in rs if r['environment'] == 'toxic'])
         return c, t
     names = {'langgraph_react_full': 'LangGraph ReAct', 'smolagents_toolcalling': 'smolagents',
-             'pandasai_dataframe': 'PandasAI', 'autogen_tool_agent': 'AutoGen', 'da_agent_full': 'DA-Agent'}
+             'autogen_tool_agent': 'AutoGen', 'da_agent_full': 'DA-Agent'}
     path = ROOT / 'sections/05_experiments.tex'
     rows = []
     for model, name in [('gpt-5.4-mini', 'GPT-5.4-mini'), ('claude-sonnet-4-6', 'Claude Sonnet 4.6'),
@@ -106,6 +106,8 @@ def main():
                       *(float(ops[k]['bcr']) for k in ('aggregate_scale', 'rank_swap', 'sign_flip'))), text)
     path.write_text(text)
     inputs = {DEFAULT_MANIFEST, Path(__file__).resolve(), ROOT / 'toxictool_bench/evaluator.py',
+              ROOT / 'toxictool_bench/answer_selection.py', ROOT / 'toxictool_bench/audit_reference_answers.py',
+              ROOT / 'toxictool_bench/results/reference_answer_audit.json',
               ROOT / 'toxictool_bench/rebuild_paper_results.py', ROOT / 'toxictool_bench/summarize_results.py',
               ROOT / 'toxictool_bench/bootstrap_ci.py', ROOT / 'toxictool_bench/build_public_paper_summaries.py'}
     for s in specs:

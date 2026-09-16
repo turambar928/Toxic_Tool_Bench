@@ -32,6 +32,16 @@ main.pdf
 *~
 figures/preview/
 
+# Local scoring-revision archive and generated review/build duplicates.
+output/scorer_revision_v2/baseline/
+output/scorer_revision_v2/pdf/
+output/scorer_revision_v2/figure_previews/
+output/scorer_revision_v2/api_smoke/
+output/scorer_revision_v2/final_validation/runs/
+output/scorer_revision_v2/final_validation/reviewer_packet/
+output/scorer_revision_v2/final_validation/reference_errata_review/
+output/scorer_revision_v2/final_validation/*admin*
+
 # Benchmark runtime caches
 toxictool_bench/cache/
 

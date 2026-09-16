@@ -12,25 +12,6 @@ DAComp evaluates repository-level data engineering and open-ended analysis, with
 \paragraph{Poisoned instructions and evidence.}
 Prompt injection can place hostile instructions in user input or retrieved content \citep{perez2022ignore,greshake2023indirect}. MCP-ITP attacks tool metadata, while TRUSTDESC builds tool descriptions from implementations \citep{li2026mcpitp,ye2026trustdesc}. AgentDojo and AgentCanary provide executable settings for testing agent attacks and defenses \citep{debenedetti2024agentdojo,li2026agentcanary}; AgentSentry targets indirect prompt injection during an agent run \citep{zhang2026agentsentry}. PoisonedRAG and SafeRAG study corrupted retrieval evidence \citep{zou2024poisonedrag,liang2025saferag}. PoisonArena and CPA-RAG further examine competing or covert attacks on retrieved content \citep{chen2025poisonarena,li2025cparag}. In a financial setting, manipulated tool data can also shift recommendations away from a user's risk profile \citep{wu2026agentdrift}. ToxicBench applies controlled numerical and semantic changes directly to returned data-tool observations. Table~\ref{tab:closest-work} compares these evaluation settings.
 
-\begin{table}[t]
-\centering
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}p{0.18\linewidth}p{0.17\linewidth}p{0.18\linewidth}p{0.19\linewidth}p{0.18\linewidth}@{}}
-\toprule
-Work & Attack position & Domain / error & Metrics & Defense view \\
-\midrule
-Tools Fail & Faulty tool output & Calculator and embodied planning; silent errors & Detection and recovery & Error detection/recovery \\
-ToolBench-X & Tool environment & General agents; output drift and other hazards & Environment-level reliability & Broader hazard coverage \\
-AgentDojo & Dynamic tool environment & Prompt injection and malicious data & Attack/defense success & Security defenses \\
-PoisonedRAG & Retrieval corpus & Knowledge-base poisoning & Retrieval QA attack success & Corpus/source protection \\
-ToxicBench & Returned observation & Data analysis; numerical and semantic corruption & Paired TSR, BCR, PAR/VPA, ADR, VR, RR, PDR & Matched-budget verification \\
-\bottomrule
-\end{tabular}
-\caption{Related benchmarks and their evaluation settings. ToxicBench combines paired data-analysis tasks with separate measures of adoption, checking, and recovery.}
-\label{tab:closest-work}
-\end{table}
-
 \paragraph{Data quality and evidence checks.}
 Data-validation systems check schema constraints and data quality before downstream use \citep{schelter2018automating,breck2019data}. RADAR tests how models handle missing values, outliers, and inconsistencies in tables \citep{gu2025radar}. For retrieved evidence, SDAG limits attention across documents, RAGRank scores source credibility, and RAGShield checks numerical claims against a source registry \citep{dekel2026sdag,jia2025ragrank,patil2026ragshield}. ToxicBench keeps source tables available and tests whether an agent uses them to check a changed tool response.
 

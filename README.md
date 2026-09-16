@@ -4,9 +4,11 @@ ToxicBench evaluates whether data-analysis agents blindly trust tool outputs tha
 
 The main behavioral metric is blind compliance: whether an agent copies or relies on poisoned tool evidence in its final answer without validation.
 
-For the current submission-stage scorer repair and validation plan, see
-[评分器修复与验证实验说明（中文）](SCORER_REPAIR_PLAN_CN.md). It distinguishes
-planned work from completed experiments and documents the verified rerun entry points.
+For the current submission revision, see the
+[repair plan](SCORER_REPAIR_PLAN_CN.md), the
+[execution report](SCORER_REPAIR_EXECUTION_CN.md), and
+[current status](CURRENT_STATUS.md). The execution report separates completed
+offline repairs from the still-pending independent human validation.
 
 ## Repository Layout
 
@@ -23,7 +25,8 @@ planned work from completed experiments and documents the verified rerun entry p
 │   ├── 06_qualitative_analysis.tex
 │   ├── 06_related_work.tex
 │   ├── 07_discussion_limitations.tex
-│   └── 08_appendix_guard_details.tex
+│   ├── 08_appendix_guard_details.tex
+│   └── 09_revision_validation.tex
 ├── toxictool_bench/
 │   ├── tasks/
 │   ├── datasets/
@@ -65,32 +68,22 @@ planned work from completed experiments and documents the verified rerun entry p
 
 ## Key Results
 
-The completed experiments show that high clean-task success does not imply robustness to silently corrupted tool observations. Several agents solve clean tasks while directly copying poisoned values, labels, or retrieved evidence under poisoning.
+After reference auditing, the revised expanded comparisons retain 58 numerical
+and 60 semantic/schema tasks. GPT poisoned TSR falls from 0.99 to 0.67 for
+LangGraph, from 0.98 to 0.59 for smolagents, and from 0.92 to 0.66 for AutoGen.
+These are adapter-level diagnostic results, not deployment-frequency estimates.
 
-The LangGraph ReAct guarded-verification defense substantially improves robustness on the 120-task expanded ablation:
+In the equal-budget Claude Haiku defense matrix, Double-pass reaches 1.00
+poisoned TSR versus 0.89 for Base over the 118 retained tasks. The paired
+difference is +0.110, with template-cluster 95% interval [0.056, 0.171] and
+dataset-cluster interval [0.060, 0.172]. Generic Guard reaches 0.97 and does not
+outperform Double-pass. This supports the value of another evidence pass, not a
+claim that a specialized guard is uniquely effective.
 
-```text
-Combined 120 tasks:
-Base LangGraph:   Clean TSR 0.93, Poisoned TSR 0.62, BCR 0.30, RR 0.42
-Full guard:       Clean TSR 0.93, Poisoned TSR 0.93, BCR 0.00, RR 0.93
-Light guard:      Clean TSR 0.91, Poisoned TSR 0.93, BCR 0.00, RR 0.93
-
-Multi-table join extension, 13 tasks:
-Base LangGraph:   Clean TSR 1.00, Poisoned TSR 0.23, BCR 0.77, RR 0.15
-Full guard:       Clean TSR 1.00, Poisoned TSR 1.00, BCR 0.00, RR 1.00
-Light guard:      Clean TSR 1.00, Poisoned TSR 1.00, BCR 0.00, RR 1.00
-
-AutoGen replication, 120 tasks:
-Base AutoGen:     Clean TSR 0.92, Poisoned TSR 0.65, BCR 0.20, RR 0.37
-Verification:     Clean TSR 0.93, Poisoned TSR 0.93, BCR 0.00, RR 0.93
-Guarded:          Clean TSR 0.92, Poisoned TSR 0.93, BCR 0.00, RR 0.93
-```
-
-For the expanded release, the LangGraph defense runner supports a six-way
-ablation matrix: base, caution prompt only, expectation only, verification only,
-full guard, and light guard.
-
-See `EXPERIMENT_RESULTS.md`, `ARTIFACT_MANIFEST.md`, `SUBMISSION_CHECKLIST.md`, and `CURRENT_STATUS.md` for fuller summaries and release-package status.
+The revised scorer reaches 238/240 TSR agreement on the audit-informed
+development set, but that is not independent validation. A frozen 200-case
+protocol is prepared; only 90 reused trajectories are currently available
+because the fixed-model API preflight fails. Human validation has not started.
 
 ## Important Artifacts
 
@@ -108,6 +101,8 @@ For a complete artifact map, see `ARTIFACT_MANIFEST.md`. The core paper-facing r
 - Multi-table extension: `toxictool_bench/results/langgraph_multitable_extension_summary.csv`
 - AutoGen replication: `toxictool_bench/results/autogen_guarded_replication_summary.csv`
 - AutoGen replication CIs: `toxictool_bench/results/autogen_guarded_replication_bootstrap_ci.csv`
+- Versioned scorer analysis: `output/scorer_revision_v2/analysis_manifest.json`
+- Reference audit: `toxictool_bench/results/reference_answer_audit.json`
 - AutoGen combined logs: `toxictool_bench/results/autogen_*_expanded120_combined.jsonl`
 - Bootstrap CIs:
   - `toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
@@ -116,14 +111,13 @@ For a complete artifact map, see `ARTIFACT_MANIFEST.md`. The core paper-facing r
 
 ## Paper
 
-The paper entry point is `main.tex`. It includes all section files and an appendix skeleton. The file uses `iclr2026_conference.sty` if present and falls back to a standard `article` layout for local sanity checks.
+The paper entry point is `main.tex`. It uses the included ICLR 2027 style. The
+current compiled version ends the main text on page 9 and starts references on
+page 10.
 
 ```bash
-pdflatex main.tex
-pdflatex main.tex
+tectonic main.tex --outdir output/scorer_revision_v2/pdf --keep-logs
 ```
-
-The current environment used to prepare this export did not include `pdflatex` or `latexmk`, so PDF compilation was not run before export.
 
 ## Reproduction
 

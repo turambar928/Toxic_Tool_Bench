@@ -1,0 +1,12 @@
+[
+  {
+    "model": "claude-haiku-4-5-20251001",
+    "ok": false,
+    "status": "LLM HTTP 502: "
+  },
+  {
+    "model": "gpt-5.4-mini",
+    "ok": false,
+    "status": "LLM HTTP 502: "
+  }
+]

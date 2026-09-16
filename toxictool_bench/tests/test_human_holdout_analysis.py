@@ -97,7 +97,11 @@ class HoldoutUnitTests(unittest.TestCase):
 class ReturnedHoldoutTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.cases, cls.status = load_cases()
+        # This table is explicitly the archived pre-repair audit. New-parser
+        # development checks live separately; original annotations are immutable.
+        from analyze_revision_v2 import old_evaluator
+        with patch('analyze_human_holdout.evaluate_run', old_evaluator().evaluate_run):
+            cls.cases, cls.status = load_cases()
 
     def test_source_identity_exposure_and_annotation_status(self):
         self.assertEqual(len(self.cases), 240)

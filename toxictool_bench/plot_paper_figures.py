@@ -16,7 +16,6 @@ from matplotlib.lines import Line2D
 PUBLIC_ADAPTERS = {
     "autogen_tool_agent": "AutoGen",
     "langgraph_react_full": "LangGraph",
-    "pandasai_dataframe": "PandasAI",
     "smolagents_toolcalling": "smolagents",
 }
 EXPANDED_ADAPTERS = {
@@ -78,6 +77,10 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 
 def mean(rows: list[dict[str, str]], key: str) -> float:
+    if key in {'bcr', 'adr', 'vr', 'rr', 'toxic_bcr', 'toxic_par', 'toxic_vpa'}:
+        rows = [r for r in rows if float(r.get('n_exposed', r.get('poison_delivery_rate', 1))) > 0]
+    if not rows:
+        return float('nan')
     return sum(float(row[key]) for row in rows) / len(rows)
 
 
@@ -316,14 +319,15 @@ def plot_severity(results_dir: Path, output_dir: Path, preview_dir: Path | None)
                 ax.text(j, i, f"{format_rate(matrix[i, j])}\n$n={counts[i, j]}$", ha="center", va="center",
                         fontsize=6.2, color=color, linespacing=1.05)
             else:
-                ax.text(j, i, "N/A", ha="center", va="center", fontsize=6.5, color=COLORS["muted"])
+                exists = any(r['poison_type']==operators[i] and r['severity']==severities[j] for r in rows)
+                ax.text(j, i, "No exposure" if exists else "No tasks", ha="center", va="center", fontsize=6.0, color=COLORS["muted"])
     for spine in ax.spines.values():
         spine.set_visible(False)
     cbar = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.025)
     cbar.set_label("BCR", fontsize=8)
     cbar.ax.tick_params(length=0, labelsize=7)
     cbar.outline.set_visible(False)
-    ax.set_title("Blind compliance by severity", pad=8)
+    ax.set_title("Blind compliance by legacy severity label (descriptive)", pad=8)
     fig.subplots_adjust(left=0.23, right=0.94, top=0.89, bottom=0.12)
     save_figure(fig, output_dir / "fig_severity_heatmap.pdf", preview_dir)
 
@@ -384,7 +388,9 @@ def plot_capability_gap(results_dir: Path, output_dir: Path, preview_dir: Path |
         ax.text(toxic_value - 0.018, yi, format_rate(toxic_value), va="center", ha="right", fontsize=7, color=COLORS["clean"])
     ax.set_yticks(y, labels)
     ax.invert_yaxis()
-    ax.set_xlim(0.45, 1.05)
+    # Leave room for the clean-score and delta annotation; otherwise the
+    # rightmost text is clipped in the PDF/PNG export.
+    ax.set_xlim(0.45, 1.13)
     ax.set_xlabel("Task success rate")
     ax.set_title("")
     ax.legend(frameon=False, loc="lower left", bbox_to_anchor=(0.0, 1.01), ncol=2,

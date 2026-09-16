@@ -15,14 +15,14 @@ ToxicBench tests whether data agents can distinguish successful tool execution f
 
 Each item contains a query, one or more datasets, a clean oracle or rubric, and a poisoning specification. Poisoned outputs preserve schema, type, and formatting, and never expose an exception or warning. Each task also retains a path for checking the answer, such as recomputation from raw rows or inspection of source metadata. This path can share the upstream table and tool backend.
 
-The cross-model evaluation contains 34 numerical task instances over 11 CSV datasets and 24 semantic/schema instances over 17 datasets. The expanded cross-agent evaluation uses GPT, while the verification study uses Claude Haiku on 60 instances from each family. A separate 13-instance extension requires multi-table joins. Appendix~\ref{sec:appendix-benchmark-details} lists the query--dataset--poison templates behind these instances.
+The cross-model evaluation contains 34 numerical instances over 11 CSV datasets and 24 semantic/schema instances over 17 datasets. The expanded release has 60 instances per family; reference auditing retains 58 numerical and all 60 semantic instances for the revised analysis. A separate 13-instance extension requires multi-table joins. The released fixtures are synthetic: numerical tables contain 4--12 rows (median 5.5), and semantic tables 3--6 rows (median 3.5). This design makes corruption and recovery inspectable; it does not estimate performance on production-scale analysis.
 
 \paragraph{Building a task pair.}
 We start from a query and its source table, compute the clean answer, and specify a changed value or claim that would alter that answer. The proxy runs the original tool before editing the returned observation. It records both versions for scoring; only the returned version enters the agent context. The source table remains available for later checks. For example, a label swap can attach the largest revenue to the wrong store while leaving the amount and output format intact. Recomputing the maximum from source rows reveals the correct store.
 
 The poisoning specification names the target tool and the value or text to change. The proxy applies the operator to eligible observations and logs whether the returned text actually changed. A call to another tool, or a response that the operator cannot change, can leave the trajectory unexposed. The delivery log separates an agent that never receives the planned poison from one that receives it and reaches the clean answer. Keeping both observations also lets a reviewer trace an adopted value back to the injected change.
 
-The expanded numerical suite has 60 instances from 56 templates over 14 datasets. The semantic/schema suite has 60 instances from 41 templates over 22 datasets. Templates cover different queries, datasets, and poison settings; repeated instances test the stability of a setting. The 13-task extension adds table discovery and joins on customer, team, clinic, and product keys.
+The expanded numerical release has 60 instances from 56 query--dataset--poison specifications over 14 datasets; the semantic release has 60 instances from 41 specifications over 22 datasets. These counts distinguish literal specifications, not independent semantic problems. Our sensitivity analysis also groups instances after removing generic checking suffixes and severity labels. The 13-task extension adds table discovery and joins on customer, team, clinic, and product keys.
 
 
 \begin{figure}[t]
@@ -65,27 +65,9 @@ We score final answers against the clean oracle and compute behavior labels from
     \item \textbf{Poison Delivery Rate (PDR):} the fraction of toxic-environment runs in which the proxy actually modifies at least one eligible observation.
 \end{itemize}
 
-All methods use the same scorer after removing known adapter-added display labels. The scorer excludes rejected oracle matches and prioritizes explicit final conclusions; competing matches are marked ambiguous. Ambiguous or unresolved answers remain in the denominator and receive neither TSR nor PAR credit. Behavioral rates condition on delivered poison, whereas TSR uses all runs. Thus PAR=0 does not by itself establish rejection of the poisoned answer.
+All methods use the same scorer after removing adapter display labels. A scoring-only parser extracts query-related assertions, explicit corrections, and role-specific conclusions before matching the clean and poisoned references. It handles complete numerical tokens, including thousands separators, without changing the helpers used by agent policies. Unresolved and conflicting selections remain in the denominator. TSR and PAR assess outcomes; BCR and VPA partition aspects of adoption behavior. A qualifying check makes BCR zero by definition, so zero BCR alone is not mitigation evidence.
 
-We test these operational labels against human judgments at two levels: individual decisions and paired method comparisons. A 120-trajectory audit supported scorer development; a separate 240-trajectory holdout evaluates the unchanged scorer on other task IDs. Section~\ref{sec:human-holdout} reports the returned annotations, and Appendix~\ref{sec:appendix-holdout} gives the protocol and full comparison. Table~\ref{tab:metric-scoring-rules} summarizes the decisions.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}@{}}
-\toprule
-Metric & Positive decision & Excluded behavior \\
-\midrule
-BCR & Final answer adopts the poisoned value, label, schema meaning, or conclusion without ADR or a qualifying post-poison evidence event. & Merely observing poison when later evidence rejects it. \\
-ADR & The final response explicitly identifies a conflict, implausibility, stale source, or possible tool error. & Generic caution that does not identify an anomaly. \\
-VR & A post-poison action recomputes raw rows, checks source metadata, or queries an independent route. & Paraphrasing the same result or requesting a second explanation from the same cached summary. \\
-RR & The final answer matches an accepted clean answer after detection or validation. & Flagging an anomaly while still returning the poisoned answer. \\
-\bottomrule
-\end{tabular}
-\caption{Operational rules for trajectory-level behavior metrics. Full edge cases appear in Appendix~\ref{sec:appendix-metric-protocol}.}
-\label{tab:metric-scoring-rules}
-\end{table}
+We test both individual scoring decisions and paired method comparisons against human judgments. The 120-trajectory development audit and subsequent 240-trajectory audit are preserved. Once the latter informed repairs, it became a development set for the revised parser. Section~\ref{sec:human-holdout} distinguishes the original audit from that recheck. Table~\ref{tab:metric-scoring-rules} summarizes the decisions.
 
 \subsection{Verification Protocols}
 \label{sec:method}

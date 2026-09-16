@@ -1,9 +1,9 @@
 suite,adapter,model,n_toxic,n_exposed,bcr_events,pdr,bcr,par,vpa,adr,vr,rr
-numerical_iclr2027,langgraph_react_double_pass,claude-haiku-4-5-20251001,60,43,0,0.7167,0.0000,0.0000,0.0000,0.0000,0.9535,0.8837
-numerical_iclr2027,langgraph_react_full,claude-haiku-4-5-20251001,60,42,9,0.7000,0.2143,0.2143,0.0000,0.0238,0.0476,0.0000
-numerical_iclr2027,langgraph_react_guarded,claude-haiku-4-5-20251001,60,46,0,0.7667,0.0000,0.0000,0.0000,0.0000,0.9348,0.6957
-numerical_iclr2027,langgraph_react_verification_only,claude-haiku-4-5-20251001,60,43,0,0.7167,0.0000,0.0000,0.0000,0.0000,0.9302,0.7442
-semantic_schema_iclr2027,langgraph_react_double_pass,claude-haiku-4-5-20251001,60,60,0,1.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.7333
-semantic_schema_iclr2027,langgraph_react_full,claude-haiku-4-5-20251001,60,59,1,0.9833,0.0169,0.0169,0.0000,0.0000,0.7627,0.5085
-semantic_schema_iclr2027,langgraph_react_guarded,claude-haiku-4-5-20251001,60,60,0,1.0000,0.0000,0.0000,0.0000,0.0333,1.0000,0.7000
-semantic_schema_iclr2027,langgraph_react_verification_only,claude-haiku-4-5-20251001,60,60,0,1.0000,0.0000,0.0000,0.0000,0.0333,0.9833,0.6333
+numerical_iclr2027,langgraph_react_double_pass,claude-haiku-4-5-20251001,58,41,0,0.7069,0.0000,0.0000,0.0000,0.0000,0.9512,0.9512
+numerical_iclr2027,langgraph_react_full,claude-haiku-4-5-20251001,58,40,8,0.6897,0.2000,0.2000,0.0000,0.0250,0.0250,0.0000
+numerical_iclr2027,langgraph_react_guarded,claude-haiku-4-5-20251001,58,44,0,0.7586,0.0000,0.0000,0.0000,0.0000,0.9318,0.9091
+numerical_iclr2027,langgraph_react_verification_only,claude-haiku-4-5-20251001,58,41,0,0.7069,0.0000,0.0244,0.0244,0.0000,0.9512,0.8293
+semantic_schema_iclr2027,langgraph_react_double_pass,claude-haiku-4-5-20251001,60,60,0,1.0000,0.0000,0.0000,0.0000,0.0000,1.0000,1.0000
+semantic_schema_iclr2027,langgraph_react_full,claude-haiku-4-5-20251001,60,59,1,0.9833,0.0169,0.0169,0.0000,0.0000,0.7627,0.7458
+semantic_schema_iclr2027,langgraph_react_guarded,claude-haiku-4-5-20251001,60,60,0,1.0000,0.0000,0.0000,0.0000,0.0333,1.0000,0.9667
+semantic_schema_iclr2027,langgraph_react_verification_only,claude-haiku-4-5-20251001,60,60,0,1.0000,0.0000,0.0000,0.0000,0.0333,0.9833,0.8833

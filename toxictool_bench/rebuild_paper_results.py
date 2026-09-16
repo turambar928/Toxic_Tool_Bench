@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from evaluator import aggregate, evaluate_run
+from audit_reference_answers import corrected_task
 from bootstrap_ci import METRICS as BOOTSTRAP_METRICS, bootstrap, summarize as bootstrap_summary
 from summarize_results import write_overall, write_poison, write_severity
 
@@ -35,12 +36,13 @@ def rescore(spec: dict[str, str]) -> list[dict[str, Any]]:
     tasks: dict[str, dict[str, Any]] = {}
     for task_name in spec["tasks"].split(";"):
         for task in read_jsonl(ROOT / task_name):
-            tasks[task["task_id"]] = task
+            tasks[task["task_id"]] = corrected_task(task)
     source = ROOT / spec["source"]
     rows = read_jsonl(source)
     missing = sorted({row["task_id"] for row in rows} - tasks.keys())
     if missing:
         raise ValueError(f"{source}: task definitions missing for {missing[:5]}")
+    rows = [r for r in rows if not tasks[r['task_id']].get('reference_ineligible')]
     for row in rows:
         row["metrics"] = evaluate_run(tasks[row["task_id"]], row.get("final_answer", ""), row.get("tool_events", []))
         row["paper_variant"] = spec["variant"]

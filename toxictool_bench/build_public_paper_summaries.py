@@ -18,7 +18,6 @@ POISON_METRICS = ("toxic_tsr", "bcr", "adr", "vr", "rr", "poison_delivery_rate")
 PAPER_ADAPTERS = {
     "autogen_tool_agent",
     "langgraph_react_full",
-    "pandasai_dataframe",
     "smolagents_toolcalling",
 }
 
@@ -29,6 +28,10 @@ def read_rows(path: Path, included: set[str]) -> list[dict[str, str]]:
 
 
 def mean(rows: list[dict[str, str]], key: str) -> float:
+    if key in {"toxic_bcr", "bcr", "adr", "vr", "rr"}:
+        rows = [r for r in rows if float(r.get('n_exposed', r.get('poison_delivery_rate', 1))) > 0]
+    if not rows:
+        return float('nan')
     return sum(float(row[key]) for row in rows) / len(rows)
 
 
@@ -79,7 +82,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--include-adapter",
         action="append",
-        help="Adapter to include; defaults to the four common cross-model paper adapters.",
+        help="Adapter to include; defaults to the three common observation-level adapters.",
     )
     return parser.parse_args()
 

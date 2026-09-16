@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from evaluator import evaluate_run
+from audit_reference_answers import corrected_task
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,13 +68,15 @@ def load_runs(manifest: Path) -> dict[tuple[str, str, str], dict[str, dict[str, 
                 for line in handle:
                     if line.strip():
                         task = json.loads(line)
-                        task_defs[task["task_id"]] = task
+                        task_defs[task["task_id"]] = corrected_task(task)
         suite, adapter = spec["suite"], spec["adapter"]
         for row in read_jsonl(ROOT / spec["path"]):
             environment = row.get("environment")
             if environment not in {"clean", "toxic"} or row.get("adapter") != adapter:
                 raise ValueError(f"Run identity disagrees with manifest: {spec['path']}")
             task_id = str(row["task_id"])
+            if task_defs[task_id].get('reference_ineligible'):
+                continue
             key = (suite, adapter, environment)
             if task_id in grouped[key]:
                 raise ValueError(f"duplicate task {key}/{task_id}")

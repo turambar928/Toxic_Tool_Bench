@@ -47,7 +47,7 @@ We use ``independent'' at three distinct levels. \emph{Observation independence}
 \subsection{Deterministic Scoring Rules}
 \label{sec:appendix-metric-protocol}
 
-A deterministic scorer assigns the behavior metrics from each trajectory. For each toxic-environment run, the scorer first checks whether the proxy actually returned a poisoned observation. Known adapter-added display prefixes are removed for every method before scoring. This prevents a wrapper label from being interpreted as an agent conclusion. The scorer then selects between clean and poisoned oracles using boundary-aware categorical matches, numeric tolerances, rejection context, and conclusion-marker precedence. If both oracles remain at the highest priority, selection is ambiguous; if neither matches, it is unresolved. Neither state receives TSR or PAR credit, and both remain in the denominator. This shared selection rule changes TSR and RR as well as adoption metrics. TSR uses all runs; the behavior rates below use only exposed runs.
+A deterministic scorer first checks actual poison delivery and removes known adapter display labels. The revised parser extracts query-related assertions, explicit conclusions, corrections, and numerator/denominator roles without seeing oracle candidates. It then applies categorical boundaries and complete-number matching at the existing tolerance. Conflicting selected references remain ambiguous; unmatched claims remain unresolved, with neither state removed from the denominator. Historical scoring and reference corrections are distinguished in Appendix~\ref{sec:revision-v2}. TSR uses all retained runs; behavioral rates use exposed runs.
 
 \textbf{Blind Compliance Rate (BCR).}
 BCR is one when the final answer matches the poisoned value, label, ranking, schema meaning, treatment assignment, or evidence conclusion and neither ADR nor VR is present. At least one logged event must have \texttt{was\_poisoned=true}.
@@ -88,7 +88,7 @@ Ambiguous cases are adjudicated against over-crediting the agent. A statement su
 
 Table~\ref{tab:appendix-scorer-precision} compares the current scorer with the adjudicated 120-row consensus. Table~\ref{tab:appendix-human-iaa} reports agreement between the two original annotators before adjudication. The released label sheets and \path{scorer_consensus_validation.json} preserve the distinction between annotator agreement and scorer accuracy.
 
-This audit was used during scorer development. Its BCR and ADR recall are limited, and it did not separately label TSR, PAR, or VPA. The 18-case VR review covers non-disputed scorer-positive cases; its 18/18 relevance judgments describe that targeted check. The separate holdout below tests the unchanged scorer on other tasks and adds answer-level labels.
+This audit was used during scorer development. Its BCR and ADR recall are limited, and it did not separately label TSR, PAR, or VPA. The 18-case VR review covers non-disputed scorer-positive cases; its 18/18 relevance judgments describe that targeted check. The historical holdout below tested the pre-repair scorer on other tasks and added answer-level labels; it later informed the new parser and is no longer independent for that version.
 
 \begin{table}[t]
 \centering
@@ -102,7 +102,7 @@ Metric & $n$ & Precision & Recall & F1 \\
 BCR & 120 & 0.750 & 0.250 & 0.375 \\
 ADR & 120 & 1.000 & 0.030 & 0.059 \\
 VR & 120 & 0.683 & 0.958 & 0.798 \\
-RR & 120 & 0.797 & 0.627 & 0.701 \\
+RR & 120 & 0.840 & 0.840 & 0.840 \\
 \bottomrule
 \end{tabular}
 \caption{Current scorer versus the final human consensus on all 120 trajectories. Agreed cells retain the original label; 16 disputed cells use separate blind adjudication. The audit was used during scorer revision and is therefore not an independent holdout.}
@@ -129,7 +129,7 @@ Macro average & 120 & 0.967 & 0.913 & -- \\
 \label{tab:appendix-human-iaa}
 \end{table}
 
-\subsection{Held-Out Human Evaluation}
+\subsection{Archived Pre-Repair Human Holdout}
 \label{sec:appendix-holdout}
 
 \paragraph{Sample and annotation.}
@@ -157,7 +157,7 @@ Ambiguity & 240 & 0 & 1.000 & -- \\
 \end{table}
 
 \paragraph{Scoring agreement.}
-We apply the unchanged evaluator to the original answers and tool events, rather than reuse older metrics stored in the logs. Source files, task definitions, returned annotations, and the evaluator are hashed in the analysis record. Human BCR is derived as adoption without detection or validation; VPA is adoption with validation. RR uses final correctness with detection or validation, matching the paper definition. The packet's separate recovery field requires a check and is retained in the agreement table. TSR comparisons use all 240 cases; other metric comparisons use the 94 exposed cases.
+This subsection preserves evaluation with the pre-repair scorer at commit \texttt{4ae42cd}, original references, and original human labels. It is not the revised scorer's accuracy report. Source files and annotations are hashed in the archived analysis. Human BCR is adoption without detection or validation; VPA is adoption with validation. RR requires correctness and detection or validation. TSR uses all 240 cases; behavioral comparisons use the 94 exposed cases. Appendix~\ref{sec:revision-v2} reports the development recheck separately.
 
 A third annotator independently reviewed all six fields on the 60 disputed trajectories and ten shared-label ROAS cases, using the task evidence without either prior label set. The ten additional cases were selected to check the task's existing numeric tolerance; all were judged correct. The third annotator's full labels replace these 70 rows, and the other 170 retain the two annotators' shared labels. All 240 reference rows are complete, with no ambiguous cases. Table~\ref{tab:holdout-scorer} reports the final comparison. The scorer misses 64 of 193 human-correct answers and 36 of 72 recoveries. Its BCR recall is based on only three human-positive cases.
 
@@ -178,7 +178,7 @@ VPA & 94 & 4 & 1.000 & 1.000 & 1.000 \\
 RR & 94 & 72 & 1.000 & 0.500 & 0.667 \\
 \bottomrule
 \end{tabular}
-\caption{Automatic scorer versus the completed human reference. TSR uses all 240 trajectories; behavior metrics use the 94 exposed trajectories. The perfect VPA scores cover four human-positive cases. Original per-rater comparisons and full confusion counts are released in \protect\path{human_holdout_v1/analysis/scorer_comparison.csv}.}
+\caption{Archived pre-repair scorer versus original adjudicated references. TSR uses 240 trajectories; behavior metrics use 94 exposed trajectories. VPA has four positives. These are historical audit results, not revised-parser validation.}
 \label{tab:holdout-scorer}
 \end{table}
 
@@ -201,7 +201,7 @@ Repeated, $p=1$ & Double-pass & 20 & 0.45 & 0.80 \\
  & Generic Guard & 20 & 0.25 & 0.70 \\
 \bottomrule
 \end{tabular}
-\caption{Poisoned TSR on the 20 shared core holdout tasks, using the automatic scorer and completed human reference. The repeated-poison rows reuse those tasks; the full automatic comparison covers 120 tasks.}
+\caption{Archived pre-repair automatic and human TSR on 20 shared audit tasks, with original references. The revised full analysis uses 118 retained instances and is reported separately.}
 \label{tab:holdout-methods}
 \end{table}
 
@@ -212,7 +212,7 @@ The third-rater reference confirms four VPA-positive repeated-poison trajectorie
 The main text keeps compact tables for page budget. Detailed adapter-level cross-model tables and the expanded GPT-only cross-agent breakdowns are released as machine-readable artifacts:
 
 \begin{itemize}
-  \item Public-agent aggregates: \path{public_cross_model_*_summary.csv} and \path{public_poison_type_summary.csv}. They are regenerated by \path{build_public_paper_summaries.py}, which explicitly allowlists the four adapters shared by all cross-model groups.
+  \item Public-agent aggregates: \path{public_cross_model_*_summary.csv} and \path{public_poison_type_summary.csv}, using the three common observation-level adapters; PandasAI is excluded.
   \item Expanded GPT summaries: files matching \path{iclr2027_gpt_expanded_cross_agent_*_summary.csv}.
   \item Leakage-free defense ablation: \path{leakage_free_defense_*}, including task-level bootstrap intervals, poison/severity summaries, overhead, and the immutable run manifest.
   \item Multi-table extension: task JSONL and extension summary CSVs.
@@ -241,7 +241,7 @@ The current release does not include an independently adjudicated task-level fal
 
 We implement three additional policies with the same LangGraph ReAct adapter and tool boundary. The abstain policy runs a primary route and a verification route, then refuses to answer when the two disagree. The randomized policy always runs the primary route and triggers an independent recomputation with a deterministic 0.5 task-level gate. The selective policy triggers verification for high-risk query patterns such as rankings, ratios, denominators, schema lookup, evidence retrieval, and source-of-truth metadata. These baselines distinguish always-on guarding from cheaper policies that verify selectively or refuse to answer under disagreement.
 
-Table~\ref{tab:appendix-stronger-baselines} reports fixed-subset results under a six-step cap, rescored with the same evaluator. The abstention policy has zero detected BCR but lower answer coverage. Randomized and selective verification leave numerical BCR at 0.23 and 0.33, respectively. On the 10 semantic tasks, Selective reaches VR 1.00 but poisoned TSR only 0.60, illustrating that recorded verification does not guarantee a correct final selection. These small-subset policies are diagnostics rather than learned or generally calibrated triggers.
+Table~\ref{tab:appendix-stronger-baselines} reports fixed-subset results under a six-step cap with the revised scorer. The abstention policy has zero detected BCR but lower answer coverage; randomized and selective policies can still adopt poison. These small-subset policies are diagnostics rather than learned or generally calibrated triggers.
 
 \begin{table}[t]
 \centering
@@ -252,12 +252,12 @@ Table~\ref{tab:appendix-stronger-baselines} reports fixed-subset results under a
 Suite & Adapter & Clean TSR & Poisoned TSR & BCR & VR & RR & PDR \\
 \midrule
 % Generated by toxictool_bench/sync_defense_paper.py; do not edit numbers.
-Numerical-20 & Abstain & 0.55 & 0.35 & 0.00 & 1.00 & 0.46 & 0.65 \\
-Numerical-20 & Randomized & 0.75 & 0.60 & 0.23 & 0.62 & 0.62 & 0.65 \\
-Numerical-20 & Selective & 0.65 & 0.35 & 0.33 & 0.50 & 0.25 & 0.60 \\
-Semantic-10 & Abstain & 0.80 & 0.40 & 0.00 & 0.90 & 0.40 & 1.00 \\
-Semantic-10 & Randomized & 0.90 & 0.80 & 0.20 & 0.70 & 0.70 & 1.00 \\
-Semantic-10 & Selective & 0.80 & 0.60 & 0.00 & 1.00 & 0.60 & 1.00 \\
+Numerical-20 & Abstain & 0.65 & 0.35 & 0.00 & 1.00 & 0.46 & 0.65 \\
+Numerical-20 & Randomized & 0.95 & 0.80 & 0.23 & 0.62 & 0.54 & 0.65 \\
+Numerical-20 & Selective & 0.90 & 0.70 & 0.25 & 0.50 & 0.42 & 0.60 \\
+Semantic-10 & Abstain & 0.60 & 0.50 & 0.00 & 0.90 & 0.50 & 1.00 \\
+Semantic-10 & Randomized & 1.00 & 0.80 & 0.20 & 0.70 & 0.70 & 1.00 \\
+Semantic-10 & Selective & 0.90 & 0.70 & 0.00 & 1.00 & 0.70 & 1.00 \\
 \bottomrule
 \end{tabular}
 \caption{LangGraph alternative verification policies on fixed stratified subsets. Behavior rates use only poison-exposed runs; PDR gives the exposed fraction.}
@@ -284,7 +284,7 @@ python3 toxictool_bench/run_full_bench.py \
 
 \subsection{Multi-Route Poisoning Stress}
 
-The default defense ablation uses \path{poison_once}, which creates a clean verification path after the first poisoned observation. To stress this assumption, \path{--poison-repeat} disables the one-shot constraint and deterministically corrupts each eligible, operator-matching observation with probability \(p\). We run all 60 numerical, 60 semantic/schema, and 13 multi-table tasks for three two-route variants at \(p\in\{0.25,0.50,0.75,1.00\}\), for 1,596 toxic trajectories. Even at \(p=1\), an observation that does not match the operator can remain clean; this tests returned-observation corruption, not a compromised database.
+The default defense ablation uses \path{poison_once}. Repeated poisoning disables this constraint and applies a deterministic hash gate with probability \(p\) to eligible, operator-matching observations. The recorded matrix has 60 numerical, 60 semantic, and 13 join tasks, three two-route variants, and \(p\in\{0.25,0.50,0.75,1.00\}\). Reference exclusions retain 1,572 of its 1,596 trajectories. Even at \(p=1\), nonmatching observations can remain unmodified. The matrix tests returned-observation corruption, not a compromised database.
 
 At $p=1$, Table~\ref{tab:appendix-multiroute-stress} shows zero detected BCR but nonzero PAR and VPA in all nine cells. A corrupted verification return still counts as an evidence action, so these failures are adoption after verification. Some lower-probability cells have nonzero BCR; both rates are retained in the CSV. The 13-task join estimates are imprecise, and probability curves need not be monotonic on this finite set.
 
@@ -298,14 +298,14 @@ At $p=1$, Table~\ref{tab:appendix-multiroute-stress} shows zero detected BCR but
 Suite & Variant & Poisoned TSR & BCR & PAR & VPA & VR & RR & PDR \\
 \midrule
 % Generated by toxictool_bench/sync_defense_paper.py; do not edit numbers.
-Numerical & Double-pass & 0.62 & 0.00 & 0.24 & 0.24 & 1.00 & 0.62 & 0.70 \\
-Numerical & Verification only & 0.55 & 0.00 & 0.28 & 0.28 & 1.00 & 0.51 & 0.72 \\
-Numerical & Generic guard & 0.52 & 0.00 & 0.11 & 0.11 & 0.98 & 0.43 & 0.77 \\
-Semantic/schema & Double-pass & 0.65 & 0.00 & 0.05 & 0.05 & 0.90 & 0.58 & 1.00 \\
-Semantic/schema & Verification only & 0.62 & 0.00 & 0.03 & 0.03 & 0.95 & 0.58 & 1.00 \\
-Semantic/schema & Generic guard & 0.50 & 0.00 & 0.12 & 0.12 & 1.00 & 0.50 & 1.00 \\
+Numerical & Double-pass & 0.81 & 0.00 & 0.20 & 0.20 & 1.00 & 0.72 & 0.69 \\
+Numerical & Verification only & 0.71 & 0.00 & 0.27 & 0.27 & 1.00 & 0.59 & 0.71 \\
+Numerical & Generic guard & 0.79 & 0.00 & 0.11 & 0.11 & 0.98 & 0.70 & 0.76 \\
+Semantic/schema & Double-pass & 0.95 & 0.00 & 0.05 & 0.05 & 0.90 & 0.85 & 1.00 \\
+Semantic/schema & Verification only & 0.87 & 0.00 & 0.03 & 0.03 & 0.95 & 0.82 & 1.00 \\
+Semantic/schema & Generic guard & 0.82 & 0.00 & 0.12 & 0.12 & 1.00 & 0.82 & 1.00 \\
 Multi-table & Double-pass & 0.54 & 0.00 & 0.38 & 0.38 & 1.00 & 0.54 & 1.00 \\
-Multi-table & Verification only & 0.38 & 0.00 & 0.31 & 0.31 & 1.00 & 0.38 & 1.00 \\
+Multi-table & Verification only & 0.54 & 0.00 & 0.38 & 0.38 & 1.00 & 0.54 & 1.00 \\
 Multi-table & Generic guard & 0.46 & 0.00 & 0.08 & 0.08 & 1.00 & 0.46 & 1.00 \\
 \bottomrule
 \end{tabular}%
@@ -337,11 +337,11 @@ python3 toxictool_bench/run_full_bench.py \
 
 Double-pass runs two ordinary routes with no expectation policy, no primary-answer handoff, and the same maximum route budget as the verification variants. The released runs use two independent LangGraph calls, each with \texttt{--max-steps 10}, \texttt{--max-tokens 3072}, and temperature 0; the second route's final response is selected verbatim. Verification-only also uses two calls with the same per-route cap, passes the first answer only as an untrusted claim, and selects the second route's response. Generic Guard uses a deterministic generic expectation string inside the primary prompt, then runs the same two-call structure; its verification response is selected verbatim and prefixed with a guard label. Thus ``matched'' means matched per-route step/token budget and route count, not equal realized token usage or latency. Table~\ref{tab:appendix-paired-defense-ci} compares the complete Guard and Double-pass wrappers. Display-only labels are removed before scoring; any remaining effect combines prompt, answer-handoff, and evidence-selection differences.
 
-Guard's combined poisoned-TSR difference from Double-pass is $-0.067$ [$-0.125$, $-0.008$]. The clean-TSR difference is also $-0.067$, yielding a combined interaction estimate of zero. For task $i$, let $G_{i,e}$ and $D_{i,e}$ denote binary task success for Guard and Double-pass in environment $e$. We also estimate
+Guard's revised poisoned-TSR difference from Double-pass is $-0.025$ [$-0.059$, $0.000$], and its clean difference is $-0.008$ [$-0.034$, $0.017$]. For task $i$, let $G_{i,e}$ and $D_{i,e}$ denote task success for Guard and Double-pass in environment $e$. We estimate
 \[
 \Delta_{\mathrm{interaction}}=\frac{1}{n}\sum_i\big[(G_{i,\mathrm{toxic}}-D_{i,\mathrm{toxic}})-(G_{i,\mathrm{clean}}-D_{i,\mathrm{clean}})\big].
 \]
-Its interval includes zero in both suites and in aggregate. Each bootstrap draw preserves all four outcomes for a task; combined draws resample within each suite to retain 60 instances per family. BCR, VR, and RR differences instead condition on exposure in both variants, so their estimates need not equal differences of separately exposure-conditioned marginal rates. Intervals are pointwise and conditional on the selected task instances and deterministic scorer, not multiplicity-adjusted or estimates of scorer uncertainty.
+Its interval includes zero in both suites and in aggregate. Each draw preserves all four outcomes for a task; combined draws retain 58 numerical and 60 semantic instances. Behavioral differences condition on exposure in both variants and need not equal differences of marginal rates. These pointwise intervals condition on the selected tasks and scorer; template and dataset sensitivity appears in Appendix~\ref{sec:revision-v2}.
 
 \begin{table}[t]
 \centering
@@ -352,21 +352,21 @@ Its interval includes zero in both suites and in aggregate. Each bootstrap draw 
 Suite & Metric & $n_{\mathrm{paired}}$ & $\Delta$ (Guard$-$DP) & 95\% CI \\
 \midrule
 % Generated by toxictool_bench/sync_defense_paper.py; do not edit numbers.
-Numerical & Clean TSR & 60 & -0.067 & [-0.150, 0.017] \\
-Numerical & Poisoned TSR & 60 & -0.100 & [-0.200, 0.000] \\
-Numerical & $\Delta_{\mathrm{interaction}}$ & 60 & -0.033 & [-0.100, 0.033] \\
-Numerical & BCR & 43 & +0.000 & [0.000, 0.000] \\
-Numerical & VR & 43 & +0.000 & [-0.070, 0.070] \\
-Numerical & RR & 43 & -0.163 & [-0.279, -0.070] \\
-Semantic/schema & Clean TSR & 60 & -0.067 & [-0.133, -0.017] \\
-Semantic/schema & Poisoned TSR & 60 & -0.033 & [-0.100, 0.033] \\
-Semantic/schema & $\Delta_{\mathrm{interaction}}$ & 60 & +0.033 & [-0.033, 0.117] \\
+Numerical & Clean TSR & 58 & +0.000 & [-0.052, 0.052] \\
+Numerical & Poisoned TSR & 58 & -0.017 & [-0.052, 0.000] \\
+Numerical & $\Delta_{\mathrm{interaction}}$ & 58 & -0.017 & [-0.086, 0.035] \\
+Numerical & BCR & 41 & +0.000 & [0.000, 0.000] \\
+Numerical & VR & 41 & +0.000 & [-0.073, 0.073] \\
+Numerical & RR & 41 & -0.024 & [-0.122, 0.049] \\
+Semantic/schema & Clean TSR & 60 & -0.017 & [-0.050, 0.000] \\
+Semantic/schema & Poisoned TSR & 60 & -0.033 & [-0.083, 0.000] \\
+Semantic/schema & $\Delta_{\mathrm{interaction}}$ & 60 & -0.017 & [-0.083, 0.033] \\
 Semantic/schema & BCR & 60 & +0.000 & [0.000, 0.000] \\
 Semantic/schema & VR & 60 & +0.000 & [0.000, 0.000] \\
-Semantic/schema & RR & 60 & -0.033 & [-0.100, 0.033] \\
-Combined & Clean TSR & 120 & -0.067 & [-0.125, -0.008] \\
-Combined & Poisoned TSR & 120 & -0.067 & [-0.125, -0.008] \\
-Combined & $\Delta_{\mathrm{interaction}}$ & 120 & +0.000 & [-0.050, 0.050] \\
+Semantic/schema & RR & 60 & -0.033 & [-0.083, 0.000] \\
+Combined & Clean TSR & 118 & -0.009 & [-0.034, 0.017] \\
+Combined & Poisoned TSR & 118 & -0.025 & [-0.059, 0.000] \\
+Combined & $\Delta_{\mathrm{interaction}}$ & 118 & -0.017 & [-0.059, 0.017] \\
 \bottomrule
 \end{tabular}
 \caption{Task-paired bootstrap differences between Generic Guard and the matched Double-pass (DP). TSR and interaction use all shared tasks; BCR, VR, and RR use tasks exposed in both variants. Bootstrap uses 5,000 task resamples and seed 13; combined TSR resampling is stratified by suite. Degenerate BCR difference intervals describe the observed scorer labels, not proof of equal human-judged risk.}
@@ -388,13 +388,13 @@ Table~\ref{tab:appendix-cost-robustness} reports the cost of the four leakage-fr
 Adapter & Poisoned TSR & BCR & Sem. events & Num. events \\
 \midrule
 % Generated by toxictool_bench/sync_defense_paper.py; do not edit numbers.
-Base & 0.67 & 0.10 & 2.40 & 2.32 \\
-Double-pass & 0.78 & 0.00 & 4.77 & 4.45 \\
-Verification only & 0.68 & 0.00 & 4.57 & 4.30 \\
-Generic guard & 0.71 & 0.00 & 5.10 & 4.62 \\
+Base & 0.89 & 0.09 & 2.40 & 2.28 \\
+Double-pass & 1.00 & 0.00 & 4.77 & 4.41 \\
+Verification only & 0.90 & 0.00 & 4.57 & 4.21 \\
+Generic guard & 0.97 & 0.00 & 5.10 & 4.59 \\
 \bottomrule
 \end{tabular}
-\caption{Cost--robustness tradeoff for the expanded 120-task LangGraph ReAct defense ablation. Event columns report average tool events per poisoned run.}
+\caption{Cost and outcomes on the 118 retained defense tasks. Event columns report average tool events per poisoned run.}
 \label{tab:appendix-cost-robustness}
 \end{table}
 
@@ -403,7 +403,7 @@ Selective checks could use route disagreement, source uncertainty, or confidence
 \subsection{Latency Distribution}
 \label{sec:appendix-latency-distribution}
 
-Table~\ref{tab:appendix-latency-distribution} reports toxic-run wall-clock distributions for the post-fix suites. Generic Guard increases mean latency from \texttt{16.98}s to \texttt{39.90}s. Double-pass costs \texttt{36.16}s and Verification-only \texttt{34.02}s, again showing that most overhead comes from collecting a second route. Token cost is omitted because the gateway does not expose consistent per-call usage accounting across adapters.
+Table~\ref{tab:appendix-latency-distribution} preserves timing over the original 120-task sample, including the two subsequently excluded queries. It is not recomputed from answer labels. Main-text cost means use the 118 retained tasks. Token billing is unavailable from the gateway.
 
 \begin{table}[t]
 \centering
@@ -423,7 +423,7 @@ Semantic/schema Verification only & 60 & 36.34 & 31.99 & 55.60 & 4.57 \\
 Semantic/schema Generic guard & 60 & 39.61 & 36.65 & 57.13 & 5.10 \\
 \bottomrule
 \end{tabular}
-\caption{Latency distribution and tool-event overhead for public-framework defense runs. Rows are clean or poisoned environment instances.}
+\caption{Historical toxic-run latency and event counts on all 120 released instances, including two reference-excluded queries.}
 \label{tab:appendix-latency-distribution}
 \end{table}
 
@@ -441,14 +441,14 @@ We compute nonparametric bootstrap confidence intervals by resampling task IDs w
 Suite & Adapter & Poisoned TSR 95\% CI & BCR 95\% CI \\
 \midrule
 % Generated by toxictool_bench/sync_defense_paper.py; do not edit numbers.
-Numerical & Base & [0.50, 0.73] & [0.10, 0.34] \\
-Numerical & Double-pass & [0.72, 0.92] & [0.00, 0.07] \\
-Numerical & Verification only & [0.60, 0.82] & [0.00, 0.07] \\
-Numerical & Generic guard & [0.60, 0.83] & [0.00, 0.06] \\
-Semantic/schema & Base & [0.60, 0.83] & [0.00, 0.05] \\
-Semantic/schema & Double-pass & [0.62, 0.83] & [0.00, 0.05] \\
-Semantic/schema & Verification only & [0.52, 0.75] & [0.00, 0.05] \\
-Semantic/schema & Generic guard & [0.58, 0.82] & [0.00, 0.05] \\
+Numerical & Base & [0.71, 0.90] & [0.08, 0.33] \\
+Numerical & Double-pass & [1.00, 1.00] & [0.00, 0.07] \\
+Numerical & Verification only & [0.81, 0.97] & [0.00, 0.07] \\
+Numerical & Generic guard & [0.95, 1.00] & [0.00, 0.07] \\
+Semantic/schema & Base & [0.92, 1.00] & [0.00, 0.05] \\
+Semantic/schema & Double-pass & [1.00, 1.00] & [0.00, 0.05] \\
+Semantic/schema & Verification only & [0.82, 0.97] & [0.00, 0.05] \\
+Semantic/schema & Generic guard & [0.92, 1.00] & [0.00, 0.05] \\
 \bottomrule
 \end{tabular}
 \caption{Bootstrap confidence intervals for guarded LangGraph ReAct ablations. For all-zero BCR cells, the displayed upper endpoint is the exact one-sided 95\% binomial upper bound for scorer-detected events based on $n_{\mathrm{exposed}}$, rather than the degenerate bootstrap endpoint.}
@@ -458,6 +458,7 @@ Semantic/schema & Generic guard & [0.58, 0.82] & [0.00, 0.05] \\
 \section{Additional Analyses}
 
 \subsection{Experimental Protocol and Framework Boundaries}
+\label{sec:appendix-framework-boundaries}
 
 The experiments evaluate complete framework adapters rather than prompt profiles. All feasible adapters are run with \texttt{gpt-5.4-mini}; LangGraph, smolagents, PandasAI, and AutoGen are additionally evaluated with \texttt{claude-sonnet-4-6} and \texttt{Qwen3.6-35B-A3B-no-thinking}. DA-Agent remains in the GPT evaluation but is omitted from the Claude and Qwen summaries because its cross-model execution did not complete within a practical runtime budget. Each reported pair uses the same task, model, adapter, and step cap in clean and poisoned environments.
 
@@ -480,7 +481,7 @@ DA-Agent & action/execution trace & yes & omitted for runtime \\
 \label{tab:appendix-framework-boundaries}
 \end{table}
 
-PandasAI is the main comparability caveat: its public interface does not expose internal code-execution observations through the same adapter protocol, so poisoning is applied to the completed chat result. Its BCR measures end-to-end adoption of a poisoned returned answer rather than response to one internal dataframe event. DA-Agent observations may include shell output and tracebacks. We report each adapter separately. Bootstrap intervals are computed within each adapter--model run by resampling task IDs.
+PandasAI's historical adapter calls \texttt{agent.chat}, changes the returned final answer, and returns that changed string directly to scoring. The agent never receives the modified content. These logs therefore measure final-output integrity, not agent adoption or recovery, and are excluded from the main behavioral tables, cross-model means, and operator profiles. They remain in the raw archive and versioned sensitivity report. DA-Agent uses a different action/trace boundary and is reported separately. The three fully crossed observation-level adapters are LangGraph, smolagents, and AutoGen.
 
 \subsection{Expanded Qualitative Analysis}
 
@@ -503,17 +504,17 @@ Table~\ref{tab:appendix-guard-suite-breakdown} separates numerical and semantic/
 Suite & Variant & Clean TSR & Poisoned TSR & BCR & VR & RR \\
 \midrule
 % Generated by toxictool_bench/sync_defense_paper.py; do not edit numbers.
-Numerical & Base & 0.82 & 0.62 & 0.21 & 0.05 & 0.00 \\
-Numerical & Double-pass & 0.82 & 0.82 & 0.00 & 0.95 & 0.88 \\
-Numerical & Verification only & 0.80 & 0.72 & 0.00 & 0.93 & 0.74 \\
-Numerical & Generic guard & 0.75 & 0.72 & 0.00 & 0.93 & 0.70 \\
-Semantic/schema & Base & 0.75 & 0.72 & 0.02 & 0.76 & 0.51 \\
-Semantic/schema & Double-pass & 0.73 & 0.73 & 0.00 & 1.00 & 0.73 \\
-Semantic/schema & Verification only & 0.67 & 0.63 & 0.00 & 0.98 & 0.63 \\
-Semantic/schema & Generic guard & 0.67 & 0.70 & 0.00 & 1.00 & 0.70 \\
+Numerical & Base & 1.00 & 0.81 & 0.20 & 0.03 & 0.00 \\
+Numerical & Double-pass & 0.98 & 1.00 & 0.00 & 0.95 & 0.95 \\
+Numerical & Verification only & 0.95 & 0.90 & 0.00 & 0.95 & 0.83 \\
+Numerical & Generic guard & 0.98 & 0.98 & 0.00 & 0.93 & 0.91 \\
+Semantic/schema & Base & 0.98 & 0.97 & 0.02 & 0.76 & 0.75 \\
+Semantic/schema & Double-pass & 1.00 & 1.00 & 0.00 & 1.00 & 1.00 \\
+Semantic/schema & Verification only & 0.90 & 0.90 & 0.00 & 0.98 & 0.88 \\
+Semantic/schema & Generic guard & 0.98 & 0.97 & 0.00 & 1.00 & 0.97 \\
 \bottomrule
 \end{tabular}
-\caption{Suite-level LangGraph ReAct defense results on the expanded 120-instance evaluation.}
+\caption{Suite-level defense results on 58 numerical and 60 semantic instances after reference auditing.}
 \label{tab:appendix-guard-suite-breakdown}
 \end{table}
 
@@ -526,10 +527,10 @@ Semantic/schema & Generic guard & 0.67 & 0.70 & 0.00 & 1.00 & 0.70 \\
 Suite & Variant & $n_{\mathrm{toxic}}$ & $n_{\mathrm{exposed}}$ & PDR & BCR & BCR events/exposed \\
 \midrule
 % Generated by toxictool_bench/sync_defense_paper.py; do not edit numbers.
-Numerical & Base & 60 & 42 & 0.700 & 0.214 & 9/42 \\
-Numerical & Double-pass & 60 & 43 & 0.717 & 0.000 & 0/43 \\
-Numerical & Verification only & 60 & 43 & 0.717 & 0.000 & 0/43 \\
-Numerical & Generic guard & 60 & 46 & 0.767 & 0.000 & 0/46 \\
+Numerical & Base & 58 & 40 & 0.690 & 0.200 & 8/40 \\
+Numerical & Double-pass & 58 & 41 & 0.707 & 0.000 & 0/41 \\
+Numerical & Verification only & 58 & 41 & 0.707 & 0.000 & 0/41 \\
+Numerical & Generic guard & 58 & 44 & 0.759 & 0.000 & 0/44 \\
 Semantic/schema & Base & 60 & 59 & 0.983 & 0.017 & 1/59 \\
 Semantic/schema & Double-pass & 60 & 60 & 1.000 & 0.000 & 0/60 \\
 Semantic/schema & Verification only & 60 & 60 & 1.000 & 0.000 & 0/60 \\
@@ -550,7 +551,7 @@ Semantic/schema & Generic guard & 60 & 60 & 1.000 & 0.000 & 0/60 \\
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/fig_severity_heatmap}
-\caption{Expanded GPT-only blind compliance by poison type and severity. Values average the three public expanded cross-agent adapters; blank cells indicate that a task family does not define that severity for the operator. Task counts vary by operator and are shown in the cells.}
+\caption{Expanded GPT BCR by operator and legacy severity label. Conditional means omit adapters with no exposure; $n$ counts exposed trajectories across adapters. Empty cells distinguish no tasks from no exposure. Some repeated instances changed labels without changing poison magnitude, so these labels do not support a causal severity ordering.}
 \label{fig:severity-heatmap}
 \end{figure*}
 
@@ -608,7 +609,7 @@ The repeated-poison manifest records wall-clock time for every multi-table stres
 
 \subsection{Scorer Revision Sensitivity}
 \label{sec:scorer-sensitivity}
-Table~\ref{tab:appendix-scorer-revision-impact} compares evaluator commit \texttt{f0aa054} with the current scorer on the same 960 trajectories. The current scorer uses mutually exclusive answer selection and removes known adapter display prefixes for all methods. Regression checks verify that adding any supported display prefix leaves all metrics unchanged. This normalization is necessary because wrapper text can otherwise create an artificial high-priority conclusion span. Task answers and tool events are unchanged; ambiguous and unresolved selections remain in the denominator. The released counts and input hashes support reproduction.
+Table~\ref{tab:appendix-scorer-revision-impact} compares legacy evaluator \texttt{f0aa054} and original references with the revised parser and corrected references on the same 944 retained defense trajectories. Thus it combines parser and reference changes. The separate three-version comparison against fixed baseline \texttt{4ae42cd} isolates those effects in Appendix~\ref{sec:revision-v2}. Raw answers, events, and ambiguous-answer denominator treatment are preserved.
 
 \begin{table}[t]
 \centering
@@ -619,10 +620,10 @@ Table~\ref{tab:appendix-scorer-revision-impact} compares evaluator commit \textt
 Variant & Clean TSR & Poisoned TSR & BCR & PAR & VPA & VR & RR \\
 \midrule
 % Generated by toxictool_bench/sync_defense_paper.py; do not edit numbers.
-Base & 0.91$\to$0.78 & 0.82$\to$0.67 & 0.11$\to$0.10 & 0.27$\to$0.10 & 0.15$\to$0.00 & 0.47$\to$0.47 & 0.46$\to$0.30 \\
-Double-pass & 0.91$\to$0.78 & 0.92$\to$0.78 & 0.01$\to$0.00 & 0.17$\to$0.00 & 0.16$\to$0.00 & 0.98$\to$0.98 & 0.95$\to$0.80 \\
-Verification only & 0.92$\to$0.73 & 0.93$\to$0.68 & 0.02$\to$0.00 & 0.29$\to$0.00 & 0.27$\to$0.00 & 0.96$\to$0.96 & 0.95$\to$0.68 \\
-Generic guard & 0.93$\to$0.71 & 0.93$\to$0.71 & 0.00$\to$0.00 & 0.25$\to$0.00 & 0.25$\to$0.00 & 0.97$\to$0.97 & 0.94$\to$0.70 \\
+Base & 0.92$\to$0.99 & 0.83$\to$0.89 & 0.11$\to$0.09 & 0.27$\to$0.09 & 0.15$\to$0.00 & 0.46$\to$0.46 & 0.46$\to$0.44 \\
+Double-pass & 0.92$\to$0.99 & 0.93$\to$1.00 & 0.01$\to$0.00 & 0.17$\to$0.00 & 0.16$\to$0.00 & 0.98$\to$0.98 & 0.97$\to$0.98 \\
+Verification only & 0.93$\to$0.92 & 0.93$\to$0.90 & 0.02$\to$0.00 & 0.29$\to$0.01 & 0.27$\to$0.01 & 0.97$\to$0.97 & 0.96$\to$0.86 \\
+Generic guard & 0.94$\to$0.98 & 0.94$\to$0.97 & 0.00$\to$0.00 & 0.24$\to$0.00 & 0.24$\to$0.00 & 0.97$\to$0.97 & 0.95$\to$0.94 \\
 \bottomrule
 \end{tabular}
 \caption{Legacy $\to$ current scorer on identical defense trajectories. Behavior rates use the same exposed denominators as Table~\ref{tab:appendix-defense-exposure}.}

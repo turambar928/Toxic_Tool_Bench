@@ -42,6 +42,8 @@ def main():
         for s in titles for a in NAMES if a != 'langgraph_react_full'
         for r in summaries if r['suite']==s and r['adapter']==a and float(r['poison_probability'])==1])
     sources = {manifest,summary_path,Path(__file__),ROOT/'toxictool_bench/evaluator.py',ROOT/'toxictool_bench/summarize_verification_stress.py'}
+    sources.update(ROOT / 'toxictool_bench' / name for name in (
+        'answer_selection.py', 'audit_reference_answers.py', 'results/reference_answer_audit.json'))
     sources.update(ROOT/s['path'] for s in read_csv(manifest))
     sources.update(ROOT/s['source'] for s,_ in auto)
     sources.update(ROOT/s['source'] for s,_ in alternatives)
@@ -50,7 +52,7 @@ def main():
     (RESULTS/'supplementary_analysis_provenance.json').write_text(json.dumps({
         'n_stress_trajectories':sum(len(g) for g in groups.values()),
         'sha256':{str(p.relative_to(ROOT)):sha(p) for p in sorted(sources)}},indent=2)+'\n')
-    print('Synchronized 1,596 repeated-poison trajectories and 480 AutoGen trajectories.')
+    print('Synchronized repeated-poison and AutoGen summaries with explicit reference exclusions.')
 
 
 if __name__ == '__main__':

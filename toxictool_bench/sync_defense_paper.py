@@ -75,8 +75,8 @@ def main() -> None:
     runs = load_runs(DEFAULT_MANIFEST)
     if set(key[0] for key in runs) != set(SUITES):
         raise ValueError("Expected the two registered defense suites")
-    if any(len(group) != 60 for group in runs.values()):
-        raise ValueError("Expected 60 task IDs in each method/suite/environment")
+    if any(len(group) != (58 if key[0]=='numerical_iclr2027' else 60) for key, group in runs.items()):
+        raise ValueError("Expected 58 numerical / 60 semantic task IDs after reference exclusions")
     toxic = {(suite, adapter): rows for (suite, adapter, env), rows in runs.items() if env == "toxic"}
     exposure = build_exposure(toxic)
     paired = build_paired(toxic, 13)
@@ -181,6 +181,8 @@ def main() -> None:
     table_rows(appendix, "tab:appendix-scorer-revision-impact", [
         line(NAMES[a], *[f"{f(next(r for r in impacts if r['adapter']==a and r['metric']==m)['old_value'])}$\\to${f(next(r for r in impacts if r['adapter']==a and r['metric']==m)['revised_value'])}" for m in ('clean_tsr','toxic_tsr','toxic_bcr','toxic_par','toxic_vpa','toxic_vr','toxic_rr')]) for a in NAMES])
     inputs = {DEFAULT_MANIFEST, ROOT / "toxictool_bench/evaluator.py", Path(__file__), ROOT / "toxictool_bench/build_defense_paired_analysis.py", audit.DEFAULT_AUDIT}
+    inputs.update(ROOT / 'toxictool_bench' / name for name in (
+        'answer_selection.py', 'audit_reference_answers.py', 'results/reference_answer_audit.json'))
     inputs.update(ROOT / row['path'] for row in read_csv(DEFAULT_MANIFEST))
     inputs.update(ROOT / row['source_file'] for row in audit.read_csv(audit.DEFAULT_AUDIT))
     inputs.update(ROOT / path for row in manifest_rows for path in row['tasks'].split(';'))

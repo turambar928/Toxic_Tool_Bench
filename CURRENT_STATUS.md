@@ -1,43 +1,41 @@
 # ToxicBench Current Status
 
-Last updated: 2026-08-31
+Last updated: 2026-09-16
 
-## Completed
+## Submission revision
 
-- Cross-framework benchmark evaluation on LangGraph, smolagents, PandasAI, DA-Agent, and AutoGen where feasible.
-- Cross-model numerical (34 tasks) and semantic/schema (24 tasks) evaluations using GPT, Claude, and Qwen families.
-- Expanded GPT-only cross-agent evaluation with 60 numerical and 60 semantic/schema tasks.
-- Leakage-free LangGraph defense ablation on 120 tasks with Claude Haiku.
-- Matched-compute Double-pass baseline, Verification-only baseline, and Generic Guard.
-- Task-level bootstrap confidence intervals, poison/severity breakdowns, clean-transition analysis, tool-event counts, and latency distributions.
-- Complete repeated-poison matrix: 1,596 toxic trajectories over numerical, semantic/schema, and 13 multi-table tasks at four poisoning probabilities.
-- Deterministic strict scorer, regression tests, release audit, licenses, manifests, and checksums.
-- Blinded 120-trajectory packet, independent labels, pre-adjudication agreement, and merge utility for a genuine two-person audit.
-- Paper updated to use only post-fix defense results and to state that zero BCR is limited to `poison_once`.
+The scoring-only answer selector is frozen at commit `98c2ed8`. A versioned analysis has rescored 5,396 historical trajectories without changing raw trajectories, historical task JSONL, poison targets, or human labels. The manuscript uses corrected scoring references and excludes two denominator-ambiguous tasks from revised comparisons.
 
-## Main Post-Fix Defense Result
+The full execution record is [SCORER_REPAIR_EXECUTION_CN.md](SCORER_REPAIR_EXECUTION_CN.md).
+
+## Revised defense result (118 retained tasks)
 
 | Variant | Clean TSR | Poisoned TSR | BCR | VR | RR |
 |---|---:|---:|---:|---:|---:|
-| Base | 0.91 | 0.82 | 0.11 | 0.47 | 0.46 |
-| Double-pass | 0.91 | 0.92 | 0.01 | 0.98 | 0.95 |
-| Verification-only | 0.92 | 0.93 | 0.02 | 0.96 | 0.95 |
-| Generic Guard | 0.93 | 0.93 | 0.00 | 0.97 | 0.94 |
+| Base | 0.99 | 0.89 | 0.09 | 0.46 | 0.44 |
+| Double-pass | 0.99 | 1.00 | 0.00 | 0.98 | 0.98 |
+| Verification-only | 0.92 | 0.90 | 0.00 | 0.97 | 0.86 |
+| Generic Guard | 0.98 | 0.97 | 0.00 | 0.97 | 0.94 |
 
-Extra evidence and compute explain most of the improvement. Generic Guard removes the residual observed blind compliance under `poison_once`; it is not a guarantee under repeated or shared-source corruption.
+Double-pass minus Base poisoned TSR is +0.110. Its template-cluster 95% interval is [0.056, 0.171], and its dataset-cluster interval is [0.060, 0.172]. Generic Guard does not improve on Double-pass in this matrix.
 
-## Repeated-Poison Boundary
+## Scorer and reference audit
 
-At poisoning probability 1.00, Generic Guard BCR is 0.24 on numerical tasks, 0.10 on semantic/schema tasks, and 0.00 on the 13 joins. Numerical RR falls to 0.24. The full curves and confidence intervals are in `verification_stress_summary.csv` and `figures/verification_stress_curves.pdf`.
+- Development recheck on the audit-informed 240 cases: TSR agreement 238/240 (99.2%), precision 1.000, recall 0.990. This is not independent validation.
+- Reference audit: seven incorrect numerical instances, two tied-answer omissions, and two denominator-ambiguous instances.
+- Revised denominators: 118 single-table task instances, 944 defense trajectories, and 1,572 repeated-poison trajectories.
+- Forty historical human-audit rows require reference re-review; their original labels remain unchanged.
+- PandasAI is excluded from main behavioral comparisons because its historical adapter mutates the final chat return after agent completion.
 
-## Audit Result
+## Frozen independent validation
 
-The two-annotator audit has 0.967 macro percent agreement and 0.913 macro Cohen's kappa over 120 trajectories. Per-label kappa is 0.914 for BCR, 0.826 for ADR, 0.948 for VR, and 0.965 for RR. Separate blind review resolved all 16 disputed label cells across 12 trajectories. Against the final 120-row consensus, scorer F1 is 0.667 for BCR, 0.059 for ADR, 0.971 for VR, and 0.913 for RR. A targeted audit of 18 non-disputed scorer-positive VR cases found 18/18 task-relevant target checks with substantive evidence; this conditional sample is not an overall accuracy estimate.
+The protocol targets 200 trajectories: 90 reused semantic trajectories and 110 new numerical trajectories on task instances excluded from parser development. The current packet is only 90/200 and human annotation has not started. API preflight for the fixed Claude Haiku and GPT-5.4-mini models returns HTTP 502 (direct-host diagnostic: HTTP 503), so the new matrix was not started and no substitute model was used.
 
-The defense analysis now includes task-paired Generic Guard versus Double-pass
-bootstrap differences and suite-level PDR/`n_exposed` denominators. No new
-factorial same-task/different-operator run was added; operator comparisons in the
-paper are explicitly descriptive because the current task construction does not
-support a causal operator estimate.
+## Paper status
 
-The final PDF must be compiled and visually checked on Overleaf because no local TeX toolchain is installed.
+- Main text ends on page 9; references start on page 10.
+- The manuscript distinguishes development recheck, reference re-review, and pending independent validation.
+- It no longer claims Generic Guard superiority or that every VPA case ignored sufficient correct evidence.
+- Test suite: 116 passed.
+
+The paper is materially repaired but not final: the 110 new trajectories, two-person validation annotation, and 40-row reference re-review remain required submission work.

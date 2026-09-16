@@ -1,14 +1,16 @@
 {
   "rows": {
     "cross_model": 1460,
-    "expanded_gpt": 720
+    "expanded_gpt": 708
   },
   "bootstrap_iterations": 2000,
   "inputs": {
+    "toxictool_bench/answer_selection.py": "30d202fc20301d2a7c4fbc6d3637f5030fb7cc618687c8c9ec945829db9f8958",
+    "toxictool_bench/audit_reference_answers.py": "7c4f266f34bb8e214816ed03b37f3d1b516cb390b1dbbf8c1ca4a47a7b8a4f87",
     "toxictool_bench/bootstrap_ci.py": "74d9da04d104221842ba87882415049282a31d2c23de7fc5343ff8f4c2cc6253",
-    "toxictool_bench/build_public_paper_summaries.py": "a5a03dcef80e49372123a421646348fba98c713b5ab203e4204b1aac9ba0514f",
-    "toxictool_bench/evaluator.py": "782667a232b1dd74c64aa5df68fb5955547d805e7ffb339c5d5cf1644c5b917d",
-    "toxictool_bench/rebuild_paper_results.py": "3823292abec747fe251585e1268a9771456e65563a186bb8acbecad50f66b105",
+    "toxictool_bench/build_public_paper_summaries.py": "233a103844880ac402156cca459dccf69bb73af2edb4b8e0e0dc834825f60896",
+    "toxictool_bench/evaluator.py": "70c5a5e044950583fd44b284df201deba733a0735820bd64c753ce20b6f37972",
+    "toxictool_bench/rebuild_paper_results.py": "c0fc0330e41e77f24a3570998373e5112314aed666856bce136f1e9bfd0b1715",
     "toxictool_bench/results/20260707-124859_autogen_tool_agent_gpt-5.4-mini_both.jsonl": "d61a3c55d7f0df5f1c8a8df30a9dd3146f1c21ee3ba7ce0cbf52b35d1dcf5a17",
     "toxictool_bench/results/20260707-130327_pandasai_dataframe_gpt-5.4-mini_both.jsonl": "69e45ce15430e767ed12dfcd528701ebff5c30cdf6cf8799495d75ca133ce061",
     "toxictool_bench/results/20260707-130859_da_agent_full_gpt-5.4-mini_both.jsonl": "0a587a20a003291bccf23003cd989c77b6953fb9b4045ed1d9779d11c48a772a",
@@ -41,8 +43,9 @@
     "toxictool_bench/results/20260721-184737_smolagents_toolcalling_gpt-5.4-mini_both.jsonl": "2e2e9f54d811908388b6df98c679bfb4cb8e3d7653e7215aae300089c01af824",
     "toxictool_bench/results/20260721-203945_autogen_tool_agent_gpt-5.4-mini_both.jsonl": "5a7ebb149f0e7e66f0e048c6d9155240107ee4c485c9784bc7f9d86a6333a787",
     "toxictool_bench/results/paper_run_manifest.csv": "802367fff6ebf792516ed24a17b5308a2e467dad00eab83d1268b7173bc266a1",
+    "toxictool_bench/results/reference_answer_audit.json": "6f0bf8cc97a2e7628d63f1f7a289460a23028351cf1065f88f0c7636a65991c9",
     "toxictool_bench/summarize_results.py": "56acc23599accdff480ceacd855b322899974b6137fd7662661e4385bf16617f",
-    "toxictool_bench/sync_primary_paper.py": "984e0a9ca9ed8b9c949adb03f250202cb0721b2d9809ecaa4891c4c507b17a5c",
+    "toxictool_bench/sync_primary_paper.py": "9b07e37a891dd08da2e5d9a409c3ada9f52ee2a274cd4aea915d4864d51b7d85",
     "toxictool_bench/tasks/numerical_expanded.jsonl": "94411b471e35fd1f031bee3ef612d54b1877b6071111476fb674a40fcaff0864",
     "toxictool_bench/tasks/numerical_iclr2027.jsonl": "e2cdb5b196c8dda35c0fc3a140902839560ac6627367bbe0c5f0c138af815a38",
     "toxictool_bench/tasks/semantic_schema.jsonl": "07c950bf180ec9a8b9d235579e69c3bc792da3d8688d4503482f91467b73d944",

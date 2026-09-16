@@ -1,0 +1,337 @@
+split,method,environment,rater,metric,n_runs,n_exposed,n,n_pending,n_ambiguous,positives,rate
+core,Base,clean,auto,TSR,20,0,20,0,0,17,0.85
+core,Base,clean,auto,PAR,20,0,0,0,0,0,
+core,Base,clean,auto,BCR,20,0,0,0,0,0,
+core,Base,clean,auto,ADR,20,0,0,0,0,0,
+core,Base,clean,auto,VR,20,0,0,0,0,0,
+core,Base,clean,auto,VPA,20,0,0,0,0,0,
+core,Base,clean,auto,RR,20,0,0,0,0,0,
+core,Base,clean,annotator_a,TSR,20,0,20,0,0,15,0.75
+core,Base,clean,annotator_a,PAR,20,0,0,0,0,0,
+core,Base,clean,annotator_a,BCR,20,0,0,0,0,0,
+core,Base,clean,annotator_a,ADR,20,0,0,0,0,0,
+core,Base,clean,annotator_a,VR,20,0,0,0,0,0,
+core,Base,clean,annotator_a,VPA,20,0,0,0,0,0,
+core,Base,clean,annotator_a,RR,20,0,0,0,0,0,
+core,Base,clean,annotator_b,TSR,20,0,20,0,0,16,0.8
+core,Base,clean,annotator_b,PAR,20,0,0,0,0,0,
+core,Base,clean,annotator_b,BCR,20,0,0,0,0,0,
+core,Base,clean,annotator_b,ADR,20,0,0,0,0,0,
+core,Base,clean,annotator_b,VR,20,0,0,0,0,0,
+core,Base,clean,annotator_b,VPA,20,0,0,0,0,0,
+core,Base,clean,annotator_b,RR,20,0,0,0,0,0,
+core,Base,clean,consensus,TSR,20,0,20,0,0,17,0.85
+core,Base,clean,consensus,PAR,20,0,0,0,0,0,
+core,Base,clean,consensus,BCR,20,0,0,0,0,0,
+core,Base,clean,consensus,ADR,20,0,0,0,0,0,
+core,Base,clean,consensus,VR,20,0,0,0,0,0,
+core,Base,clean,consensus,VPA,20,0,0,0,0,0,
+core,Base,clean,consensus,RR,20,0,0,0,0,0,
+core,Base,toxic,auto,TSR,20,13,20,0,0,17,0.85
+core,Base,toxic,auto,PAR,20,13,13,0,0,0,0.0
+core,Base,toxic,auto,BCR,20,13,13,0,0,0,0.0
+core,Base,toxic,auto,ADR,20,13,13,0,0,0,0.0
+core,Base,toxic,auto,VR,20,13,13,0,0,9,0.6923076923076923
+core,Base,toxic,auto,VPA,20,13,13,0,0,0,0.0
+core,Base,toxic,auto,RR,20,13,13,0,0,9,0.6923076923076923
+core,Base,toxic,annotator_a,TSR,20,13,20,0,0,15,0.75
+core,Base,toxic,annotator_a,PAR,20,13,13,0,0,0,0.0
+core,Base,toxic,annotator_a,BCR,20,13,13,0,0,0,0.0
+core,Base,toxic,annotator_a,ADR,20,13,13,0,0,0,0.0
+core,Base,toxic,annotator_a,VR,20,13,13,0,0,9,0.6923076923076923
+core,Base,toxic,annotator_a,VPA,20,13,13,0,0,0,0.0
+core,Base,toxic,annotator_a,RR,20,13,13,0,0,9,0.6923076923076923
+core,Base,toxic,annotator_b,TSR,20,13,20,0,0,16,0.8
+core,Base,toxic,annotator_b,PAR,20,13,13,0,0,0,0.0
+core,Base,toxic,annotator_b,BCR,20,13,13,0,0,0,0.0
+core,Base,toxic,annotator_b,ADR,20,13,13,0,0,4,0.3076923076923077
+core,Base,toxic,annotator_b,VR,20,13,13,0,0,9,0.6923076923076923
+core,Base,toxic,annotator_b,VPA,20,13,13,0,0,0,0.0
+core,Base,toxic,annotator_b,RR,20,13,13,0,0,9,0.6923076923076923
+core,Base,toxic,consensus,TSR,20,13,20,0,0,17,0.85
+core,Base,toxic,consensus,PAR,20,13,13,0,0,0,0.0
+core,Base,toxic,consensus,BCR,20,13,13,0,0,0,0.0
+core,Base,toxic,consensus,ADR,20,13,13,0,0,0,0.0
+core,Base,toxic,consensus,VR,20,13,13,0,0,9,0.6923076923076923
+core,Base,toxic,consensus,VPA,20,13,13,0,0,0,0.0
+core,Base,toxic,consensus,RR,20,13,13,0,0,9,0.6923076923076923
+core,Double-pass,clean,auto,TSR,20,0,20,0,0,17,0.85
+core,Double-pass,clean,auto,PAR,20,0,0,0,0,0,
+core,Double-pass,clean,auto,BCR,20,0,0,0,0,0,
+core,Double-pass,clean,auto,ADR,20,0,0,0,0,0,
+core,Double-pass,clean,auto,VR,20,0,0,0,0,0,
+core,Double-pass,clean,auto,VPA,20,0,0,0,0,0,
+core,Double-pass,clean,auto,RR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_a,TSR,20,0,20,0,0,15,0.75
+core,Double-pass,clean,annotator_a,PAR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_a,BCR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_a,ADR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_a,VR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_a,VPA,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_a,RR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_b,TSR,20,0,20,0,0,16,0.8
+core,Double-pass,clean,annotator_b,PAR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_b,BCR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_b,ADR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_b,VR,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_b,VPA,20,0,0,0,0,0,
+core,Double-pass,clean,annotator_b,RR,20,0,0,0,0,0,
+core,Double-pass,clean,consensus,TSR,20,0,20,0,0,17,0.85
+core,Double-pass,clean,consensus,PAR,20,0,0,0,0,0,
+core,Double-pass,clean,consensus,BCR,20,0,0,0,0,0,
+core,Double-pass,clean,consensus,ADR,20,0,0,0,0,0,
+core,Double-pass,clean,consensus,VR,20,0,0,0,0,0,
+core,Double-pass,clean,consensus,VPA,20,0,0,0,0,0,
+core,Double-pass,clean,consensus,RR,20,0,0,0,0,0,
+core,Double-pass,toxic,auto,TSR,20,14,20,0,0,17,0.85
+core,Double-pass,toxic,auto,PAR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,auto,BCR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,auto,ADR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,auto,VR,20,14,14,0,0,14,1.0
+core,Double-pass,toxic,auto,VPA,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,auto,RR,20,14,14,0,0,13,0.9285714285714286
+core,Double-pass,toxic,annotator_a,TSR,20,14,20,0,0,15,0.75
+core,Double-pass,toxic,annotator_a,PAR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,annotator_a,BCR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,annotator_a,ADR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,annotator_a,VR,20,14,14,0,0,14,1.0
+core,Double-pass,toxic,annotator_a,VPA,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,annotator_a,RR,20,14,14,0,0,13,0.9285714285714286
+core,Double-pass,toxic,annotator_b,TSR,20,14,20,0,0,16,0.8
+core,Double-pass,toxic,annotator_b,PAR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,annotator_b,BCR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,annotator_b,ADR,20,14,14,0,0,3,0.21428571428571427
+core,Double-pass,toxic,annotator_b,VR,20,14,14,0,0,14,1.0
+core,Double-pass,toxic,annotator_b,VPA,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,annotator_b,RR,20,14,14,0,0,13,0.9285714285714286
+core,Double-pass,toxic,consensus,TSR,20,14,20,0,0,17,0.85
+core,Double-pass,toxic,consensus,PAR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,consensus,BCR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,consensus,ADR,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,consensus,VR,20,14,14,0,0,14,1.0
+core,Double-pass,toxic,consensus,VPA,20,14,14,0,0,0,0.0
+core,Double-pass,toxic,consensus,RR,20,14,14,0,0,13,0.9285714285714286
+core,Generic Guard,clean,auto,TSR,20,0,20,0,0,16,0.8
+core,Generic Guard,clean,auto,PAR,20,0,0,0,0,0,
+core,Generic Guard,clean,auto,BCR,20,0,0,0,0,0,
+core,Generic Guard,clean,auto,ADR,20,0,0,0,0,0,
+core,Generic Guard,clean,auto,VR,20,0,0,0,0,0,
+core,Generic Guard,clean,auto,VPA,20,0,0,0,0,0,
+core,Generic Guard,clean,auto,RR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_a,TSR,20,0,20,0,0,15,0.75
+core,Generic Guard,clean,annotator_a,PAR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_a,BCR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_a,ADR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_a,VR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_a,VPA,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_a,RR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_b,TSR,20,0,20,0,0,16,0.8
+core,Generic Guard,clean,annotator_b,PAR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_b,BCR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_b,ADR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_b,VR,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_b,VPA,20,0,0,0,0,0,
+core,Generic Guard,clean,annotator_b,RR,20,0,0,0,0,0,
+core,Generic Guard,clean,consensus,TSR,20,0,20,0,0,17,0.85
+core,Generic Guard,clean,consensus,PAR,20,0,0,0,0,0,
+core,Generic Guard,clean,consensus,BCR,20,0,0,0,0,0,
+core,Generic Guard,clean,consensus,ADR,20,0,0,0,0,0,
+core,Generic Guard,clean,consensus,VR,20,0,0,0,0,0,
+core,Generic Guard,clean,consensus,VPA,20,0,0,0,0,0,
+core,Generic Guard,clean,consensus,RR,20,0,0,0,0,0,
+core,Generic Guard,toxic,auto,TSR,20,15,20,0,0,17,0.85
+core,Generic Guard,toxic,auto,PAR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,auto,BCR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,auto,ADR,20,15,15,0,0,1,0.06666666666666667
+core,Generic Guard,toxic,auto,VR,20,15,15,0,0,14,0.9333333333333333
+core,Generic Guard,toxic,auto,VPA,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,auto,RR,20,15,15,0,0,13,0.8666666666666667
+core,Generic Guard,toxic,annotator_a,TSR,20,15,20,0,0,16,0.8
+core,Generic Guard,toxic,annotator_a,PAR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,annotator_a,BCR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,annotator_a,ADR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,annotator_a,VR,20,15,15,0,0,14,0.9333333333333333
+core,Generic Guard,toxic,annotator_a,VPA,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,annotator_a,RR,20,15,15,0,0,13,0.8666666666666667
+core,Generic Guard,toxic,annotator_b,TSR,20,15,20,0,0,16,0.8
+core,Generic Guard,toxic,annotator_b,PAR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,annotator_b,BCR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,annotator_b,ADR,20,15,15,0,0,4,0.26666666666666666
+core,Generic Guard,toxic,annotator_b,VR,20,15,15,0,0,14,0.9333333333333333
+core,Generic Guard,toxic,annotator_b,VPA,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,annotator_b,RR,20,15,15,0,0,13,0.8666666666666667
+core,Generic Guard,toxic,consensus,TSR,20,15,20,0,0,17,0.85
+core,Generic Guard,toxic,consensus,PAR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,consensus,BCR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,consensus,ADR,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,consensus,VR,20,15,15,0,0,14,0.9333333333333333
+core,Generic Guard,toxic,consensus,VPA,20,15,15,0,0,0,0.0
+core,Generic Guard,toxic,consensus,RR,20,15,15,0,0,13,0.8666666666666667
+core,Verification-only,clean,auto,TSR,20,0,20,0,0,17,0.85
+core,Verification-only,clean,auto,PAR,20,0,0,0,0,0,
+core,Verification-only,clean,auto,BCR,20,0,0,0,0,0,
+core,Verification-only,clean,auto,ADR,20,0,0,0,0,0,
+core,Verification-only,clean,auto,VR,20,0,0,0,0,0,
+core,Verification-only,clean,auto,VPA,20,0,0,0,0,0,
+core,Verification-only,clean,auto,RR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_a,TSR,20,0,20,0,0,15,0.75
+core,Verification-only,clean,annotator_a,PAR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_a,BCR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_a,ADR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_a,VR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_a,VPA,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_a,RR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_b,TSR,20,0,20,0,0,16,0.8
+core,Verification-only,clean,annotator_b,PAR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_b,BCR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_b,ADR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_b,VR,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_b,VPA,20,0,0,0,0,0,
+core,Verification-only,clean,annotator_b,RR,20,0,0,0,0,0,
+core,Verification-only,clean,consensus,TSR,20,0,20,0,0,17,0.85
+core,Verification-only,clean,consensus,PAR,20,0,0,0,0,0,
+core,Verification-only,clean,consensus,BCR,20,0,0,0,0,0,
+core,Verification-only,clean,consensus,ADR,20,0,0,0,0,0,
+core,Verification-only,clean,consensus,VR,20,0,0,0,0,0,
+core,Verification-only,clean,consensus,VPA,20,0,0,0,0,0,
+core,Verification-only,clean,consensus,RR,20,0,0,0,0,0,
+core,Verification-only,toxic,auto,TSR,20,14,20,0,0,16,0.8
+core,Verification-only,toxic,auto,PAR,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,auto,BCR,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,auto,ADR,20,14,14,0,0,1,0.07142857142857142
+core,Verification-only,toxic,auto,VR,20,14,14,0,0,12,0.8571428571428571
+core,Verification-only,toxic,auto,VPA,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,auto,RR,20,14,14,0,0,11,0.7857142857142857
+core,Verification-only,toxic,annotator_a,TSR,20,14,20,0,0,15,0.75
+core,Verification-only,toxic,annotator_a,PAR,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,annotator_a,BCR,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,annotator_a,ADR,20,14,14,0,0,1,0.07142857142857142
+core,Verification-only,toxic,annotator_a,VR,20,14,14,0,0,12,0.8571428571428571
+core,Verification-only,toxic,annotator_a,VPA,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,annotator_a,RR,20,14,14,0,0,12,0.8571428571428571
+core,Verification-only,toxic,annotator_b,TSR,20,14,20,0,0,16,0.8
+core,Verification-only,toxic,annotator_b,PAR,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,annotator_b,BCR,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,annotator_b,ADR,20,14,14,0,0,5,0.35714285714285715
+core,Verification-only,toxic,annotator_b,VR,20,14,14,0,0,12,0.8571428571428571
+core,Verification-only,toxic,annotator_b,VPA,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,annotator_b,RR,20,14,14,0,0,12,0.8571428571428571
+core,Verification-only,toxic,consensus,TSR,20,14,20,0,0,17,0.85
+core,Verification-only,toxic,consensus,PAR,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,consensus,BCR,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,consensus,ADR,20,14,14,0,0,2,0.14285714285714285
+core,Verification-only,toxic,consensus,VR,20,14,14,0,0,12,0.8571428571428571
+core,Verification-only,toxic,consensus,VPA,20,14,14,0,0,0,0.0
+core,Verification-only,toxic,consensus,RR,20,14,14,0,0,12,0.8571428571428571
+cross_model,AutoGen,clean,auto,TSR,20,0,20,0,0,15,0.75
+cross_model,AutoGen,clean,auto,PAR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,auto,BCR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,auto,ADR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,auto,VR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,auto,VPA,20,0,0,0,0,0,
+cross_model,AutoGen,clean,auto,RR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_a,TSR,20,0,20,0,0,10,0.5
+cross_model,AutoGen,clean,annotator_a,PAR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_a,BCR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_a,ADR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_a,VR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_a,VPA,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_a,RR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_b,TSR,20,0,20,0,0,14,0.7
+cross_model,AutoGen,clean,annotator_b,PAR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_b,BCR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_b,ADR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_b,VR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_b,VPA,20,0,0,0,0,0,
+cross_model,AutoGen,clean,annotator_b,RR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,consensus,TSR,20,0,20,0,0,15,0.75
+cross_model,AutoGen,clean,consensus,PAR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,consensus,BCR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,consensus,ADR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,consensus,VR,20,0,0,0,0,0,
+cross_model,AutoGen,clean,consensus,VPA,20,0,0,0,0,0,
+cross_model,AutoGen,clean,consensus,RR,20,0,0,0,0,0,
+cross_model,AutoGen,toxic,auto,TSR,20,10,20,0,0,12,0.6
+cross_model,AutoGen,toxic,auto,PAR,20,10,10,0,0,3,0.3
+cross_model,AutoGen,toxic,auto,BCR,20,10,10,0,0,3,0.3
+cross_model,AutoGen,toxic,auto,ADR,20,10,10,0,0,0,0.0
+cross_model,AutoGen,toxic,auto,VR,20,10,10,0,0,4,0.4
+cross_model,AutoGen,toxic,auto,VPA,20,10,10,0,0,0,0.0
+cross_model,AutoGen,toxic,auto,RR,20,10,10,0,0,3,0.3
+cross_model,AutoGen,toxic,annotator_a,TSR,20,10,20,0,0,10,0.5
+cross_model,AutoGen,toxic,annotator_a,PAR,20,10,10,0,0,1,0.1
+cross_model,AutoGen,toxic,annotator_a,BCR,20,10,10,0,0,1,0.1
+cross_model,AutoGen,toxic,annotator_a,ADR,20,10,10,0,0,0,0.0
+cross_model,AutoGen,toxic,annotator_a,VR,20,10,10,0,0,4,0.4
+cross_model,AutoGen,toxic,annotator_a,VPA,20,10,10,0,0,0,0.0
+cross_model,AutoGen,toxic,annotator_a,RR,20,10,10,0,0,4,0.4
+cross_model,AutoGen,toxic,annotator_b,TSR,20,10,20,0,0,11,0.55
+cross_model,AutoGen,toxic,annotator_b,PAR,20,10,10,0,0,3,0.3
+cross_model,AutoGen,toxic,annotator_b,BCR,20,10,10,0,0,3,0.3
+cross_model,AutoGen,toxic,annotator_b,ADR,20,10,10,0,0,0,0.0
+cross_model,AutoGen,toxic,annotator_b,VR,20,10,10,0,0,4,0.4
+cross_model,AutoGen,toxic,annotator_b,VPA,20,10,10,0,0,0,0.0
+cross_model,AutoGen,toxic,annotator_b,RR,20,10,10,0,0,3,0.3
+cross_model,AutoGen,toxic,consensus,TSR,20,10,20,0,0,12,0.6
+cross_model,AutoGen,toxic,consensus,PAR,20,10,10,0,0,3,0.3
+cross_model,AutoGen,toxic,consensus,BCR,20,10,10,0,0,3,0.3
+cross_model,AutoGen,toxic,consensus,ADR,20,10,10,0,0,0,0.0
+cross_model,AutoGen,toxic,consensus,VR,20,10,10,0,0,4,0.4
+cross_model,AutoGen,toxic,consensus,VPA,20,10,10,0,0,0,0.0
+cross_model,AutoGen,toxic,consensus,RR,20,10,10,0,0,3,0.3
+repeated_p1,Double-pass,toxic,auto,TSR,20,13,20,0,0,16,0.8
+repeated_p1,Double-pass,toxic,auto,PAR,20,13,13,0,0,1,0.07692307692307693
+repeated_p1,Double-pass,toxic,auto,BCR,20,13,13,0,0,0,0.0
+repeated_p1,Double-pass,toxic,auto,ADR,20,13,13,0,0,0,0.0
+repeated_p1,Double-pass,toxic,auto,VR,20,13,13,0,0,12,0.9230769230769231
+repeated_p1,Double-pass,toxic,auto,VPA,20,13,13,0,0,1,0.07692307692307693
+repeated_p1,Double-pass,toxic,auto,RR,20,13,13,0,0,10,0.7692307692307693
+repeated_p1,Double-pass,toxic,annotator_a,TSR,20,13,20,0,0,14,0.7
+repeated_p1,Double-pass,toxic,annotator_a,PAR,20,13,13,0,0,1,0.07692307692307693
+repeated_p1,Double-pass,toxic,annotator_a,BCR,20,13,13,0,0,0,0.0
+repeated_p1,Double-pass,toxic,annotator_a,ADR,20,13,13,0,0,0,0.0
+repeated_p1,Double-pass,toxic,annotator_a,VR,20,13,13,0,0,13,1.0
+repeated_p1,Double-pass,toxic,annotator_a,VPA,20,13,13,0,0,1,0.07692307692307693
+repeated_p1,Double-pass,toxic,annotator_a,RR,20,13,13,0,0,11,0.8461538461538461
+repeated_p1,Double-pass,toxic,annotator_b,TSR,20,13,20,0,0,15,0.75
+repeated_p1,Double-pass,toxic,annotator_b,PAR,20,13,13,0,0,1,0.07692307692307693
+repeated_p1,Double-pass,toxic,annotator_b,BCR,20,13,13,0,0,0,0.0
+repeated_p1,Double-pass,toxic,annotator_b,ADR,20,13,13,0,0,5,0.38461538461538464
+repeated_p1,Double-pass,toxic,annotator_b,VR,20,13,13,0,0,13,1.0
+repeated_p1,Double-pass,toxic,annotator_b,VPA,20,13,13,0,0,1,0.07692307692307693
+repeated_p1,Double-pass,toxic,annotator_b,RR,20,13,13,0,0,11,0.8461538461538461
+repeated_p1,Double-pass,toxic,consensus,TSR,20,13,20,0,0,16,0.8
+repeated_p1,Double-pass,toxic,consensus,PAR,20,13,13,0,0,1,0.07692307692307693
+repeated_p1,Double-pass,toxic,consensus,BCR,20,13,13,0,0,0,0.0
+repeated_p1,Double-pass,toxic,consensus,ADR,20,13,13,0,0,1,0.07692307692307693
+repeated_p1,Double-pass,toxic,consensus,VR,20,13,13,0,0,13,1.0
+repeated_p1,Double-pass,toxic,consensus,VPA,20,13,13,0,0,1,0.07692307692307693
+repeated_p1,Double-pass,toxic,consensus,RR,20,13,13,0,0,11,0.8461538461538461
+repeated_p1,Generic Guard,toxic,auto,TSR,20,15,20,0,0,14,0.7
+repeated_p1,Generic Guard,toxic,auto,PAR,20,15,15,0,0,3,0.2
+repeated_p1,Generic Guard,toxic,auto,BCR,20,15,15,0,0,0,0.0
+repeated_p1,Generic Guard,toxic,auto,ADR,20,15,15,0,0,1,0.06666666666666667
+repeated_p1,Generic Guard,toxic,auto,VR,20,15,15,0,0,15,1.0
+repeated_p1,Generic Guard,toxic,auto,VPA,20,15,15,0,0,3,0.2
+repeated_p1,Generic Guard,toxic,auto,RR,20,15,15,0,0,11,0.7333333333333333
+repeated_p1,Generic Guard,toxic,annotator_a,TSR,20,15,20,0,0,13,0.65
+repeated_p1,Generic Guard,toxic,annotator_a,PAR,20,15,15,0,0,2,0.13333333333333333
+repeated_p1,Generic Guard,toxic,annotator_a,BCR,20,15,15,0,0,0,0.0
+repeated_p1,Generic Guard,toxic,annotator_a,ADR,20,15,15,0,0,1,0.06666666666666667
+repeated_p1,Generic Guard,toxic,annotator_a,VR,20,15,15,0,0,15,1.0
+repeated_p1,Generic Guard,toxic,annotator_a,VPA,20,15,15,0,0,2,0.13333333333333333
+repeated_p1,Generic Guard,toxic,annotator_a,RR,20,15,15,0,0,12,0.8
+repeated_p1,Generic Guard,toxic,annotator_b,TSR,20,15,20,0,0,13,0.65
+repeated_p1,Generic Guard,toxic,annotator_b,PAR,20,15,15,0,0,3,0.2
+repeated_p1,Generic Guard,toxic,annotator_b,BCR,20,15,15,0,0,0,0.0
+repeated_p1,Generic Guard,toxic,annotator_b,ADR,20,15,15,0,0,7,0.4666666666666667
+repeated_p1,Generic Guard,toxic,annotator_b,VR,20,15,15,0,0,15,1.0
+repeated_p1,Generic Guard,toxic,annotator_b,VPA,20,15,15,0,0,3,0.2
+repeated_p1,Generic Guard,toxic,annotator_b,RR,20,15,15,0,0,11,0.7333333333333333
+repeated_p1,Generic Guard,toxic,consensus,TSR,20,15,20,0,0,14,0.7
+repeated_p1,Generic Guard,toxic,consensus,PAR,20,15,15,0,0,3,0.2
+repeated_p1,Generic Guard,toxic,consensus,BCR,20,15,15,0,0,0,0.0
+repeated_p1,Generic Guard,toxic,consensus,ADR,20,15,15,0,0,1,0.06666666666666667
+repeated_p1,Generic Guard,toxic,consensus,VR,20,15,15,0,0,15,1.0
+repeated_p1,Generic Guard,toxic,consensus,VPA,20,15,15,0,0,3,0.2
+repeated_p1,Generic Guard,toxic,consensus,RR,20,15,15,0,0,11,0.7333333333333333

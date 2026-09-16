@@ -1,0 +1,82 @@
+[
+  {
+    "task_id": "validation_v2_amount_01",
+    "stdlib_reference": 118499,
+    "pandas_reference": 118499.0,
+    "data_sha256": "65fc6cc45a10f5edd06f859ac75aa1bfbc6ae6246b583d014f415ed751b6a53b",
+    "rows": 96,
+    "rubric": "numeric result with stated units"
+  },
+  {
+    "task_id": "validation_v2_amount_02",
+    "stdlib_reference": 134739,
+    "pandas_reference": 134739.0,
+    "data_sha256": "476853794d0c7654147cbddf0e43bd5068bedb82c88eadd73c9c4b6e689233e6",
+    "rows": 104,
+    "rubric": "numeric result with stated units"
+  },
+  {
+    "task_id": "validation_v2_percentage_03",
+    "stdlib_reference": 6.633463035019456,
+    "pandas_reference": 6.633463035019456,
+    "data_sha256": "522ab29987709bdd454a6e3a3f3cf9caf5fd16fadd3e45b2e044acb5021e2b00",
+    "rows": 112,
+    "rubric": "numeric result with stated units"
+  },
+  {
+    "task_id": "validation_v2_percentage_04",
+    "stdlib_reference": 6.78743961352657,
+    "pandas_reference": 6.78743961352657,
+    "data_sha256": "f0b85132373ce862114d03ada171ae2797d73949d5cbc661b148494d225e169d",
+    "rows": 120,
+    "rubric": "numeric result with stated units"
+  },
+  {
+    "task_id": "validation_v2_ranking_05",
+    "stdlib_reference": 52521,
+    "pandas_reference": 52521.0,
+    "data_sha256": "0484bf694bfb690803795a3622d64ce045c537a72efdcc6320a9f77bf4710188",
+    "rows": 128,
+    "rubric": "selected entity only"
+  },
+  {
+    "task_id": "validation_v2_ranking_06",
+    "stdlib_reference": 49439,
+    "pandas_reference": 49439.0,
+    "data_sha256": "6ae5456d1ddae863088074d405c118c8066755caed6d8d808d8a1cd65c0acd3f",
+    "rows": 136,
+    "rubric": "selected entity only"
+  },
+  {
+    "task_id": "validation_v2_filtered_07",
+    "stdlib_reference": 91336,
+    "pandas_reference": 91336.0,
+    "data_sha256": "cf955f2156a74d27763cd042c02dcd3bc7c3974f7eb5c7004265ff14790a3c1b",
+    "rows": 144,
+    "rubric": "numeric result with stated units"
+  },
+  {
+    "task_id": "validation_v2_filtered_08",
+    "stdlib_reference": 109592,
+    "pandas_reference": 109592.0,
+    "data_sha256": "bdbbf30284f09857d0834b9c9c5afcb9bfad1a3393f73a89b6b04c8a51956612",
+    "rows": 152,
+    "rubric": "numeric result with stated units"
+  },
+  {
+    "task_id": "validation_v2_binding_09",
+    "stdlib_reference": 804,
+    "pandas_reference": 804.0,
+    "data_sha256": "cd6ea6ad43fe3f1ee8ef02e6cbdb7c4662ed4c9e146b95070e20507a033ed10b",
+    "rows": 160,
+    "rubric": "selected entity only"
+  },
+  {
+    "task_id": "validation_v2_binding_10",
+    "stdlib_reference": 856,
+    "pandas_reference": 856.0,
+    "data_sha256": "e8fe8bcbabc05ec3b57abd6be27754c2c6129435d7d4b18a6a580cff87b6424f",
+    "rows": 168,
+    "rubric": "selected entity only"
+  }
+]
