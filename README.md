@@ -4,6 +4,10 @@ ToxicBench evaluates whether data-analysis agents blindly trust tool outputs tha
 
 The main behavioral metric is blind compliance: whether an agent copies or relies on poisoned tool evidence in its final answer without validation.
 
+For the current submission-stage scorer repair and validation plan, see
+[评分器修复与验证实验说明（中文）](SCORER_REPAIR_PLAN_CN.md). It distinguishes
+planned work from completed experiments and documents the verified rerun entry points.
+
 ## Repository Layout
 
 ```text
