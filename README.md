@@ -73,12 +73,25 @@ and 60 semantic/schema tasks. GPT poisoned TSR falls from 0.99 to 0.67 for
 LangGraph, from 0.98 to 0.59 for smolagents, and from 0.92 to 0.66 for AutoGen.
 These are adapter-level diagnostic results, not deployment-frequency estimates.
 
-In the equal-budget Claude Haiku defense matrix, Double-pass reaches 1.00
+In the historical-injector, matched-cap Claude Haiku matrix, Double-pass reaches 1.00
 poisoned TSR versus 0.89 for Base over the 118 retained tasks. The paired
 difference is +0.110, with template-cluster 95% interval [0.056, 0.171] and
 dataset-cluster interval [0.060, 0.172]. Generic Guard reaches 0.97 and does not
 outperform Double-pass. This supports the value of another evidence pass, not a
 claim that a specialized guard is uniquely effective.
+
+The delivery audit flags 204 off-target sign-flip events among 3,319 recorded
+corruptions (157 trajectories), including 20 numeric no-ops. Historical delivery
+rates are not certified valid exposure. Removing all eight sign-flip tasks
+preserves the direction of the defense comparison on the remaining 110 tasks.
+All 152 fresh repaired-injector trajectories are complete; their results and
+historical exposure sensitivity are versioned separately under
+`output/submission_revision_v3/`. The selected 16-task control has small TSR
+differences whose paired intervals include zero. The six public-data tasks show
+ceiling performance with residual clean answers still available, not evidence
+of deployment robustness.
+Matched caps mean route count, steps per route, and output tokens **per request**,
+not equal total token cost. See [SUBMISSION_REVISION_V3_CN.md](SUBMISSION_REVISION_V3_CN.md).
 
 The revised scorer reaches 238/240 TSR agreement on the audit-informed
 development set, but that is not independent validation. All 200 trajectories

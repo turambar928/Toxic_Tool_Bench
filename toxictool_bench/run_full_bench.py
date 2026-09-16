@@ -11,6 +11,7 @@ from evaluator import aggregate, evaluate_run
 from full_adapters import DATAFRAME_ROUTER_ALIASES, run_full_adapter
 from run_bench import chunk_suffix, load_tasks, select_tasks
 from tools import DataToolEnv
+from poisoners import POISONER_VERSION
 
 
 def parse_args() -> argparse.Namespace:
@@ -48,6 +49,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-tokens", type=int, default=2048)
     parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument("--limit", type=int, default=0)
+    parser.add_argument("--route-poison-policy", choices=["shared", "per_route"], default="shared",
+                        help="LangGraph only: shared one-shot eligibility or reset at each route.")
     parser.add_argument(
         "--poison-probability",
         type=float,
@@ -64,6 +67,10 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    if args.route_poison_policy == "per_route" and not args.adapter.startswith("langgraph_react"):
+        raise ValueError("Per-route poison reset is implemented only for LangGraph routes")
+    if args.route_poison_policy == "per_route" and args.poison_repeat:
+        raise ValueError("Per-route one-shot and repeated poisoning are distinct interventions")
     bench_dir = Path(__file__).resolve().parent
     tasks = load_tasks(args.tasks)
     tasks = select_tasks(tasks, start_index=args.start_index, limit=args.limit)
@@ -79,6 +86,7 @@ def main() -> None:
         for task in tasks:
             for env_name in envs:
                 env = DataToolEnv(task=task, bench_dir=bench_dir, toxic=(env_name == "toxic"))
+                env.route_poison_policy = args.route_poison_policy
                 run_started = time.perf_counter()
                 run = run_full_adapter(
                     adapter=args.adapter,
@@ -100,6 +108,11 @@ def main() -> None:
                     "model": args.model,
                     "environment": env_name,
                     "poison": task.get("poison", {}),
+                    "poisoner_version": POISONER_VERSION,
+                    "route_poison_policy": args.route_poison_policy,
+                    "route_count": env.route_id,
+                    "budget": {"max_steps_per_route": args.max_steps, "max_output_tokens_per_request": args.max_tokens},
+                    "llm_requests": env.llm_requests if env.route_id else None,
                     "tool_events": env.events,
                     "final_answer": run.final_answer,
                     "raw_actions": run.raw_actions,

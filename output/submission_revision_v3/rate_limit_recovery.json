@@ -1,0 +1,1078 @@
+{
+  "reason": "HTTP 429 after automatic transport retries; stop high-concurrency queues, retain every completed trajectory and retry only missing environments at four workers",
+  "selection": "Infrastructure/completion status only; no answer or metric selection",
+  "workers": 4,
+  "original_status": [
+    {
+      "job_id": "control_00_Base_shared",
+      "exit_code": 0
+    },
+    {
+      "job_id": "control_00_Double-pass_shared",
+      "exit_code": 0
+    },
+    {
+      "job_id": "control_00_Double-pass_per_route",
+      "exit_code": 0
+    },
+    {
+      "job_id": "control_00_Verification_shared",
+      "exit_code": 0
+    },
+    {
+      "job_id": "control_00_Verification_per_route",
+      "exit_code": 0
+    },
+    {
+      "job_id": "control_00_Guard_shared",
+      "exit_code": 0
+    },
+    {
+      "job_id": "control_00_Guard_per_route",
+      "exit_code": 0
+    },
+    {
+      "job_id": "control_01_Base_shared",
+      "exit_code": 0
+    },
+    {
+      "job_id": "control_01_Double-pass_shared",
+      "exit_code": 1
+    },
+    {
+      "job_id": "control_01_Double-pass_per_route",
+      "exit_code": 1
+    },
+    {
+      "job_id": "control_01_Verification_shared",
+      "exit_code": 0
+    },
+    {
+      "job_id": "control_01_Verification_per_route",
+      "exit_code": 1
+    },
+    {
+      "job_id": "control_01_Guard_shared",
+      "exit_code": 1
+    },
+    {
+      "job_id": "control_08_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_08_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_08_Double-pass_per_route",
+      "exit_code": 0,
+      "reserved": false
+    },
+    {
+      "job_id": "control_08_Verification_shared",
+      "exit_code": 0,
+      "reserved": false
+    },
+    {
+      "job_id": "control_08_Verification_per_route",
+      "exit_code": 0,
+      "reserved": false
+    },
+    {
+      "job_id": "control_08_Guard_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_08_Guard_per_route",
+      "exit_code": 0,
+      "reserved": false
+    },
+    {
+      "job_id": "control_09_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_09_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_09_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_09_Verification_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_09_Verification_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_09_Guard_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_09_Guard_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_10_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_10_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_10_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_10_Verification_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_10_Verification_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_10_Guard_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_10_Guard_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_11_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_11_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_11_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_11_Verification_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_11_Verification_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_11_Guard_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_11_Guard_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_12_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_12_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_12_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_12_Verification_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_12_Verification_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_12_Guard_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_12_Guard_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_13_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_13_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_13_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_13_Verification_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_13_Verification_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_13_Guard_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_13_Guard_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_14_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_14_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_14_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_14_Verification_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_14_Verification_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_14_Guard_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_14_Guard_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_15_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_15_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_15_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_15_Verification_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_15_Verification_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_15_Guard_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "control_15_Guard_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_00_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_00_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_00_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_01_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_01_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_01_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_02_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_02_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_02_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_03_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_03_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_03_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_04_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_04_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_04_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_05_Base_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_05_Double-pass_shared",
+      "exit_code": null,
+      "reserved": true
+    },
+    {
+      "job_id": "public_05_Double-pass_per_route",
+      "exit_code": null,
+      "reserved": true
+    }
+  ],
+  "missing": [
+    {
+      "job_id": "control_01_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_01_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_01_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_01_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_02_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_02_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_03_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_03_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_03_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_03_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_03_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_03_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_03_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_04_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_04_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_04_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_04_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_04_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_04_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_04_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_05_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_05_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_05_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_05_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_05_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_05_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_05_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_06_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_06_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_06_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_06_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_06_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_06_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_06_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_07_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_07_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_07_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_07_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_07_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_07_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_07_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_09_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_09_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_09_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_09_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_10_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_10_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_10_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_10_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_10_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_10_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_10_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_11_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_11_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_11_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_11_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_11_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_11_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_11_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_12_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_12_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_12_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_12_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_12_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_12_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_12_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_13_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_13_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_13_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_13_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_13_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_13_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_13_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_14_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_14_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_14_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_14_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_14_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_14_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_14_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_15_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_15_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_15_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_15_Verification_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_15_Verification_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_15_Guard_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "control_15_Guard_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_00_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_00_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_00_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_01_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_01_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_01_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_02_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_02_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_02_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_03_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_03_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_03_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_04_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_04_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_04_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_05_Base_shared",
+      "environments": [
+        "clean",
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_05_Double-pass_shared",
+      "environments": [
+        "toxic"
+      ]
+    },
+    {
+      "job_id": "public_05_Double-pass_per_route",
+      "environments": [
+        "toxic"
+      ]
+    }
+  ]
+}

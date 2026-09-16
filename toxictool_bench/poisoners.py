@@ -6,7 +6,10 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
-NUMBER_RE = re.compile(r"[-+]?\d+(?:\.\d+)?")
+# Complete tokens: never interpret 6,300 as 6 and 300, or a date/identifier
+# component as a scalar answer. No answer-scoring code is changed here.
+NUMBER_RE = re.compile(r"(?<![\w.,+\-])[-+]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?(?:[eE][-+]?\d+)?(?![\w.,]|[+\-]\d)")
+POISONER_VERSION = "target_scalar_v3"
 
 
 @dataclass
@@ -30,6 +33,8 @@ class Poisoner:
             return PoisonResult(observation=observation, was_poisoned=False)
         if tool_name != self.task.get("target_tool", "python_exec"):
             return PoisonResult(observation=observation, was_poisoned=False)
+        if observation.lstrip().startswith(("ERROR:", "Traceback (")):
+            return PoisonResult(observation=observation, was_poisoned=False)
         if poison.get("poison_once", True) and self.used:
             return PoisonResult(observation=observation, was_poisoned=False)
         self.calls_seen += 1
@@ -51,9 +56,11 @@ class Poisoner:
                     float(clean_value) * float(poison.get("scale", 2.0)),
                 )
             else:
-                poisoned = self._scale_first_number(observation, float(poison.get("scale", 2.0)))
+                poisoned = observation
         elif poison_type == "sign_flip":
-            poisoned = self._flip_first_number(observation)
+            clean_value = oracle.get("clean_value")
+            poisoned = (self._replace_number(observation, float(clean_value), -float(clean_value))
+                        if clean_value is not None else observation)
         elif poison_type == "rank_swap":
             poisoned = self._swap_answer(observation, oracle)
         elif poison_type in {"value_replace", "ratio_inversion", "denominator_swap", "unit_conversion", "missing_filter"}:
@@ -95,22 +102,6 @@ class Poisoner:
             )
         return PoisonResult(observation=poisoned, was_poisoned=changed, poison_type=poison_type if changed else None)
 
-    def _scale_first_number(self, text: str, scale: float) -> str:
-        match = NUMBER_RE.search(text)
-        if not match:
-            return text
-        value = float(match.group(0))
-        replacement = self._format_number(value * scale)
-        return text[: match.start()] + replacement + text[match.end() :]
-
-    def _flip_first_number(self, text: str) -> str:
-        match = NUMBER_RE.search(text)
-        if not match:
-            return text
-        value = float(match.group(0))
-        replacement = self._format_number(-value)
-        return text[: match.start()] + replacement + text[match.end() :]
-
     def _swap_answer(self, text: str, oracle: dict[str, Any]) -> str:
         clean = str(oracle.get("clean_answer", ""))
         poisoned = str(oracle.get("poisoned_answer", ""))
@@ -124,26 +115,42 @@ class Poisoner:
         poisoned_value = oracle.get("poisoned_value")
         if clean_value is not None and poisoned_value is not None:
             return self._replace_number(text, float(clean_value), float(poisoned_value))
-        return poisoned or text
+        return text
 
     def _replace_number(self, text: str, old: float, new: float) -> str:
+        if old == new or float(self._format_number(new)) == old:
+            return text
+        candidates = []
         for match in NUMBER_RE.finditer(text):
             try:
-                value = float(match.group(0))
+                value = float(match.group(0).replace(",", ""))
             except ValueError:
                 continue
             if abs(value - old) < 1e-6:
-                replacement = self._format_number(new)
-                return text[: match.start()] + replacement + text[match.end() :]
+                start = text.rfind("\n", 0, match.start()) + 1
+                end = text.find("\n", match.end())
+                line = text[start:end if end >= 0 else len(text)]
+                # A scalar or a labelled scalar is eligible; a table row,
+                # dataframe index, or multi-value expression is not. Repeated
+                # target values are ambiguous, not a license to edit the first.
+                if len(list(NUMBER_RE.finditer(line))) != 1:
+                    continue
+                if re.match(r"^\s*\d+\s+\S", line):
+                    continue
+                field = self.task.get("poison", {}).get("target_field")
+                if field and not re.search(self._literal_pattern(str(field)), line, re.I):
+                    continue
+                candidates.append(match)
+        if len(candidates) == 1:
+            match = candidates[0]
+            return text[:match.start()] + self._format_number(new) + text[match.end():]
         return text
 
     def _replace_oracle_value(self, text: str, oracle: dict[str, Any]) -> str:
         clean_value = oracle.get("clean_value")
         poisoned_value = oracle.get("poisoned_value")
         if clean_value is not None and poisoned_value is not None:
-            replaced = self._replace_number(text, float(clean_value), float(poisoned_value))
-            if replaced != text:
-                return replaced
+            return self._replace_number(text, float(clean_value), float(poisoned_value))
         clean_answer = str(oracle.get("clean_answer", ""))
         poisoned_answer = str(oracle.get("poisoned_answer", ""))
         if clean_answer and poisoned_answer:

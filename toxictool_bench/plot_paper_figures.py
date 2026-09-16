@@ -182,7 +182,8 @@ def plot_operator_profile(results_dir: Path, output_dir: Path, preview_dir: Path
     order = [
         ("aggregate_scale", "Aggregate scale", "Numerical"),
         ("rank_swap", "Rank swap", "Numerical"),
-        ("sign_flip", "Sign flip", "Numerical"),
+        # Delivery audit V3: the legacy sign flip often changed a non-target
+        # token. Preserve its CSV history, but do not visualize it as robustness.
         ("label_swap", "Label swap", "Semantic/schema"),
         ("treatment_control_flip", "Treatment/control", "Semantic/schema"),
         ("stale_metadata", "Stale metadata", "Semantic/schema"),
@@ -209,7 +210,7 @@ def plot_operator_profile(results_dir: Path, output_dir: Path, preview_dir: Path
     )
     ax.axvline(1.5, color=COLORS["ink"], linewidth=0.8)
     ax.axvline(3.5, color=COLORS["ink"], linewidth=0.8)
-    ax.set_title("Operator profiles", pad=8)
+    ax.set_title("Historical operator profiles (sign flip excluded)", pad=8)
     fig.subplots_adjust(left=0.20, right=0.99, top=0.87, bottom=0.15)
     save_figure(fig, output_dir / "fig_operator_profile.pdf", preview_dir)
 

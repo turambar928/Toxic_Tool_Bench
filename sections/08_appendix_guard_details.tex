@@ -335,7 +335,7 @@ python3 toxictool_bench/run_full_bench.py \
 
 \paragraph{Matched-budget interpretation.}
 
-Double-pass runs two ordinary routes with no expectation policy, no primary-answer handoff, and the same maximum route budget as the verification variants. The released runs use two independent LangGraph calls, each with \texttt{--max-steps 10}, \texttt{--max-tokens 3072}, and temperature 0; the second route's final response is selected verbatim. Verification-only also uses two calls with the same per-route cap, passes the first answer only as an untrusted claim, and selects the second route's response. Generic Guard uses a deterministic generic expectation string inside the primary prompt, then runs the same two-call structure; its verification response is selected verbatim and prefixed with a guard label. Thus ``matched'' means matched per-route step/token budget and route count, not equal realized token usage or latency. Table~\ref{tab:appendix-paired-defense-ci} compares the complete Guard and Double-pass wrappers. Display-only labels are removed before scoring; any remaining effect combines prompt, answer-handoff, and evidence-selection differences.
+Double-pass runs two ordinary routes with no expectation policy or primary-answer handoff. Each route uses \texttt{--max-steps 10} and temperature 0; \texttt{--max-tokens 3072} caps each model request, not the route's accumulated output. The second route's response is selected verbatim. Verification-only passes the first answer as an untrusted claim; Generic Guard additionally supplies a generic expectation prompt. Thus ``matched'' means the same route count, step cap per route, and output-token cap per request, not equal realized token use or latency. Table~\ref{tab:appendix-paired-defense-ci} compares the complete wrappers. Display labels are removed before scoring; any remaining effect combines prompt, answer-handoff, and evidence-selection differences.
 
 Guard's revised poisoned-TSR difference from Double-pass is $-0.025$ [$-0.059$, $0.000$], and its clean difference is $-0.008$ [$-0.034$, $0.017$]. For task $i$, let $G_{i,e}$ and $D_{i,e}$ denote task success for Guard and Double-pass in environment $e$. We estimate
 \[
@@ -548,12 +548,8 @@ Semantic/schema & Generic guard & 60 & 60 & 1.000 & 0.000 & 0/60 \\
 \label{fig:cross-agent-model}
 \end{figure*}
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig_severity_heatmap}
-\caption{Expanded GPT BCR by operator and legacy severity label. Conditional means omit adapters with no exposure; $n$ counts exposed trajectories across adapters. Empty cells distinguish no tasks from no exposure. Some repeated instances changed labels without changing poison magnitude, so these labels do not support a causal severity ordering.}
-\label{fig:severity-heatmap}
-\end{figure*}
+% Legacy severity heatmap remains in the artifact only: labels are not a
+% controlled manipulation of corruption magnitude.
 
 \begin{figure*}[t]
 \centering

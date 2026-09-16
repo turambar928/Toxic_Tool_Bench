@@ -455,6 +455,7 @@ def run_langgraph_react(
     temperature: float,
     max_tokens: int,
 ) -> FullAdapterResult:
+    env.begin_route()
     try:
         from langgraph.graph import END, StateGraph
     except Exception as exc:
@@ -477,6 +478,7 @@ def run_langgraph_react(
     ]
 
     def llm_node(state: dict[str, Any]) -> dict[str, Any]:
+        env.llm_requests += 1
         content = client.complete(state["messages"])
         action = parse_action(content)
         parse_errors = state.get("parse_errors", 0)
@@ -687,7 +689,7 @@ def run_langgraph_react_double_pass(
     temperature: float,
     max_tokens: int,
 ) -> FullAdapterResult:
-    """Matched-compute baseline: two ordinary routes with no guard instruction."""
+    """Matched-cap baseline: two ordinary routes with no guard instruction."""
     first = run_langgraph_react(
         api_file=api_file, model=model, env=env, task=task,
         max_steps=max_steps, temperature=temperature, max_tokens=max_tokens,

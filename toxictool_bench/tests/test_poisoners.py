@@ -8,6 +8,61 @@ BENCH_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BENCH_DIR))
 
 from poisoners import Poisoner  # noqa: E402
+import pytest
+
+
+def numeric_poison(old=70.0, new=-70.0, kind="sign_flip", **extra):
+    return Poisoner(True, {"target_tool": "python_exec",
+        "poison": {"enabled": True, "type": kind, "poison_once": True, **extra},
+        "oracle": {"clean_value": old, "poisoned_value": new}})
+
+
+def test_sign_flip_waits_for_scalar_and_does_not_consume_once_on_index():
+    p = numeric_poison()
+    table = "  month revenue\n0 2025-01 100\n1 2025-02 170"
+    assert not p.apply("python_exec", {}, table).was_poisoned
+    assert not p.used
+    r = p.apply("python_exec", {}, table + "\nGrowth rate: 70.00%")
+    assert r.was_poisoned
+    assert r.observation == table + "\nGrowth rate: -70.0%"
+
+
+@pytest.mark.parametrize("text", ["ERROR: ValueError 70", "Traceback (70)",
+    "0 70", "70 row_label", "70 2025-01", "a=70 b=80", "a=70\nb=70", "value=170", "date=2070-01-01"])
+def test_no_unsafe_numeric_replacement(text):
+    p = numeric_poison()
+    assert not p.apply("python_exec", {}, text).was_poisoned
+    assert not p.used
+
+
+def test_numeric_tokens_and_explicit_field_binding():
+    p = numeric_poison(6300, 21900, "value_replace", target_field="Profit")
+    assert not p.apply("python_exec", {}, "Cost: $6,300").was_poisoned
+    assert p.apply("python_exec", {}, "Profit: $6,300").observation == "Profit: $21900.0"
+    assert not numeric_poison(6, 12, "value_replace").apply("python_exec", {}, "$6,300").was_poisoned
+    assert numeric_poison(6300, 21900, "value_replace").apply("python_exec", {}, "6.3e3").was_poisoned
+
+
+def test_zero_flip_and_missing_rank_target_are_not_exposures():
+    assert not numeric_poison(0, 0).apply("python_exec", {}, "0").was_poisoned
+    p = Poisoner(True, {"poison": {"enabled": True, "type": "rank_swap"},
+                        "oracle": {"clean_answer": "Email", "poisoned_answer": "Display"}})
+    assert p.apply("python_exec", {}, "Search leads the comparison").observation == "Search leads the comparison"
+
+
+@pytest.mark.parametrize("policy, expected", [("shared", False), ("per_route", True)])
+def test_route_reset_keeps_event_history(policy, expected):
+    from tools import DataToolEnv
+    p = numeric_poison()
+    task = {**p.task, "dataset": "monthly_revenue.csv"}
+    env = DataToolEnv(task, BENCH_DIR, True)
+    env.route_poison_policy = policy
+    env.begin_route()
+    env.call("python_exec", {"code": "print(70)"})
+    env.begin_route()
+    env.call("python_exec", {"code": "print(70)"})
+    assert [e["route_id"] for e in env.events] == [1, 2]
+    assert env.events[1]["was_poisoned"] is expected
 
 
 def test_rank_swap_single_letter_label_does_not_rewrite_words():

@@ -1,0 +1,5 @@
+suite,method,n,delta_per_route_minus_shared,ci_low,ci_high
+control,Double-pass,16,-0.0625,-0.1875,0.0
+control,Verification,16,-0.0625,-0.1875,0.0
+control,Guard,16,-0.1875,-0.375,0.0
+public,Double-pass,6,0.0,0.0,0.0

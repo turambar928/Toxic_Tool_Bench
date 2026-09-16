@@ -9,11 +9,11 @@ ToxicBench asks whether agents detect, verify, or adopt this corrupted evidence.
 
 We evaluate framework adapters for LangGraph, smolagents, DA-Agent, and AutoGen where feasible. The cross-model suite contains 34 numerical and 24 semantic/schema instances; the revised expanded GPT-only analysis retains 118 of 120 released instances after reference auditing. PandasAI's historical final-output corruption is reported separately because that agent cannot respond after the injected change. Across the observation-level settings, high clean-task success coexists with substantial poisoned-task degradation.
 
-We compare Double-pass, Verification-only, and Generic Guard with equal route and token limits, followed by repeated poisoning over numerical, semantic/schema, and multi-table workflows. These protocols distinguish another attempt from an explicit request to verify the first answer. A 240-trajectory human audit with third-rater adjudication exposed answer-selection errors and informed the revised scorer. Its subsequent recheck is a development evaluation, not independent validation. Trace analysis separates corrupted follow-up checks from unmodified observations whose relevance still needs assessment.
+We compare Double-pass, Verification-only, and Generic Guard with the same route count, per-route step limit, and per-request output-token cap. An ordinary second attempt is a necessary control: under one-shot poisoning, it can access later uncorrupted observations without a verification instruction. Repeated poisoning then tests checking when that opportunity is reduced. We audit three distinct measurement layers---reference answers, answer selection, and corruption delivery---and report repaired-injector experiments separately from historical runs. Human checks and their remaining validation limits are reported alongside these comparisons.
 
 Our contributions are:
 \begin{itemize}
-    \item A data-analysis benchmark with paired clean and poisoned runs, seven numerical operators, five semantic/schema operators, and a multi-table extension.
-    \item A trajectory protocol separating adoption, checking, and recovery, with exposure counts, human-audit evidence, and versioned parser and reference-answer sensitivity analyses.
-    \item Cross-framework and cross-model experiments, equal-budget verification controls, clustered sensitivity checks, and 1,596 recorded repeated-poison trajectories (1,572 retained after reference exclusions).
+    \item An inspectable data-analysis benchmark that changes returned evidence while preserving source tables, including numerical, semantic/schema, and multi-table tasks.
+    \item A distinction between checking and answer adoption: trace-level and human evidence show that a fresh check need not prevent adoption of a poisoned conclusion, especially when the check is also corrupted.
+    \item Controls separating another attempt, verification instructions, and later corruption opportunities, with explicit exposure auditing and dependence sensitivity. These diagnose conditions for recovery rather than establish a superior defense.
 \end{itemize}

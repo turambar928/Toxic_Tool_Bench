@@ -1,7 +1,7 @@
 \section{Experiments}
 \label{sec:experiments}
 
-We ask whether silent poisoning causes blind compliance across agents and models, which operators are most harmful, and how much a controlled evidence-verification protocol changes behavior at a fixed task.
+We ask whether corrupted observations lead to answer adoption, whether requesting verification improves on an ordinary retry, and how later corruption opportunities affect recovery.
 
 \subsection{Setup}
 
@@ -9,7 +9,7 @@ We ask whether silent poisoning causes blind compliance across agents and models
 The cross-model evaluation uses 34 numerical and 24 semantic/schema instances. The revised expanded GPT evaluation and defense comparison use 58 numerical and 60 semantic instances. LangGraph ReAct, smolagents, and AutoGen cover GPT, Claude, and Qwen; DA-Agent completed the GPT numerical suite. PandasAI is excluded from these behavioral comparisons: its historical adapter changes the final chat result after the agent has finished, leaving no opportunity to inspect the change (Appendix~\ref{sec:appendix-framework-boundaries}).
 
 \paragraph{Protocol.}
-Clean and toxic runs are paired by task. TSR uses all retained runs; behavioral rates condition on delivered poison, with PDR and exposed counts reported separately. Revised scoring changes neither recorded answers nor tool events. An independent arithmetic recomputation found seven numerical-reference errors and two omitted tied answers; two additional queries lacked a unique denominator interpretation and are excluded consistently across methods. Reference corrections and parser changes are reported separately, with original tasks and annotations preserved (Appendix~\ref{sec:revision-v2}).
+Clean and toxic runs are paired by task. TSR uses all retained runs; behavioral rates condition on recorded delivery. Reference auditing excludes two ambiguous queries and corrects seven numerical values and two omitted ties (Appendix~\ref{sec:revision-v2}). The historical tables retain their original injector: a separate audit flags 204 of 3,319 recorded corruptions as off-target sign flips, including 20 zero-value changes. These tables describe the implemented intervention, not certified valid delivery. Appendix~\ref{sec:delivery-v3} reports exposure sensitivity and fresh repaired-injector controls separately; original trajectories and annotations remain intact.
 
 \subsection{Blind Compliance Across Agents and Models}
 
@@ -29,7 +29,7 @@ smolagents & 0.98 & 0.59 & 0.39 & 0.53 & 0.15 & 0.74 \\
 AutoGen & 0.92 & 0.66 & 0.26 & 0.27 & 0.32 & 0.86 \\
 \bottomrule
 \end{tabular}
-\caption{Expanded GPT results on 118 retained instances, using the revised parser and corrected references. Behavioral rates condition on exposure.}
+\caption{Historical-injector GPT results on 118 retained instances, with revised scoring and references. Behavioral rates use recorded exposure; delivery sensitivity is reported separately.}
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
@@ -66,12 +66,12 @@ Qwen3.6-35B & LangGraph ReAct & 1.00 & 0.38 & 0.68 & 1.00 & 0.79 & 0.21 \\
 \label{tab:cross-agent-model-full}
 \end{table*}
 
-Across the nine common observation-level model--adapter groups, aggregate scaling and rank swaps have numerical BCR 0.62 and 0.37, compared with 0.08 for sign flips. These are descriptive comparisons across different tasks, not causal operator effects. Figure~\ref{fig:operator-profile} includes semantic corruption: label swaps preserve an amount while changing its entity, so magnitude checks alone need not reveal them.
+Across nine common model--adapter groups, aggregate scaling and rank swaps have historical numerical BCR 0.62 and 0.37. We do not interpret the lower sign-flip rate as robustness: off-target delivery compromises that comparison. Figure~\ref{fig:operator-profile} is descriptive, not a causal operator ranking. Label swaps illustrate a different diagnostic failure: preserving an amount while changing its entity can defeat magnitude-only checks.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.86\textwidth]{figures/fig_operator_profile}
-\caption{Descriptive operator profiles across nine observation-level model--adapter configurations. Conditional behavior averages omit groups with no exposure; PDR includes all groups. PandasAI is excluded.}
+\caption{Historical operator profiles across nine observation-level model--adapter configurations. Sign flip is omitted because off-target delivery compromises its interpretation. Conditional means omit unexposed groups; PDR includes all groups.}
 \label{fig:operator-profile}
 \end{figure*}
 
@@ -94,7 +94,7 @@ Verification only & 0.92 & 0.90 & 0.00 & 0.01 & 0.01 & 0.97 & 0.86 & 101 \\
 Generic guard & 0.98 & 0.97 & 0.00 & 0.00 & 0.00 & 0.97 & 0.94 & 104 \\
 \bottomrule
 \end{tabular}
-\caption{LangGraph verification on 118 retained tasks with Claude Haiku 4.5. Two-route methods share budget caps. TSR uses all retained tasks; behavioral rates use the displayed exposed counts.}
+\caption{Historical-injector LangGraph comparison on 118 retained tasks with Claude Haiku 4.5. Two-route methods share caps, not actual compute. Behavioral rates use recorded exposure.}
 \label{tab:langgraph-guarded}
 \end{table}
 
@@ -103,10 +103,12 @@ Double-pass exceeds Base poisoned TSR by 0.110; the 95\% interval is [0.056, 0.1
 \paragraph{What evidence follows the poison?}
 Under shared \texttt{poison\_once} state, a second route can receive unmodified observations after the first corruption. The released trace analysis records these opportunities, but an unmodified observation is not necessarily correct, sufficient, or used. Double-pass therefore measures another attempt with access to later evidence; it does not isolate a causal gain from verification reasoning.
 
+Fresh repaired-injector runs on 16 preselected tasks reset eligibility at each route boundary. Double-pass second-route exposure rises from $1/16$ to $12/16$, while TSR changes from $16/16$ to $15/16$; the paired 95\% interval for the difference includes zero. Base also achieves $16/16$, so this repair-focused subset does not reproduce the full-matrix retry advantage. Six public-data tasks likewise show ceiling performance across four conditions. These checks constrain the interpretation rather than establish a causal explanation of the historical gain (Appendix~\ref{sec:delivery-v3}).
+
 Table~\ref{tab:appendix-guard-suite-breakdown} separates the families. AutoGen provides an additional framework check: Guard clean/poisoned TSR is 0.88/0.87, versus 0.91/0.86 for Verification-only on the same 118 retained instances. This small difference is descriptive and does not establish a general prompt advantage.
 
 \paragraph{Harder workflows and adversaries.}
-The repeated-poison analysis retains 1,572 of 1,596 recorded trajectories: 58 numerical, 60 semantic, and 13 join tasks, three protocols, and four poisoning probabilities. Table~\ref{tab:appendix-multiroute-stress} and Figure~\ref{fig:guard-tradeoff} report adoption after checking. Across probabilities, 101 revised-scoring trajectories have VPA: 78 have only corrupted qualifying follow-up checks; 23 have at least one unmodified qualifying check. Only one of the latter has an automatically identifiable clean-reference match, which still requires evidence-level review. These counts distinguish corrupted checks from unresolved evidence sufficiency; they do not show that 101 agents ignored correct evidence. The three protocols share source tables and backends, and this matrix has no single-route Base control.
+The repeated-poison analysis retains 1,572 of 1,596 trajectories: 58 numerical, 60 semantic, and 13 join tasks, three protocols, and four poisoning probabilities. Table~\ref{tab:appendix-multiroute-stress} and Figure~\ref{fig:guard-tradeoff} report adoption after checking. All 101 revised-scoring VPA classifications persist when flagged delivery events are excluded. Under the recorded-event taxonomy, 78 have only corrupted qualifying follow-up checks and 23 have at least one unmodified check. Only one of the latter has an automatically identifiable clean-reference match, still requiring evidence-level review. Thus these counts do not show that 101 agents ignored correct evidence. Routes share sources and backends; this matrix has no single-route Base control.
 
 \paragraph{Cost.}
 On retained toxic runs, Generic Guard averages 39.79 seconds, versus 16.91 for Base, 35.89 for Double-pass, and 33.62 for Verification-only. Equal budget caps do not imply equal realized cost; token billing is unavailable from the gateway. The latency distributions in Table~\ref{tab:appendix-latency-distribution} retain the original 120-task timing sample for reproducibility.

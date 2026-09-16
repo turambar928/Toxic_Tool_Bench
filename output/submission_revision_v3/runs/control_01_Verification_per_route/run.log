@@ -1,0 +1,47 @@
+Traceback (most recent call last):
+  File "/home/taozifu2025/toxicbench/toxictool_bench/llm_client.py", line 78, in complete
+    with urllib.request.urlopen(request, timeout=120) as response:
+  File "/usr/lib/python3.10/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+  File "/usr/lib/python3.10/urllib/request.py", line 525, in open
+    response = meth(req, response)
+  File "/usr/lib/python3.10/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+  File "/usr/lib/python3.10/urllib/request.py", line 563, in error
+    return self._call_chain(*args)
+  File "/usr/lib/python3.10/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.10/urllib/request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 429: Too Many Requests
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/taozifu2025/toxicbench/toxictool_bench/run_full_bench.py", line 177, in <module>
+    main()
+  File "/home/taozifu2025/toxicbench/toxictool_bench/run_full_bench.py", line 91, in main
+    run = run_full_adapter(
+  File "/home/taozifu2025/toxicbench/toxictool_bench/full_adapters.py", line 168, in run_full_adapter
+    result = run_langgraph_react_verification_only(
+  File "/home/taozifu2025/toxicbench/toxictool_bench/full_adapters.py", line 650, in run_langgraph_react_verification_only
+    verification = run_langgraph_react(
+  File "/home/taozifu2025/toxicbench/toxictool_bench/full_adapters.py", line 542, in run_langgraph_react
+    final_state = app.invoke({"messages": initial_messages, "raw_actions": [], "parse_errors": 0, "steps": 0})
+  File "/home/taozifu2025/.local/lib/python3.10/site-packages/langgraph/pregel/main.py", line 3928, in invoke
+    for chunk in self.stream(
+  File "/home/taozifu2025/.local/lib/python3.10/site-packages/langgraph/pregel/main.py", line 2982, in stream
+    for _ in runner.tick(
+  File "/home/taozifu2025/.local/lib/python3.10/site-packages/langgraph/pregel/_runner.py", line 207, in tick
+    run_with_retry(
+  File "/home/taozifu2025/.local/lib/python3.10/site-packages/langgraph/pregel/_retry.py", line 617, in run_with_retry
+    return task.proc.invoke(task.input, config)
+  File "/home/taozifu2025/.local/lib/python3.10/site-packages/langgraph/_internal/_runnable.py", line 684, in invoke
+    input = context.run(step.invoke, input, config, **kwargs)
+  File "/home/taozifu2025/.local/lib/python3.10/site-packages/langgraph/_internal/_runnable.py", line 426, in invoke
+    ret = self.func(*args, **kwargs)
+  File "/home/taozifu2025/toxicbench/toxictool_bench/full_adapters.py", line 482, in llm_node
+    content = client.complete(state["messages"])
+  File "/home/taozifu2025/toxicbench/toxictool_bench/llm_client.py", line 85, in complete
+    raise RuntimeError(f"LLM HTTP {exc.code}: {detail}") from exc
+RuntimeError: LLM HTTP 429: 

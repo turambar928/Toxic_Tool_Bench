@@ -1,0 +1,95 @@
+suite,method,policy,task_id,route,step,clean_value,tolerance,candidate_clean_reference_remains,unchanged_lines
+control,Base,shared,num_mean_001,1,4,16.0,0.05,False,
+control,Double-pass,shared,num_mean_001,1,4,16.0,0.05,False,
+control,Double-pass,per_route,num_mean_001,1,4,16.0,0.05,False,
+control,Double-pass,per_route,num_mean_001,2,7,16.0,0.05,False,
+control,Verification,shared,num_mean_001,1,4,16.0,0.05,False,
+control,Verification,per_route,num_mean_001,1,4,16.0,0.05,False,
+control,Verification,per_route,num_mean_001,2,6,16.0,0.05,False,
+control,Guard,shared,num_mean_001,1,2,16.0,0.05,True,"5    6     16
+50%     5.50000  16.000000
+9   10     16
+mean    5.50000  16.000000"
+control,Guard,per_route,num_mean_001,1,2,16.0,0.05,True,"5    6     16
+50%     5.50000  16.000000
+9   10     16
+mean    5.50000  16.000000"
+control,Guard,per_route,num_mean_001,2,5,16.0,0.05,True,Verification: 160 / 10 = 16.0
+control,Base,shared,num_growth_002,1,2,70.0,0.2,False,
+control,Double-pass,shared,num_growth_002,1,2,70.0,0.2,False,
+control,Double-pass,per_route,num_growth_002,1,2,70.0,0.2,False,
+control,Double-pass,per_route,num_growth_002,2,4,70.0,0.2,False,
+control,Verification,shared,num_growth_002,1,2,70.0,0.2,False,
+control,Verification,per_route,num_growth_002,1,2,70.0,0.2,False,
+control,Verification,per_route,num_growth_002,2,4,70.0,0.2,False,
+control,Guard,shared,num_growth_002,1,2,70.0,0.2,False,
+control,Guard,per_route,num_growth_002,2,5,70.0,0.2,True,= 70 / 100 * 100
+control,Base,shared,num_regional_growth_007,1,2,25.0,0.2,False,
+control,Double-pass,shared,num_regional_growth_007,1,2,25.0,0.2,False,
+control,Double-pass,per_route,num_regional_growth_007,1,2,25.0,0.2,False,
+control,Double-pass,per_route,num_regional_growth_007,2,4,25.0,0.2,False,
+control,Verification,shared,num_regional_growth_007,1,2,25.0,0.2,False,
+control,Verification,per_route,num_regional_growth_007,1,2,25.0,0.2,False,
+control,Verification,per_route,num_regional_growth_007,2,4,25.0,0.2,False,
+control,Guard,shared,num_regional_growth_007,1,2,25.0,0.2,False,
+control,Guard,per_route,num_regional_growth_007,1,2,25.0,0.2,False,
+control,Base,shared,num_campaign_search_roi_016,1,2,75.0,0.2,False,
+control,Double-pass,shared,num_campaign_search_roi_016,1,2,75.0,0.2,False,
+control,Double-pass,per_route,num_campaign_search_roi_016,1,2,75.0,0.2,False,
+control,Double-pass,per_route,num_campaign_search_roi_016,2,4,75.0,0.2,False,
+control,Verification,shared,num_campaign_search_roi_016,1,2,75.0,0.2,False,
+control,Verification,per_route,num_campaign_search_roi_016,1,2,75.0,0.2,False,
+control,Verification,per_route,num_campaign_search_roi_016,2,4,75.0,0.2,False,
+control,Guard,shared,num_campaign_search_roi_016,1,2,75.0,0.2,False,
+control,Guard,per_route,num_campaign_search_roi_016,1,2,75.0,0.2,False,
+control,Base,shared,num_subscription_jan_churn_024,1,2,18.0,0.1,False,
+control,Double-pass,shared,num_subscription_jan_churn_024,2,4,18.0,0.1,False,
+control,Double-pass,per_route,num_subscription_jan_churn_024,1,2,18.0,0.1,False,
+control,Double-pass,per_route,num_subscription_jan_churn_024,2,4,18.0,0.1,False,
+control,Verification,shared,num_subscription_jan_churn_024,1,2,18.0,0.1,False,
+control,Verification,per_route,num_subscription_jan_churn_024,1,2,18.0,0.1,False,
+control,Guard,shared,num_subscription_jan_churn_024,1,2,18.0,0.1,False,
+control,Guard,per_route,num_subscription_jan_churn_024,1,2,18.0,0.1,False,
+control,Base,shared,num_store_b_return_028,1,2,2.5,0.05,False,
+control,Verification,shared,num_store_b_return_028,2,4,2.5,0.05,False,
+control,Verification,per_route,num_store_b_return_028,1,2,2.5,0.05,False,
+control,Verification,per_route,num_store_b_return_028,2,4,2.5,0.05,False,
+control,Guard,shared,num_store_b_return_028,1,2,2.5,0.05,False,
+control,Guard,per_route,num_store_b_return_028,1,2,2.5,0.05,False,
+control,Guard,per_route,num_store_b_return_028,2,4,2.5,0.05,False,
+control,Base,shared,num_support_risk_resolution_032,1,2,90.0,0.1,False,
+control,Double-pass,shared,num_support_risk_resolution_032,1,2,90.0,0.1,False,
+control,Double-pass,per_route,num_support_risk_resolution_032,1,2,90.0,0.1,False,
+control,Double-pass,per_route,num_support_risk_resolution_032,2,4,90.0,0.1,False,
+control,Verification,shared,num_support_risk_resolution_032,1,2,90.0,0.1,False,
+control,Verification,per_route,num_support_risk_resolution_032,1,2,90.0,0.1,False,
+control,Verification,per_route,num_support_risk_resolution_032,2,4,90.0,0.1,True,Risk team: 225 resolved / 250 total = 90.0%
+control,Guard,shared,num_support_risk_resolution_032,2,4,90.0,0.1,False,
+control,Guard,per_route,num_support_risk_resolution_032,2,4,90.0,0.1,False,
+control,Base,shared,num_iclr2027_ad_email_margin_040,1,2,6300.0,0.1,False,
+control,Double-pass,shared,num_iclr2027_ad_email_margin_040,1,2,6300.0,0.1,False,
+control,Double-pass,per_route,num_iclr2027_ad_email_margin_040,1,2,6300.0,0.1,False,
+control,Double-pass,per_route,num_iclr2027_ad_email_margin_040,2,4,6300.0,0.1,False,
+control,Verification,shared,num_iclr2027_ad_email_margin_040,1,2,6300.0,0.1,False,
+control,Verification,per_route,num_iclr2027_ad_email_margin_040,1,2,6300.0,0.1,False,
+control,Verification,per_route,num_iclr2027_ad_email_margin_040,2,4,6300.0,0.1,False,
+control,Guard,shared,num_iclr2027_ad_email_margin_040,1,2,6300.0,0.1,False,
+control,Guard,per_route,num_iclr2027_ad_email_margin_040,1,2,6300.0,0.1,False,
+control,Guard,per_route,num_iclr2027_ad_email_margin_040,2,4,6300.0,0.1,True,Total: $3500 + $2800 = $6300
+control,Guard,per_route,num_iclr2027_clinic_adverse_sign_052,2,4,-3.3333,0.1,True,Rounded to 2 decimal places: -3.33 percentage points
+public,Double-pass,shared,public_penguins_mass_v3,1,2,4201.754385964912,0.01,True,Mean body_mass_g (4 decimals): 4201.7544
+public,Double-pass,per_route,public_penguins_mass_v3,1,2,4201.754385964912,0.01,True,Mean body_mass_g (4 decimals): 4201.7544
+public,Double-pass,per_route,public_penguins_mass_v3,2,4,4201.754385964912,0.01,True,Mean body_mass_g (4 decimals): 4201.7544
+public,Base,shared,public_penguins_adelie_mass_v3,1,2,3700.662251655629,0.01,True,Mean body mass for Adelie penguins: 3700.6623 grams
+public,Double-pass,shared,public_penguins_adelie_mass_v3,1,2,3700.662251655629,0.01,True,Mean body mass for Adelie penguins: 3700.6623 grams
+public,Double-pass,per_route,public_penguins_adelie_mass_v3,1,2,3700.662251655629,0.01,True,Mean body mass for Adelie penguins: 3700.6623 grams
+public,Base,shared,public_penguins_gentoo_count_v3,1,2,124.0,0.01,True,Result with 4 decimal places: 124.0000
+public,Double-pass,per_route,public_penguins_gentoo_count_v3,1,2,124.0,0.01,True,Result with 4 decimal places: 124.0000
+public,Double-pass,per_route,public_penguins_gentoo_count_v3,2,4,124.0,0.01,True,Result with 4 decimal places: 124.0000
+public,Base,shared,public_penguins_male_bill_v3,1,2,45.85476190476191,0.01,True,Mean bill_length_mm for male penguins: 45.8548
+public,Double-pass,shared,public_penguins_male_bill_v3,1,2,45.85476190476191,0.01,True,Mean bill_length_mm for male penguins: 45.8548
+public,Double-pass,per_route,public_penguins_male_bill_v3,1,2,45.85476190476191,0.01,True,Mean bill_length_mm for male penguins: 45.8548
+public,Base,shared,public_penguins_mass_kg_v3,1,2,4.201754385964912,0.01,True,"Mean body mass (kilograms, 4+ decimals): 4.2018"
+public,Double-pass,shared,public_penguins_mass_kg_v3,1,2,4.201754385964912,0.01,True,Mean body mass in kilograms: 4.2018
+public,Double-pass,per_route,public_penguins_mass_kg_v3,1,2,4.201754385964912,0.01,True,Mean body mass in kilograms: 4.2018
+public,Double-pass,per_route,public_penguins_mass_kg_v3,2,4,4.201754385964912,0.01,True,Mean body mass: 4.2018 kg

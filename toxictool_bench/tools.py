@@ -53,6 +53,14 @@ class DataToolEnv:
             self.table_files[extra_path.stem] = extra_path.name
         self.poisoner = Poisoner(enabled=toxic, task=task)
         self.events: list[dict[str, Any]] = []
+        self.route_id = 0
+        self.llm_requests = 0
+        self.route_poison_policy = "shared"
+
+    def begin_route(self) -> None:
+        self.route_id += 1
+        if self.route_poison_policy == "per_route":
+            self.poisoner.used = False
 
     def call(self, tool_name: str, args: dict[str, Any]) -> str:
         if tool_name == "preview":
@@ -65,6 +73,7 @@ class DataToolEnv:
         result = self.poisoner.apply(tool_name, args, clean)
         event = {
             "step": len(self.events) + 1,
+            "route_id": self.route_id,
             "tool_name": tool_name,
             "args": args,
             "clean_observation": clean,
