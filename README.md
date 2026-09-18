@@ -133,13 +133,25 @@ For a complete artifact map, see `ARTIFACT_MANIFEST.md`. The core paper-facing r
 
 ## Paper
 
-The paper entry point is `main.tex`. It uses the included ICLR 2027 style. The
+The paper entry point is `main.tex`. It uses the official bundle in `iclr2027/`,
+including its supplied `fancyhdr.sty` and `natbib.sty`, in anonymous review mode.
+Do not edit the official style files or enable `\iclrfinalcopy` for submission. The
 current compiled version ends the main text on page 9 and starts references on
 page 10.
 
 ```bash
-tectonic main.tex --outdir output/scorer_revision_v2/pdf --keep-logs
+python3 toxictool_bench/check_paper_static.py --main main.tex
+tectonic -Z search-path=iclr2027 main.tex --outdir output/scorer_revision_v2/pdf --keep-logs --keep-intermediates
 ```
+
+Open `output/scorer_revision_v2/pdf/main.pdf`, not an older root-level PDF.
+Compile the complete `main.tex` entry point, including the appendix inputs;
+individual files in `sections/` are not standalone documents. Tectonic runs
+the reference/bibliography passes automatically. With a traditional LaTeX
+toolchain, use `TEXINPUTS=./iclr2027//: latexmk -pdf main.tex`
+(or LaTeX, BibTeX, then LaTeX twice with the same search path),
+not a single LaTeX pass. If references show `??`, check the final build log
+for undefined references/citations and rebuild the complete document.
 
 ## Reproduction
 
@@ -185,3 +197,10 @@ python3 toxictool_bench/generate_iclr2027_tasks.py
 ## Security Note
 
 API keys and local endpoint configuration should not be committed. This repository ignores the local `api` file and `.env` files.
+
+## Paper Appendix
+
+The compact appendix groups construction, scoring/human validation, agent protocols,
+supplementary results, and controlled evidence experiments into five sections.
+See [the appendix reorganization guide](docs/APPENDIX_REORGANIZATION_CN.md) for the
+full-material index, preserved pre-reorganization sources, and official-template build commands.

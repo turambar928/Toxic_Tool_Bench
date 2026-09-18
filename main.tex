@@ -1,14 +1,12 @@
 \documentclass{article}
 
-\IfFileExists{iclr2027_conference.sty}{
-    \usepackage{iclr2027_conference,times}
-}{
-    \IfFileExists{iclr2026_conference.sty}{
-        \usepackage{iclr2026_conference,times}
-    }{
-        \usepackage[margin=1in]{geometry}
-    }
-}
+% Use the supplied official bundle; do not silently fall back to another style.
+% For Tectonic, also pass -Z search-path=iclr2027 so bundled dependencies win.
+\makeatletter
+\def\input@path{{iclr2027/}}
+\makeatother
+\usepackage{iclr2027/iclr2027_conference,times}
+% Leave \iclrfinalcopy disabled for anonymous submission.
 
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
@@ -42,15 +40,7 @@
 \input{sections/07_discussion_limitations}
 
 \clearpage
-\IfFileExists{iclr2027_conference.bst}{
-    \bibliographystyle{iclr2027_conference}
-}{
-    \IfFileExists{iclr2026_conference.bst}{
-        \bibliographystyle{iclr2026_conference}
-    }{
-        \bibliographystyle{plainnat}
-    }
-}
+\bibliographystyle{iclr2027/iclr2027_conference}
 \bibliography{references}
 
 \clearpage
@@ -59,8 +49,5 @@
 \renewcommand{\thesection}{\Alph{section}}
 \renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
 \input{sections/08_appendix_guard_details}
-\input{sections/09_revision_validation}
-\input{sections/10_delivery_controls}
-\input{sections/11_matched_evidence_controls}
 
 \end{document}

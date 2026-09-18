@@ -156,7 +156,7 @@ class ReturnedHoldoutTests(unittest.TestCase):
             self.assertGreaterEqual(r["ci95_hi"], 0)
 
     def test_paper_holdout_table_matches_derived_method_rates(self):
-        paper = (ROOT / "sections/08_appendix_guard_details.tex").read_text()
+        paper = (ROOT / "sections/09_revision_validation.tex").read_text()
         rates = method_rates(self.cases)
         for split, method in (("core", "Base"), ("core", "Double-pass"),
                               ("core", "Verification-only"), ("core", "Generic Guard"),
@@ -193,12 +193,14 @@ class ReturnedHoldoutTests(unittest.TestCase):
 
     def test_adjudicated_paper_precision_recall_and_counts(self):
         _, accuracy = agreement_tables(self.cases)
-        paper = (ROOT / "sections/08_appendix_guard_details.tex").read_text()
+        paper = (ROOT / "sections/09_revision_validation.tex").read_text()
         final = [r for r in accuracy if r["rater"] == "consensus" and r["split"] == "all"]
         self.assertEqual(len(final), 7)
         for r in final:
             if r["split"] == "all":
-                cells = f'{r["metric"]} & {r["n"]} & {r["tp"] + r["fn"]} & {r["precision"]:.3f} & {r["recall"]:.3f} & {r["f1"]:.3f}'
+                # The compact table displays precision/recall for both versions;
+                # F1 remains in the archived analysis, not an adjacent column.
+                cells = f'{r["metric"]} & {r["n"]} & {r["tp"] + r["fn"]} & {r["precision"]:.3f} & {r["recall"]:.3f} & '
                 self.assertIn(cells, paper)
 
 

@@ -71,6 +71,26 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def suite_table_lines(summaries, exposure):
+    """Combined suite outcomes and delivery denominators in the short appendix."""
+    exp = {(r['suite'], r['adapter']): r for r in exposure}
+    return [line(
+        'Numerical' if s == 'numerical_iclr2027' else 'Semantic', NAMES[a],
+        *[summaries[s][a][k] for k in
+          ('clean_tsr', 'poisoned_tsr', 'toxic_bcr', 'toxic_vr', 'toxic_rr')],
+        f"{exp[s,a]['n_exposed']}/{exp[s,a]['n_toxic']}", f(exp[s,a]['pdr'], 3),
+    ) for s in SUITES for a in NAMES]
+
+
+def audit_table_lines(consensus, agreement):
+    """Keep scorer accuracy distinct from pre-adjudication rater agreement."""
+    return [line(k.upper(), r['n_evaluated'], f(r['precision'], 3),
+                 f(r['recall'], 3), f(r['f1'], 3),
+                 f(agreement[k]['percent_agreement'], 3),
+                 f(agreement[k]['cohen_kappa'], 3))
+            for k, r in consensus.items()]
+
+
 def main() -> None:
     runs = load_runs(DEFAULT_MANIFEST)
     if set(key[0] for key in runs) != set(SUITES):
@@ -143,20 +163,18 @@ def main() -> None:
                             "old_value": f(old[metric], 6), "revised_value": f(new[metric], 6), "delta": f(new[metric]-old[metric], 6)})
     write_csv(RESULTS / f"{PREFIX}_scorer_revision_impact.csv", impacts)
     appendix = SECTIONS / "08_appendix_guard_details.tex"
+    scoring_appendix = SECTIONS / "09_revision_validation.tex"
+    agreement_path = ROOT / "toxictool_bench/human_audit_v2/agreement.json"
+    agreement = json.loads(agreement_path.read_text())["labels"]
     # Main results, suite breakdown, counts, audit, paired inference and CIs all
     # come from the objects above, not independently typed manuscript values.
     table_rows(SECTIONS / "05_experiments.tex", "tab:langgraph-guarded", [
         line(NAMES[a], *[summaries['combined'][a][k] for k in ('clean_tsr','poisoned_tsr','toxic_bcr','toxic_par','toxic_vpa','toxic_vr','toxic_rr')], summaries['combined'][a]['n_exposed']) for a in NAMES])
-    table_rows(appendix, "tab:appendix-cost-robustness", [
-        line(NAMES[a], summaries['combined'][a]['poisoned_tsr'], summaries['combined'][a]['toxic_bcr'],
-             *[f(sum(len(r['tool_events']) for r in runs[s,a,'toxic'].values()) / len(runs[s,a,'toxic']))
-               for s in ('semantic_schema_iclr2027','numerical_iclr2027')]) for a in NAMES])
-    table_rows(appendix, "tab:appendix-guard-suite-breakdown", [
-        line(SUITES[s], NAMES[a], *[summaries[s][a][k] for k in ('clean_tsr','poisoned_tsr','toxic_bcr','toxic_vr','toxic_rr')]) for s in SUITES for a in NAMES])
+    table_rows(appendix, "tab:appendix-guard-suite-breakdown",
+               suite_table_lines(summaries, exposure))
     exp = {(r['suite'],r['adapter']):r for r in exposure}
-    table_rows(appendix, "tab:appendix-defense-exposure", [
-        line(SUITES[s], NAMES[a], exp[s,a]['n_toxic'], exp[s,a]['n_exposed'], f(exp[s,a]['pdr'],3), f(exp[s,a]['bcr'],3), f"{exp[s,a]['bcr_events']}/{exp[s,a]['n_exposed']}") for s in SUITES for a in NAMES])
-    table_rows(appendix, "tab:appendix-scorer-precision", [line(k.upper(), r['n_evaluated'], f(r['precision'],3), f(r['recall'],3), f(r['f1'],3)) for k,r in consensus.items()])
+    table_rows(scoring_appendix, "tab:appendix-scorer-precision",
+               audit_table_lines(consensus, agreement))
     paired_lines = []
     for suite in [*SUITES, "combined"]:
         for r in interaction:
@@ -176,11 +194,20 @@ def main() -> None:
             if exp[s,a]['bcr_events'] == 0:
                 # One-sided exact binomial upper bound on detected-event rate.
                 blo, bhi = 0., 1 - .05 ** (1/int(r['n_exposed']))
-            interval_lines.append(line(SUITES[s], NAMES[a],f"[{f(r['toxic_tsr_lo'])}, {f(r['toxic_tsr_hi'])}]",f"[{f(blo)}, {f(bhi)}]"))
-    table_rows(appendix, "tab:appendix-guard-ci", interval_lines)
-    table_rows(appendix, "tab:appendix-scorer-revision-impact", [
+            interval_lines.append({
+                'suite': s, 'adapter': a,
+                'poisoned_tsr_lo': r['toxic_tsr_lo'],
+                'poisoned_tsr_hi': r['toxic_tsr_hi'],
+                'bcr_lo': blo, 'bcr_hi': bhi,
+                'bcr_interval': 'one_sided_exact' if exp[s,a]['bcr_events'] == 0 else 'bootstrap',
+            })
+    # Full marginal intervals stay available outside the compact paper; do not
+    # update the immutable pre-reorganization TeX archive.
+    write_csv(RESULTS / f"{PREFIX}_paper_intervals.csv", interval_lines)
+    table_rows(scoring_appendix, "tab:appendix-scorer-revision-impact", [
         line(NAMES[a], *[f"{f(next(r for r in impacts if r['adapter']==a and r['metric']==m)['old_value'])}$\\to${f(next(r for r in impacts if r['adapter']==a and r['metric']==m)['revised_value'])}" for m in ('clean_tsr','toxic_tsr','toxic_bcr','toxic_par','toxic_vpa','toxic_vr','toxic_rr')]) for a in NAMES])
     inputs = {DEFAULT_MANIFEST, ROOT / "toxictool_bench/evaluator.py", Path(__file__), ROOT / "toxictool_bench/build_defense_paired_analysis.py", audit.DEFAULT_AUDIT}
+    inputs.add(agreement_path)
     inputs.update(ROOT / 'toxictool_bench' / name for name in (
         'answer_selection.py', 'audit_reference_answers.py', 'results/reference_answer_audit.json'))
     inputs.update(ROOT / row['path'] for row in read_csv(DEFAULT_MANIFEST))

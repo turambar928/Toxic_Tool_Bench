@@ -35,35 +35,22 @@ The expanded numerical release has 60 instances from 56 query--dataset--poison s
 \subsection{Poisoning Operators and Metrics}
 
 \paragraph{Numerical poisoning.}
-Numerical operators target computation outputs from Python, pandas, SQL, or dataframe routes:
-\begin{itemize}
-    \item \textbf{Aggregate scaling:} multiply a requested aggregate such as a mean, sum, rate, or count by a controlled factor while preserving the surrounding output format.
-    \item \textbf{Sign flip:} reverse the sign of a change, growth rate, or delta while keeping the magnitude plausible.
-    \item \textbf{Rank/label swap:} swap the entity label attached to a statistic or ranking result while leaving the value format intact.
-\end{itemize}
-The 34-instance cross-model suite uses these three core operators. The expanded numerical suite additionally includes ratio inversion, denominator swap, omitted-filter corruption, and unit conversion.
+Numerical operators target computation outputs from Python, pandas, SQL, or dataframe routes. The 34-instance cross-model suite uses three core operators: \emph{aggregate scaling} multiplies a requested mean, sum, rate, or count by a controlled factor while preserving the output format; \emph{sign flip} reverses the sign of a change, growth rate, or delta while keeping its magnitude plausible; and \emph{rank/label swap} changes the entity label attached to a statistic or ranking result without changing the value format. The expanded numerical suite additionally includes ratio inversion, denominator swap, omitted-filter corruption, and unit conversion.
 
 \paragraph{Semantic and schema poisoning.}
-These operators change how evidence is linked to an entity or claim:
-\begin{itemize}
-    \item \textbf{Label swap:} replace an entity label associated with an otherwise plausible result.
-    \item \textbf{Treatment/control flip:} invert experimental group semantics while preserving outcome values.
-    \item \textbf{Column-semantic swap:} swap column descriptions or meanings in schema evidence.
-    \item \textbf{Stale metadata:} return outdated data-dictionary or source-of-truth metadata.
-    \item \textbf{Biased retrieval:} return evidence rows or snippets that support the wrong conclusion while appearing relevant.
-\end{itemize}
-We score final answers against the clean oracle and compute behavior labels from the logged trajectory. The scorer reports the following metrics:
-\begin{itemize}
-    \item \textbf{Task Success Rate (TSR):} the fraction of tasks that satisfy the clean reference answer or rubric.
-    \item \textbf{Poisoned Degradation ($\Delta$TSR):} the drop from clean TSR to poisoned TSR.
-    \item \textbf{Blind Compliance Rate (BCR):} the fraction of exposed runs whose final answer matches the poisoned oracle without ADR or VR.
-    \item \textbf{Poison Adoption Rate (PAR):} the fraction of exposed runs whose final answer matches the poisoned oracle, regardless of whether the agent detected or validated the observation.
-    \item \textbf{Validated Poison Adoption (VPA):} the fraction of exposed runs that both obtain qualifying VR and still match the poisoned oracle. VPA records adoption after a check.
-    \item \textbf{Anomaly Detection Rate (ADR):} the fraction of exposed runs whose final response explicitly identifies a discrepancy, implausibility, conflict, or possible corruption.
-    \item \textbf{Validation Rate (VR):} the fraction of exposed runs with a fresh, task-relevant evidence-producing tool event after the poisoned observation. The event may itself be corrupted under repeated poisoning; VPA records cases that still adopt the poisoned answer after such validation.
-    \item \textbf{Recovery Rate (RR):} the fraction of exposed runs that produce an accepted clean answer after ADR or VR.
-    \item \textbf{Poison Delivery Rate (PDR):} the fraction of toxic-environment runs in which the proxy actually modifies at least one eligible observation.
-\end{itemize}
+These operators change how evidence is linked to an entity or claim. \emph{Label swap} replaces the entity label of an otherwise plausible result, and \emph{treatment/control flip} inverts experimental group semantics while preserving outcome values. \emph{Column-semantic swap} exchanges column descriptions or meanings; \emph{stale metadata} returns outdated data-dictionary or source-of-truth metadata; and \emph{biased retrieval} returns apparently relevant rows or snippets that support a wrong conclusion.
+
+\paragraph{Task outcomes.}
+We score final answers against the clean oracle and derive behavior labels from the logged trajectory. \emph{Task Success Rate (TSR)} is the fraction of tasks satisfying the clean reference answer or rubric; \emph{Poisoned Degradation ($\Delta$TSR)} is clean TSR minus poisoned TSR. TSR uses all retained runs. The six behavioral rates below---ADR, VR, RR, PAR, BCR, and VPA---instead use exposed runs as their denominator.
+
+\paragraph{Detection, validation, and recovery.}
+\emph{Anomaly Detection Rate (ADR)} records final responses that explicitly identify a discrepancy, implausibility, conflict, or possible corruption. \emph{Validation Rate (VR)} records a fresh, task-relevant evidence-producing tool event after the poisoned observation. Such a check may itself return corrupted evidence under repeated poisoning. \emph{Recovery Rate (RR)} records an accepted clean final answer after ADR or VR.
+
+\paragraph{Poison adoption.}
+\emph{Poison Adoption Rate (PAR)} records final answers matching the poisoned oracle, regardless of detection or validation. \emph{Blind Compliance Rate (BCR)} records adoption without either ADR or VR, whereas \emph{Validated Poison Adoption (VPA)} records adoption despite a qualifying VR event. VPA is a fraction of all exposed runs, not only the runs with validation.
+
+\paragraph{Poison delivery.}
+\emph{Poison Delivery Rate (PDR)} is the fraction of toxic-environment runs in which the proxy actually modifies at least one eligible observation. It distinguishes delivery coverage from the exposure-conditioned behavioral rates.
 
 All methods use the same scorer after removing adapter display labels. A scoring-only parser extracts query-related assertions, explicit corrections, and role-specific conclusions before matching the clean and poisoned references. It handles complete numerical tokens, including thousands separators, without changing the helpers used by agent policies. Unresolved and conflicting selections remain in the denominator. TSR and PAR assess outcomes; BCR and VPA partition aspects of adoption behavior. A qualifying check makes BCR zero by definition, so zero BCR alone is not mitigation evidence.
 

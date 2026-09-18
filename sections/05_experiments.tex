@@ -33,7 +33,7 @@ AutoGen & 0.92 & 0.66 & 0.26 & 0.27 & 0.32 & 0.86 \\
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
-Table~\ref{tab:cross-agent-model-full} repeats the smaller suites across model families. All nine fully crossed configurations show a numerical clean-to-poisoned gap; eight show a semantic gap, while Claude--AutoGen has a small increase. The heatmap appears in Figure~\ref{fig:cross-agent-model}; for example, GPT--LangGraph numerical BCR is 0.79 [0.64, 0.93].
+Table~\ref{tab:cross-agent-model-full} repeats the smaller suites across model families. All nine fully crossed configurations show a numerical clean-to-poisoned gap; eight show a semantic gap, while Claude--AutoGen has a small increase. Figure~\ref{fig:cross-agent-model} visualizes mean clean-to-poisoned TSR changes across the three fully crossed adapters, with exact rates in Table~\ref{tab:cross-model-rates}. For example, GPT--LangGraph numerical BCR is 0.79 [0.64, 0.93].
 
 \begin{table*}[t]
 \centering
@@ -68,12 +68,12 @@ Qwen3.6-35B & LangGraph ReAct & 1.00 & 0.38 & 0.68 & 1.00 & 0.79 & 0.21 \\
 
 Across nine common model--adapter groups, aggregate scaling and rank swaps have historical numerical BCR 0.62 and 0.37. We do not interpret the lower sign-flip rate as robustness: off-target delivery compromises that comparison. Figure~\ref{fig:operator-profile} is descriptive, not a causal operator ranking. Label swaps illustrate a different diagnostic failure: preserving an amount while changing its entity can defeat magnitude-only checks.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.86\textwidth]{figures/fig_operator_profile}
-\caption{Historical operator profiles across nine observation-level model--adapter configurations. Sign flip is omitted because off-target delivery compromises its interpretation. Conditional means omit unexposed groups; PDR includes all groups.}
+\includegraphics[width=\textwidth]{figures/fig_operator_dots}
+\caption{Historical operator profiles: (a) poisoned TSR, (b) BCR, and (c) VR and RR, with numerical operators above the divider and semantic/schema operators below. Means cover nine model--adapter configurations; BCR, VR, and RR omit unexposed groups. Sign flip is excluded due to off-target delivery. Full values and PDR appear in Table~\ref{tab:operator-profile}.}
 \label{fig:operator-profile}
-\end{figure*}
+\end{figure}
 
 \subsection{What Does Additional Verification Buy?}
 
