@@ -1,0 +1,7 @@
+field,meaning
+net_revenue_usd,"current revenue after discounts, in US dollars"
+gross_revenue_usd,legacy revenue before discounts
+active_accounts,current active account count
+registered_accounts,legacy lifetime registration count
+event_timestamp_utc,canonical event timestamp in UTC
+ingest_timestamp_local,legacy ingestion timestamp in local time

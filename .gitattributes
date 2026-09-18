@@ -1,3 +1,7 @@
 # Preserve downloaded UCI exports byte-for-byte, including source CRLF endings.
 toxictool_bench/datasets/public_auto_mpg_v4.csv -text whitespace=cr-at-eol
 toxictool_bench/datasets/public_bike_v4.csv -text whitespace=cr-at-eol
+# Preserve hashed human-review assets, including literal tool-output whitespace.
+output/HUMAN_REVIEW_KIT_20260917/** -text
+output/HUMAN_REVIEW_KIT_20260917/*/cases.html -whitespace
+output/HUMAN_REVIEW_KIT_20260917/*/evidence.csv -whitespace

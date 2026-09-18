@@ -1,0 +1,38 @@
+[
+  {
+    "source": "figure1.png",
+    "pdf": "figure1.pdf",
+    "source_sha256": "038c3a40d10a2e4937ba34865fa9bece0c304c449eb7b5e716cf7ae17e568b67",
+    "pdf_sha256": "e9247c32841f7c0e917c674e020f58d39ef4d98b5624b7a52643695fc92b2528",
+    "width_pixels": 5504,
+    "height_pixels": 3072,
+    "page_width_points": 396.0,
+    "page_height_points": 221.02325581395348,
+    "effective_dpi_at_paper_width": 1000.7272727272727,
+    "image_filters": [
+      "/FlateDecode"
+    ],
+    "rgb_pixels_identical": true,
+    "rgb_pixel_sha256": "b18c369f2b849ea47a395dbe1e6d09abf085b88ccfebf45a78922fd711732d23",
+    "font_or_layout_changed": false,
+    "vectorized": false
+  },
+  {
+    "source": "figure2.png",
+    "pdf": "figure2.pdf",
+    "source_sha256": "59df196e8dfdb386a6fddb641f958b80d29e21956cd2d1111e9ea3a2176801c9",
+    "pdf_sha256": "e642898b08a9693cf8d80067572dfd578dea888f46a28d25cd521cc73569078a",
+    "width_pixels": 5504,
+    "height_pixels": 3072,
+    "page_width_points": 396.0,
+    "page_height_points": 221.02325581395348,
+    "effective_dpi_at_paper_width": 1000.7272727272727,
+    "image_filters": [
+      "/FlateDecode"
+    ],
+    "rgb_pixels_identical": true,
+    "rgb_pixel_sha256": "a285c01bd06a341c563e6a87283b3cab885674485cfbd757368e7d511f7442ae",
+    "font_or_layout_changed": false,
+    "vectorized": false
+  }
+]

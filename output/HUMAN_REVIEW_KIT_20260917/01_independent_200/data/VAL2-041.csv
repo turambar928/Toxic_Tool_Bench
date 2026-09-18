@@ -1,0 +1,4 @@
+flag,exposures,errors,latency_ms
+old_ui,12000,96,210
+new_ui,12000,54,185
+search_v2,12000,72,198

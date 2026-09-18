@@ -1,0 +1,1791 @@
+{
+  "preserved_original_sha256": {
+    "figures/figure1.png": "038c3a40d10a2e4937ba34865fa9bece0c304c449eb7b5e716cf7ae17e568b67",
+    "figures/figure2.png": "59df196e8dfdb386a6fddb641f958b80d29e21956cd2d1111e9ea3a2176801c9",
+    "figures/figure1.pdf": "e9247c32841f7c0e917c674e020f58d39ef4d98b5624b7a52643695fc92b2528",
+    "figures/figure2.pdf": "e642898b08a9693cf8d80067572dfd578dea888f46a28d25cd521cc73569078a"
+  },
+  "font": "Arial; Courier New for code",
+  "figures": [
+    {
+      "svg": "figure1_vector.svg",
+      "pdf": "figure1_vector.pdf",
+      "svg_sha256": "bbc19e6f2d21d991124f5f24dc22a2ccfb74a4d42e8674cfaacfadf0b85d37a6",
+      "pdf_sha256": "3101d88b4c24309f25fb77ed2506ecbc78bf8a5c61566c54c3c6c6242259c6d6",
+      "embedded_raster_images": 0,
+      "text_selectable": true,
+      "text_elements": [
+        {
+          "text": "Figure 1 | Silent Tool Poisoning: An Example",
+          "x": 1000,
+          "baseline": 58,
+          "font_size": 37,
+          "font": "Arial",
+          "bold": true,
+          "left": 608.34375,
+          "right": 1391.65625
+        },
+        {
+          "text": "USER QUERY",
+          "x": 985.0,
+          "baseline": 138.36,
+          "font_size": 28,
+          "font": "Arial",
+          "bold": true,
+          "left": 892.94609375,
+          "right": 1077.05390625
+        },
+        {
+          "text": "“Which store had the highest revenue last quarter, and what was it?”",
+          "x": 510,
+          "baseline": 198,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": false,
+          "left": 510,
+          "right": 1264.55
+        },
+        {
+          "text": "DATA AGENT WITH TOOL ACCESS",
+          "x": 985.0,
+          "baseline": 285.19,
+          "font_size": 29,
+          "font": "Arial",
+          "bold": true,
+          "left": 744.41328125,
+          "right": 1225.5867187499998
+        },
+        {
+          "text": "LLM",
+          "x": 69,
+          "baseline": 59,
+          "font_size": 17,
+          "font": "Arial",
+          "bold": true,
+          "left": 51.53515625,
+          "right": 86.46484375
+        },
+        {
+          "text": "Data Agent",
+          "x": 985,
+          "baseline": 445,
+          "font_size": 28,
+          "font": "Arial",
+          "bold": true,
+          "left": 911.6234375,
+          "right": 1058.3765625
+        },
+        {
+          "text": "LLM + Tool Calls",
+          "x": 985,
+          "baseline": 478,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": false,
+          "left": 892.478125,
+          "right": 1077.521875
+        },
+        {
+          "text": "REGISTERED TOOL",
+          "x": 529,
+          "baseline": 365,
+          "font_size": 24,
+          "font": "Arial",
+          "bold": true,
+          "left": 529,
+          "right": 757.9234375
+        },
+        {
+          "text": "csv_tool(query)",
+          "x": 495,
+          "baseline": 435,
+          "font_size": 28,
+          "font": "Courier New",
+          "bold": false,
+          "left": 495,
+          "right": 747.046875
+        },
+        {
+          "text": "DATA SOURCE",
+          "x": 1738.0,
+          "baseline": 286.88,
+          "font_size": 30,
+          "font": "Arial",
+          "bold": true,
+          "left": 1630.7796875,
+          "right": 1845.2203124999999
+        },
+        {
+          "text": "CSV",
+          "x": 46,
+          "baseline": 69,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 23.3828125,
+          "right": 68.6171875
+        },
+        {
+          "text": "Store",
+          "x": 1511,
+          "baseline": 335,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": true,
+          "left": 1511,
+          "right": 1574.903125
+        },
+        {
+          "text": "Q4 Revenue",
+          "x": 1697,
+          "baseline": 335,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": true,
+          "left": 1697,
+          "right": 1841.5015625
+        },
+        {
+          "text": "Store A",
+          "x": 1514,
+          "baseline": 380,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": false,
+          "left": 1514,
+          "right": 1599.2734375
+        },
+        {
+          "text": "$230,000",
+          "x": 1697,
+          "baseline": 380,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": false,
+          "left": 1697,
+          "right": 1805.4390625
+        },
+        {
+          "text": "Store B",
+          "x": 1514,
+          "baseline": 423,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 1514,
+          "right": 1606.459375
+        },
+        {
+          "text": "$450,000",
+          "x": 1697,
+          "baseline": 423,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 1697,
+          "right": 1805.4390625
+        },
+        {
+          "text": "Store C",
+          "x": 1514,
+          "baseline": 471,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": false,
+          "left": 1514,
+          "right": 1602.1421875
+        },
+        {
+          "text": "$310,000",
+          "x": 1697,
+          "baseline": 471,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": false,
+          "left": 1697,
+          "right": 1805.4390625
+        },
+        {
+          "text": "highest",
+          "x": 1883,
+          "baseline": 423,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": false,
+          "left": 1883,
+          "right": 1957.16875
+        },
+        {
+          "text": "READS",
+          "x": 1399,
+          "baseline": 363,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 1353.49296875,
+          "right": 1444.50703125
+        },
+        {
+          "text": "(stores.csv)",
+          "x": 1399,
+          "baseline": 420,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 1342.16171875,
+          "right": 1455.8382812500001
+        },
+        {
+          "text": "PATH 1: CLEAN ENVIRONMENT",
+          "x": 491.5,
+          "baseline": 653.02,
+          "font_size": 31,
+          "font": "Arial",
+          "bold": true,
+          "left": 256.9859375,
+          "right": 726.0140624999999
+        },
+        {
+          "text": "CSV Tool",
+          "x": 232,
+          "baseline": 773,
+          "font_size": 30,
+          "font": "Arial",
+          "bold": true,
+          "left": 166.44921875,
+          "right": 297.55078125
+        },
+        {
+          "text": "row = stores.loc[",
+          "x": 59,
+          "baseline": 817,
+          "font_size": 16.5,
+          "font": "Courier New",
+          "bold": false,
+          "left": 59,
+          "right": 227.3265625
+        },
+        {
+          "text": "    stores[\"Q4 Revenue\"].idxmax()]",
+          "x": 59,
+          "baseline": 840,
+          "font_size": 16.5,
+          "font": "Courier New",
+          "bold": false,
+          "left": 59,
+          "right": 395.653125
+        },
+        {
+          "text": "return row[\"Store\"], row[\"Q4 Revenue\"]",
+          "x": 59,
+          "baseline": 863,
+          "font_size": 15.173043861033364,
+          "font": "Courier New",
+          "bold": false,
+          "left": 59,
+          "right": 405.63125
+        },
+        {
+          "text": "Original Tool",
+          "x": 560,
+          "baseline": 812,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": true,
+          "left": 489.93515625,
+          "right": 630.0648437499999
+        },
+        {
+          "text": "Output",
+          "x": 560,
+          "baseline": 838,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": true,
+          "left": 522.3203125,
+          "right": 597.6796875
+        },
+        {
+          "text": "No Modification",
+          "x": 560,
+          "baseline": 875,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 491.07734375,
+          "right": 628.92265625
+        },
+        {
+          "text": "Store B – $450,000",
+          "x": 822,
+          "baseline": 824,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": false,
+          "left": 709.9734375,
+          "right": 934.0265625000001
+        },
+        {
+          "text": "Correct Observation",
+          "x": 822,
+          "baseline": 867,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 723.571875,
+          "right": 920.4281249999999
+        },
+        {
+          "text": "CORRECT STORE-VALUE PAIR",
+          "x": 514,
+          "baseline": 1067,
+          "font_size": 24.446376637783708,
+          "font": "Arial",
+          "bold": true,
+          "left": 332.34609375,
+          "right": 695.6539062500001
+        },
+        {
+          "text": "PATH 2: POISONED ENVIRONMENT",
+          "x": 1517.0,
+          "baseline": 566.02,
+          "font_size": 29,
+          "font": "Arial",
+          "bold": true,
+          "left": 1271.01796875,
+          "right": 1762.9820312499999
+        },
+        {
+          "text": "TOOL-OUTPUT POISONING",
+          "x": 1150,
+          "baseline": 635,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": true,
+          "left": 1150,
+          "right": 1478.70625
+        },
+        {
+          "text": "• The original tool runs successfully.",
+          "x": 1150,
+          "baseline": 663,
+          "font_size": 19,
+          "font": "Arial",
+          "bold": false,
+          "left": 1150,
+          "right": 1450.5875
+        },
+        {
+          "text": "• The proxy swaps Store A and Store B",
+          "x": 1150,
+          "baseline": 686,
+          "font_size": 19,
+          "font": "Arial",
+          "bold": false,
+          "left": 1150,
+          "right": 1477.3671875
+        },
+        {
+          "text": "  in the output.",
+          "x": 1150,
+          "baseline": 709,
+          "font_size": 19,
+          "font": "Arial",
+          "bold": false,
+          "left": 1150,
+          "right": 1270.4171875
+        },
+        {
+          "text": "• No exception, error, or warning is shown.",
+          "x": 1150,
+          "baseline": 732,
+          "font_size": 19,
+          "font": "Arial",
+          "bold": false,
+          "left": 1150,
+          "right": 1506.2015625
+        },
+        {
+          "text": "Original output",
+          "x": 1638,
+          "baseline": 670,
+          "font_size": 18,
+          "font": "Arial",
+          "bold": true,
+          "left": 1573.50859375,
+          "right": 1702.49140625
+        },
+        {
+          "text": "Store B – $450,000",
+          "x": 1638,
+          "baseline": 713,
+          "font_size": 18.56647994579687,
+          "font": "Arial",
+          "bold": false,
+          "left": 1557.86015625,
+          "right": 1718.13984375
+        },
+        {
+          "text": "Modified output",
+          "x": 1868,
+          "baseline": 670,
+          "font_size": 18,
+          "font": "Arial",
+          "bold": true,
+          "left": 1800.52109375,
+          "right": 1935.4789062500001
+        },
+        {
+          "text": "Store A – $450,000",
+          "x": 1868,
+          "baseline": 713,
+          "font_size": 18.80733501532156,
+          "font": "Arial",
+          "bold": false,
+          "left": 1788.028125,
+          "right": 1947.971875
+        },
+        {
+          "text": "Label",
+          "x": 1753,
+          "baseline": 661,
+          "font_size": 16,
+          "font": "Arial",
+          "bold": true,
+          "left": 1732.10546875,
+          "right": 1773.89453125
+        },
+        {
+          "text": "swap",
+          "x": 1753,
+          "baseline": 679,
+          "font_size": 16,
+          "font": "Arial",
+          "bold": true,
+          "left": 1732.9921875,
+          "right": 1773.0078125
+        },
+        {
+          "text": "MODIFIED TOOL OBSERVATION",
+          "x": 1516,
+          "baseline": 828,
+          "font_size": 29,
+          "font": "Arial",
+          "bold": true,
+          "left": 1293.3796875,
+          "right": 1738.6203125000002
+        },
+        {
+          "text": "Original Tool Output",
+          "x": 1213,
+          "baseline": 889,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 1106.88515625,
+          "right": 1319.1148437499999
+        },
+        {
+          "text": "Store B – $450,000",
+          "x": 1213,
+          "baseline": 936,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": false,
+          "left": 1105.28359375,
+          "right": 1320.7164062499999
+        },
+        {
+          "text": "Output Proxy",
+          "x": 1497,
+          "baseline": 889,
+          "font_size": 24,
+          "font": "Arial",
+          "bold": true,
+          "left": 1420.99453125,
+          "right": 1573.0054687499999
+        },
+        {
+          "text": "Swap Store Labels",
+          "x": 1497,
+          "baseline": 936,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 1404.66328125,
+          "right": 1589.33671875
+        },
+        {
+          "text": "Store A – $450,000",
+          "x": 1800,
+          "baseline": 894,
+          "font_size": 28,
+          "font": "Arial",
+          "bold": false,
+          "left": 1680.89765625,
+          "right": 1919.10234375
+        },
+        {
+          "text": "Observation Received",
+          "x": 1800,
+          "baseline": 927,
+          "font_size": 19,
+          "font": "Arial",
+          "bold": false,
+          "left": 1706.534375,
+          "right": 1893.465625
+        },
+        {
+          "text": "by the Agent",
+          "x": 1800,
+          "baseline": 951,
+          "font_size": 19,
+          "font": "Arial",
+          "bold": false,
+          "left": 1747.1796875,
+          "right": 1852.8203125
+        },
+        {
+          "text": "WRONG STORE-VALUE PAIR",
+          "x": 1520,
+          "baseline": 1067,
+          "font_size": 29,
+          "font": "Arial",
+          "bold": true,
+          "left": 1318.6078125,
+          "right": 1721.3921874999999
+        },
+        {
+          "text": "A Successful Tool Call Can Return a Plausible but Wrong Observation",
+          "x": 1000,
+          "baseline": 1110,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": false,
+          "left": 597.9984375,
+          "right": 1402.0015625
+        }
+      ]
+    },
+    {
+      "svg": "figure2_vector.svg",
+      "pdf": "figure2_vector.pdf",
+      "svg_sha256": "d87787a37b66ecbd070a56e11379f8e855765d9aef878ae9973e4550477baa05",
+      "pdf_sha256": "751c9d1fd55780621c9136d22425661b4b6bb0bb94ccf9d0ce4f57db1da18fdf",
+      "embedded_raster_images": 0,
+      "text_selectable": true,
+      "text_elements": [
+        {
+          "text": "Data Agents",
+          "x": 84,
+          "baseline": 51,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 84,
+          "right": 234.728125
+        },
+        {
+          "text": "Figure 2 | ToxicBench and Evidence Verification",
+          "x": 1000,
+          "baseline": 51,
+          "font_size": 32,
+          "font": "Arial",
+          "bold": true,
+          "left": 636.609375,
+          "right": 1363.390625
+        },
+        {
+          "text": "Poisoning",
+          "x": 1790,
+          "baseline": 51,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 1790,
+          "right": 1915.6546875
+        },
+        {
+          "text": "A  Task Suites",
+          "x": 17,
+          "baseline": 117,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 17,
+          "right": 191.8359375
+        },
+        {
+          "text": "Cross-model Tasks",
+          "x": 995,
+          "baseline": 117,
+          "font_size": 29,
+          "font": "Arial",
+          "bold": true,
+          "left": 862.30546875,
+          "right": 1127.6945312500002
+        },
+        {
+          "text": "Expanded: 120 tasks  |  Multi-table: 13 tasks",
+          "x": 1980,
+          "baseline": 117,
+          "font_size": 24,
+          "font": "Arial",
+          "bold": true,
+          "left": 1479.7453125,
+          "right": 1980.0
+        },
+        {
+          "text": "CSV",
+          "x": 46,
+          "baseline": 69,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 23.3828125,
+          "right": 68.6171875
+        },
+        {
+          "text": "Numerical Tasks",
+          "x": 92,
+          "baseline": 175,
+          "font_size": 31,
+          "font": "Arial",
+          "bold": true,
+          "left": 92,
+          "right": 336.109375
+        },
+        {
+          "text": "N",
+          "x": 403,
+          "baseline": 175,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 393.25078125,
+          "right": 412.74921875
+        },
+        {
+          "text": "34",
+          "x": 448,
+          "baseline": 175,
+          "font_size": 29,
+          "font": "Arial",
+          "bold": true,
+          "left": 448,
+          "right": 480.25625
+        },
+        {
+          "text": "11 CSV datasets",
+          "x": 505,
+          "baseline": 175,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 505,
+          "right": 705.8859375
+        },
+        {
+          "text": "Operator examples across suites:",
+          "x": 36,
+          "baseline": 223,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 36,
+          "right": 389.396875
+        },
+        {
+          "text": "Aggregate Scale",
+          "x": 82,
+          "baseline": 268,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 82,
+          "right": 254.40625
+        },
+        {
+          "text": "Sign Flip",
+          "x": 395,
+          "baseline": 268,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 395,
+          "right": 487.8796875
+        },
+        {
+          "text": "1",
+          "x": 13,
+          "baseline": 27,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": true,
+          "left": 13,
+          "right": 25.7921875
+        },
+        {
+          "text": "2",
+          "x": 13,
+          "baseline": 56,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": true,
+          "left": 13,
+          "right": 25.7921875
+        },
+        {
+          "text": "3",
+          "x": 13,
+          "baseline": 85,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": true,
+          "left": 13,
+          "right": 25.7921875
+        },
+        {
+          "text": "Rank Swap",
+          "x": 708,
+          "baseline": 268,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 708,
+          "right": 825.371875
+        },
+        {
+          "text": "Ratio Inversion",
+          "x": 82,
+          "baseline": 321,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 82,
+          "right": 240.925
+        },
+        {
+          "text": "Denom. Swap",
+          "x": 395,
+          "baseline": 321,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 395,
+          "right": 539.2484375
+        },
+        {
+          "text": "Omit Filter",
+          "x": 708,
+          "baseline": 321,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 708,
+          "right": 818.0125
+        },
+        {
+          "text": "Semantic / Schema Tasks",
+          "x": 1081,
+          "baseline": 175,
+          "font_size": 30,
+          "font": "Arial",
+          "bold": true,
+          "left": 1081,
+          "right": 1445.6234375
+        },
+        {
+          "text": "S",
+          "x": 1525,
+          "baseline": 175,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 1515.9953125,
+          "right": 1534.0046875
+        },
+        {
+          "text": "24",
+          "x": 1570,
+          "baseline": 175,
+          "font_size": 29,
+          "font": "Arial",
+          "bold": true,
+          "left": 1570,
+          "right": 1602.25625
+        },
+        {
+          "text": "17 datasets",
+          "x": 1642,
+          "baseline": 175,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 1642,
+          "right": 1783.6359375
+        },
+        {
+          "text": "Operator examples across suites:",
+          "x": 1038,
+          "baseline": 223,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 1038,
+          "right": 1391.396875
+        },
+        {
+          "text": "Label Swap",
+          "x": 1085,
+          "baseline": 268,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 1085,
+          "right": 1206.0359375
+        },
+        {
+          "text": "Treatment/Control Flip",
+          "x": 1383,
+          "baseline": 268,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 1383,
+          "right": 1617.6796875
+        },
+        {
+          "text": "Biased Retrieval",
+          "x": 1731,
+          "baseline": 268,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 1731,
+          "right": 1902.203125
+        },
+        {
+          "text": "Column-Semantic Swap",
+          "x": 1085,
+          "baseline": 321,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 1085,
+          "right": 1335.5984375
+        },
+        {
+          "text": "Old",
+          "x": 68,
+          "baseline": 89,
+          "font_size": 17,
+          "font": "Arial",
+          "bold": true,
+          "left": 53.834375,
+          "right": 82.165625
+        },
+        {
+          "text": "Stale Metadata",
+          "x": 1541,
+          "baseline": 321,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 1541,
+          "right": 1695.059375
+        },
+        {
+          "text": "Old",
+          "x": 1918,
+          "baseline": 320,
+          "font_size": 18,
+          "font": "Arial",
+          "bold": true,
+          "left": 1903.00078125,
+          "right": 1932.99921875
+        },
+        {
+          "text": "B  Paired Evaluation Protocol",
+          "x": 17,
+          "baseline": 382,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": true,
+          "left": 17,
+          "right": 367.0625
+        },
+        {
+          "text": "Same Query and Source Data",
+          "x": 1040,
+          "baseline": 382,
+          "font_size": 29,
+          "font": "Arial",
+          "bold": true,
+          "left": 836.92265625,
+          "right": 1243.0773437500002
+        },
+        {
+          "text": "Clean Env.",
+          "x": 285,
+          "baseline": 447,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 216.9796875,
+          "right": 353.02031250000005
+        },
+        {
+          "text": "Data Agent",
+          "x": 95,
+          "baseline": 567,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": true,
+          "left": 37.34453125,
+          "right": 152.65546875
+        },
+        {
+          "text": "calls",
+          "x": 226,
+          "baseline": 477,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": false,
+          "left": 202.99453125,
+          "right": 249.00546874999998
+        },
+        {
+          "text": "output",
+          "x": 226,
+          "baseline": 525,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": false,
+          "left": 194.025,
+          "right": 257.975
+        },
+        {
+          "text": "data flow",
+          "x": 226,
+          "baseline": 554,
+          "font_size": 21,
+          "font": "Arial",
+          "bold": false,
+          "left": 183.9734375,
+          "right": 268.02656249999995
+        },
+        {
+          "text": "Tool",
+          "x": 352,
+          "baseline": 568,
+          "font_size": 24,
+          "font": "Arial",
+          "bold": true,
+          "left": 327.56484375,
+          "right": 376.43515625000003
+        },
+        {
+          "text": "Paired Task",
+          "x": 848,
+          "baseline": 450,
+          "font_size": 28,
+          "font": "Arial",
+          "bold": true,
+          "left": 770.43984375,
+          "right": 925.5601562500001
+        },
+        {
+          "text": "o = f(x)",
+          "x": 555,
+          "baseline": 500,
+          "font_size": 24,
+          "font": "Arial",
+          "bold": false,
+          "left": 517.32265625,
+          "right": 592.67734375
+        },
+        {
+          "text": "(query + dataset)",
+          "x": 848,
+          "baseline": 501,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 764.53515625,
+          "right": 931.46484375
+        },
+        {
+          "text": "=",
+          "x": 1003,
+          "baseline": 505,
+          "font_size": 28,
+          "font": "Arial",
+          "bold": true,
+          "left": 994.82421875,
+          "right": 1011.17578125
+        },
+        {
+          "text": "vC",
+          "x": 1137,
+          "baseline": 504,
+          "font_size": 24,
+          "font": "Arial",
+          "bold": true,
+          "left": 1121.659375,
+          "right": 1152.340625
+        },
+        {
+          "text": "Correct output",
+          "x": 555,
+          "baseline": 556,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 485.296875,
+          "right": 624.703125
+        },
+        {
+          "text": "data flow",
+          "x": 846,
+          "baseline": 556,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 801.971875,
+          "right": 890.0281249999999
+        },
+        {
+          "text": "Matched",
+          "x": 1003,
+          "baseline": 553,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 964.64453125,
+          "right": 1041.35546875
+        },
+        {
+          "text": "Settings",
+          "x": 1003,
+          "baseline": 575,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 966.86640625,
+          "right": 1039.13359375
+        },
+        {
+          "text": "compare",
+          "x": 1137,
+          "baseline": 556,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 1094.2015625,
+          "right": 1179.7984374999999
+        },
+        {
+          "text": "Poisoned Env.",
+          "x": 1628,
+          "baseline": 447,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 1535.9859375,
+          "right": 1720.0140625000001
+        },
+        {
+          "text": "o' = P(o; q)",
+          "x": 1268,
+          "baseline": 509,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 1268,
+          "right": 1375.5328125
+        },
+        {
+          "text": "Tool-output Proxy",
+          "x": 1477,
+          "baseline": 566,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": true,
+          "left": 1378.8359375,
+          "right": 1575.1640625
+        },
+        {
+          "text": "Silent – no error / warning",
+          "x": 1784,
+          "baseline": 508,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": true,
+          "left": 1660.6453125,
+          "right": 1907.3546875
+        },
+        {
+          "text": "Source Data Unchanged",
+          "x": 1800,
+          "baseline": 553,
+          "font_size": 24,
+          "font": "Arial",
+          "bold": true,
+          "left": 1661.2953125,
+          "right": 1938.7046874999999
+        },
+        {
+          "text": "C  Evaluation Metrics",
+          "x": 17,
+          "baseline": 620,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": true,
+          "left": 17,
+          "right": 269.8359375
+        },
+        {
+          "text": "Evaluation Metrics",
+          "x": 1000,
+          "baseline": 620,
+          "font_size": 29,
+          "font": "Arial",
+          "bold": true,
+          "left": 871.878125,
+          "right": 1128.1218749999998
+        },
+        {
+          "text": "TSR",
+          "x": 206,
+          "baseline": 677,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 179.0,
+          "right": 233.0
+        },
+        {
+          "text": "Task Success Rate",
+          "x": 206,
+          "baseline": 732,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 120.96484375,
+          "right": 291.03515625
+        },
+        {
+          "text": "PAR / VPA",
+          "x": 538,
+          "baseline": 677,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 472.4890625,
+          "right": 603.5109375
+        },
+        {
+          "text": "Poison adoption /",
+          "x": 538,
+          "baseline": 719,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 460.71796875,
+          "right": 615.28203125
+        },
+        {
+          "text": "after validation",
+          "x": 538,
+          "baseline": 744,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 472.959375,
+          "right": 603.0406250000001
+        },
+        {
+          "text": "IF POISON DELIVERED",
+          "x": 575,
+          "baseline": 651,
+          "font_size": 12.8,
+          "font": "Arial",
+          "bold": true,
+          "left": 504.234375,
+          "right": 645.765625
+        },
+        {
+          "text": "BCR",
+          "x": 870,
+          "baseline": 677,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 840.75234375,
+          "right": 899.24765625
+        },
+        {
+          "text": "Blind Compliance Rate",
+          "x": 870,
+          "baseline": 732,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 768.278125,
+          "right": 971.7218750000001
+        },
+        {
+          "text": "IF POISON DELIVERED",
+          "x": 907,
+          "baseline": 651,
+          "font_size": 12.8,
+          "font": "Arial",
+          "bold": true,
+          "left": 836.234375,
+          "right": 977.765625
+        },
+        {
+          "text": "ADR",
+          "x": 1202,
+          "baseline": 677,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 1172.75234375,
+          "right": 1231.2476562499999
+        },
+        {
+          "text": "Anomaly Detection Rate",
+          "x": 1202,
+          "baseline": 732,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 1094.165625,
+          "right": 1309.8343750000001
+        },
+        {
+          "text": "IF POISON DELIVERED",
+          "x": 1239,
+          "baseline": 651,
+          "font_size": 12.8,
+          "font": "Arial",
+          "bold": true,
+          "left": 1168.234375,
+          "right": 1309.765625
+        },
+        {
+          "text": "VR",
+          "x": 1534,
+          "baseline": 677,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 1515.24609375,
+          "right": 1552.75390625
+        },
+        {
+          "text": "Validation Rate",
+          "x": 1534,
+          "baseline": 732,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 1466.91796875,
+          "right": 1601.08203125
+        },
+        {
+          "text": "IF POISON DELIVERED",
+          "x": 1571,
+          "baseline": 651,
+          "font_size": 12.8,
+          "font": "Arial",
+          "bold": true,
+          "left": 1500.234375,
+          "right": 1641.765625
+        },
+        {
+          "text": "RR",
+          "x": 1866,
+          "baseline": 677,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 1846.5015625,
+          "right": 1885.4984375000001
+        },
+        {
+          "text": "Recovery Rate",
+          "x": 1866,
+          "baseline": 732,
+          "font_size": 20,
+          "font": "Arial",
+          "bold": false,
+          "left": 1799.8609375,
+          "right": 1932.1390625000001
+        },
+        {
+          "text": "IF POISON DELIVERED",
+          "x": 1903,
+          "baseline": 651,
+          "font_size": 12.8,
+          "font": "Arial",
+          "bold": true,
+          "left": 1832.234375,
+          "right": 1973.765625
+        },
+        {
+          "text": "D  Generic Guard: Four-step Protocol",
+          "x": 30,
+          "baseline": 825,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": true,
+          "left": 30,
+          "right": 474.48125
+        },
+        {
+          "text": "Evidence Verification",
+          "x": 967,
+          "baseline": 825,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 831.19765625,
+          "right": 1102.80234375
+        },
+        {
+          "text": "Check Evidence and Select the Final Answer",
+          "x": 1572,
+          "baseline": 824,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": true,
+          "left": 1307.10546875,
+          "right": 1836.89453125
+        },
+        {
+          "text": "1",
+          "x": 53,
+          "baseline": 905,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 45.4921875,
+          "right": 60.5078125
+        },
+        {
+          "text": "Generic",
+          "x": 97,
+          "baseline": 889,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 97,
+          "right": 193.825
+        },
+        {
+          "text": "Expectation",
+          "x": 97,
+          "baseline": 917,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 97,
+          "right": 244.3625
+        },
+        {
+          "text": "2",
+          "x": 551,
+          "baseline": 905,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 543.4921875,
+          "right": 558.5078125
+        },
+        {
+          "text": "Primary",
+          "x": 595,
+          "baseline": 889,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 595,
+          "right": 691.840625
+        },
+        {
+          "text": "Tool Route",
+          "x": 595,
+          "baseline": 917,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 595,
+          "right": 728.8171875
+        },
+        {
+          "text": "3",
+          "x": 1049,
+          "baseline": 905,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 1041.4921875,
+          "right": 1056.5078125
+        },
+        {
+          "text": "Verification",
+          "x": 1093,
+          "baseline": 889,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 1093,
+          "right": 1233.153125
+        },
+        {
+          "text": "Route",
+          "x": 1093,
+          "baseline": 917,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 1093,
+          "right": 1166.65625
+        },
+        {
+          "text": "4",
+          "x": 1547,
+          "baseline": 905,
+          "font_size": 27,
+          "font": "Arial",
+          "bold": true,
+          "left": 1539.4921875,
+          "right": 1554.5078125
+        },
+        {
+          "text": "Answer",
+          "x": 1591,
+          "baseline": 889,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 1591,
+          "right": 1684.91875
+        },
+        {
+          "text": "Selection",
+          "x": 1591,
+          "baseline": 917,
+          "font_size": 26,
+          "font": "Arial",
+          "bold": true,
+          "left": 1591,
+          "right": 1706.5875
+        },
+        {
+          "text": "Prompt",
+          "x": 79,
+          "baseline": 1090,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 43.54453125,
+          "right": 114.45546875
+        },
+        {
+          "text": "Value",
+          "x": 172,
+          "baseline": 1000,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 150.2703125,
+          "right": 193.72968749999998
+        },
+        {
+          "text": "Ranges",
+          "x": 172,
+          "baseline": 1020,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 141.840625,
+          "right": 202.15937499999998
+        },
+        {
+          "text": "Schema",
+          "x": 282,
+          "baseline": 1000,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 249.90078125,
+          "right": 314.09921875
+        },
+        {
+          "text": "Bindings",
+          "x": 282,
+          "baseline": 1020,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 248.4359375,
+          "right": 315.5640625
+        },
+        {
+          "text": "Rank/Label",
+          "x": 395,
+          "baseline": 1000,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 350.7328125,
+          "right": 439.26718750000003
+        },
+        {
+          "text": "Swap",
+          "x": 395,
+          "baseline": 1020,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 373.1125,
+          "right": 416.8875
+        },
+        {
+          "text": "Plausible",
+          "x": 172,
+          "baseline": 1072,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 136.4921875,
+          "right": 207.5078125
+        },
+        {
+          "text": "Values",
+          "x": 172,
+          "baseline": 1092,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 145.8953125,
+          "right": 198.10468749999998
+        },
+        {
+          "text": "Denom.",
+          "x": 282,
+          "baseline": 1072,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 251.36171875,
+          "right": 312.63828125
+        },
+        {
+          "text": "Swap",
+          "x": 282,
+          "baseline": 1092,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 260.1125,
+          "right": 303.8875
+        },
+        {
+          "text": "Null/sign",
+          "x": 395,
+          "baseline": 1072,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 361.44453125,
+          "right": 428.55546875000005
+        },
+        {
+          "text": "Filter",
+          "x": 395,
+          "baseline": 1092,
+          "font_size": 17.5,
+          "font": "Arial",
+          "bold": false,
+          "left": 375.55625,
+          "right": 414.44374999999997
+        },
+        {
+          "text": "Primary pathway",
+          "x": 530,
+          "baseline": 962,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": false,
+          "left": 530,
+          "right": 701.2796875
+        },
+        {
+          "text": "Run the agent",
+          "x": 530,
+          "baseline": 1076,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 530,
+          "right": 668.225
+        },
+        {
+          "text": "with tools.",
+          "x": 530,
+          "baseline": 1100,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 530,
+          "right": 627.8203125
+        },
+        {
+          "text": "monitoring",
+          "x": 881,
+          "baseline": 1098,
+          "font_size": 17,
+          "font": "Arial",
+          "bold": false,
+          "left": 841.3140625,
+          "right": 920.6859375
+        },
+        {
+          "text": "Additional tool evidence",
+          "x": 1028,
+          "baseline": 961,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 1028,
+          "right": 1260.3921875
+        },
+        {
+          "text": "from the same source",
+          "x": 1028,
+          "baseline": 988,
+          "font_size": 22,
+          "font": "Arial",
+          "bold": false,
+          "left": 1028,
+          "right": 1240.75625
+        },
+        {
+          "text": "Returns a second",
+          "x": 1028,
+          "baseline": 1073,
+          "font_size": 21,
+          "font": "Arial",
+          "bold": false,
+          "left": 1028,
+          "right": 1192.6
+        },
+        {
+          "text": "answer",
+          "x": 1028,
+          "baseline": 1097,
+          "font_size": 21,
+          "font": "Arial",
+          "bold": false,
+          "left": 1028,
+          "right": 1095.6984375
+        },
+        {
+          "text": "Recompute",
+          "x": 1310,
+          "baseline": 1093,
+          "font_size": 17,
+          "font": "Arial",
+          "bold": false,
+          "left": 1266.5328125,
+          "right": 1353.4671875000001
+        },
+        {
+          "text": "Inspect",
+          "x": 1427,
+          "baseline": 1072,
+          "font_size": 18,
+          "font": "Arial",
+          "bold": false,
+          "left": 1397.98203125,
+          "right": 1456.0179687500001
+        },
+        {
+          "text": "Metadata",
+          "x": 1427,
+          "baseline": 1093,
+          "font_size": 18,
+          "font": "Arial",
+          "bold": false,
+          "left": 1389.47421875,
+          "right": 1464.5257812500001
+        },
+        {
+          "text": "Select",
+          "x": 1524,
+          "baseline": 965,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": false,
+          "left": 1524,
+          "right": 1587.925
+        },
+        {
+          "text": "answer",
+          "x": 1690,
+          "baseline": 965,
+          "font_size": 23,
+          "font": "Arial",
+          "bold": false,
+          "left": 1652.92734375,
+          "right": 1727.0726562500001
+        },
+        {
+          "text": "Use the",
+          "x": 1877,
+          "baseline": 969,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": false,
+          "left": 1833.92265625,
+          "right": 1920.07734375
+        },
+        {
+          "text": "Route 2",
+          "x": 1877,
+          "baseline": 999,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": false,
+          "left": 1833.22109375,
+          "right": 1920.7789062499999
+        },
+        {
+          "text": "answer",
+          "x": 1877,
+          "baseline": 1029,
+          "font_size": 25,
+          "font": "Arial",
+          "bold": false,
+          "left": 1836.70546875,
+          "right": 1917.2945312499999
+        },
+        {
+          "text": "Route 2 answer selected",
+          "x": 1887,
+          "baseline": 1084,
+          "font_size": 13.537240325705195,
+          "font": "Arial",
+          "bold": true,
+          "left": 1808.2203125,
+          "right": 1965.7796875000001
+        }
+      ]
+    }
+  ]
+}

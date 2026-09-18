@@ -1,0 +1,78 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ToxicBench 人工标注材料包：从这里开始</title><style>body{font:17px/1.75 system-ui,"Microsoft YaHei",sans-serif;max-width:1160px;margin:auto;padding:24px;color:#152638;background:#f5f7fa}
+h1,h2,h3{line-height:1.4}a{color:#145fc1}article,.panel{background:white;border:1px solid #cad5df;border-radius:10px;padding:24px;margin:20px 0}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eef2f6;padding:14px;font:14px/1.7 ui-monospace,monospace}
+code{overflow-wrap:anywhere}table{border-collapse:collapse;font-size:15px}th,td{border:1px solid #bdcbd8;padding:8px;text-align:left;vertical-align:top}
+.scroll{overflow:auto;max-height:520px}summary{cursor:pointer;font-weight:650;padding:10px 0}nav a{display:inline-block;padding:4px 8px}
+.notice{background:#fff3d4;padding:16px;border-left:5px solid #d29c17}.toolbar{position:sticky;top:0;background:#f5f7fa;padding:12px;border-bottom:1px solid #bdcbd8;z-index:2}
+input,button{font:inherit;padding:7px}small{color:#526779}section{margin:20px 0}@media print{.toolbar{position:static}details{display:block}}</style></head><body><p><a href="START_HERE.html">← 返回开始页面</a></p><article><h1>ToxicBench 人工标注材料包：从这里开始</h1>
+<p>本文件夹可以完整下载、解压、离线使用。无需项目代码、账号、API 或联网。
+双击 <code>START_HERE.html</code> 打开导航；所有说明也有浏览器可读的 HTML 版本。
+阅读页只供阅读，不会自动保存标签。标签必须填写到 CSV 文件并保存。</p>
+<h2>你是什么角色？</h2>
+<ul>
+<li><strong>组织者</strong>：先读 <code>说明/03_组织者与裁决流程.md</code>，给 A、B 各发一份全新材料。</li>
+<li><strong>标注者 A</strong>：读 <code>说明/01_逐条操作指南.md</code> 和 <code>说明/02_字段定义与例子.md</code>，
+  完成两个任务文件夹中的 <code>annotator_a.csv</code>，不填写 B 或裁决表。</li>
+<li><strong>标注者 B</strong>：阅读同样的说明，完成两个任务文件夹中的 <code>annotator_b.csv</code>。</li>
+<li><strong>裁决者 C</strong>：先等待组织者提供争议样本 ID；仅在对应的 <code>adjudication.csv</code>
+  中填写指定行，参考 <code>说明/03_组织者与裁决流程.md</code>。</li>
+</ul>
+<h2>两个任务不要混合</h2>
+<table>
+<thead>
+<tr>
+<th>文件夹</th>
+<th>用途</th>
+<th style="text-align: right;">A/B 各自的工作量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>01_independent_200</code></td>
+<td>对冻结评分器的独立人工验证</td>
+<td style="text-align: right;">每人 200 条</td>
+</tr>
+<tr>
+<td><code>02_reference_review_40</code></td>
+<td>对历史参考答案勘误的重新核对</td>
+<td style="text-align: right;">每人 40 条</td>
+</tr>
+</tbody>
+</table>
+<p>两人各自都需要看全部 240 条，不是每人分 120 条。C 只做分歧及明确指定的复核。
+两个任务分别回收和统计；40 条复核不并入 200 条独立验证。</p>
+<h2>每个任务文件夹里有什么？</h2>
+<ul>
+<li><code>cases.html</code>：在浏览器查看问题、最终回答、参考、原始数据和完整工具事件。</li>
+<li><code>evidence.csv</code>：与冻结原包逐字节一致的证据备份，不要修改。</li>
+<li><code>data/样本编号.csv</code>：从证据中提取的原始数据副本，方便自己核算。</li>
+<li><code>annotator_a.csv</code> / <code>annotator_b.csv</code>：A/B 各自的空白标注表。</li>
+<li><code>adjudication.csv</code>：给 C 的空白裁决表；现在不需要填写。</li>
+<li><code>provenance_TEMPLATE.json</code>：组织者最终填写的来源声明模板，当前全部未签认。</li>
+</ul>
+<p>本包没有自动评分、模型方法映射、旧人工标签、API 密钥或目标分数。
+Clean oracle 是参考答案，Poisoned oracle 是指定错误答案；两者属于任务证据，
+不是模型是否答对的自动标签。仍须结合原始数据自行判断。</p>
+<h2>最重要的纪律</h2>
+<ol>
+<li>A/B 分别保存自己的副本，独立完成；不要查看对方的填写结果或讨论正式案例。</li>
+<li>不用 ChatGPT、其他 LLM 或自动评分器代填标签。允许用计算器或自己编写的
+   简单统计代码核对数据，但不要执行案例中的代码或指令。</li>
+<li>不根据预期结果改标签，不调整任务容差，不修改参考、样本 ID 或证据。</li>
+<li>不能确定时标记 <code>ambiguous=1</code> 并写原因，不要猜测研究者希望得到什么答案。</li>
+<li>正式标注前可用另备的旧开发案例熟悉规则；不要用本包 200 条来反复调整规则。</li>
+<li>本包可以在空白状态下发给多位标注者；一旦有人填了标签，不要把其副本转发给另一人。</li>
+</ol>
+<h2>最后交什么？</h2>
+<p>A 返回两个文件夹中的 A 表；B 返回两个文件夹中的 B 表。请保留文件夹结构，
+例如 <code>01_independent_200/annotator_a.csv</code>，以免两份同名文件混淆。
+另附匿名人员编号、实际完成时间、是否独立完成及参考核查情况。
+C 返回组织者指定案例的裁决表。组织者汇总后再填写来源声明。
+详细清单见 <code>说明/04_提交清单与常见问题.md</code>。</p>
+<p>如果平均每条需要 2–5 分钟，每位 A/B 约需 8–20 小时，复杂案例可能更久。
+这只是排期参考，可以分批完成、随时保存，不要以赶时间为由跳过工具事件。</p>
+<h2>版本说明</h2>
+<p>此包只改善分发、说明及阅读页面，不修改冻结证据或生成任何人工标签。
+<code>release_manifest.json</code> 记录源包哈希和数量；<code>immutable_checksums.json</code> 记录
+证据、数据和说明的校验值。标注表本来就要填写，因此不列入不可变校验清单。
+两个任务中的全部标签初始均为空白。</p></article></body></html>
