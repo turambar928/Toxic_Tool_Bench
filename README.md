@@ -102,11 +102,13 @@ Matched caps mean route count, steps per route, and output tokens **per request*
 not equal total token cost. See [SUBMISSION_REVISION_V3_CN.md](SUBMISSION_REVISION_V3_CN.md).
 
 The revised scorer reaches 238/240 TSR agreement on the audit-informed
-development set, but that is not independent validation. All 200 trajectories
-in the post-freeze packet are now prepared: 90 reused semantic trajectories,
+development set. The completed post-freeze human evaluation is reported
+separately: 192/200 TSR agreement (96.0%) on 90 reused semantic trajectories,
 90 new Haiku core/repeated trajectories, and 20 new AutoGen trajectories run
 with Claude Sonnet 4.6 after a documented pre-run model-availability amendment.
-Human validation has not started, so no independent scorer result is claimed.
+Human core poisoned TSR is 0.80 for Base, 1.00 for Double-pass and
+Verification-only, and 0.95 for Guard; see the
+[full report](output/human_validation_20260920/README_CN.md) for paired comparisons.
 
 ## Important Artifacts
 

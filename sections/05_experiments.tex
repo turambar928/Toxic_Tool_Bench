@@ -1,7 +1,7 @@
 \section{Experiments}
 \label{sec:experiments}
 
-We ask whether corrupted observations lead to answer adoption, whether requesting verification improves on an ordinary retry, and how later corruption opportunities affect recovery.
+Our experiments address three questions: how much corrupted observations degrade task success, what explicit verification adds beyond an ordinary retry, and how the evidence returned by later checks affects recovery. Human evaluation tests both scoring agreement and the resulting method comparisons.
 
 \subsection{Setup}
 
@@ -9,11 +9,11 @@ We ask whether corrupted observations lead to answer adoption, whether requestin
 The cross-model evaluation uses 34 numerical and 24 semantic/schema instances. The revised expanded GPT evaluation and defense comparison use 58 numerical and 60 semantic instances. LangGraph ReAct, smolagents, and AutoGen cover GPT, Claude, and Qwen; DA-Agent completed the GPT numerical suite. PandasAI is excluded from these behavioral comparisons: its historical adapter changes the final chat result after the agent has finished, leaving no opportunity to inspect the change (Appendix~\ref{sec:appendix-framework-boundaries}).
 
 \paragraph{Protocol.}
-Clean and toxic runs are paired by task. TSR uses all retained runs; behavioral rates condition on recorded delivery. Reference auditing excludes two ambiguous queries and corrects seven numerical values and two omitted ties (Appendix~\ref{sec:revision-v2}). The historical tables retain their original injector: a separate audit flags 204 of 3,319 recorded corruptions as off-target sign flips, including 20 zero-value changes. These tables describe the implemented intervention, not certified valid delivery. Appendix~\ref{sec:delivery-v3} reports exposure sensitivity and fresh repaired-injector controls separately; original trajectories and annotations remain intact.
+Clean and toxic runs are paired by task and evaluated with the same frozen scorer and audited references. TSR uses all retained runs; behavioral rates condition on recorded delivery. Reference auditing excludes two ambiguous queries and corrects seven numerical values and two omitted ties (Appendix~\ref{sec:revision-v2}). The primary and defense tables retain the historical injector, whose recorded exposure includes off-target sign flips and other flagged events. Appendix~\ref{sec:delivery-v3} reports delivery counts, exposure sensitivity, and fresh repaired-injector controls separately; rescoring does not alter the original trajectories.
 
 \subsection{Blind Compliance Across Agents and Models}
 
-Table~\ref{tab:gpt-expanded-cross-agent-120} reports the revised 118-instance GPT evaluation. Poisoned TSR falls by 0.26--0.39 and exposure-conditioned BCR remains nonzero. PDR varies because agents need not call a poison-eligible tool. These are adapter-level measurements; differences in exposed task sets limit interpretation as rankings of trust calibration.
+Corrupted observations substantially reduce task success even when clean performance is high. In the 118-instance GPT evaluation (Table~\ref{tab:gpt-expanded-cross-agent-120}), clean TSR is 0.92--0.99, while poisoned TSR falls by 0.26--0.39 and exposure-conditioned BCR remains nonzero. PDR varies because agents need not call a poison-eligible tool. These adapter-level measurements therefore describe both delivery coverage and behavior after exposure, rather than a ranking on a common exposed task set.
 
 \begin{table}[t]
 \centering
@@ -33,7 +33,7 @@ AutoGen & 0.92 & 0.66 & 0.26 & 0.27 & 0.32 & 0.86 \\
 \label{tab:gpt-expanded-cross-agent-120}
 \end{table}
 
-Table~\ref{tab:cross-agent-model-full} repeats the smaller suites across model families. All nine fully crossed configurations show a numerical clean-to-poisoned gap; eight show a semantic gap, while Claude--AutoGen has a small increase. Figure~\ref{fig:cross-agent-model} visualizes mean clean-to-poisoned TSR changes across the three fully crossed adapters, with exact rates in Table~\ref{tab:cross-model-rates}. For example, GPT--LangGraph numerical BCR is 0.79 [0.64, 0.93].
+The clean-to-poisoned gap also appears across model families (Table~\ref{tab:cross-agent-model-full}). All nine fully crossed configurations show a numerical gap; eight show a semantic gap, while Claude--AutoGen has a small increase. For example, GPT--LangGraph numerical BCR is 0.79 [0.64, 0.93]. Figure~\ref{fig:cross-agent-model} summarizes TSR changes across the three common adapters, with exact mean rates in Table~\ref{tab:cross-model-rates}.
 
 \begin{table*}[t]
 \centering
@@ -66,7 +66,7 @@ Qwen3.6-35B & LangGraph ReAct & 1.00 & 0.38 & 0.68 & 1.00 & 0.79 & 0.21 \\
 \label{tab:cross-agent-model-full}
 \end{table*}
 
-Across nine common model--adapter groups, aggregate scaling and rank swaps have historical numerical BCR 0.62 and 0.37. We do not interpret the lower sign-flip rate as robustness: off-target delivery compromises that comparison. Figure~\ref{fig:operator-profile} is descriptive, not a causal operator ranking. Label swaps illustrate a different diagnostic failure: preserving an amount while changing its entity can defeat magnitude-only checks.
+Operator profiles reveal different forms of evidence corruption. Across nine common model--adapter groups, aggregate scaling and rank swaps have historical numerical BCR 0.62 and 0.37. Label swaps preserve an amount while changing its entity, illustrating why magnitude-only checks can miss an incorrect conclusion. Figure~\ref{fig:operator-profile} summarizes these descriptive profiles, excluding sign flip because of off-target delivery; it is not a causal ranking of operators.
 
 \begin{figure}[t]
 \centering
@@ -77,7 +77,7 @@ Across nine common model--adapter groups, aggregate scaling and rank swaps have 
 
 \subsection{What Does Additional Verification Buy?}
 
-Table~\ref{tab:langgraph-guarded} compares four LangGraph variants on the same 118 retained instances with Claude Haiku 4.5. Double-pass reaches poisoned TSR 1.00, compared with 0.89 for Base, 0.90 for Verification-only, and 0.97 for Generic Guard. Zero BCR in the two-route methods does not establish successful recovery; Verification-only still has nonzero PAR and VPA.
+An ordinary second attempt is a strong control for explicit verification under one-shot poisoning. On the same 118 retained tasks with Claude Haiku 4.5 (Table~\ref{tab:langgraph-guarded}), Double-pass reaches poisoned TSR 1.00, compared with 0.89 for Base, 0.90 for Verification-only, and 0.97 for Generic Guard. The two-route methods all reduce BCR to zero, but their final-answer outcomes differ: Verification-only retains nonzero PAR and VPA. Checking and successful recovery must therefore be measured separately.
 
 \begin{table}[t]
 \centering
@@ -100,15 +100,15 @@ Generic guard & 0.98 & 0.97 & 0.00 & 0.00 & 0.00 & 0.97 & 0.94 & 104 \\
 
 Double-pass exceeds Base poisoned TSR by 0.110; the 95\% interval is [0.056, 0.171] when resampling normalized task templates and [0.060, 0.172] when resampling shared datasets. Guard minus Double-pass is $-0.025$, with a template-cluster interval [$-0.054$, 0.000]. Its clean-adjusted difference is $-0.017$ [$-0.059$, 0.017] under task-paired resampling. The revised evidence therefore does not establish a Guard advantage or a nonzero Guard--Double-pass difference (Appendix~\ref{sec:revision-v2}).
 
+Table~\ref{tab:appendix-guard-suite-breakdown} separates the task families. An AutoGen comparison provides an additional framework check: Guard clean/poisoned TSR is 0.88/0.87, versus 0.91/0.86 for Verification-only on the same 118 tasks. This small descriptive difference likewise provides no clear advantage for the expectation prompt.
+
 \paragraph{What evidence follows the poison?}
-Under shared \texttt{poison\_once} state, a second route can receive unmodified observations after the first corruption. The released trace analysis records these opportunities, but an unmodified observation is not necessarily correct, sufficient, or used. Double-pass therefore measures another attempt with access to later evidence; it does not isolate a causal gain from verification reasoning.
+The second route's evidence is central to interpreting these comparisons. Under shared \texttt{poison\_once} state, later calls can receive unmodified observations after the first corruption, whether or not the prompt requests verification. Double-pass thus measures another attempt with access to later evidence, rather than an isolated effect of verification reasoning. The trace analysis records these opportunities without assuming that every unmodified observation is sufficient or used.
 
-Repaired scalar controls remain limited by partial corruption and unmatched first routes (Appendix~\ref{sec:delivery-v3}). A separate field-bound experiment on 24 tasks across three public tables removes both confounds: primary correctness is $24/24$ clean, $20/24$ with partial alias corruption, and $0/24$ with all target aliases corrupted. With fixed poisoned parents and two second-stage repetitions, fresh clean evidence yields $48/48$ correct retries and $47/48$ correct reviews, versus $0/48$ each under full corruption. This isolates a local evidence-condition effect, not verification superiority or the cause of the historical gain; seeded calls and a structured endpoint limit transfer (Appendix~\ref{sec:evidence-v4}).
+To directly test the effect of supplied evidence, we use a field-bound experiment on 24 tasks across three public tables. Primary correctness is $24/24$ clean, $20/24$ with partial alias corruption, and $0/24$ with all target aliases corrupted. With fixed poisoned parents and two second-stage repetitions, fresh clean evidence yields $48/48$ correct retries and $47/48$ correct reviews, versus $0/48$ each under full corruption. Thus, changing the supplied evidence strongly changes recovery in this controlled setting. Seeded calls and a structured endpoint isolate this local effect, not verification superiority or the cause of the historical gain (Appendix~\ref{sec:evidence-v4}). Earlier scalar controls with partial corruption and unmatched first routes are reported separately in Appendix~\ref{sec:delivery-v3}.
 
-Table~\ref{tab:appendix-guard-suite-breakdown} separates the families. AutoGen provides an additional framework check: Guard clean/poisoned TSR is 0.88/0.87, versus 0.91/0.86 for Verification-only on the same 118 retained instances. This small difference is descriptive and does not establish a general prompt advantage.
-
-\paragraph{Harder workflows and adversaries.}
-The repeated-poison analysis retains 1,572 of 1,596 trajectories: 58 numerical, 60 semantic, and 13 join tasks, three protocols, and four poisoning probabilities. Table~\ref{tab:appendix-multiroute-stress} and Figure~\ref{fig:guard-tradeoff} report adoption after checking. All 101 revised-scoring VPA classifications persist when flagged delivery events are excluded. Under the recorded-event taxonomy, 78 have only corrupted qualifying follow-up checks and 23 have at least one unmodified check. Only one of the latter has an automatically identifiable clean-reference match, still requiring evidence-level review. Thus these counts do not show that 101 agents ignored correct evidence. Routes share sources and backends; this matrix has no single-route Base control.
+\paragraph{Checking under repeated poisoning.}
+Repeated poisoning reveals continued adoption of poisoned answers after fresh checks. Across 1,572 retained trajectories---58 numerical, 60 semantic, and 13 join tasks, three two-route protocols, and four poisoning probabilities---the scorer identifies 101 VPA cases, all retained after excluding flagged delivery events (Table~\ref{tab:appendix-multiroute-stress}; Figure~\ref{fig:guard-tradeoff}). Of these, 78 have only corrupted qualifying follow-up checks and 23 include an unmodified check. Only one of the latter has an automatically identifiable clean-reference match, still requiring evidence-level review. The finding is adoption after checking, not that all 101 agents ignored sufficient correct evidence. Routes share sources and backends; this matrix has no single-route Base control.
 
 \paragraph{Cost.}
 On retained toxic runs, Generic Guard averages 39.79 seconds, versus 16.91 for Base, 35.89 for Double-pass, and 33.62 for Verification-only. Equal budget caps do not imply equal realized cost; token billing is unavailable from the gateway. The latency distributions in Table~\ref{tab:appendix-latency-distribution} retain the original 120-task timing sample for reproducibility.
@@ -116,9 +116,9 @@ On retained toxic runs, Generic Guard averages 39.79 seconds, versus 16.91 for B
 \subsection{Human Checks of Scoring and Method Comparisons}
 \label{sec:human-holdout}
 
-Following DAComp's distinction between scoring agreement and comparison stability \citep{lei2025dacomp}, we evaluate the frozen scorer against two annotators on 200 trajectories from 20 task IDs disjoint from the development packets. Their six binary labels agree on every trajectory. Automatic TSR agrees with humans on 192/200 cases (96.0\%), with precision 1.000 and recall 0.957. On 77 exposed trajectories, VR recall is 0.953, and all four human VPA cases are identified. These results support the distinction between performing a check and adopting a correct answer (Appendix~\ref{sec:postfreeze-human}).
+Human evaluation supports both task-success measurement and the observation of adoption after checking. Following DAComp's distinction between scoring agreement and comparison stability \citep{lei2025dacomp}, we evaluate the frozen scorer on 200 trajectories from 20 task IDs disjoint from the development packets. Two annotators independently label six binary fields and agree on every trajectory. Automatic TSR agrees with humans on 192/200 cases (96.0\%), with precision 1.000 and recall 0.957. On 77 exposed trajectories, VR recall is 0.953, and all four human VPA cases are identified (Appendix~\ref{sec:postfreeze-human}).
 
 On the 20 core tasks, human poisoned TSR is 0.80 for Base, 1.00 for Double-pass, 1.00 for Verification-only, and 0.95 for Guard. Double-pass exceeds Base by 0.20 (task-paired 95\% bootstrap interval [0.05, 0.35]), matching the automatic difference. Verification-only rises from automatic TSR 0.80 to human TSR 1.00, tying Double-pass on this subset. Under repeated poisoning, automatic and human TSR agree at 0.80 for Double-pass and 0.70 for Guard over ten tasks. The archived 240-case audit and a separate completed 40-case reference review accompany the new evaluation; full metric counts and comparison sensitivity are reported in Appendix~\ref{sec:appendix-holdout}.
 
 \subsection{Qualitative Evidence}
-In a treatment/control task, the poisoned observation reports \texttt{Control--0.145}: the value is copied from the clean computation but attached to the wrong group, so the base trajectory repeats it without checking the rows. The guarded trajectory re-inspects the dataframe and returns \texttt{Treatment--0.145}; in a multi-table task it similarly reconstructs the join before finalizing. The useful check reconstructs the link between the group and its value. Repeating the number, or judging whether it is in a plausible range, would not reveal the swapped group. The same distinction applies to a join: the agent must check which rows match before trusting the aggregate. These cases connect the operator-level pattern to the actions visible in a trajectory. Generic statements that a result ``may need verification'' receive neither VR nor RR, because these words provide no new evidence.
+Successful checks reconstruct the evidence behind a conclusion. In a treatment/control task, the poisoned observation reports \texttt{Control--0.145}: a correct value attached to the wrong group. The base trajectory repeats it without checking the rows, whereas the guarded trajectory re-inspects the dataframe and returns \texttt{Treatment--0.145}. A magnitude check alone would miss this error; recovery requires restoring the group--value binding. In a multi-table case, the guarded agent similarly reconstructs the join before finalizing, checking which rows support the aggregate. These cases connect the operator profiles to concrete evidence-producing actions. Generic statements that a result ``may need verification'' receive neither VR nor RR, because they supply no new evidence.
