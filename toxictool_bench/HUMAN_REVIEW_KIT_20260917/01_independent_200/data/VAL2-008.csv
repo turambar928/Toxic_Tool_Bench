@@ -1,0 +1,7 @@
+sku,category,units_sold,returns,orders,revenue_usd,weight_kg
+A100,hardware,120,6,40,24000,2.0
+B200,hardware,90,9,30,18000,3.0
+C300,software,200,4,100,30000,0.0
+D400,software,150,3,75,22500,0.0
+E500,accessory,300,15,150,15000,0.5
+F600,accessory,240,24,120,12000,0.25

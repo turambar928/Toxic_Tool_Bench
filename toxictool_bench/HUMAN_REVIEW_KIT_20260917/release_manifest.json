@@ -1,0 +1,39 @@
+{
+  "kit_version": "human_review_handoff_20260917",
+  "human_labels_generated": false,
+  "independent_cases": 200,
+  "reference_review_cases": 40,
+  "presentation": "New role-neutral offline HTML; original evidence/blank-label bytes unchanged.",
+  "excludes": [
+    "administrator mappings",
+    "automatic predictions",
+    "previous human labels",
+    "API configuration"
+  ],
+  "sources": [
+    {
+      "archive": "reviewer_packet.zip",
+      "sha256": "01f513047abe9a9ca951aa7a290afcd20c1720437248ff1411e55efee19a718e",
+      "folder": "01_independent_200",
+      "case_count": 200,
+      "canonical_copied_sha256": {
+        "evidence.csv": "5d0ae86350c04d129a6a8fe0246813209961331211994c17f3991269776307a6",
+        "annotator_a.csv": "46f24cf09adf1956ddbf87a165121df09235e08ef91f5a9ee7d47c6938a966ee",
+        "annotator_b.csv": "46f24cf09adf1956ddbf87a165121df09235e08ef91f5a9ee7d47c6938a966ee",
+        "adjudication.csv": "46f24cf09adf1956ddbf87a165121df09235e08ef91f5a9ee7d47c6938a966ee"
+      }
+    },
+    {
+      "archive": "reference_errata_review.zip",
+      "sha256": "ef90cc79fb7a2d2d4a277d6a3b26dccb49c5d6ef0a56776ed90be980eb099fb3",
+      "folder": "02_reference_review_40",
+      "case_count": 40,
+      "canonical_copied_sha256": {
+        "evidence.csv": "0f58ecf31a584962324c0de213d018da123a5578945bbee8e2b83538bae7d2cc",
+        "annotator_a.csv": "2eef6af88e8c58fde024e1d2b4e69860ee52ed6bf113788f35d2f180a55dfc1e",
+        "annotator_b.csv": "2eef6af88e8c58fde024e1d2b4e69860ee52ed6bf113788f35d2f180a55dfc1e",
+        "adjudication.csv": "2eef6af88e8c58fde024e1d2b4e69860ee52ed6bf113788f35d2f180a55dfc1e"
+      }
+    }
+  ]
+}

@@ -9,7 +9,8 @@ from pypdf import PdfReader
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from plot_paper_figures import (
     configure_matplotlib, cross_model_rows, format_rate, mean,
-    operator_profile_data, plot_cross_model_paired, plot_operator_dots, write_profile_tables,
+    operator_profile_data, plot_cross_model_paired, plot_operator_bars, plot_operator_dots,
+    plot_operator_heatmap, write_profile_tables,
 )
 import plot_paper_figures as plotting
 
@@ -93,4 +94,83 @@ def test_operator_dots_preserve_rates_and_shared_scale(tmp_path, monkeypatch):
     for label in ["Aggregate scale", "Treatment/control", "Biased retrieval", "VR", "RR", "BCR"]:
         assert label in text
     svg = (tmp_path / "fig_operator_dots.svg").read_text()
+    assert "<image" not in svg and "<text" in svg
+
+
+def test_operator_bars_preserve_rates_and_zero_baseline(tmp_path, monkeypatch):
+    configure_matplotlib()
+    _, _, values = operator_profile_data(RESULTS)
+    original_save = plotting.save_figure
+    checked = []
+
+    def inspect_and_save(fig, output, preview):
+        assert len(fig.axes) == 3
+        for ax in fig.axes:
+            assert ax.get_xlim() == (0, 1.08)
+            assert ax.get_ylim() == fig.axes[0].get_ylim()
+            assert not ax.collections  # No dot/scatter marks.
+        a, b, c = fig.axes
+        for bars, column in [(a.containers[0], 0), (b.containers[0], 1),
+                             (c.containers[0], 2), (c.containers[1], 3)]:
+            assert np.array_equal([bar.get_width() for bar in bars], values[:, column])
+            assert all(bar.get_x() == 0 for bar in bars)
+        y = [bar.get_y() + bar.get_height() / 2 for bar in a.containers[0]]
+        assert y[2] - y[1] > y[1] - y[0]
+        for vr, rr in zip(c.containers[0], c.containers[1]):
+            assert vr.get_y() + vr.get_height() < rr.get_y()
+        checked.append(True)
+        original_save(fig, output, preview)
+
+    monkeypatch.setattr(plotting, "save_figure", inspect_and_save)
+    plot_operator_bars(RESULTS, tmp_path, None)
+    assert checked
+    reader = PdfReader(tmp_path / "fig_operator_bars.pdf")
+    assert len(reader.pages) == 1 and not list(reader.pages[0].images)
+    text = reader.pages[0].extract_text()
+    for label in ["Aggregate scale", "Treatment/control", "Biased retrieval", "VR", "RR", "BCR"]:
+        assert label in text
+    for value in values[:, :2].flat:
+        assert format_rate(value) in text
+    svg = (tmp_path / "fig_operator_bars.svg").read_text()
+    assert "<image" not in svg and "<text" in svg
+
+
+def test_operator_heatmap_shared_scale_values_and_vector_output(tmp_path, monkeypatch):
+    configure_matplotlib()
+    order, _, values = operator_profile_data(RESULTS)
+    original_save = plotting.save_figure
+    checked = []
+
+    def inspect_and_save(fig, output, preview):
+        assert len(fig.axes) == 2  # Matrix and one shared color scale.
+        ax, cax = fig.axes
+        assert len(ax.patches) == 28
+        assert not ax.images and not ax.collections
+        scale = cax.collections[-1]
+        assert (scale.norm.vmin, scale.norm.vmax) == (0, 1)
+        assert not scale.get_rasterized()
+        assert scale.cmap.name == "Blues"
+        samples = scale.cmap(np.linspace(0, 1, 256))[:, :3]
+        assert np.all(samples[:, 2] >= samples[:, 1])  # Blue, not green.
+        linear = np.where(samples <= .04045, samples / 12.92, ((samples + .055) / 1.055) ** 2.4)
+        assert np.all(np.diff(linear @ np.array([.2126, .7152, .0722])) <= 0)
+        for tile, label, value in zip(ax.patches, ax.texts, values[:, :4].flat):
+            assert np.allclose(tile.get_facecolor(), scale.cmap(scale.norm(value)))
+            assert label.get_text() == format_rate(value)
+        assert [t.get_text() for t in ax.get_yticklabels()] == [r[1] for r in order]
+        y = ax.get_yticks()
+        assert np.array_equal(np.diff(y), np.ones(len(order) - 1))
+        checked.append(True)
+        original_save(fig, output, preview)
+
+    monkeypatch.setattr(plotting, "save_figure", inspect_and_save)
+    plot_operator_heatmap(RESULTS, tmp_path, None)
+    assert checked
+    reader = PdfReader(tmp_path / "fig_operator_heatmap.pdf")
+    assert len(reader.pages) == 1 and not list(reader.pages[0].images)
+    text = reader.pages[0].extract_text()
+    assert all(marker not in text for marker in ["(a)", "(b)", "(c)"])
+    for value in values[:, :4].flat:
+        assert format_rate(value) in text
+    svg = (tmp_path / "fig_operator_heatmap.svg").read_text()
     assert "<image" not in svg and "<text" in svg

@@ -23,8 +23,35 @@ RR & Final answer matches a clean reference after detection or validation. & Fla
 \label{tab:metric-scoring-rules}
 \end{table}
 
-\subsection{Human audits and comparison stability}
+\subsection{Human validation and archived audits}
 \label{sec:appendix-holdout}
+\label{sec:postfreeze-human}
+
+The post-freeze evaluation contains 200 trajectories from 20 task IDs: 160 core clean/toxic runs across four methods, 20 repeated-poison runs on ten of those tasks, and 20 AutoGen clean/toxic runs on ten numerical tasks. The packet combines 90 reused semantic and 110 newly executed numerical trajectories. Its task IDs are disjoint from the known development packets, while task families and synthetic provenance are shared. The ten new numerical instances have matching standard-library and dataframe references. A documented gateway amendment uses Claude Sonnet 4.6 for the AutoGen runs.
+
+Two annotators independently completed the six binary fields, with agreement on all 200 trajectories and no ambiguous cases or disagreements requiring adjudication. Cohen's $\kappa$ is 1.000 for each nonconstant field; it is undefined for ambiguity, which is uniformly zero. The distributed packet omitted automatic predictions and administrator mappings. The organizer reports that neither annotator used an LLM and that notes were standardized after collection without changing binary labels. Received files, their hashes, and the author-reported source record are archived separately from the frozen evidence.
+
+Table~\ref{tab:postfreeze-scorer} reports 96.0\% TSR agreement, with 176 true positives, 16 true negatives, eight false negatives, and no false positives. Agreement is 95.6\% on the 160 core runs, 100\% on the 20 repeated-poison runs, and 95.0\% on the 20 cross-model runs; by task family it is 95.5\% numerical and 96.7\% semantic/schema. Behavioral metrics use the 77 exposed trajectories. The scorer identifies all four human VPA cases, two each from Double-pass and Guard under repeated poisoning, providing additional examples of adoption after checking alongside the four historical adjudicated cases.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\input{output/human_validation_20260920/scorer_metrics}
+\caption{Frozen scorer versus the new human reference. TSR uses all 200 trajectories; behavior metrics use 77 exposed trajectories. Human $+$ denotes positive labels. ADR precision is undefined because the scorer predicts no positives.}
+\label{tab:postfreeze-scorer}
+\end{table}
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\input{output/human_validation_20260920/method_comparison}
+\caption{Automatic and human task-success counts on the same post-freeze evaluation trajectories. Core conditions use 20 tasks; repeated-poison and cross-model conditions each use ten. Dashes denote conditions absent from the packet.}
+\label{tab:postfreeze-methods}
+\end{table}
+
+Table~\ref{tab:postfreeze-methods} shows a human Double-pass--Base poisoned-TSR difference of $+0.20$ [0.05, 0.35], matching the automatic contrast. Human clean TSR is 1.00 for all four core methods, so its clean-adjusted contrast is also $+0.20$. Human Verification-only ties Double-pass at 1.00, compared with automatic TSR 0.80; Guard reaches 0.95 under both ratings. Repeated-poison TSR agrees across rating sources at 0.80 for Double-pass and 0.70 for Guard; their Guard--Double-pass contrast is $-0.10$ [$-0.30$, 0.00]. Intervals use 5,000 task-paired resamples within suites (seed 20260915) and describe the selected tasks, not population-wide method rankings.
+
+The remaining TSR disagreements comprise six Verification-only cases, one Base case, and one AutoGen case; four of the Verification-only misses occur in poisoned runs. The seven-metric comparison contains 14 distinct disagreement trajectories, retained in the released error inventory. RR recall is 0.867 and BCR recall 0.800; ADR has only one human-positive exposed case and VPA four. These counts characterize metric-specific coverage alongside the overall agreement. The scorer remains frozen at \texttt{98c2ed8}; none of these labels is used to tune the reported parser. The historical audits below use different samples and references and are reported separately.
 
 The development packet contains 120 exposed trajectories, stratified equally across numerical, semantic/schema, and multi-table tasks. Two independent annotators saw queries, oracles, answers, and ordered events, but not scorer labels, model/adapter names, source paths, or each other's decisions. Twelve trajectories had disagreements in 16 label cells, resolved by separate blind adjudication. Table~\ref{tab:appendix-scorer-precision} distinguishes scorer accuracy from annotator agreement (macro agreement 0.967, $\kappa=0.913$). This packet did not separately label TSR, PAR, or VPA. A targeted review of 18 non-disputed VR-positive cases found all 18 relevant, but is not an independent accuracy estimate. The earlier 80-run author repeat-pass sheet is diagnostic only.
 
@@ -115,7 +142,7 @@ Repeated, $p=1$ & Double-pass & 20 & 0.45 & 0.80 \\
 
 On the 20 core tasks, Guard minus Double-pass poisoned TSR is $-0.10$ [$-0.25$, $0.00$] automatically and $0.00$ [$0.00$, $0.00$] by humans; under repeated poisoning the differences are $-0.20$ [$-0.40$, $-0.05$] and $-0.10$ [$-0.25$, $0.00$]. Intervals use 5,000 paired task resamples within suites. The zero-width interval reflects identical observed labels, not population certainty. All four methods have human clean TSR 0.85 on the core subset; the separate cross-model subset has human TSR 0.75 clean and 0.60 toxic. Because both automatic and human core scores tie Base and Double-pass, this subset neither confirms nor refutes the full-matrix advantage. The four adjudicated VPA cases (one of 13 exposed Double-pass runs; three of 15 Guard runs) establish adoption after checking, not necessarily rejection of sufficient correct evidence.
 
-\subsection{Frozen revision, reference audit, and remaining validation}
+\subsection{Frozen revision and reference audit}
 \label{sec:revision-v2}
 \label{sec:scorer-sensitivity}
 
@@ -142,6 +169,4 @@ Generic guard & 0.94$\to$0.98 & 0.94$\to$0.97 & 0.00$\to$0.00 & 0.24$\to$0.00 & 
 
 Independent arithmetic over the 60 expanded numerical tasks found seven out-of-tolerance instances, two omitted ties, and two ambiguous channel-ranking queries. Corrections include conversion rate $615/3800=16.1842\%$, click-through rate $3800/49000=7.7551\%$, return rate $61/1100=5.5455\%$, units per order $1100/515=2.1359$, and three repeated instances. Both A100 and B200 attain revenue per unit 200 and are accepted. Two queries leave the conversion-rate denominator unspecified (clicks versus impressions), changing the winner; both are excluded across all revised methods. This is not exhaustive semantic-oracle validation.
 
-The corrected analysis retains 118 single-table instances, 944 defense trajectories, and 1,572 stress trajectories. Historical poison targets and exposure events are unchanged; reference correction cannot create exposure. Forty historical audit rows require human re-review, so their original annotations are preserved rather than automatically relabelled.
-
-The post-freeze validation packet contains 200 prepared trajectories on 20 task IDs: 90 reused semantic and 110 new numerical trajectories. Ten new numerical instances have matching independently implemented standard-library and dataframe references. They are instance-disjoint from known development packets, not family- or provenance-disjoint. A documented outcome-independent gateway amendment switches the 20 AutoGen runs to Claude Sonnet 4.6. Two-person annotation and the separate 40-row reference re-review remain pending. This packet predates the injector repair and later structured-evidence experiment; neither new executions nor structured scoring substitute for independent human validation.
+The corrected analysis retains 118 single-table instances, 944 defense trajectories, and 1,572 stress trajectories. Historical poison targets and exposure events are unchanged. Two annotators also completed the separate review of 40 affected historical audit rows, agreeing on all six fields. Twelve trajectories have ambiguous, ineligible references and are excluded from accuracy comparisons; all 28 eligible trajectories are human-correct and match the frozen scorer. All seven exposed trajectories in this review belong to the ineligible group, leaving no eligible behavioral-rate comparison. These results document the reference corrections and are not pooled with the 200-case post-freeze evaluation. Original historical labels remain preserved alongside the new review.

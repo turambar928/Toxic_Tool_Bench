@@ -1,0 +1,17 @@
+{
+  "record_type": "author_confirmation_from_project_conversation",
+  "recorded_on": "2026-09-20",
+  "returned_directory": "toxictool_bench/HUMAN_REVIEW_KIT_20260917",
+  "independent_annotation_author_confirmed": true,
+  "no_llm_author_confirmed": true,
+  "notes_standardized_after_collection": true,
+  "binary_labels_unchanged_after_notes_edit": true,
+  "annotator_a": {"rater_id": "Annotator A", "completed_on": "2026-09-17"},
+  "annotator_b": {"rater_id": "Annotator B", "completed_on": "2026-09-17"},
+  "date_precision": "day; completion times were not supplied",
+  "scope": ["01_independent_200", "02_reference_review_40"],
+  "blind_to_automatic_labels": null,
+  "automatic_scorer_assistance": null,
+  "original_pre_standardization_files_received": false,
+  "source_note": "The author states that two classmates independently completed both packets without LLM use on September 17. Notes were standardized after collection without changing the original binary labels. Received A/B files are byte-identical within each packet. This record documents the author's account; it is not a separate rater signature or an inference about unreported blinding conditions."
+}

@@ -1,0 +1,20 @@
+{
+  "independent_human_annotation": null,
+  "no_model_generated_labels": null,
+  "blind_to_automatic_labels": null,
+  "annotator_a": {
+    "rater_id": "",
+    "completed_at": "",
+    "reference_review_complete": null
+  },
+  "annotator_b": {
+    "rater_id": "",
+    "completed_at": "",
+    "reference_review_complete": null
+  },
+  "adjudicator": {
+    "rater_id": "",
+    "completed_at": "",
+    "reference_review_complete": null
+  }
+}

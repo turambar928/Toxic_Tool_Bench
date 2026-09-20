@@ -1,0 +1,5 @@
+field,meaning,status
+inventory_on_hand,current sellable units in warehouse,current
+inventory_reserved,units committed to open orders,current
+inventory_received,units received before quality checks,legacy
+damaged_units,units not eligible for sale,current

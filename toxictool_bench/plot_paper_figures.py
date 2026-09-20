@@ -302,6 +302,96 @@ def plot_operator_dots(results_dir: Path, output_dir: Path, preview_dir: Path | 
     save_figure(fig, output_dir / "fig_operator_dots.pdf", preview_dir)
 
 
+def plot_operator_bars(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
+    """Figure 3: zero-based bars; paired VR/RR are separate, never stacked."""
+    order, _, values = operator_profile_data(results_dir)
+    ink, blue, light = "#303A40", "#50798C", "#BBCDD0"
+    y = np.arange(len(order), dtype=float)
+    y[2:] += .65
+    fig, axes = plt.subplots(1, 3, figsize=(5.5, 2.95), sharex=True, sharey=True)
+    for ax, title in zip(axes, ["(a) Poisoned TSR", "(b) BCR", "(c) VR and RR"]):
+        style_axes(ax, xgrid=True)
+        ax.grid(axis="x", color="#E6EBED", linewidth=.55)
+        ax.spines["bottom"].set_color("#BAC4C8")
+        ax.spines["left"].set_visible(True)
+        ax.spines["left"].set_color("#BAC4C8")
+        ax.spines["left"].set_linewidth(.6)
+        ax.tick_params(axis="both", colors=ink, labelsize=8)
+        ax.set_xticks([0, .5, 1], ["0", "0.5", "1.0"])
+        ax.set_xlim(0, 1.08)
+        ax.set_ylim(y[-1] + .65, -.65)
+        ax.set_xlabel("Rate", color=ink, fontsize=8)
+        ax.set_title(title, color=ink, fontsize=9, loc="left", pad=24)
+        ax.axhline(1.825, color="#CCD4D7", linewidth=.65)
+    axes[0].set_yticks(y, [label for _, label, _ in order])
+    for ax, column in zip(axes[:2], [0, 1]):
+        ax.barh(y, values[:, column], height=.48, color=blue, linewidth=0, zorder=3)
+        for yi, value in zip(y, values[:, column]):
+            # Long bars carry their value inside, leaving the same panel width.
+            inside = value >= .88
+            ax.annotate(format_rate(value), (value, yi),
+                        xytext=(-4 if inside else 4, 0), textcoords="offset points",
+                        ha="right" if inside else "left", va="center", fontsize=7.7,
+                        color="white" if inside else ink)
+    axes[2].barh(y - .17, values[:, 2], height=.28, color=blue, linewidth=0,
+                 label="VR", zorder=3)
+    axes[2].barh(y + .17, values[:, 3], height=.28, color=light,
+                 edgecolor="#819DA7", linewidth=.45, label="RR", zorder=3)
+    axes[2].legend(frameon=False, ncol=2, loc="lower left", bbox_to_anchor=(0, 1.015),
+                   fontsize=8, columnspacing=1.2, handletextpad=.4, handlelength=1.3,
+                   borderaxespad=0, labelcolor=ink)
+    fig.subplots_adjust(left=.235, right=.985, top=.80, bottom=.15, wspace=.30)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with mpl.rc_context({"svg.fonttype": "none"}):
+        fig.savefig(output_dir / "fig_operator_bars.svg")
+    save_figure(fig, output_dir / "fig_operator_bars.pdf", preview_dir)
+
+
+def plot_operator_heatmap(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
+    """One shared sequential scale encodes raw rates, not desirability or ranks."""
+    order, _, values = operator_profile_data(results_dir)
+    ink = "#253247"
+    # ColorBrewer's sequential Blues: ordered lightness, no green or hue categories.
+    cmap = mpl.colormaps["Blues"]
+    norm = mpl.colors.Normalize(vmin=0, vmax=1)
+    y = np.arange(len(order), dtype=float)
+    fig, ax = plt.subplots(figsize=(5.5, 2.65))
+    for i, yi in enumerate(y):
+        for j, value in enumerate(values[i, :4]):
+            color = cmap(norm(value))
+            ax.add_patch(mpl.patches.Rectangle(
+                (j - .475, yi - .455), .95, .91, facecolor=color, edgecolor="none"))
+            # Pick readable text by relative luminance, including the darkest cells.
+            rgb = np.asarray(color[:3])
+            linear = np.where(rgb <= .04045, rgb / 12.92, ((rgb + .055) / 1.055) ** 2.4)
+            luminance = float(linear @ np.array([.2126, .7152, .0722]))
+            ax.text(j, yi, format_rate(value), ha="center", va="center", fontsize=9,
+                    color="white" if luminance < .179 else "black")
+    ax.set_xlim(-.5, 3.5)
+    ax.set_ylim(y[-1] + .5, -.5)
+    ax.set_xticks(range(4), [r"Poisoned TSR $\uparrow$", r"BCR $\downarrow$", "VR", "RR"])
+    ax.xaxis.tick_top()
+    ax.set_yticks(y, [label for _, label, _ in order])
+    ax.tick_params(axis="both", length=0, labelsize=9, colors=ink, pad=7)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    fig.subplots_adjust(left=.255, right=.985, top=.86, bottom=.23)
+    cax = fig.add_axes([.44, .105, .36, .027])
+    cbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), cax=cax,
+                        orientation="horizontal", ticks=[0, .25, .5, .75, 1])
+    cbar.solids.set_rasterized(False)
+    cbar.solids.set_edgecolor("face")  # Avoid hairline seams in PDF viewers.
+    cbar.outline.set_visible(False)
+    cbar.ax.tick_params(length=0, labelsize=7.5, colors=ink, pad=3)
+    cbar.ax.set_xticklabels(["0", "0.25", "0.50", "0.75", "1"])
+    cbar.ax.text(-.06, .5, "Rate", transform=cbar.ax.transAxes,
+                ha="right", va="center", fontsize=8, color=ink)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with mpl.rc_context({"svg.fonttype": "none"}):
+        fig.savefig(output_dir / "fig_operator_heatmap.svg")
+    save_figure(fig, output_dir / "fig_operator_heatmap.pdf", preview_dir)
+
+
 def plot_cross_model_paired(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:
     """Compare clean and poisoned TSR; other rates remain in a native table."""
     rows = cross_model_rows(results_dir)
@@ -572,17 +662,27 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, default=Path("figures"))
     parser.add_argument("--preview-dir", type=Path)
     parser.add_argument("--defense-only", action="store_true")
+    parser.add_argument("--operator-bars-only", action="store_true",
+                        help="Regenerate the preserved bar variant only.")
+    parser.add_argument("--operator-heatmap-only", action="store_true",
+                        help="Regenerate Figure 3 heatmap only; leave other figures unchanged.")
     parser.add_argument("--table-redesign-only", action="store_true",
-                        help="Generate native tables, operator dots, and paired TSR; preserve old figures.")
+                        help="Generate native tables, operator heatmap, and paired TSR; preserve old figures.")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     configure_matplotlib()
+    if args.operator_heatmap_only:
+        plot_operator_heatmap(args.results_dir, args.output_dir, args.preview_dir)
+        return
+    if args.operator_bars_only:
+        plot_operator_bars(args.results_dir, args.output_dir, args.preview_dir)
+        return
     if args.table_redesign_only:
         write_profile_tables(args.results_dir, args.output_dir)
-        plot_operator_dots(args.results_dir, args.output_dir, args.preview_dir)
+        plot_operator_heatmap(args.results_dir, args.output_dir, args.preview_dir)
         plot_cross_model_paired(args.results_dir, args.output_dir, args.preview_dir)
         return
     if args.defense_only:
@@ -591,7 +691,7 @@ def main() -> None:
     plot_cross_agent_model(args.results_dir, args.output_dir, args.preview_dir)
     plot_operator_profile(args.results_dir, args.output_dir, args.preview_dir)
     write_profile_tables(args.results_dir, args.output_dir)
-    plot_operator_dots(args.results_dir, args.output_dir, args.preview_dir)
+    plot_operator_heatmap(args.results_dir, args.output_dir, args.preview_dir)
     plot_cross_model_paired(args.results_dir, args.output_dir, args.preview_dir)
     plot_severity(args.results_dir, args.output_dir, args.preview_dir)
     plot_capability_gap(args.results_dir, args.output_dir, args.preview_dir)

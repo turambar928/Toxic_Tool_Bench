@@ -1,0 +1,46 @@
+{
+  "packet": "reference_errata_review",
+  "expected": 40,
+  "annotator_a": 40,
+  "annotator_b": 40,
+  "disputed": 0,
+  "adjudicated": 0,
+  "pending_disputes": [],
+  "human_complete": true,
+  "labels_created_by_this_tool": false,
+  "archive_sha256": "ef90cc79fb7a2d2d4a277d6a3b26dccb49c5d6ef0a56776ed90be980eb099fb3",
+  "n_task_ids": 8,
+  "n_exposed": 7,
+  "n_ambiguous": 12,
+  "split_counts": {
+    "cross_model": 10,
+    "core": 24,
+    "repeated_p1": 6
+  },
+  "disputed_label_cells": 0,
+  "n_scorer_disagreement_trajectories": 0,
+  "rater_files_byte_identical": true,
+  "parser_sha256": {
+    "evaluator.py": "70c5a5e044950583fd44b284df201deba733a0735820bd64c753ce20b6f37972",
+    "answer_selection.py": "30d202fc20301d2a7c4fbc6d3637f5030fb7cc618687c8c9ec945829db9f8958"
+  },
+  "input_sha256": {
+    "output/scorer_revision_v2/final_validation/reference_errata_review/evidence.csv": "0f58ecf31a584962324c0de213d018da123a5578945bbee8e2b83538bae7d2cc",
+    "output/scorer_revision_v2/final_validation/protocol.json": "80c7375d9cfa8cdd4b2b2b8f5d256d6eede50f38f89b9255afe78a54a5ebd966",
+    "output/scorer_revision_v2/final_validation/reference_errata_review_admin.csv": "c6224f17aab4dbd9885d7a6c31ca1942c72daa9fd965eea149311be99631c878",
+    "toxictool_bench/results/20260722-021910_autogen_tool_agent_claude-sonnet-4-6_both_start40_limit5.jsonl": "5efdd3217e5d395f12d8049e28b3728334db2d4395fb27718b858a6928c839c7",
+    "toxictool_bench/results/20260829-113938_langgraph_react_verification_only_claude-haiku-4-5-20251001_both_start20_limit20.jsonl": "7f04e6808d6ca559f31cdc4a1d47ff1adaef4b64d0f197b97e6c69af5da8d940",
+    "toxictool_bench/results/verification_stress/numerical_iclr2027/p100/20260830-170832_langgraph_react_double_pass_claude-haiku-4-5-20251001_toxic_start35_limit5.jsonl": "13338bb319447ee16536ed464269e992de7580286c790ca64c018104f3e0c019",
+    "toxictool_bench/results/20260829-120030_langgraph_react_double_pass_claude-haiku-4-5-20251001_both_start20_limit20.jsonl": "d0eb50476452bee15050f6bb09b77f4f7e35f84b8c4df8c38ac35af4eb1e81fb",
+    "toxictool_bench/results/20260829-112921_langgraph_react_full_claude-haiku-4-5-20251001_both_start20_limit20.jsonl": "957d90faa6d56bacfc8ec2821e1b075447ea2a1f3e96f100362fb7c793d94ee2",
+    "toxictool_bench/results/20260722-022646_autogen_tool_agent_claude-sonnet-4-6_both_start55_limit5.jsonl": "955a7e7e5eaa4ef6c6c0ee7c242e4cb964ee6626b6e5490a1e479ba108b4a1bf",
+    "toxictool_bench/results/verification_stress/numerical_iclr2027/p100/20260830-175407_langgraph_react_guarded_claude-haiku-4-5-20251001_toxic_start35_limit5.jsonl": "14951d1533e58472322cf5af77c8c706d7cca2f81894ab58d4112103bcd4e7eb",
+    "toxictool_bench/results/verification_stress/numerical_iclr2027/p100/20260830-170534_langgraph_react_double_pass_claude-haiku-4-5-20251001_toxic_start30_limit5.jsonl": "7281b9c60ae6aef043e0fd7da7f343c54539aeafd6b7c4760a403251ff895597",
+    "toxictool_bench/results/20260829-121905_langgraph_react_guarded_claude-haiku-4-5-20251001_both_start20_limit20.jsonl": "9fb2b52b08c5501bd77182df3c7489c6976bbc14e26db83890c90e13d3942555",
+    "toxictool_bench/results/20260722-022355_autogen_tool_agent_claude-sonnet-4-6_both_start50_limit5.jsonl": "2ae1b82b55ebda485e1995e8846451ff5418e622f4c2d324c830dc1b25793919",
+    "toxictool_bench/results/verification_stress/numerical_iclr2027/p100/20260830-175040_langgraph_react_guarded_claude-haiku-4-5-20251001_toxic_start30_limit5.jsonl": "6f752c98b775003e87e49a9af23557680cbbce798a3084aa7d527bfe8f2645e4",
+    "toxictool_bench/HUMAN_REVIEW_KIT_20260917/02_reference_review_40/annotator_a.csv": "d2377d6b5b3c124c44e118915d94514d71117db1c9b1da2adb42ec783b2e9c67",
+    "toxictool_bench/HUMAN_REVIEW_KIT_20260917/02_reference_review_40/annotator_b.csv": "d2377d6b5b3c124c44e118915d94514d71117db1c9b1da2adb42ec783b2e9c67",
+    "toxictool_bench/HUMAN_REVIEW_KIT_20260917/02_reference_review_40/adjudication.csv": "2eef6af88e8c58fde024e1d2b4e69860ee52ed6bf113788f35d2f180a55dfc1e"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "report_type": "frozen_scorer_author_reported_human_annotation",
+  "source_notes": {
+    "record_type": "author_confirmation_from_project_conversation",
+    "recorded_on": "2026-09-20",
+    "returned_directory": "toxictool_bench/HUMAN_REVIEW_KIT_20260917",
+    "independent_annotation_author_confirmed": true,
+    "no_llm_author_confirmed": true,
+    "notes_standardized_after_collection": true,
+    "binary_labels_unchanged_after_notes_edit": true,
+    "annotator_a": {
+      "rater_id": "Annotator A",
+      "completed_on": "2026-09-17"
+    },
+    "annotator_b": {
+      "rater_id": "Annotator B",
+      "completed_on": "2026-09-17"
+    },
+    "date_precision": "day; completion times were not supplied",
+    "scope": [
+      "01_independent_200",
+      "02_reference_review_40"
+    ],
+    "blind_to_automatic_labels": null,
+    "automatic_scorer_assistance": null,
+    "original_pre_standardization_files_received": false,
+    "source_note": "The author states that two classmates independently completed both packets without LLM use on September 17. Notes were standardized after collection without changing the original binary labels. Received A/B files are byte-identical within each packet. This record documents the author's account; it is not a separate rater signature or an inference about unreported blinding conditions."
+  },
+  "source_notes_sha256": "6d6ae4215b4b9ff4ff70e91de7cdc699a7bb89ec8c48ab2d4b829d22621de330",
+  "source_independence_evidence": "author confirmation; not independently established by identical files",
+  "blinding_attested": false,
+  "strict_blinded_validation_provenance_complete": false,
+  "packet_masking": "Distributed kit excludes automatic predictions and administrator mappings.",
+  "evidence_integrity": {
+    "n_files_checked": 256,
+    "changed_instruction_files": [
+      "README_CN.html",
+      "README_CN.md"
+    ],
+    "original_checksum_manifest_sha256": "eff2b49a43e1a46960eae9a5c60e69b1b3225ebc3a7bf8bdd5d9d1dcf069afab",
+    "case_evidence_and_data_unchanged": true
+  },
+  "no_labels_generated_or_changed": true,
+  "scorer_frozen": true,
+  "comparison_bootstrap": {
+    "draws": 5000,
+    "seed": 20260915,
+    "unit": "paired task within suite"
+  },
+  "script_sha256": {
+    "toxictool_bench/report_returned_human_validation.py": "5f28858198ca21c9ddaee6d9f4b4d3b3fee7421f5015baec102e2cbed37f5896",
+    "toxictool_bench/analyze_human_holdout.py": "6bfcfcbd2fad3173dc4f2b678ace9fb7d8216fb4965cd0b32001cab9ae479b25",
+    "toxictool_bench/validate_human_returns_v2.py": "7d1ee51c67b3df6138254b6ae9502787fc3417445cad5cd24dcf85b46b68e077"
+  },
+  "returned_files_sha256": {
+    "README_CN.md": "317a49e54e761cfb86afa25e72e9f1443d224f53e2fea7bb4b2faf21d73256ac",
+    "README_CN.html": "4d8c06afc389acb0a571a80d3a8a221fccddbc756536fa6afa9f3fee300cc1c9",
+    "release_manifest.json": "9e7f78f29f0abcf28f7ab167ab2707ce54791e5ba84b7a5b69456b315dbe27a2",
+    "immutable_checksums.json": "eff2b49a43e1a46960eae9a5c60e69b1b3225ebc3a7bf8bdd5d9d1dcf069afab",
+    "01_independent_200/annotator_a.csv": "517c049c49e4cd8b457969efc09aa4e2d6c04dd33a208115917e6d5c7019762d",
+    "01_independent_200/annotator_b.csv": "517c049c49e4cd8b457969efc09aa4e2d6c04dd33a208115917e6d5c7019762d",
+    "01_independent_200/adjudication.csv": "46f24cf09adf1956ddbf87a165121df09235e08ef91f5a9ee7d47c6938a966ee",
+    "01_independent_200/provenance_TEMPLATE.json": "df596f1cef5c5b441cc6542164e4cb31c9687de9c7b3375b619f525a31a215b7",
+    "02_reference_review_40/annotator_a.csv": "d2377d6b5b3c124c44e118915d94514d71117db1c9b1da2adb42ec783b2e9c67",
+    "02_reference_review_40/annotator_b.csv": "d2377d6b5b3c124c44e118915d94514d71117db1c9b1da2adb42ec783b2e9c67",
+    "02_reference_review_40/adjudication.csv": "2eef6af88e8c58fde024e1d2b4e69860ee52ed6bf113788f35d2f180a55dfc1e",
+    "02_reference_review_40/provenance_TEMPLATE.json": "df596f1cef5c5b441cc6542164e4cb31c9687de9c7b3375b619f525a31a215b7"
+  },
+  "output_sha256": {
+    "independent/annotator_agreement.csv": "9929bcfd193c3961ba3a50892dd456c687e5d200c9668effbdb9f7df382945eb",
+    "independent/method_rates.csv": "137314e0d8661c6da91de981ce130d5b91c8874549d544e09447a29c16c5f58f",
+    "independent/paired_comparisons.csv": "aa46e5044ea33763656ba1a419f1947558d78136e48ee3aa33e3aa678eea6711",
+    "independent/scorer_comparison.csv": "55d03c8cfe1956ccbc59e593d43cbd84d7b9af11ffd08ab4dc20560d01684eb2",
+    "independent/scorer_comparison_by_family.csv": "07205cc5e4219d4552bdf3ba3489fa9a71350880db8f9d4ae3029607eb8104ab",
+    "independent/scorer_disagreements.csv": "3baa1de7549d00257e7910882dd6db24e413f633b14769b8fbebcee2c0ad5cf9",
+    "independent/status.json": "1f1d320f62313de390490d45892e1e502b5259135dc6ac50b2706e22927ff65c",
+    "independent/trajectory_inventory.csv": "83799ec2a49d7d2ff8dce960cc9b0155923b52ce93a496f68ea69612d123531b",
+    "method_comparison.tex": "cc9190de1163e5c195b26a3518a53ab1ce9783f763fb7c6aa9243196fd3c4447",
+    "reference_review/annotator_agreement.csv": "72529944ec8c4cc18a64c2dc342bb14ae770a7944f6388c97aee82cd96434b25",
+    "reference_review/method_rates.csv": "81a993c63c08d683ee5a7d07849f24e5de5e6b1d4e2ef88acd7953a2db91032d",
+    "reference_review/scorer_comparison.csv": "843af83cfa9e6bc86ff55bd3f322a1cbbf35212747e5f85129ffec4f26849433",
+    "reference_review/scorer_comparison_by_family.csv": "3b96b1a3f6b6276c0f380c8e88a070b4c51de5fecb35f41e7253db9fd5300f9a",
+    "reference_review/scorer_disagreements.csv": "f77372be4206098a3f8ed26fed7bb8d941103d14425f36f88a489a04e4255b58",
+    "reference_review/status.json": "c70b0a55c4105162e9fa9e2d697e7611e17d760a3828f71528e07d437dc5a825",
+    "reference_review/trajectory_inventory.csv": "a96558615d429e19018535116befe3af2ee8a17d96ee0d83bbe6a33b4d9737a8",
+    "returned_materials.zip": "536f1173dccfc26821a886b24e92b83a1f85341261e8c9c9b562cd299c52d94e",
+    "scorer_metrics.tex": "3e0395fd41fdd78104b707c077a72f4081d12c23e16d58093802febde610be6c"
+  }
+}

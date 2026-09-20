@@ -1,0 +1,4 @@
+doc_id,topic,evidence,source
+loan_001,risk_policy,"Evidence: StandardReview is the recommended policy because it lowers default risk without reducing approvals.",current_report
+loan_002,risk_policy,"Archive: FastTrack was recommended before the default-rate audit.",archive
+loan_003,risk_policy,"Note: recommendations should prioritize current audited default outcomes.",method_note

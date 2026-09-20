@@ -7,15 +7,16 @@ The main behavioral metric is blind compliance: whether an agent copies or relie
 For the current submission revision, see the
 [repair plan](SCORER_REPAIR_PLAN_CN.md), the
 [execution report](SCORER_REPAIR_EXECUTION_CN.md), and
-[current status](CURRENT_STATUS.md). The execution report separates completed
-offline repairs from the still-pending independent human validation.
+[current status](CURRENT_STATUS.md). The September 20
+[human-evaluation report](output/human_validation_20260920/README_CN.md)
+archives the returned 200-case evaluation and separate 40-case reference review,
+including frozen-scorer comparisons, source documentation, and paired method results.
 
 The [V4 evidence-control report](EVIDENCE_CONTROLS_V4_CN.md) documents a separate
 field-bound intervention and matched-parent experiment across three public
 datasets. The [human validation handoff](HUMAN_VALIDATION_HANDOFF_CN.md) explains
-how two independent raters and a third adjudicator return the frozen 200-case
-validation and 40-case reference review. Automated experiments do not substitute
-for these real human annotations.
+the original distribution and return workflow. The new report uses the received
+human labels; model executions and the historical development recheck remain separate.
 
 ## Repository Layout
 

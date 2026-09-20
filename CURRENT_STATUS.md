@@ -1,6 +1,6 @@
 # ToxicBench Current Status
 
-Last updated: 2026-09-16
+Last updated: 2026-09-20
 
 ## Submission revision
 
@@ -13,12 +13,17 @@ alias. One budget-exhausted model outcome is retained as a failure; one API
 failure was recovered without replacing completed answers. See
 [EVIDENCE_CONTROLS_V4_CN.md](EVIDENCE_CONTROLS_V4_CN.md). It is a separate
 structured-tool interface, not a replacement for historical framework results
-or independent validation of the free-text scorer. The current 156 tests pass.
+or the separate human evaluation of the free-text scorer. The V4 checkpoint had 156 passing tests.
 
-Real human annotations remain pending (0/200 independent, 0/40 errata).
-[HUMAN_VALIDATION_HANDOFF_CN.md](HUMAN_VALIDATION_HANDOFF_CN.md) provides
-distribution instructions and a source/return validator. All 240 packet entries
-have passed read-only source verification; no human labels were generated.
+Two annotators have returned all 200 post-freeze evaluation labels and all 40
+reference-review labels, with no binary-label disagreements. The author confirms
+independent completion without LLM use on September 17, followed by note
+standardization without changing labels. TSR agreement is 192/200 (96.0%).
+Human core poisoned TSR is Base 0.80, Double-pass 1.00, Verification-only 1.00,
+and Guard 0.95; the Double-pass--Base contrast is +0.20 [0.05, 0.35].
+The 40-case review excludes 12 ambiguous references and agrees on 28/28 eligible
+cases. See the [full report](output/human_validation_20260920/README_CN.md)
+for all metric counts, source attestations, and the unchanged frozen scorer.
 
 Previous non-human submission revision V3 is documented in
 [SUBMISSION_REVISION_V3_CN.md](SUBMISSION_REVISION_V3_CN.md). The injector now
@@ -30,7 +35,7 @@ results. The separately frozen follow-up is complete: 152/152 trajectories,
 including 128 controlled and 24 public-data runs, with no missing or duplicate
 conditions. Eight failed attempts caused by HTTP 429 are retained; only missing
 environments were recovered, finishing at one worker. Human validation and the
-answer parser remain untouched. All 134 tests pass.
+answer parser were untouched at the V3 checkpoint, which had 134 passing tests.
 
 The 16-task control increases second-route exposure but gives small, uncertain
 TSR differences: per-route minus shared is -0.0625 for Double-pass and
@@ -60,20 +65,24 @@ Double-pass minus Base poisoned TSR is +0.110. Its template-cluster 95% interval
 - Development recheck on the audit-informed 240 cases: TSR agreement 238/240 (99.2%), precision 1.000, recall 0.990. This is not independent validation.
 - Reference audit: seven incorrect numerical instances, two tied-answer omissions, and two denominator-ambiguous instances.
 - Revised denominators: 118 single-table task instances, 944 defense trajectories, and 1,572 repeated-poison trajectories.
-- Forty historical human-audit rows require reference re-review; their original labels remain unchanged.
+- Forty historical audit rows have now been reviewed separately: 12 reference-ineligible, 28 eligible and scorer-concordant. Original historical labels remain unchanged.
 - PandasAI is excluded from main behavioral comparisons because its historical adapter mutates the final chat return after agent completion.
 
-## Frozen independent validation
+## Post-freeze human evaluation
 
-The protocol contains 200 trajectories: 90 reused semantic trajectories and 110 new numerical trajectories on task instances excluded from parser development. After bypassing the server's local proxy, all 90 fixed-Haiku core/repeated trajectories completed with zero failed jobs. The original GPT model was unavailable, and the first approved replacement accepted chat but rejected function tools; both events were recorded before any cross-model trajectory completed. A second user-authorized amendment selected tool-compatible Claude Sonnet 4.6, and all 20 AutoGen trajectories completed. The packet is now 200/200, with source hashes and both amendments preserved. Human annotation has not started.
+The protocol contains 200 trajectories: 90 reused semantic trajectories and 110 new numerical trajectories on task instances excluded from parser development. After bypassing the server's local proxy, all 90 fixed-Haiku core/repeated trajectories completed with zero failed jobs. The original GPT model was unavailable, and the first approved replacement accepted chat but rejected function tools; both events were recorded before any cross-model trajectory completed. A second user-authorized amendment selected tool-compatible Claude Sonnet 4.6, and all 20 AutoGen trajectories completed. Execution and human-label collection are complete; source hashes, amendments, received-label bytes, and author-reported provenance are preserved. The distributed kit omitted automatic labels; additional blinding attestations were not supplied and are not fabricated.
 
 ## Paper status
 
 - Main text ends on page 9; references start on page 10.
-- The V4 build is 32 pages including references and appendices; new evidence
-  controls are in Appendix I and do not expand the main-text limit.
-- The manuscript distinguishes development recheck, reference re-review, and pending independent validation.
+- The current build is 26 pages, with five appendix sections; new evidence
+  controls are in Appendix E and the human evaluation is in Appendix B.
+- The manuscript distinguishes historical development recheck, completed reference review, and post-freeze human evaluation.
 - It no longer claims Generic Guard superiority or that every VPA case ignored sufficient correct evidence.
 - V2 checkpoint test suite: 116 passed; current test count is reported above.
+- September 20 regression suite: 188 passed; static references and both official-template PDF builds checked.
 
-The paper is materially repaired but not final: two-person validation annotation and the 40-row reference re-review remain required submission work.
+The annotation collection is no longer the blocking task. The manuscript now leads
+with the supported phenomena and reports the full human/automatic comparison in
+the appendix, including Verification-only's tie with Double-pass on the audited
+core subset. Final submission still requires the usual author and format review.
