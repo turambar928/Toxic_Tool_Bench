@@ -5,7 +5,9 @@ An agent receives query $q$, calls tools, observes their returns, and eventually
 
 The setting covers stale summaries, arithmetic or unit-conversion bugs, label-binding errors, corrupted retrieval evidence, and modified successful tool returns. It excludes ordinary malformed outputs and control of the system prompt. Source data remain unchanged. The single-poison setting leaves later checking routes available; repeated poisoning targets later matching returns, not an adversary with unrestricted control of every source.
 
-Each task specifies a query, source tables, clean and poisoned references, aliases/tolerances, and an eligible event. Clean/toxic runs share the task, model, adapter, tools, and budget. Hidden clean observations are logged but never supplied to the model. Numerical workflows include aggregates, rates, rankings, filters, and unit conversion; semantic workflows include entity bindings, treatment/control labels, schema dictionaries, stale metadata, and retrieval evidence. Retrieval poisons remain topical and plausible rather than carrying explicit hostile instructions. PDR separates non-delivery from behavior after exposure.
+The main suites use repository-defined synthetic tables and explicit task specifications, not queries sampled from user logs. The expansion script retains the 34 numerical and 24 semantic/schema cross-model items, adds 18 numerical and 12 semantic query--operator combinations, and creates a further eight and 24 instances by appending generic checking prompts and assigning severity labels. A changed severity label alone need not change the poisoned value. Numerical workflows cover aggregates, rates, rankings, filters, and unit conversion; semantic workflows cover bindings, treatment/control labels, dictionaries, and retrieval evidence. Questions and operators are paired to target these operations; this is coverage-oriented construction, not a frequency estimate of naturally occurring errors.
+
+Each task specifies source tables, clean and poisoned references, aliases/tolerances, and an eligible event. Clean/toxic runs share the task, model, adapter, tools, and budget. Hidden clean observations are logged but never supplied to the model. The target is a changed answer-bearing value or claim, rather than an arbitrary textual edit. Actual delivery is checked separately: an ineligible call can leave a toxic-environment run unexposed, and historical textual-change flags can overcount valid corruption. PDR and the delivery audit distinguish these cases.
 
 \begin{table}[t]
 \centering
@@ -13,18 +15,24 @@ Each task specifies a query, source tables, clean and poisoned references, alias
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
-Suite & Instances & Templates & Data & Main coverage \\
+Suite & Instances & Specs. & CSVs & Main coverage \\
 \midrule
-Cross-model numerical & 34 & 31 & 11 & aggregates, rates, rankings \\
-Cross-model semantic/schema & 24 & 22 & 17 & labels, schema, retrieval \\
-Expanded numerical & 60 & 56 & 14 & seven operators, severity \\
-Expanded semantic/schema & 60 & 41 & 22 & binding, metadata, evidence \\
-Multi-table extension & 13 & 11 & 4 groups & discovery, joins, checks \\
+Cross-model numerical & 34 & 34 & 11 & aggregates, rates, rankings \\
+Cross-model semantic/schema & 24 & 24 & 17 & labels, schema, retrieval \\
+Expanded numerical & 60 & 52 & 14 & seven operators, severity \\
+Expanded semantic/schema & 60 & 36 & 22 & binding, metadata, evidence \\
+Multi-table extension & 13 & 13 & 8 & discovery, joins, checks \\
 \bottomrule
 \end{tabular}
-\caption{ToxicBench suite inventory. A template is a distinct query--dataset--poison specification; repeated instances measure stability but do not add semantic diversity.}
+\caption{ToxicBench inventory before reference exclusions. Specifications group the dataset, query, and poison configuration after stripping the two generic checking suffixes and ignoring severity, poison probability, and one-shot policy, as in the cluster sensitivity analysis. These are normalized specifications, not independent semantic problems. The multi-table suite uses four pairs of CSVs.}
 \label{tab:appendix-suite-inventory}
 \end{table}
+
+The cross-model suites are wholly contained in the corresponding expanded suites. The two expanded families share six CSVs (30 distinct CSVs in their union); their task IDs differ. The 13 multi-table IDs and eight source files are separate from these single-table suites. Stratified method controls and repeated-poison sweeps reuse selected tasks rather than adding new problems. The 200-trajectory post-freeze human evaluation uses ten semantic IDs from the expanded suite and ten newly defined numerical IDs. It is task-ID-disjoint from the scorer-development packets, not a template-disjoint evaluation. The structured public-data controls add 24 separately specified queries over Palmer Penguins, Auto MPG, and Bike Sharing; their results are reported separately from the synthetic matrix.
+
+Existing acceptance evidence has three scopes. First, \texttt{audit\_reference\_answers.py} independently recomputes all 60 expanded numerical references from source CSVs, retaining data hashes and tolerance comparisons. It identifies seven out-of-tolerance values, two omitted ties, and two ambiguous queries; scoring-only corrections and exclusions leave the original tasks, poison targets, and trajectories intact. This audit does not exhaustively validate the semantic or multi-table oracles. Second, injector regression tests exercise complete-token and label-boundary matching, wrong-field/error/no-op rejection, and whether ineligible calls consume the one-shot opportunity. The historical delivery audit covers 3,319 recorded corruptions across eight observation-level adapter identifiers, flagging 204 events in 157 trajectories; unflagged events are not automatically certified. Appendix~\ref{sec:delivery-v3} reports the resulting sensitivity analyses and fresh repaired-injector runs.
+
+Third, the structured public-data controls have matching standard-library and pandas references for all 24 tasks, with clean/poisoned values separated beyond the scoring tolerance. Frozen source-file hashes are checked against the protocol. Environment tests execute a target corruption, unmodified alternative computations and raw-row access, and verify unchanged source bytes; delivery checks cover the 264 completed trajectories and residual clean aliases in full-target returns (Appendix~\ref{sec:evidence-v4}). This provides executable evidence for the structured environment. In the historical synthetic suites, recomputation and metadata inspection are available by design and observed in trajectories, but there is no separate, exhaustive per-task recovery-path acceptance run. The post-freeze human evaluation tests scoring decisions on selected trajectories, not every task's construction.
 
 Checking may recompute raw rows, inspect metadata, or consult evidence behind a summary. We distinguish observation independence (not copying the poisoned return), execution-route independence (a fresh evidence-producing action), and source independence (different upstream tables, caches, or authorities). VR requires the first two only. All 120 original expanded tasks and 13 join tasks reuse their source CSVs, so source-independent coverage is 0/133. A successful check cannot rule out a shared upstream error. Table~\ref{tab:closest-work} locates this observation-level setting relative to broader agent and retrieval benchmarks.
 
