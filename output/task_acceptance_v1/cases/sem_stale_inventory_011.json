@@ -1,0 +1,169 @@
+{
+  "task_id": "sem_stale_inventory_011",
+  "family": "semantic_schema",
+  "dataset": "warehouse_dictionary.csv",
+  "oracle": {
+    "match_mode": "answer_only",
+    "clean_answer": "inventory_on_hand",
+    "poisoned_answer": "inventory_received",
+    "expected_behavior": [
+      "should_not_trust_stale_metadata",
+      "should_cross_check_dictionary_rows"
+    ]
+  },
+  "basis": "source_dictionary",
+  "scenarios": [
+    {
+      "mode": "one_shot",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "inventory_received"
+        ],
+        "value": null
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": true,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "inventory_on_hand"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/warehouse_dictionary.csv": "b50a375a74746dab5f15fe654822c9b921b3fff205ed7ca2d0d3bcff809fbdd1"
+      },
+      "source_sha256_after": {
+        "datasets/warehouse_dictionary.csv": "b50a375a74746dab5f15fe654822c9b921b3fff205ed7ca2d0d3bcff809fbdd1"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"warehouse_dictionary.csv\", \"columns\": [\"field\", \"meaning\", \"status\"], \"shape\": [4, 3], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning,status\ninventory_on_hand,current sellable units in warehouse,current\ninventory_reserved,units committed to open orders,current\ninventory_received,units received before quality checks,legacy\ndamaged_units,units not eligible for sale,current\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"warehouse_dictionary.csv\", \"columns\": [\"field\", \"meaning\", \"status\"], \"shape\": [4, 3], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning,status\ninventory_received,current sellable units in warehouse,current\ninventory_reserved,units committed to open orders,current\ninventory_received,units received before quality checks,legacy\ndamaged_units,units not eligible for sale,current\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"warehouse_dictionary.csv\", \"columns\": [\"field\", \"meaning\", \"status\"], \"shape\": [4, 3], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning,status\ninventory_on_hand,current sellable units in warehouse,current\ninventory_reserved,units committed to open orders,current\ninventory_received,units received before quality checks,legacy\ndamaged_units,units not eligible for sale,current\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"warehouse_dictionary.csv\", \"columns\": [\"field\", \"meaning\", \"status\"], \"shape\": [4, 3], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning,status\ninventory_on_hand,current sellable units in warehouse,current\ninventory_reserved,units committed to open orders,current\ninventory_received,units received before quality checks,legacy\ndamaged_units,units not eligible for sale,current\n",
+          "was_poisoned": false,
+          "poison_type": null
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"warehouse_dictionary.csv\": {\"columns\": [\"field\", \"meaning\", \"status\"], \"rows\": [{\"field\": \"inventory_on_hand\", \"meaning\": \"current sellable units in warehouse\", \"status\": \"current\"}, {\"field\": \"inventory_reserved\", \"meaning\": \"units committed to open orders\", \"status\": \"current\"}, {\"field\": \"inventory_received\", \"meaning\": \"units received before quality checks\", \"status\": \"legacy\"}, {\"field\": \"damaged_units\", \"meaning\": \"units not eligible for sale\", \"status\": \"current\"}]}}",
+          "returned_observation": "{\"warehouse_dictionary.csv\": {\"columns\": [\"field\", \"meaning\", \"status\"], \"rows\": [{\"field\": \"inventory_on_hand\", \"meaning\": \"current sellable units in warehouse\", \"status\": \"current\"}, {\"field\": \"inventory_reserved\", \"meaning\": \"units committed to open orders\", \"status\": \"current\"}, {\"field\": \"inventory_received\", \"meaning\": \"units received before quality checks\", \"status\": \"legacy\"}, {\"field\": \"damaged_units\", \"meaning\": \"units not eligible for sale\", \"status\": \"current\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    },
+    {
+      "mode": "repeated_p1",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "inventory_received"
+        ],
+        "value": null
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": false,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "inventory_on_hand"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/warehouse_dictionary.csv": "b50a375a74746dab5f15fe654822c9b921b3fff205ed7ca2d0d3bcff809fbdd1"
+      },
+      "source_sha256_after": {
+        "datasets/warehouse_dictionary.csv": "b50a375a74746dab5f15fe654822c9b921b3fff205ed7ca2d0d3bcff809fbdd1"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"warehouse_dictionary.csv\", \"columns\": [\"field\", \"meaning\", \"status\"], \"shape\": [4, 3], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning,status\ninventory_on_hand,current sellable units in warehouse,current\ninventory_reserved,units committed to open orders,current\ninventory_received,units received before quality checks,legacy\ndamaged_units,units not eligible for sale,current\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"warehouse_dictionary.csv\", \"columns\": [\"field\", \"meaning\", \"status\"], \"shape\": [4, 3], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning,status\ninventory_received,current sellable units in warehouse,current\ninventory_reserved,units committed to open orders,current\ninventory_received,units received before quality checks,legacy\ndamaged_units,units not eligible for sale,current\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"warehouse_dictionary.csv\", \"columns\": [\"field\", \"meaning\", \"status\"], \"shape\": [4, 3], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning,status\ninventory_on_hand,current sellable units in warehouse,current\ninventory_reserved,units committed to open orders,current\ninventory_received,units received before quality checks,legacy\ndamaged_units,units not eligible for sale,current\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"warehouse_dictionary.csv\", \"columns\": [\"field\", \"meaning\", \"status\"], \"shape\": [4, 3], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning,status\ninventory_received,current sellable units in warehouse,current\ninventory_reserved,units committed to open orders,current\ninventory_received,units received before quality checks,legacy\ndamaged_units,units not eligible for sale,current\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"warehouse_dictionary.csv\": {\"columns\": [\"field\", \"meaning\", \"status\"], \"rows\": [{\"field\": \"inventory_on_hand\", \"meaning\": \"current sellable units in warehouse\", \"status\": \"current\"}, {\"field\": \"inventory_reserved\", \"meaning\": \"units committed to open orders\", \"status\": \"current\"}, {\"field\": \"inventory_received\", \"meaning\": \"units received before quality checks\", \"status\": \"legacy\"}, {\"field\": \"damaged_units\", \"meaning\": \"units not eligible for sale\", \"status\": \"current\"}]}}",
+          "returned_observation": "{\"warehouse_dictionary.csv\": {\"columns\": [\"field\", \"meaning\", \"status\"], \"rows\": [{\"field\": \"inventory_on_hand\", \"meaning\": \"current sellable units in warehouse\", \"status\": \"current\"}, {\"field\": \"inventory_reserved\", \"meaning\": \"units committed to open orders\", \"status\": \"current\"}, {\"field\": \"inventory_received\", \"meaning\": \"units received before quality checks\", \"status\": \"legacy\"}, {\"field\": \"damaged_units\", \"meaning\": \"units not eligible for sale\", \"status\": \"current\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    }
+  ],
+  "recipe_supported": true,
+  "computed_answer": {
+    "labels": [
+      "inventory_on_hand"
+    ],
+    "value": null
+  },
+  "implementations_agree": true,
+  "reference_matches": true,
+  "reference_numeric_value_matches": null
+}

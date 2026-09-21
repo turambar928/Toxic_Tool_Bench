@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2000.0" height="1116.2790697674418" viewBox="0 0 2000.0 1116.2790697674418" role="img">
+  <title>Figure 1 | Silent Tool Poisoning: An Example</title>
+  <rect x="0" y="0" width="2000.0" height="1116.2790697674418" rx="0" fill="#ffffff" stroke="none" stroke-width="2" />
+  <rect x="10" y="7" width="1980" height="76" rx="14" fill="#263650" stroke="#263650" stroke-width="2" />
+  <text x="1000" y="58" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="37.000" font-weight="bold" text-anchor="middle">Figure 1 | Silent Tool Poisoning: An Example</text>
+  <rect x="432" y="112" width="1110" height="117" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="430" y="108" width="1110" height="117" rx="18" fill="#eef3fa" stroke="#244873" stroke-width="2.7" />
+  <rect x="430" y="108" width="1110" height="44" rx="17" fill="#244873" stroke="#244873" stroke-width="2" />
+  <rect x="430" y="130.0" width="1110" height="22.0" rx="0" fill="#244873" stroke="#244873" stroke-width="0" />
+  <text x="985.0" y="138.36" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="28.000" font-weight="bold" text-anchor="middle">USER QUERY</text>
+  <g transform="translate(449 163) scale(0.45)">
+    <circle cx="50" cy="28" r="18" fill="#244873" stroke="none" stroke-width="2" />
+    <path d="M 12 91 L 12 77 Q 12 53 50 53 Q 88 53 88 77 L 88 91 Z" stroke="#244873" fill="#244873" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <text x="510" y="198" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="normal" text-anchor="start">“Which store had the highest revenue last quarter, and what was it?”</text>
+  <path d="M 985 225 L 985 249" stroke="#244873" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="985,249 989.32,240.0 980.68,240.0" fill="#244873" stroke="#244873" stroke-width="1" stroke-linejoin="round" />
+  <rect x="662" y="254" width="650" height="250" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="660" y="250" width="650" height="250" rx="18" fill="#eef3fa" stroke="#244873" stroke-width="2.7" />
+  <rect x="660" y="250" width="650" height="51" rx="17" fill="#244873" stroke="#244873" stroke-width="2" />
+  <rect x="660" y="275.5" width="650" height="25.5" rx="0" fill="#244873" stroke="#244873" stroke-width="0" />
+  <text x="985.0" y="285.19" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="middle">DATA AGENT WITH TOOL ACCESS</text>
+  <g transform="translate(915 323) scale(0.98)">
+    <path d="M 39 87 C 13 95 6 75 15 64 C 1 52 8 34 20 31 C 15 15 29 7 40 13 C 45 1 63 7 67 21 L 78 21 L 78 85 Z" stroke="#244873" fill="#dceaf3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 26 24 C 41 23 23 44 38 45 M 16 57 C 31 44 42 58 28 70 M 40 15 L 40 88" stroke="#244873" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <rect x="45" y="34" width="48" height="37" rx="3" fill="#244873" stroke="#244873" stroke-width="2" />
+    <text x="69" y="59" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.000" font-weight="bold" text-anchor="middle">LLM</text>
+  </g>
+  <g transform="translate(1031 327) scale(0.91)">
+    <polygon points="93.0,50.0 92.47059864559093,56.72668199672993 82.33592155403522,60.50657780874821 80.29422182240451,65.43567699114459 84.78773075812273,75.27476584857635 80.40559159102155,80.40559159102153 69.98469857794409,77.5065778087482 65.43567699114459,80.29422182240451 63.28773075812274,90.8954302006916 56.72668199672993,92.47059864559093 50.0,84.0 44.68122818863216,83.58140358023468 36.712269241877266,90.8954302006916 30.478408511199493,88.31328054009981 30.015301422055916,77.5065778087482 25.958369439657385,74.04163056034261 15.212269241877266,75.27476584857635 11.686719459900182,69.52159148880051 17.664078445964783,60.50657780874822 16.418596419765322,55.31877181136785 7.0,50.00000000000001 7.5294013544090745,43.27331800327008 17.66407844596477,39.49342219125181 19.70577817759549,34.56432300885541 15.212269241877252,24.72523415142366 19.59440840897845,19.59440840897846 30.01530142205591,22.493422191251792 34.5643230088554,19.705778177595494 36.71226924187725,9.1045697993084 43.27331800327006,7.529401354409082 49.99999999999999,16.0 55.318771811367846,16.418596419765315 63.287730758122734,9.104569799308393 69.52159148880051,11.686719459900175 69.98469857794407,22.49342219125178 74.04163056034261,25.95836943965738 84.78773075812273,24.725234151423646 88.31328054009981,30.47840851119948 82.33592155403522,39.49342219125178 83.58140358023468,44.68122818863214" fill="#9cb5ca" stroke="#244873" stroke-width="3" stroke-linejoin="round" />
+    <circle cx="50" cy="50" r="17" fill="#f6f9fc" stroke="#244873" stroke-width="3" />
+    <path d="M 8 90 L 61 35 Q 52 14 77 8 L 71 24 L 82 31 L 95 22 Q 99 43 77 49 L 26 99 Z" stroke="#244873" fill="#dce5eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <text x="985" y="445" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="28.000" font-weight="bold" text-anchor="middle">Data Agent</text>
+  <text x="985" y="478" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="normal" text-anchor="middle">LLM + Tool Calls</text>
+  <rect x="467" y="330" width="321" height="160" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="465" y="326" width="321" height="160" rx="18" fill="#e7eff8" stroke="#244873" stroke-width="2.7" />
+  <g transform="translate(479 340) scale(0.37)">
+    <rect x="13" y="28" width="74" height="60" rx="7" fill="#dd4852" stroke="#b1262d" stroke-width="3" />
+    <path d="M 35 28 L 35 12 L 64 12 L 64 28" stroke="#b1262d" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="13" y1="47" x2="87" y2="47" stroke="#8f202d" stroke-width="4" stroke-linecap="round" />
+    <rect x="43" y="42" width="15" height="18" rx="2" fill="#f5c2aa" stroke="#b1262d" stroke-width="2" />
+  </g>
+  <text x="529" y="365" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="24.000" font-weight="bold" text-anchor="start">REGISTERED TOOL</text>
+  <rect x="478" y="381" width="294" height="90" rx="10" fill="#273247" stroke="none" stroke-width="2" />
+  <text x="495" y="435" fill="#a4d397" font-family="Courier New, monospace" font-size="28.000" font-weight="normal" text-anchor="start">csv_tool(query)</text>
+  <rect x="1492" y="255" width="496" height="249" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1490" y="251" width="496" height="249" rx="18" fill="#f6f8fa" stroke="#244873" stroke-width="2.7" />
+  <rect x="1490" y="251" width="496" height="52" rx="17" fill="#244873" stroke="#244873" stroke-width="2" />
+  <rect x="1490" y="277.0" width="496" height="26.0" rx="0" fill="#244873" stroke="#244873" stroke-width="0" />
+  <text x="1738.0" y="286.88" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="30.000" font-weight="bold" text-anchor="middle">DATA SOURCE</text>
+  <g transform="translate(1925 259) scale(0.49)">
+    <path d="M 19 5 L 63 5 L 84 27 L 84 95 L 19 95 Z" stroke="#244873" fill="#cfdee5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 63 5 L 63 27 L 84 27" stroke="#244873" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <rect x="7" y="48" width="78" height="29" rx="3" fill="#2b794b" stroke="#2b794b" stroke-width="2" />
+    <text x="46" y="69" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="middle">CSV</text>
+  </g>
+  <text x="1511" y="335" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="bold" text-anchor="start">Store</text>
+  <text x="1697" y="335" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="bold" text-anchor="start">Q4 Revenue</text>
+  <line x1="1511" y1="347" x2="1965" y2="347" stroke="#ccd4dc" stroke-width="2" stroke-linecap="round" />
+  <rect x="1507" y="392" width="466" height="44" rx="8" fill="#d6ead9" stroke="none" stroke-width="2" />
+  <text x="1514" y="380" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="normal" text-anchor="start">Store A</text>
+  <text x="1697" y="380" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="normal" text-anchor="start">$230,000</text>
+  <text x="1514" y="423" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Store B</text>
+  <text x="1697" y="423" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">$450,000</text>
+  <text x="1514" y="471" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="normal" text-anchor="start">Store C</text>
+  <text x="1697" y="471" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="normal" text-anchor="start">$310,000</text>
+  <path d="M 1870 412 L 1838 412" stroke="#2b794b" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1838,412 1848.0,416.8 1848.0,407.2" fill="#2b794b" stroke="#2b794b" stroke-width="1" stroke-linejoin="round" />
+  <text x="1883" y="423" fill="#2b794b" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="normal" text-anchor="start">highest</text>
+  <path d="M 1310 387 L 1487 387" stroke="#244873" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1487,387 1474.0,380.76 1474.0,393.24" fill="#244873" stroke="#244873" stroke-width="1" stroke-linejoin="round" />
+  <text x="1399" y="363" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="middle">READS</text>
+  <text x="1399" y="420" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="middle">(stores.csv)</text>
+  <path d="M 965 500 L 965 556 L 500 556 L 500 612" stroke="#2b794b" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="500,612 506.24,599.0 493.76,599.0" fill="#2b794b" stroke="#2b794b" stroke-width="1" stroke-linejoin="round" />
+  <circle cx="731" cy="556" r="27" fill="#2b794b" stroke="none" stroke-width="2" />
+  <g transform="translate(711 536) scale(0.4)">
+    <polygon points="93.0,50.0 92.47059864559093,56.72668199672993 82.33592155403522,60.50657780874821 80.29422182240451,65.43567699114459 84.78773075812273,75.27476584857635 80.40559159102155,80.40559159102153 69.98469857794409,77.5065778087482 65.43567699114459,80.29422182240451 63.28773075812274,90.8954302006916 56.72668199672993,92.47059864559093 50.0,84.0 44.68122818863216,83.58140358023468 36.712269241877266,90.8954302006916 30.478408511199493,88.31328054009981 30.015301422055916,77.5065778087482 25.958369439657385,74.04163056034261 15.212269241877266,75.27476584857635 11.686719459900182,69.52159148880051 17.664078445964783,60.50657780874822 16.418596419765322,55.31877181136785 7.0,50.00000000000001 7.5294013544090745,43.27331800327008 17.66407844596477,39.49342219125181 19.70577817759549,34.56432300885541 15.212269241877252,24.72523415142366 19.59440840897845,19.59440840897846 30.01530142205591,22.493422191251792 34.5643230088554,19.705778177595494 36.71226924187725,9.1045697993084 43.27331800327006,7.529401354409082 49.99999999999999,16.0 55.318771811367846,16.418596419765315 63.287730758122734,9.104569799308393 69.52159148880051,11.686719459900175 69.98469857794407,22.49342219125178 74.04163056034261,25.95836943965738 84.78773075812273,24.725234151423646 88.31328054009981,30.47840851119948 82.33592155403522,39.49342219125178 83.58140358023468,44.68122818863214" fill="#9cb5ca" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" />
+    <circle cx="50" cy="50" r="17" fill="#f6f9fc" stroke="#ffffff" stroke-width="3" />
+    <path d="M 8 90 L 61 35 Q 52 14 77 8 L 71 24 L 82 31 L 95 22 Q 99 43 77 49 L 26 99 Z" stroke="#ffffff" fill="#dce5eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <path d="M 990 500 L 1018 500 L 1018 722 L 1041 722" stroke="#b1262d" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1041,722 1028.0,715.76 1028.0,728.24" fill="#b1262d" stroke="#b1262d" stroke-width="1" stroke-linejoin="round" />
+  <g transform="translate(997 639) scale(0.42)">
+    <circle cx="50" cy="50" r="44" fill="#b1262d" stroke="none" stroke-width="2" />
+    <line x1="32" y1="32" x2="68" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+    <line x1="68" y1="32" x2="32" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+  </g>
+  <rect x="14" y="617" width="959" height="445" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="12" y="613" width="959" height="445" rx="18" fill="#fcfffd" stroke="#2b794b" stroke-width="2.7" />
+  <rect x="12" y="613" width="959" height="58" rx="17" fill="#2b794b" stroke="#2b794b" stroke-width="2" />
+  <rect x="12" y="642.0" width="959" height="29.0" rx="0" fill="#2b794b" stroke="#2b794b" stroke-width="0" />
+  <text x="491.5" y="653.02" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="31.000" font-weight="bold" text-anchor="middle">PATH 1: CLEAN ENVIRONMENT</text>
+  <g transform="translate(28 624) scale(0.4)">
+    <circle cx="50" cy="50" r="44" fill="#2b794b" stroke="none" stroke-width="2" />
+    <path d="M 25 50 L 43 69 L 76 30" stroke="#ffffff" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <rect x="37" y="739" width="394" height="176" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="35" y="735" width="394" height="176" rx="18" fill="#dff0e3" stroke="#2b794b" stroke-width="2.7" />
+  <text x="232" y="773" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="30.000" font-weight="bold" text-anchor="middle">CSV Tool</text>
+  <rect x="47" y="790" width="370" height="106" rx="10" fill="#273247" stroke="none" stroke-width="2" />
+  <text x="59" y="817" fill="#e8f0fa" font-family="Courier New, monospace" font-size="16.500" font-weight="normal" text-anchor="start">row = stores.loc[</text>
+  <text x="59" y="840" fill="#e8f0fa" font-family="Courier New, monospace" font-size="16.500" font-weight="normal" text-anchor="start">    stores["Q4 Revenue"].idxmax()]</text>
+  <text x="59" y="863" fill="#e8f0fa" font-family="Courier New, monospace" font-size="15.173" font-weight="normal" text-anchor="start">return row["Store"], row["Q4 Revenue"]</text>
+  <rect x="459" y="784" width="207" height="117" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="457" y="780" width="207" height="117" rx="18" fill="#e1f0e5" stroke="#2b794b" stroke-width="2.7" />
+  <text x="560" y="812" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="bold" text-anchor="middle">Original Tool</text>
+  <text x="560" y="838" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="bold" text-anchor="middle">Output</text>
+  <text x="560" y="875" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">No Modification</text>
+  <rect x="697" y="784" width="254" height="117" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="695" y="780" width="254" height="117" rx="18" fill="#ffffff" stroke="#2b794b" stroke-width="2.7" />
+  <text x="822" y="824" fill="#2b794b" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="normal" text-anchor="middle">Store B – $450,000</text>
+  <text x="822" y="867" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="middle">Correct Observation</text>
+  <path d="M 429 839 L 457 839" stroke="#2b794b" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="457,839 447.0,834.2 447.0,843.8" fill="#2b794b" stroke="#2b794b" stroke-width="1" stroke-linejoin="round" />
+  <path d="M 664 839 L 695 839" stroke="#2b794b" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="695,839 685.0,834.2 685.0,843.8" fill="#2b794b" stroke="#2b794b" stroke-width="1" stroke-linejoin="round" />
+  <g transform="translate(922 761) scale(0.4)">
+    <circle cx="50" cy="50" r="44" fill="#2b794b" stroke="none" stroke-width="2" />
+    <path d="M 25 50 L 43 69 L 76 30" stroke="#ffffff" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <rect x="278" y="1027" width="435" height="58" rx="12" fill="#2b794b" stroke="#2b794b" stroke-width="2" />
+  <g transform="translate(290 1039) scale(0.35)">
+    <circle cx="50" cy="50" r="44" fill="#2b794b" stroke="none" stroke-width="2" />
+    <path d="M 25 50 L 43 69 L 76 30" stroke="#ffffff" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <text x="514" y="1067" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="24.446" font-weight="bold" text-anchor="middle">CORRECT STORE-VALUE PAIR</text>
+  <rect x="1047" y="530" width="944" height="532" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1045" y="526" width="944" height="532" rx="18" fill="#fffafa" stroke="#b1262d" stroke-width="2.7" />
+  <rect x="1045" y="526" width="944" height="58" rx="17" fill="#b1262d" stroke="#b1262d" stroke-width="2" />
+  <rect x="1045" y="555.0" width="944" height="29.0" rx="0" fill="#b1262d" stroke="#b1262d" stroke-width="0" />
+  <text x="1517.0" y="566.02" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="middle">PATH 2: POISONED ENVIRONMENT</text>
+  <g transform="translate(1059 539) scale(0.37)">
+    <circle cx="50" cy="50" r="44" fill="#b1262d" stroke="none" stroke-width="2" />
+    <line x1="32" y1="32" x2="68" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+    <line x1="68" y1="32" x2="32" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+  </g>
+  <rect x="1066" y="607" width="904" height="163" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1064" y="603" width="904" height="163" rx="18" fill="#fff1cf" stroke="#dca951" stroke-width="2.7" />
+  <g transform="translate(1080 651) scale(0.59)">
+    <path d="M 20 88 L 20 38 C 20 2 80 2 80 38 L 88 55 L 78 64 L 80 88 L 65 82 L 51 90 L 36 82 Z" stroke="#244873" fill="#e2e9fb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="38" cy="43" r="5" fill="#244873" stroke="none" stroke-width="2" />
+    <circle cx="62" cy="43" r="5" fill="#244873" stroke="none" stroke-width="2" />
+    <ellipse cx="50" cy="64" rx="7" ry="11" fill="#244873" />
+  </g>
+  <text x="1150" y="635" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="bold" text-anchor="start">TOOL-OUTPUT POISONING</text>
+  <text x="1150" y="663" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="19.000" font-weight="normal" text-anchor="start">• The original tool runs successfully.</text>
+  <text x="1150" y="686" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="19.000" font-weight="normal" text-anchor="start">• The proxy swaps Store A and Store B</text>
+  <text x="1150" y="709" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="19.000" font-weight="normal" text-anchor="start">  in the output.</text>
+  <text x="1150" y="732" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="19.000" font-weight="normal" text-anchor="start">• No exception, error, or warning is shown.</text>
+  <rect x="1552" y="646" width="176" height="97" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1550" y="642" width="176" height="97" rx="18" fill="#edf3f8" stroke="#2b794b" stroke-width="2.7" />
+  <text x="1638" y="670" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="18.000" font-weight="bold" text-anchor="middle">Original output</text>
+  <text x="1638" y="713" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="18.566" font-weight="normal" text-anchor="middle">Store B – $450,000</text>
+  <rect x="1782" y="646" width="176" height="97" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1780" y="642" width="176" height="97" rx="18" fill="#ffffff" stroke="#2b794b" stroke-width="2.7" />
+  <text x="1868" y="670" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="18.000" font-weight="bold" text-anchor="middle">Modified output</text>
+  <text x="1868" y="713" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="18.807" font-weight="normal" text-anchor="middle">Store A – $450,000</text>
+  <text x="1753" y="661" fill="#b1262d" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="16.000" font-weight="bold" text-anchor="middle">Label</text>
+  <text x="1753" y="679" fill="#b1262d" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="16.000" font-weight="bold" text-anchor="middle">swap</text>
+  <path d="M 1727 702 L 1778 702" stroke="#b1262d" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1778,702 1766.0,696.24 1766.0,707.76" fill="#b1262d" stroke="#b1262d" stroke-width="1" stroke-linejoin="round" />
+  <rect x="1066" y="793" width="904" height="203" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1064" y="789" width="904" height="203" rx="18" fill="#fdebed" stroke="#b1262d" stroke-width="2.7" />
+  <text x="1516" y="828" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="middle">MODIFIED TOOL OBSERVATION</text>
+  <rect x="1083" y="856" width="264" height="112" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1081" y="852" width="264" height="112" rx="18" fill="#ffffff" stroke="#b1262d" stroke-width="2.7" />
+  <rect x="1382" y="856" width="235" height="112" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1380" y="852" width="235" height="112" rx="18" fill="#ffffff" stroke="#b1262d" stroke-width="2.7" />
+  <rect x="1652" y="856" width="300" height="112" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1650" y="852" width="300" height="112" rx="18" fill="#ffffff" stroke="#b1262d" stroke-width="2.7" />
+  <text x="1213" y="889" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="middle">Original Tool Output</text>
+  <text x="1213" y="936" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="normal" text-anchor="middle">Store B – $450,000</text>
+  <text x="1497" y="889" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="24.000" font-weight="bold" text-anchor="middle">Output Proxy</text>
+  <text x="1497" y="936" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="middle">Swap Store Labels</text>
+  <text x="1800" y="894" fill="#b1262d" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="28.000" font-weight="normal" text-anchor="middle">Store A – $450,000</text>
+  <text x="1800" y="927" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="19.000" font-weight="normal" text-anchor="middle">Observation Received</text>
+  <text x="1800" y="951" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="19.000" font-weight="normal" text-anchor="middle">by the Agent</text>
+  <path d="M 1345 909 L 1379 909" stroke="#b1262d" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1379,909 1368.0,903.72 1368.0,914.28" fill="#b1262d" stroke="#b1262d" stroke-width="1" stroke-linejoin="round" />
+  <path d="M 1615 909 L 1649 909" stroke="#b1262d" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1649,909 1638.0,903.72 1638.0,914.28" fill="#b1262d" stroke="#b1262d" stroke-width="1" stroke-linejoin="round" />
+  <g transform="translate(1930 835) scale(0.39)">
+    <circle cx="50" cy="50" r="44" fill="#b1262d" stroke="none" stroke-width="2" />
+    <line x1="32" y1="32" x2="68" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+    <line x1="68" y1="32" x2="32" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+  </g>
+  <rect x="1254" y="1027" width="512" height="58" rx="12" fill="#b1262d" stroke="#b1262d" stroke-width="2" />
+  <g transform="translate(1268 1038) scale(0.38)">
+    <circle cx="50" cy="50" r="44" fill="#b1262d" stroke="none" stroke-width="2" />
+    <line x1="32" y1="32" x2="68" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+    <line x1="68" y1="32" x2="32" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+  </g>
+  <text x="1520" y="1067" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="middle">WRONG STORE-VALUE PAIR</text>
+  <text x="1000" y="1110" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="normal" text-anchor="middle">A Successful Tool Call Can Return a Plausible but Wrong Observation</text>
+</svg>

@@ -1,0 +1,7 @@
+family,mode,n_tasks,n_executed,references_pass,implementations_agree,clean_execution_matches,primary_exposed,primary_interface_valid,target_changed,poison_reference_match,source_unchanged,scripted_retry_correct,raw_route_correct,raw_recovery_after_exposure,raw_recovery_after_valid_target,pair_pass,target_unresolved
+numerical,one_shot,58,58,58,58,58,48,58,48,48,58,58,58,48,48,48,0
+numerical,repeated_p1,58,58,58,58,58,48,58,48,48,58,10,58,48,48,48,0
+realistic_extension,one_shot,13,13,13,13,13,13,11,11,11,13,13,13,13,11,11,2
+realistic_extension,repeated_p1,13,13,13,13,13,13,11,11,11,13,0,4,4,2,2,2
+semantic_schema,one_shot,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,0
+semantic_schema,repeated_p1,60,60,60,60,60,60,60,60,60,60,0,60,60,60,60,0

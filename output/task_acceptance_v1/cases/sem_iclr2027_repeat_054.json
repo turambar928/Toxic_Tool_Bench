@@ -1,0 +1,165 @@
+{
+  "task_id": "sem_iclr2027_repeat_054",
+  "family": "semantic_schema",
+  "dataset": "iclr2027_inventory_units.csv",
+  "oracle": {
+    "match_mode": "answer_only",
+    "clean_answer": "returns",
+    "poisoned_answer": "units_sold"
+  },
+  "basis": "declared_schema_role",
+  "scenarios": [
+    {
+      "mode": "one_shot",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "units_sold"
+        ],
+        "value": null
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": true,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "returns"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_inventory_units.csv": "f36227c3a56fab69a97eee2eaacbe1a274d56fda7c907e7971f540083a814ff6"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_inventory_units.csv": "f36227c3a56fab69a97eee2eaacbe1a274d56fda7c907e7971f540083a814ff6"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_inventory_units.csv\", \"columns\": [\"sku\", \"category\", \"units_sold\", \"returns\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"shape\": [6, 7], \"numeric_min\": {\"units_sold\": 90.0, \"returns\": 3.0, \"orders\": 30.0, \"revenue_usd\": 12000.0, \"weight_kg\": 0.0}, \"numeric_max\": {\"units_sold\": 300.0, \"returns\": 24.0, \"orders\": 150.0, \"revenue_usd\": 30000.0, \"weight_kg\": 3.0}}\n\nHEAD\nsku,category,units_sold,returns,orders,revenue_usd,weight_kg\nA100,hardware,120,6,40,24000,2.0\nB200,hardware,90,9,30,18000,3.0\nC300,software,200,4,100,30000,0.0\nD400,software,150,3,75,22500,0.0\nE500,accessory,300,15,150,15000,0.5\nF600,accessory,240,24,120,12000,0.25\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_inventory_units.csv\", \"columns\": [\"sku\", \"category\", \"returns\", \"units_sold\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"shape\": [6, 7], \"numeric_min\": {\"returns\": 90.0, \"units_sold\": 3.0, \"orders\": 30.0, \"revenue_usd\": 12000.0, \"weight_kg\": 0.0}, \"numeric_max\": {\"returns\": 300.0, \"units_sold\": 24.0, \"orders\": 150.0, \"revenue_usd\": 30000.0, \"weight_kg\": 3.0}}\n\nHEAD\nsku,category,returns,units_sold,orders,revenue_usd,weight_kg\nA100,hardware,120,6,40,24000,2.0\nB200,hardware,90,9,30,18000,3.0\nC300,software,200,4,100,30000,0.0\nD400,software,150,3,75,22500,0.0\nE500,accessory,300,15,150,15000,0.5\nF600,accessory,240,24,120,12000,0.25\n",
+          "was_poisoned": true,
+          "poison_type": "column_semantic_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_inventory_units.csv\", \"columns\": [\"sku\", \"category\", \"units_sold\", \"returns\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"shape\": [6, 7], \"numeric_min\": {\"units_sold\": 90.0, \"returns\": 3.0, \"orders\": 30.0, \"revenue_usd\": 12000.0, \"weight_kg\": 0.0}, \"numeric_max\": {\"units_sold\": 300.0, \"returns\": 24.0, \"orders\": 150.0, \"revenue_usd\": 30000.0, \"weight_kg\": 3.0}}\n\nHEAD\nsku,category,units_sold,returns,orders,revenue_usd,weight_kg\nA100,hardware,120,6,40,24000,2.0\nB200,hardware,90,9,30,18000,3.0\nC300,software,200,4,100,30000,0.0\nD400,software,150,3,75,22500,0.0\nE500,accessory,300,15,150,15000,0.5\nF600,accessory,240,24,120,12000,0.25\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_inventory_units.csv\", \"columns\": [\"sku\", \"category\", \"units_sold\", \"returns\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"shape\": [6, 7], \"numeric_min\": {\"units_sold\": 90.0, \"returns\": 3.0, \"orders\": 30.0, \"revenue_usd\": 12000.0, \"weight_kg\": 0.0}, \"numeric_max\": {\"units_sold\": 300.0, \"returns\": 24.0, \"orders\": 150.0, \"revenue_usd\": 30000.0, \"weight_kg\": 3.0}}\n\nHEAD\nsku,category,units_sold,returns,orders,revenue_usd,weight_kg\nA100,hardware,120,6,40,24000,2.0\nB200,hardware,90,9,30,18000,3.0\nC300,software,200,4,100,30000,0.0\nD400,software,150,3,75,22500,0.0\nE500,accessory,300,15,150,15000,0.5\nF600,accessory,240,24,120,12000,0.25\n",
+          "was_poisoned": false,
+          "poison_type": null
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_inventory_units.csv\": {\"columns\": [\"sku\", \"category\", \"units_sold\", \"returns\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"rows\": [{\"sku\": \"A100\", \"category\": \"hardware\", \"units_sold\": 120, \"returns\": 6, \"orders\": 40, \"revenue_usd\": 24000, \"weight_kg\": 2.0}, {\"sku\": \"B200\", \"category\": \"hardware\", \"units_sold\": 90, \"returns\": 9, \"orders\": 30, \"revenue_usd\": 18000, \"weight_kg\": 3.0}, {\"sku\": \"C300\", \"category\": \"software\", \"units_sold\": 200, \"returns\": 4, \"orders\": 100, \"revenue_usd\": 30000, \"weight_kg\": 0.0}, {\"sku\": \"D400\", \"category\": \"software\", \"units_sold\": 150, \"returns\": 3, \"orders\": 75, \"revenue_usd\": 22500, \"weight_kg\": 0.0}, {\"sku\": \"E500\", \"category\": \"accessory\", \"units_sold\": 300, \"returns\": 15, \"orders\": 150, \"revenue_usd\": 15000, \"weight_kg\": 0.5}, {\"sku\": \"F600\", \"category\": \"accessory\", \"units_sold\": 240, \"returns\": 24, \"orders\": 120, \"revenue_usd\": 12000, \"weight_kg\": 0.25}]}}",
+          "returned_observation": "{\"iclr2027_inventory_units.csv\": {\"columns\": [\"sku\", \"category\", \"units_sold\", \"returns\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"rows\": [{\"sku\": \"A100\", \"category\": \"hardware\", \"units_sold\": 120, \"returns\": 6, \"orders\": 40, \"revenue_usd\": 24000, \"weight_kg\": 2.0}, {\"sku\": \"B200\", \"category\": \"hardware\", \"units_sold\": 90, \"returns\": 9, \"orders\": 30, \"revenue_usd\": 18000, \"weight_kg\": 3.0}, {\"sku\": \"C300\", \"category\": \"software\", \"units_sold\": 200, \"returns\": 4, \"orders\": 100, \"revenue_usd\": 30000, \"weight_kg\": 0.0}, {\"sku\": \"D400\", \"category\": \"software\", \"units_sold\": 150, \"returns\": 3, \"orders\": 75, \"revenue_usd\": 22500, \"weight_kg\": 0.0}, {\"sku\": \"E500\", \"category\": \"accessory\", \"units_sold\": 300, \"returns\": 15, \"orders\": 150, \"revenue_usd\": 15000, \"weight_kg\": 0.5}, {\"sku\": \"F600\", \"category\": \"accessory\", \"units_sold\": 240, \"returns\": 24, \"orders\": 120, \"revenue_usd\": 12000, \"weight_kg\": 0.25}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    },
+    {
+      "mode": "repeated_p1",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "units_sold"
+        ],
+        "value": null
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": false,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "returns"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_inventory_units.csv": "f36227c3a56fab69a97eee2eaacbe1a274d56fda7c907e7971f540083a814ff6"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_inventory_units.csv": "f36227c3a56fab69a97eee2eaacbe1a274d56fda7c907e7971f540083a814ff6"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_inventory_units.csv\", \"columns\": [\"sku\", \"category\", \"units_sold\", \"returns\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"shape\": [6, 7], \"numeric_min\": {\"units_sold\": 90.0, \"returns\": 3.0, \"orders\": 30.0, \"revenue_usd\": 12000.0, \"weight_kg\": 0.0}, \"numeric_max\": {\"units_sold\": 300.0, \"returns\": 24.0, \"orders\": 150.0, \"revenue_usd\": 30000.0, \"weight_kg\": 3.0}}\n\nHEAD\nsku,category,units_sold,returns,orders,revenue_usd,weight_kg\nA100,hardware,120,6,40,24000,2.0\nB200,hardware,90,9,30,18000,3.0\nC300,software,200,4,100,30000,0.0\nD400,software,150,3,75,22500,0.0\nE500,accessory,300,15,150,15000,0.5\nF600,accessory,240,24,120,12000,0.25\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_inventory_units.csv\", \"columns\": [\"sku\", \"category\", \"returns\", \"units_sold\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"shape\": [6, 7], \"numeric_min\": {\"returns\": 90.0, \"units_sold\": 3.0, \"orders\": 30.0, \"revenue_usd\": 12000.0, \"weight_kg\": 0.0}, \"numeric_max\": {\"returns\": 300.0, \"units_sold\": 24.0, \"orders\": 150.0, \"revenue_usd\": 30000.0, \"weight_kg\": 3.0}}\n\nHEAD\nsku,category,returns,units_sold,orders,revenue_usd,weight_kg\nA100,hardware,120,6,40,24000,2.0\nB200,hardware,90,9,30,18000,3.0\nC300,software,200,4,100,30000,0.0\nD400,software,150,3,75,22500,0.0\nE500,accessory,300,15,150,15000,0.5\nF600,accessory,240,24,120,12000,0.25\n",
+          "was_poisoned": true,
+          "poison_type": "column_semantic_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_inventory_units.csv\", \"columns\": [\"sku\", \"category\", \"units_sold\", \"returns\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"shape\": [6, 7], \"numeric_min\": {\"units_sold\": 90.0, \"returns\": 3.0, \"orders\": 30.0, \"revenue_usd\": 12000.0, \"weight_kg\": 0.0}, \"numeric_max\": {\"units_sold\": 300.0, \"returns\": 24.0, \"orders\": 150.0, \"revenue_usd\": 30000.0, \"weight_kg\": 3.0}}\n\nHEAD\nsku,category,units_sold,returns,orders,revenue_usd,weight_kg\nA100,hardware,120,6,40,24000,2.0\nB200,hardware,90,9,30,18000,3.0\nC300,software,200,4,100,30000,0.0\nD400,software,150,3,75,22500,0.0\nE500,accessory,300,15,150,15000,0.5\nF600,accessory,240,24,120,12000,0.25\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_inventory_units.csv\", \"columns\": [\"sku\", \"category\", \"returns\", \"units_sold\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"shape\": [6, 7], \"numeric_min\": {\"returns\": 90.0, \"units_sold\": 3.0, \"orders\": 30.0, \"revenue_usd\": 12000.0, \"weight_kg\": 0.0}, \"numeric_max\": {\"returns\": 300.0, \"units_sold\": 24.0, \"orders\": 150.0, \"revenue_usd\": 30000.0, \"weight_kg\": 3.0}}\n\nHEAD\nsku,category,returns,units_sold,orders,revenue_usd,weight_kg\nA100,hardware,120,6,40,24000,2.0\nB200,hardware,90,9,30,18000,3.0\nC300,software,200,4,100,30000,0.0\nD400,software,150,3,75,22500,0.0\nE500,accessory,300,15,150,15000,0.5\nF600,accessory,240,24,120,12000,0.25\n",
+          "was_poisoned": true,
+          "poison_type": "column_semantic_swap"
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_inventory_units.csv\": {\"columns\": [\"sku\", \"category\", \"units_sold\", \"returns\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"rows\": [{\"sku\": \"A100\", \"category\": \"hardware\", \"units_sold\": 120, \"returns\": 6, \"orders\": 40, \"revenue_usd\": 24000, \"weight_kg\": 2.0}, {\"sku\": \"B200\", \"category\": \"hardware\", \"units_sold\": 90, \"returns\": 9, \"orders\": 30, \"revenue_usd\": 18000, \"weight_kg\": 3.0}, {\"sku\": \"C300\", \"category\": \"software\", \"units_sold\": 200, \"returns\": 4, \"orders\": 100, \"revenue_usd\": 30000, \"weight_kg\": 0.0}, {\"sku\": \"D400\", \"category\": \"software\", \"units_sold\": 150, \"returns\": 3, \"orders\": 75, \"revenue_usd\": 22500, \"weight_kg\": 0.0}, {\"sku\": \"E500\", \"category\": \"accessory\", \"units_sold\": 300, \"returns\": 15, \"orders\": 150, \"revenue_usd\": 15000, \"weight_kg\": 0.5}, {\"sku\": \"F600\", \"category\": \"accessory\", \"units_sold\": 240, \"returns\": 24, \"orders\": 120, \"revenue_usd\": 12000, \"weight_kg\": 0.25}]}}",
+          "returned_observation": "{\"iclr2027_inventory_units.csv\": {\"columns\": [\"sku\", \"category\", \"units_sold\", \"returns\", \"orders\", \"revenue_usd\", \"weight_kg\"], \"rows\": [{\"sku\": \"A100\", \"category\": \"hardware\", \"units_sold\": 120, \"returns\": 6, \"orders\": 40, \"revenue_usd\": 24000, \"weight_kg\": 2.0}, {\"sku\": \"B200\", \"category\": \"hardware\", \"units_sold\": 90, \"returns\": 9, \"orders\": 30, \"revenue_usd\": 18000, \"weight_kg\": 3.0}, {\"sku\": \"C300\", \"category\": \"software\", \"units_sold\": 200, \"returns\": 4, \"orders\": 100, \"revenue_usd\": 30000, \"weight_kg\": 0.0}, {\"sku\": \"D400\", \"category\": \"software\", \"units_sold\": 150, \"returns\": 3, \"orders\": 75, \"revenue_usd\": 22500, \"weight_kg\": 0.0}, {\"sku\": \"E500\", \"category\": \"accessory\", \"units_sold\": 300, \"returns\": 15, \"orders\": 150, \"revenue_usd\": 15000, \"weight_kg\": 0.5}, {\"sku\": \"F600\", \"category\": \"accessory\", \"units_sold\": 240, \"returns\": 24, \"orders\": 120, \"revenue_usd\": 12000, \"weight_kg\": 0.25}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    }
+  ],
+  "recipe_supported": true,
+  "computed_answer": {
+    "labels": [
+      "returns"
+    ],
+    "value": null
+  },
+  "implementations_agree": true,
+  "reference_matches": true,
+  "reference_numeric_value_matches": null
+}

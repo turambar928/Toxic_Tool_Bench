@@ -1,0 +1,563 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2000.0" height="1116.2790697674418" viewBox="0 0 2000.0 1116.2790697674418" role="img">
+  <title>Figure 2 | ToxicBench and Evidence Verification</title>
+  <rect x="0" y="0" width="2000.0" height="1116.2790697674418" rx="0" fill="#ffffff" stroke="none" stroke-width="2" />
+  <rect x="8" y="5" width="1980" height="73" rx="14" fill="#263650" stroke="#263650" stroke-width="2" />
+  <g transform="translate(22 17) scale(0.44)">
+    <polygon points="93.0,50.0 92.47059864559093,56.72668199672993 82.33592155403522,60.50657780874821 80.29422182240451,65.43567699114459 84.78773075812273,75.27476584857635 80.40559159102155,80.40559159102153 69.98469857794409,77.5065778087482 65.43567699114459,80.29422182240451 63.28773075812274,90.8954302006916 56.72668199672993,92.47059864559093 50.0,84.0 44.68122818863216,83.58140358023468 36.712269241877266,90.8954302006916 30.478408511199493,88.31328054009981 30.015301422055916,77.5065778087482 25.958369439657385,74.04163056034261 15.212269241877266,75.27476584857635 11.686719459900182,69.52159148880051 17.664078445964783,60.50657780874822 16.418596419765322,55.31877181136785 7.0,50.00000000000001 7.5294013544090745,43.27331800327008 17.66407844596477,39.49342219125181 19.70577817759549,34.56432300885541 15.212269241877252,24.72523415142366 19.59440840897845,19.59440840897846 30.01530142205591,22.493422191251792 34.5643230088554,19.705778177595494 36.71226924187725,9.1045697993084 43.27331800327006,7.529401354409082 49.99999999999999,16.0 55.318771811367846,16.418596419765315 63.287730758122734,9.104569799308393 69.52159148880051,11.686719459900175 69.98469857794407,22.49342219125178 74.04163056034261,25.95836943965738 84.78773075812273,24.725234151423646 88.31328054009981,30.47840851119948 82.33592155403522,39.49342219125178 83.58140358023468,44.68122818863214" fill="#9cb5ca" stroke="#b8cbdc" stroke-width="3" stroke-linejoin="round" />
+    <circle cx="50" cy="50" r="17" fill="#f6f9fc" stroke="#b8cbdc" stroke-width="3" />
+    <path d="M 8 90 L 61 35 Q 52 14 77 8 L 71 24 L 82 31 L 95 22 Q 99 43 77 49 L 26 99 Z" stroke="#b8cbdc" fill="#dce5eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <text x="84" y="51" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Data Agents</text>
+  <text x="1000" y="51" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="32.000" font-weight="bold" text-anchor="middle">Figure 2 | ToxicBench and Evidence Verification</text>
+  <text x="1790" y="51" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Poisoning</text>
+  <g transform="translate(1928 11) scale(0.58)">
+    <polygon points="50,4 97,94 3,94" fill="#f1ce56" stroke="#263650" stroke-width="3" stroke-linejoin="round" />
+    <circle cx="50" cy="47" r="17" fill="#fff2ba" stroke="#263650" stroke-width="2" />
+    <circle cx="44" cy="45" r="4" fill="#263650" stroke="none" stroke-width="2" />
+    <circle cx="57" cy="45" r="4" fill="#263650" stroke="none" stroke-width="2" />
+    <line x1="31" y1="69" x2="70" y2="83" stroke="#263650" stroke-width="5" stroke-linecap="round" />
+    <line x1="70" y1="69" x2="31" y2="83" stroke="#263650" stroke-width="5" stroke-linecap="round" />
+  </g>
+  <text x="17" y="117" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">A  Task Suites</text>
+  <text x="995" y="117" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="middle">Cross-model Tasks</text>
+  <text x="1980" y="117" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="24.000" font-weight="bold" text-anchor="end">Expanded: 120 tasks  |  Multi-table: 13 tasks</text>
+  <rect x="11" y="140" width="972" height="209" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="9" y="136" width="972" height="209" rx="18" fill="#eef2ff" stroke="#4264ce" stroke-width="2.7" />
+  <rect x="9" y="136" width="972" height="59" rx="14" fill="#4264ce" stroke="#4264ce" stroke-width="2" />
+  <g transform="translate(27 145) scale(0.42)">
+    <rect x="9" y="7" width="83" height="87" rx="4" fill="#dce8ee" stroke="#244873" stroke-width="3" />
+    <rect x="17" y="16" width="67" height="16" rx="2" fill="#8dbbd0" stroke="#244873" stroke-width="2" />
+    <line x1="33" y1="40" x2="33" y2="88" stroke="#244873" stroke-width="2" stroke-linecap="round" />
+    <line x1="58" y1="40" x2="58" y2="88" stroke="#244873" stroke-width="2" stroke-linecap="round" />
+    <line x1="80" y1="40" x2="80" y2="88" stroke="#244873" stroke-width="2" stroke-linecap="round" />
+    <line x1="17" y1="40" x2="85" y2="40" stroke="#244873" stroke-width="2" stroke-linecap="round" />
+    <line x1="17" y1="55" x2="85" y2="55" stroke="#244873" stroke-width="2" stroke-linecap="round" />
+    <line x1="17" y1="71" x2="85" y2="71" stroke="#244873" stroke-width="2" stroke-linecap="round" />
+    <line x1="17" y1="87" x2="85" y2="87" stroke="#244873" stroke-width="2" stroke-linecap="round" />
+  </g>
+  <g transform="translate(58 166) scale(0.27)">
+    <path d="M 19 5 L 63 5 L 84 27 L 84 95 L 19 95 Z" stroke="#244873" fill="#cfdee5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 63 5 L 63 27 L 84 27" stroke="#244873" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <rect x="7" y="48" width="78" height="29" rx="3" fill="#2b794b" stroke="#2b794b" stroke-width="2" />
+    <text x="46" y="69" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="middle">CSV</text>
+  </g>
+  <text x="92" y="175" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="31.000" font-weight="bold" text-anchor="start">Numerical Tasks</text>
+  <circle cx="403" cy="166" r="21" fill="#ffffff" stroke="none" stroke-width="2" />
+  <text x="403" y="175" fill="#4264ce" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">N</text>
+  <text x="448" y="175" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="start">34</text>
+  <text x="505" y="175" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">11 CSV datasets</text>
+  <text x="36" y="223" fill="#244873" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Operator examples across suites:</text>
+  <rect x="31" y="240" width="303" height="43" rx="8" fill="#f2f5fb" stroke="#4264ce" stroke-width="1.8" />
+  <g transform="translate(40 246) scale(0.31)">
+    <rect x="15" y="58" width="18" height="28" rx="1" fill="#deb47a" stroke="#4264ce" stroke-width="2" />
+    <rect x="40" y="38" width="18" height="48" rx="1" fill="#85acbe" stroke="#4264ce" stroke-width="2" />
+    <rect x="65" y="14" width="18" height="72" rx="1" fill="#88bb9e" stroke="#4264ce" stroke-width="2" />
+    <line x1="8" y1="91" x2="95" y2="91" stroke="#4264ce" stroke-width="3" stroke-linecap="round" />
+  </g>
+  <text x="82" y="268" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Aggregate Scale</text>
+  <rect x="344" y="240" width="303" height="43" rx="8" fill="#f2f5fb" stroke="#4264ce" stroke-width="1.8" />
+  <g transform="translate(353 246) scale(0.31)">
+    <line x1="10" y1="28" x2="44" y2="28" stroke="#4264ce" stroke-width="7" stroke-linecap="round" />
+    <line x1="27" y1="11" x2="27" y2="45" stroke="#4264ce" stroke-width="7" stroke-linecap="round" />
+    <line x1="59" y1="75" x2="93" y2="75" stroke="#4264ce" stroke-width="7" stroke-linecap="round" />
+  </g>
+  <text x="395" y="268" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Sign Flip</text>
+  <rect x="657" y="240" width="303" height="43" rx="8" fill="#f2f5fb" stroke="#4264ce" stroke-width="1.8" />
+  <g transform="translate(666 246) scale(0.31)">
+    <text x="13" y="27" fill="#4264ce" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="bold" text-anchor="start">1</text>
+    <rect x="39" y="10" width="52" height="14" rx="2" fill="#9fc4e2" stroke="#4264ce" stroke-width="2" />
+    <text x="13" y="56" fill="#4264ce" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="bold" text-anchor="start">2</text>
+    <rect x="39" y="39" width="43" height="14" rx="2" fill="#9fc4e2" stroke="#4264ce" stroke-width="2" />
+    <text x="13" y="85" fill="#4264ce" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="bold" text-anchor="start">3</text>
+    <rect x="39" y="68" width="34" height="14" rx="2" fill="#9fc4e2" stroke="#4264ce" stroke-width="2" />
+  </g>
+  <text x="708" y="268" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Rank Swap</text>
+  <rect x="31" y="293" width="303" height="43" rx="8" fill="#f2f5fb" stroke="#4264ce" stroke-width="1.8" />
+  <g transform="translate(40 299) scale(0.31)">
+    <line x1="15" y1="50" x2="85" y2="50" stroke="#4264ce" stroke-width="7" stroke-linecap="round" />
+    <circle cx="50" cy="19" r="10" fill="#84bca2" stroke="#4264ce" stroke-width="2" />
+    <circle cx="50" cy="81" r="10" fill="#8caeca" stroke="#4264ce" stroke-width="2" />
+  </g>
+  <text x="82" y="321" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Ratio Inversion</text>
+  <rect x="344" y="293" width="303" height="43" rx="8" fill="#f2f5fb" stroke="#4264ce" stroke-width="1.8" />
+  <g transform="translate(353 299) scale(0.31)">
+    <line x1="15" y1="50" x2="85" y2="50" stroke="#4264ce" stroke-width="7" stroke-linecap="round" />
+    <circle cx="50" cy="19" r="10" fill="#84bca2" stroke="#4264ce" stroke-width="2" />
+    <circle cx="50" cy="81" r="10" fill="#8caeca" stroke="#4264ce" stroke-width="2" />
+    <line x1="64" y1="69" x2="91" y2="93" stroke="#b1262d" stroke-width="5" stroke-linecap="round" />
+    <line x1="91" y1="69" x2="64" y2="93" stroke="#b1262d" stroke-width="5" stroke-linecap="round" />
+  </g>
+  <text x="395" y="321" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Denom. Swap</text>
+  <rect x="657" y="293" width="303" height="43" rx="8" fill="#f2f5fb" stroke="#4264ce" stroke-width="1.8" />
+  <g transform="translate(666 299) scale(0.31)">
+    <path d="M 6 12 L 94 12 L 62 52 L 62 88 L 39 98 L 39 52 Z" stroke="#4264ce" fill="#b2c5d2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="72" y1="67" x2="95" y2="90" stroke="#b1262d" stroke-width="5" stroke-linecap="round" />
+    <line x1="95" y1="67" x2="72" y2="90" stroke="#b1262d" stroke-width="5" stroke-linecap="round" />
+  </g>
+  <text x="708" y="321" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Omit Filter</text>
+  <rect x="1014" y="140" width="977" height="209" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1012" y="136" width="977" height="209" rx="18" fill="#f5effd" stroke="#713cc2" stroke-width="2.7" />
+  <rect x="1012" y="136" width="977" height="59" rx="14" fill="#713cc2" stroke="#713cc2" stroke-width="2" />
+  <g transform="translate(1028 145) scale(0.42)">
+    <line x1="24" y1="19" x2="66" y2="38" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <line x1="24" y1="19" x2="30" y2="78" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <line x1="66" y1="38" x2="83" y2="81" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <line x1="30" y1="78" x2="83" y2="81" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <circle cx="24" cy="19" r="11" fill="#80bbcf" stroke="#244873" stroke-width="3" />
+    <circle cx="66" cy="38" r="11" fill="#ecaeb6" stroke="#244873" stroke-width="3" />
+    <circle cx="30" cy="78" r="11" fill="#bcace5" stroke="#244873" stroke-width="3" />
+    <circle cx="83" cy="81" r="11" fill="#e7bb74" stroke="#244873" stroke-width="3" />
+  </g>
+  <text x="1081" y="175" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="30.000" font-weight="bold" text-anchor="start">Semantic / Schema Tasks</text>
+  <circle cx="1525" cy="166" r="21" fill="#ffffff" stroke="none" stroke-width="2" />
+  <text x="1525" y="175" fill="#713cc2" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">S</text>
+  <text x="1570" y="175" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="start">24</text>
+  <text x="1642" y="175" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">17 datasets</text>
+  <text x="1038" y="223" fill="#713cc2" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Operator examples across suites:</text>
+  <rect x="1034" y="240" width="286" height="43" rx="8" fill="#f2f5fb" stroke="#713cc2" stroke-width="1.8" />
+  <g transform="translate(1043 246) scale(0.31)">
+    <path d="M 9 12 L 52 12 L 94 54 L 54 95 L 9 50 Z" stroke="#713cc2" fill="#edc087" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="30" cy="32" r="5" fill="#ffffff" stroke="#713cc2" stroke-width="2" />
+  </g>
+  <text x="1085" y="268" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Label Swap</text>
+  <rect x="1332" y="240" width="335" height="43" rx="8" fill="#f2f5fb" stroke="#713cc2" stroke-width="1.8" />
+  <g transform="translate(1341 246) scale(0.31)">
+    <path d="M 13 79 L 64 25 L 82 43 L 31 97 Z" stroke="#713cc2" fill="#dfabb4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="64" y1="12" x2="95" y2="42" stroke="#713cc2" stroke-width="5" stroke-linecap="round" />
+    <line x1="15" y1="89" x2="3" y2="100" stroke="#713cc2" stroke-width="3" stroke-linecap="round" />
+  </g>
+  <text x="1383" y="268" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Treatment/Control Flip</text>
+  <rect x="1680" y="240" width="287" height="43" rx="8" fill="#f2f5fb" stroke="#713cc2" stroke-width="1.8" />
+  <g transform="translate(1689 246) scale(0.31)">
+    <circle cx="39" cy="39" r="29" fill="#e4eff7" stroke="#713cc2" stroke-width="4" />
+    <path d="M 60 61 L 92 94" stroke="#713cc2" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="25" y1="32" x2="51" y2="32" stroke="#713cc2" stroke-width="3" stroke-linecap="round" />
+    <line x1="25" y1="43" x2="51" y2="43" stroke="#713cc2" stroke-width="3" stroke-linecap="round" />
+  </g>
+  <text x="1731" y="268" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Biased Retrieval</text>
+  <rect x="1034" y="293" width="444" height="43" rx="8" fill="#f2f5fb" stroke="#713cc2" stroke-width="1.8" />
+  <g transform="translate(1043 299) scale(0.31)">
+    <rect x="9" y="7" width="83" height="87" rx="4" fill="#dce8ee" stroke="#713cc2" stroke-width="3" />
+    <rect x="17" y="16" width="67" height="16" rx="2" fill="#8dbbd0" stroke="#713cc2" stroke-width="2" />
+    <line x1="33" y1="40" x2="33" y2="88" stroke="#713cc2" stroke-width="2" stroke-linecap="round" />
+    <line x1="58" y1="40" x2="58" y2="88" stroke="#713cc2" stroke-width="2" stroke-linecap="round" />
+    <line x1="80" y1="40" x2="80" y2="88" stroke="#713cc2" stroke-width="2" stroke-linecap="round" />
+    <line x1="17" y1="40" x2="85" y2="40" stroke="#713cc2" stroke-width="2" stroke-linecap="round" />
+    <line x1="17" y1="55" x2="85" y2="55" stroke="#713cc2" stroke-width="2" stroke-linecap="round" />
+    <line x1="17" y1="71" x2="85" y2="71" stroke="#713cc2" stroke-width="2" stroke-linecap="round" />
+    <line x1="17" y1="87" x2="85" y2="87" stroke="#713cc2" stroke-width="2" stroke-linecap="round" />
+  </g>
+  <text x="1085" y="321" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Column-Semantic Swap</text>
+  <rect x="1490" y="293" width="477" height="43" rx="8" fill="#f2f5fb" stroke="#713cc2" stroke-width="1.8" />
+  <g transform="translate(1499 299) scale(0.31)">
+    <circle cx="45" cy="43" r="37" fill="#fff6df" stroke="#713cc2" stroke-width="3" />
+    <line x1="45" y1="17" x2="45" y2="43" stroke="#713cc2" stroke-width="4" stroke-linecap="round" />
+    <line x1="45" y1="43" x2="66" y2="55" stroke="#713cc2" stroke-width="4" stroke-linecap="round" />
+    <rect x="39" y="70" width="58" height="25" rx="3" fill="#efbd79" stroke="#713cc2" stroke-width="2" />
+    <text x="68" y="89" fill="#713cc2" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.000" font-weight="bold" text-anchor="middle">Old</text>
+  </g>
+  <text x="1541" y="321" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="start">Stale Metadata</text>
+  <rect x="1885" y="300" width="66" height="27" rx="5" fill="#f0c28c" stroke="#c77d32" stroke-width="2" />
+  <text x="1918" y="320" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="18.000" font-weight="bold" text-anchor="middle">Old</text>
+  <text x="17" y="382" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="bold" text-anchor="start">B  Paired Evaluation Protocol</text>
+  <text x="1040" y="382" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="middle">Same Query and Source Data</text>
+  <line x1="8" y1="398" x2="1989" y2="398" stroke="#e3e7ed" stroke-width="4" stroke-linecap="round" />
+  <rect x="12" y="417" width="430" height="165" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="10" y="413" width="430" height="165" rx="18" fill="#e7f5e9" stroke="#2b794b" stroke-width="2.7" />
+  <text x="285" y="447" fill="#2b794b" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">Clean Env.</text>
+  <g transform="translate(41 449) scale(0.99)">
+    <line x1="50" y1="5" x2="50" y2="17" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <circle cx="50" cy="5" r="4" fill="#96c7b0" stroke="#244873" stroke-width="2" />
+    <rect x="18" y="18" width="64" height="43" rx="10" fill="#bbcedb" stroke="#244873" stroke-width="3" />
+    <rect x="27" y="29" width="46" height="20" rx="7" fill="#213746" stroke="#244873" stroke-width="2" />
+    <circle cx="39" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <circle cx="61" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <rect x="29" y="63" width="42" height="32" rx="5" fill="#b8cbd7" stroke="#244873" stroke-width="3" />
+    <rect x="8" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#244873" stroke-width="3" />
+    <rect x="77" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#244873" stroke-width="3" />
+    <line x1="36" y1="96" x2="36" y2="100" stroke="#244873" stroke-width="6" stroke-linecap="round" />
+    <line x1="64" y1="96" x2="64" y2="100" stroke="#244873" stroke-width="6" stroke-linecap="round" />
+    <rect x="39" y="73" width="22" height="12" rx="2" fill="#83c296" stroke="#244873" stroke-width="2" />
+  </g>
+  <text x="95" y="567" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="bold" text-anchor="middle">Data Agent</text>
+  <text x="226" y="477" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="normal" text-anchor="middle">calls</text>
+  <path d="M 160 496 L 288 496" stroke="#54a36a" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="288,496 273.0,488.8 273.0,503.2" fill="#54a36a" stroke="#54a36a" stroke-width="1" stroke-linejoin="round" />
+  <text x="226" y="525" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="normal" text-anchor="middle">output</text>
+  <text x="226" y="554" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="21.000" font-weight="normal" text-anchor="middle">data flow</text>
+  <g transform="translate(312 469) scale(0.8)">
+    <polygon points="93.0,50.0 92.47059864559093,56.72668199672993 82.33592155403522,60.50657780874821 80.29422182240451,65.43567699114459 84.78773075812273,75.27476584857635 80.40559159102155,80.40559159102153 69.98469857794409,77.5065778087482 65.43567699114459,80.29422182240451 63.28773075812274,90.8954302006916 56.72668199672993,92.47059864559093 50.0,84.0 44.68122818863216,83.58140358023468 36.712269241877266,90.8954302006916 30.478408511199493,88.31328054009981 30.015301422055916,77.5065778087482 25.958369439657385,74.04163056034261 15.212269241877266,75.27476584857635 11.686719459900182,69.52159148880051 17.664078445964783,60.50657780874822 16.418596419765322,55.31877181136785 7.0,50.00000000000001 7.5294013544090745,43.27331800327008 17.66407844596477,39.49342219125181 19.70577817759549,34.56432300885541 15.212269241877252,24.72523415142366 19.59440840897845,19.59440840897846 30.01530142205591,22.493422191251792 34.5643230088554,19.705778177595494 36.71226924187725,9.1045697993084 43.27331800327006,7.529401354409082 49.99999999999999,16.0 55.318771811367846,16.418596419765315 63.287730758122734,9.104569799308393 69.52159148880051,11.686719459900175 69.98469857794407,22.49342219125178 74.04163056034261,25.95836943965738 84.78773075812273,24.725234151423646 88.31328054009981,30.47840851119948 82.33592155403522,39.49342219125178 83.58140358023468,44.68122818863214" fill="#9cb5ca" stroke="#244873" stroke-width="3" stroke-linejoin="round" />
+    <circle cx="50" cy="50" r="17" fill="#f6f9fc" stroke="#244873" stroke-width="3" />
+    <path d="M 8 90 L 61 35 Q 52 14 77 8 L 71 24 L 82 31 L 95 22 Q 99 43 77 49 L 26 99 Z" stroke="#244873" fill="#dce5eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <text x="352" y="568" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="24.000" font-weight="bold" text-anchor="middle">Tool</text>
+  <path d="M 440 496 L 473 496" stroke="#54a36a" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="473,496 461.0,490.24 461.0,501.76" fill="#54a36a" stroke="#54a36a" stroke-width="1" stroke-linejoin="round" />
+  <rect x="477" y="417" width="745" height="165" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="475" y="413" width="745" height="165" rx="18" fill="#f6f7fc" stroke="#a3adc3" stroke-width="2.7" />
+  <text x="848" y="450" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="28.000" font-weight="bold" text-anchor="middle">Paired Task</text>
+  <text x="555" y="500" fill="#2b794b" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="24.000" font-weight="normal" text-anchor="middle" font-style="italic">o = f(x)</text>
+  <g transform="translate(640 466) scale(0.38)">
+    <path d="M 12 28 L 86 28" stroke="#2b794b" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    <polygon points="86,28 69.0,19.84 69.0,36.16" fill="#2b794b" stroke="#2b794b" stroke-width="1" stroke-linejoin="round" />
+    <path d="M 86 72 L 12 72" stroke="#2b794b" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+    <polygon points="12,72 29.0,80.16 29.0,63.84" fill="#2b794b" stroke="#2b794b" stroke-width="1" stroke-linejoin="round" />
+  </g>
+  <g transform="translate(685 466) scale(0.48)">
+    <path d="M 16 22 L 16 78 C 16 96 84 96 84 78 L 84 22" stroke="#244873" fill="#cbd8e3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <ellipse cx="50" cy="22" rx="34" ry="12" fill="#e6edf3" stroke="#244873" stroke-width="3" />
+    <path d="M 16 47 C 16 63 84 63 84 47 M 16 70 C 16 86 84 86 84 70" stroke="#244873" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <text x="848" y="501" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="middle" font-style="italic">(query + dataset)</text>
+  <path d="M 948 495 L 973 495" stroke="#80828b" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="973,495 963.0,490.2 963.0,499.8" fill="#80828b" stroke="#80828b" stroke-width="1" stroke-linejoin="round" />
+  <polygon points="1003,462 1036,495 1003,528 970,495" fill="#e6e8ec" stroke="#626670" stroke-width="3" stroke-linejoin="round" />
+  <text x="1003" y="505" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="28.000" font-weight="bold" text-anchor="middle">=</text>
+  <path d="M 1036 495 L 1094 495" stroke="#80828b" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1094,495 1082.0,489.24 1082.0,500.76" fill="#80828b" stroke="#80828b" stroke-width="1" stroke-linejoin="round" />
+  <circle cx="1137" cy="495" r="27" fill="#e2e5ec" stroke="#626670" stroke-width="3" />
+  <text x="1137" y="504" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="24.000" font-weight="bold" text-anchor="middle" font-style="italic">vC</text>
+  <text x="555" y="556" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="middle">Correct output</text>
+  <text x="846" y="556" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="middle">data flow</text>
+  <text x="1003" y="553" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">Matched</text>
+  <text x="1003" y="575" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">Settings</text>
+  <text x="1137" y="556" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="middle">compare</text>
+  <rect x="1252" y="417" width="739" height="165" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1250" y="413" width="739" height="165" rx="18" fill="#fceced" stroke="#b1262d" stroke-width="2.7" />
+  <text x="1628" y="447" fill="#b1262d" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">Poisoned Env.</text>
+  <path d="M 1250 496 L 1223 496" stroke="#b1262d" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1223,496 1235.0,501.76 1235.0,490.24" fill="#b1262d" stroke="#b1262d" stroke-width="1" stroke-linejoin="round" />
+  <text x="1268" y="509" fill="#b1262d" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="start">o' = P(o; q)</text>
+  <path d="M 1410 496 L 1436 496" stroke="#b1262d" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1436,496 1425.0,490.72 1425.0,501.28" fill="#b1262d" stroke="#b1262d" stroke-width="1" stroke-linejoin="round" />
+  <g transform="translate(1440 455) scale(0.89)">
+    <path d="M 16 22 L 16 78 C 16 96 84 96 84 78 L 84 22" stroke="#244873" fill="#cbd8e3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <ellipse cx="50" cy="22" rx="34" ry="12" fill="#e6edf3" stroke="#244873" stroke-width="3" />
+    <path d="M 16 47 C 16 63 84 63 84 47 M 16 70 C 16 86 84 86 84 70" stroke="#244873" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 77 42 C 68 57 55 71 55 83 C 55 105 93 105 93 83 C 93 71 81 52 77 42 Z" stroke="#b1262d" fill="#ea8996" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="70" cy="83" r="4" fill="#b1262d" stroke="none" stroke-width="2" />
+    <circle cx="82" cy="87" r="4" fill="#b1262d" stroke="none" stroke-width="2" />
+  </g>
+  <text x="1477" y="566" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="bold" text-anchor="middle">Tool-output Proxy</text>
+  <rect x="1630" y="478" width="336" height="43" rx="7" fill="#fff7e7" stroke="#cba667" stroke-width="2" />
+  <text x="1784" y="508" fill="#b1262d" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="bold" text-anchor="middle" font-style="italic">Silent – no error / warning</text>
+  <g transform="translate(1930 485) scale(0.29)">
+    <circle cx="50" cy="50" r="44" fill="#b1262d" stroke="none" stroke-width="2" />
+    <line x1="32" y1="32" x2="68" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+    <line x1="68" y1="32" x2="32" y2="68" stroke="#ffffff" stroke-width="9" stroke-linecap="round" />
+  </g>
+  <text x="1800" y="553" fill="#b1262d" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="24.000" font-weight="bold" text-anchor="middle">Source Data Unchanged</text>
+  <text x="17" y="620" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="bold" text-anchor="start">C  Evaluation Metrics</text>
+  <text x="1000" y="620" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="middle">Evaluation Metrics</text>
+  <rect x="11" y="647" width="320" height="123" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="9" y="643" width="320" height="123" rx="18" fill="#edf1ff" stroke="#4162cf" stroke-width="2.7" />
+  <rect x="9" y="643" width="320" height="48" rx="12" fill="#4162cf" stroke="#4162cf" stroke-width="2" />
+  <g transform="translate(24 661) scale(0.66)">
+    <path d="M 24 9 L 77 9 L 70 48 Q 63 66 50 68 Q 34 65 29 48 Z" stroke="#263650" fill="#ebbc59" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 24 17 L 7 17 Q 7 51 31 52 M 77 17 L 94 17 Q 94 50 70 52" stroke="#263650" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="50" y1="68" x2="50" y2="86" stroke="#263650" stroke-width="6" stroke-linecap="round" />
+    <rect x="24" y="88" width="52" height="10" rx="2" fill="#c1c9d1" stroke="#263650" stroke-width="3" />
+    <polygon points="50,20 55,33 69,34 59,43 62,58 50,50 38,58 41,43 31,34 45,33" fill="#fff0aa" stroke="#263650" stroke-width="2" stroke-linejoin="round" />
+  </g>
+  <text x="206" y="677" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">TSR</text>
+  <text x="206" y="732" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">Task Success Rate</text>
+  <rect x="343" y="647" width="320" height="123" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="341" y="643" width="320" height="123" rx="18" fill="#fcecec" stroke="#c73532" stroke-width="2.7" />
+  <rect x="341" y="643" width="320" height="48" rx="12" fill="#c73532" stroke="#c73532" stroke-width="2" />
+  <g transform="translate(356 661) scale(0.66)">
+    <rect x="15" y="58" width="18" height="28" rx="1" fill="#deb47a" stroke="#263650" stroke-width="2" />
+    <rect x="40" y="38" width="18" height="48" rx="1" fill="#85acbe" stroke="#263650" stroke-width="2" />
+    <rect x="65" y="14" width="18" height="72" rx="1" fill="#88bb9e" stroke="#263650" stroke-width="2" />
+    <line x1="8" y1="91" x2="95" y2="91" stroke="#263650" stroke-width="3" stroke-linecap="round" />
+    <path d="M 8 9 L 35 32 L 54 22 L 91 61" stroke="#b1262d" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <polygon points="91,61 86.91954572038509,48.33005553003596 78.5622039135589,56.25881570574285" fill="#b1262d" stroke="#b1262d" stroke-width="1" stroke-linejoin="round" />
+  </g>
+  <text x="538" y="677" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">PAR / VPA</text>
+  <text x="538" y="719" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">Poison adoption /</text>
+  <text x="538" y="744" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">after validation</text>
+  <rect x="492" y="634" width="166" height="23" rx="4" fill="#fcecec" stroke="#c73532" stroke-width="1.5" />
+  <text x="575" y="651" fill="#c73532" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="12.800" font-weight="bold" text-anchor="middle">IF POISON DELIVERED</text>
+  <rect x="675" y="647" width="320" height="123" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="673" y="643" width="320" height="123" rx="18" fill="#fff2e0" stroke="#c77d32" stroke-width="2.7" />
+  <rect x="673" y="643" width="320" height="48" rx="12" fill="#c77d32" stroke="#c77d32" stroke-width="2" />
+  <g transform="translate(688 661) scale(0.66)">
+    <path d="M 4 53 Q 50 4 96 53 Q 50 101 4 53 Z" stroke="#263650" fill="#f5fbff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="50" cy="53" r="18" fill="#263650" stroke="none" stroke-width="2" />
+    <circle cx="55" cy="47" r="5" fill="#ffffff" stroke="none" stroke-width="2" />
+  </g>
+  <text x="870" y="677" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">BCR</text>
+  <text x="870" y="732" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">Blind Compliance Rate</text>
+  <rect x="824" y="634" width="166" height="23" rx="4" fill="#fff2e0" stroke="#c77d32" stroke-width="1.5" />
+  <text x="907" y="651" fill="#c77d32" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="12.800" font-weight="bold" text-anchor="middle">IF POISON DELIVERED</text>
+  <rect x="1007" y="647" width="320" height="123" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1005" y="643" width="320" height="123" rx="18" fill="#f5eefc" stroke="#713cc2" stroke-width="2.7" />
+  <rect x="1005" y="643" width="320" height="48" rx="12" fill="#713cc2" stroke="#713cc2" stroke-width="2" />
+  <g transform="translate(1020 661) scale(0.66)">
+    <circle cx="50" cy="50" r="44" fill="#d897b8" stroke="#263650" stroke-width="3" />
+    <rect x="44" y="20" width="12" height="40" rx="5" fill="#ffffff" stroke="#263650" stroke-width="2" />
+    <circle cx="50" cy="77" r="7" fill="#ffffff" stroke="#263650" stroke-width="2" />
+  </g>
+  <text x="1202" y="677" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">ADR</text>
+  <text x="1202" y="732" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">Anomaly Detection Rate</text>
+  <rect x="1156" y="634" width="166" height="23" rx="4" fill="#f5eefc" stroke="#713cc2" stroke-width="1.5" />
+  <text x="1239" y="651" fill="#713cc2" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="12.800" font-weight="bold" text-anchor="middle">IF POISON DELIVERED</text>
+  <rect x="1339" y="647" width="320" height="123" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1337" y="643" width="320" height="123" rx="18" fill="#ebf7ed" stroke="#4d965c" stroke-width="2.7" />
+  <rect x="1337" y="643" width="320" height="48" rx="12" fill="#4d965c" stroke="#4d965c" stroke-width="2" />
+  <g transform="translate(1352 661) scale(0.66)">
+    <path d="M 50 5 L 88 20 L 83 57 Q 78 78 50 96 Q 21 78 17 57 L 12 20 Z" stroke="#263650" fill="#91cca3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 30 47 L 45 65 L 71 32" stroke="#ffffff" fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <text x="1534" y="677" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">VR</text>
+  <text x="1534" y="732" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">Validation Rate</text>
+  <rect x="1488" y="634" width="166" height="23" rx="4" fill="#ebf7ed" stroke="#4d965c" stroke-width="1.5" />
+  <text x="1571" y="651" fill="#4d965c" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="12.800" font-weight="bold" text-anchor="middle">IF POISON DELIVERED</text>
+  <rect x="1671" y="647" width="320" height="123" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1669" y="643" width="320" height="123" rx="18" fill="#eff1f5" stroke="#535e73" stroke-width="2.7" />
+  <rect x="1669" y="643" width="320" height="48" rx="12" fill="#535e73" stroke="#535e73" stroke-width="2" />
+  <g transform="translate(1684 661) scale(0.66)">
+    <path d="M 49 70 Q 14 61 4 14 L 35 39 L 24 6 L 51 30 L 76 7 L 65 42 L 97 16 Q 85 57 57 69 L 72 91 L 50 83 L 28 92 Z" stroke="#263650" fill="#e6a451" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="51" y1="65" x2="51" y2="91" stroke="#263650" stroke-width="3" stroke-linecap="round" />
+  </g>
+  <text x="1866" y="677" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">RR</text>
+  <text x="1866" y="732" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="20.000" font-weight="normal" text-anchor="middle">Recovery Rate</text>
+  <rect x="1820" y="634" width="166" height="23" rx="4" fill="#eff1f5" stroke="#535e73" stroke-width="1.5" />
+  <text x="1903" y="651" fill="#535e73" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="12.800" font-weight="bold" text-anchor="middle">IF POISON DELIVERED</text>
+  <rect x="9" y="790" width="1980" height="53" rx="10" fill="#263650" stroke="#263650" stroke-width="2" />
+  <text x="30" y="825" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="bold" text-anchor="start">D  Generic Guard: Four-step Protocol</text>
+  <text x="967" y="825" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">Evidence Verification</text>
+  <rect x="1171" y="798" width="803" height="36" rx="8" fill="#4f995d" stroke="none" stroke-width="2" />
+  <text x="1572" y="824" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="bold" text-anchor="middle">Check Evidence and Select the Final Answer</text>
+  <rect x="11" y="864" width="485" height="247" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="9" y="860" width="485" height="247" rx="18" fill="#f2f5ff" stroke="#4162cf" stroke-width="2.7" />
+  <rect x="9" y="860" width="485" height="70" rx="14" fill="#4162cf" stroke="#4162cf" stroke-width="2" />
+  <circle cx="53" cy="895" r="23" fill="#ffffff" stroke="none" stroke-width="2" />
+  <text x="53" y="905" fill="#4162cf" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">1</text>
+  <text x="97" y="889" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Generic</text>
+  <text x="97" y="917" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Expectation</text>
+  <rect x="351" y="897" width="124" height="14" rx="8" fill="#eee3d4" stroke="#4162cf" stroke-width="1.5" />
+  <rect x="351" y="897" width="60" height="14" rx="8" fill="#b7cbea" stroke="#4162cf" stroke-width="1.5" />
+  <circle cx="382" cy="884" r="8" fill="#fff0d8" stroke="#263650" stroke-width="1.5" />
+  <circle cx="380" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="384" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="447" cy="884" r="8" fill="#fff0d8" stroke="#263650" stroke-width="1.5" />
+  <circle cx="445" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="449" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <rect x="509" y="864" width="485" height="247" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="507" y="860" width="485" height="247" rx="18" fill="#fff6e7" stroke="#c77d32" stroke-width="2.7" />
+  <rect x="507" y="860" width="485" height="70" rx="14" fill="#c77d32" stroke="#c77d32" stroke-width="2" />
+  <circle cx="551" cy="895" r="23" fill="#ffffff" stroke="none" stroke-width="2" />
+  <text x="551" y="905" fill="#c77d32" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">2</text>
+  <text x="595" y="889" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Primary</text>
+  <text x="595" y="917" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Tool Route</text>
+  <rect x="849" y="897" width="124" height="14" rx="8" fill="#eee3d4" stroke="#c77d32" stroke-width="1.5" />
+  <rect x="849" y="897" width="60" height="14" rx="8" fill="#b7cbea" stroke="#c77d32" stroke-width="1.5" />
+  <circle cx="880" cy="884" r="8" fill="#fff0d8" stroke="#263650" stroke-width="1.5" />
+  <circle cx="878" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="882" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="945" cy="884" r="8" fill="#fff0d8" stroke="#263650" stroke-width="1.5" />
+  <circle cx="943" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="947" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <rect x="1007" y="864" width="485" height="247" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1005" y="860" width="485" height="247" rx="18" fill="#f6effc" stroke="#713cc2" stroke-width="2.7" />
+  <rect x="1005" y="860" width="485" height="70" rx="14" fill="#713cc2" stroke="#713cc2" stroke-width="2" />
+  <circle cx="1049" cy="895" r="23" fill="#ffffff" stroke="none" stroke-width="2" />
+  <text x="1049" y="905" fill="#713cc2" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">3</text>
+  <text x="1093" y="889" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Verification</text>
+  <text x="1093" y="917" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Route</text>
+  <rect x="1347" y="897" width="124" height="14" rx="8" fill="#eee3d4" stroke="#713cc2" stroke-width="1.5" />
+  <rect x="1347" y="897" width="60" height="14" rx="8" fill="#b7cbea" stroke="#713cc2" stroke-width="1.5" />
+  <circle cx="1378" cy="884" r="8" fill="#fff0d8" stroke="#263650" stroke-width="1.5" />
+  <circle cx="1376" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="1380" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="1443" cy="884" r="8" fill="#fff0d8" stroke="#263650" stroke-width="1.5" />
+  <circle cx="1441" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="1445" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <rect x="1505" y="864" width="485" height="247" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
+  <rect x="1503" y="860" width="485" height="247" rx="18" fill="#eff9ef" stroke="#4d965c" stroke-width="2.7" />
+  <rect x="1503" y="860" width="485" height="70" rx="14" fill="#4d965c" stroke="#4d965c" stroke-width="2" />
+  <circle cx="1547" cy="895" r="23" fill="#ffffff" stroke="none" stroke-width="2" />
+  <text x="1547" y="905" fill="#4d965c" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="27.000" font-weight="bold" text-anchor="middle">4</text>
+  <text x="1591" y="889" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Answer</text>
+  <text x="1591" y="917" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Selection</text>
+  <rect x="1845" y="897" width="124" height="14" rx="8" fill="#eee3d4" stroke="#4d965c" stroke-width="1.5" />
+  <rect x="1845" y="897" width="60" height="14" rx="8" fill="#b7cbea" stroke="#4d965c" stroke-width="1.5" />
+  <circle cx="1876" cy="884" r="8" fill="#fff0d8" stroke="#263650" stroke-width="1.5" />
+  <circle cx="1874" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="1878" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="1941" cy="884" r="8" fill="#fff0d8" stroke="#263650" stroke-width="1.5" />
+  <circle cx="1939" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <circle cx="1943" cy="883" r="1" fill="#263650" stroke="none" stroke-width="2" />
+  <g transform="translate(29 955) scale(1.0)">
+    <line x1="50" y1="5" x2="50" y2="17" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <circle cx="50" cy="5" r="4" fill="#96c7b0" stroke="#244873" stroke-width="2" />
+    <rect x="18" y="18" width="64" height="43" rx="10" fill="#bbcedb" stroke="#244873" stroke-width="3" />
+    <rect x="27" y="29" width="46" height="20" rx="7" fill="#213746" stroke="#244873" stroke-width="2" />
+    <circle cx="39" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <circle cx="61" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <rect x="29" y="63" width="42" height="32" rx="5" fill="#b8cbd7" stroke="#244873" stroke-width="3" />
+    <rect x="8" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#244873" stroke-width="3" />
+    <rect x="77" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#244873" stroke-width="3" />
+    <line x1="36" y1="96" x2="36" y2="100" stroke="#244873" stroke-width="6" stroke-linecap="round" />
+    <line x1="64" y1="96" x2="64" y2="100" stroke="#244873" stroke-width="6" stroke-linecap="round" />
+    <rect x="39" y="73" width="22" height="12" rx="2" fill="#83c296" stroke="#244873" stroke-width="2" />
+    <path d="M 17 22 Q 19 -4 49 -4 Q 80 -4 84 22 Z" stroke="#244873" fill="#e8b35c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <rect x="45" y="-9" width="10" height="29" rx="2" fill="#f2c56c" stroke="#244873" stroke-width="2" />
+    <rect x="7" y="20" width="84" height="7" rx="2" fill="#f2c56c" stroke="#244873" stroke-width="2" />
+  </g>
+  <text x="79" y="1090" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="middle">Prompt</text>
+  <g transform="translate(155 952) scale(0.31)">
+    <rect x="15" y="58" width="18" height="28" rx="1" fill="#deb47a" stroke="#244873" stroke-width="2" />
+    <rect x="40" y="38" width="18" height="48" rx="1" fill="#85acbe" stroke="#244873" stroke-width="2" />
+    <rect x="65" y="14" width="18" height="72" rx="1" fill="#88bb9e" stroke="#244873" stroke-width="2" />
+    <line x1="8" y1="91" x2="95" y2="91" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+  </g>
+  <text x="172" y="1000" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Value</text>
+  <text x="172" y="1020" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Ranges</text>
+  <g transform="translate(265 952) scale(0.31)">
+    <line x1="24" y1="19" x2="66" y2="38" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <line x1="24" y1="19" x2="30" y2="78" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <line x1="66" y1="38" x2="83" y2="81" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <line x1="30" y1="78" x2="83" y2="81" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <circle cx="24" cy="19" r="11" fill="#80bbcf" stroke="#244873" stroke-width="3" />
+    <circle cx="66" cy="38" r="11" fill="#ecaeb6" stroke="#244873" stroke-width="3" />
+    <circle cx="30" cy="78" r="11" fill="#bcace5" stroke="#244873" stroke-width="3" />
+    <circle cx="83" cy="81" r="11" fill="#e7bb74" stroke="#244873" stroke-width="3" />
+  </g>
+  <text x="282" y="1000" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Schema</text>
+  <text x="282" y="1020" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Bindings</text>
+  <g transform="translate(378 952) scale(0.31)">
+    <path d="M 9 12 L 52 12 L 94 54 L 54 95 L 9 50 Z" stroke="#244873" fill="#edc087" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="30" cy="32" r="5" fill="#ffffff" stroke="#244873" stroke-width="2" />
+  </g>
+  <text x="395" y="1000" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Rank/Label</text>
+  <text x="395" y="1020" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Swap</text>
+  <g transform="translate(155 1024) scale(0.31)">
+    <line x1="15" y1="50" x2="85" y2="50" stroke="#244873" stroke-width="7" stroke-linecap="round" />
+    <circle cx="50" cy="19" r="10" fill="#84bca2" stroke="#244873" stroke-width="2" />
+    <circle cx="50" cy="81" r="10" fill="#8caeca" stroke="#244873" stroke-width="2" />
+  </g>
+  <text x="172" y="1072" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Plausible</text>
+  <text x="172" y="1092" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Values</text>
+  <g transform="translate(265 1024) scale(0.31)">
+    <line x1="10" y1="28" x2="44" y2="28" stroke="#244873" stroke-width="7" stroke-linecap="round" />
+    <line x1="27" y1="11" x2="27" y2="45" stroke="#244873" stroke-width="7" stroke-linecap="round" />
+    <line x1="59" y1="75" x2="93" y2="75" stroke="#244873" stroke-width="7" stroke-linecap="round" />
+  </g>
+  <text x="282" y="1072" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Denom.</text>
+  <text x="282" y="1092" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Swap</text>
+  <g transform="translate(378 1024) scale(0.31)">
+    <path d="M 6 12 L 94 12 L 62 52 L 62 88 L 39 98 L 39 52 Z" stroke="#244873" fill="#b2c5d2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="72" y1="67" x2="95" y2="90" stroke="#b1262d" stroke-width="5" stroke-linecap="round" />
+    <line x1="95" y1="67" x2="72" y2="90" stroke="#b1262d" stroke-width="5" stroke-linecap="round" />
+  </g>
+  <text x="395" y="1072" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Null/sign</text>
+  <text x="395" y="1092" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.500" font-weight="normal" text-anchor="middle">Filter</text>
+  <text x="530" y="962" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="normal" text-anchor="start">Primary pathway</text>
+  <g transform="translate(753 952) scale(0.45)">
+    <rect x="9" y="23" width="82" height="50" rx="8" fill="#c4d7e1" stroke="#244873" stroke-width="3" />
+    <circle cx="50" cy="47" r="17" fill="#829cab" stroke="#244873" stroke-width="3" />
+    <circle cx="50" cy="47" r="7" fill="#c3e4b7" stroke="#244873" stroke-width="2" />
+    <line x1="50" y1="73" x2="50" y2="91" stroke="#244873" stroke-width="4" stroke-linecap="round" />
+    <line x1="27" y1="93" x2="74" y2="93" stroke="#244873" stroke-width="5" stroke-linecap="round" />
+  </g>
+  <g transform="translate(851 952) scale(0.45)">
+    <rect x="9" y="23" width="82" height="50" rx="8" fill="#c4d7e1" stroke="#244873" stroke-width="3" />
+    <circle cx="50" cy="47" r="17" fill="#829cab" stroke="#244873" stroke-width="3" />
+    <circle cx="50" cy="47" r="7" fill="#c3e4b7" stroke="#244873" stroke-width="2" />
+    <line x1="50" y1="73" x2="50" y2="91" stroke="#244873" stroke-width="4" stroke-linecap="round" />
+    <line x1="27" y1="93" x2="74" y2="93" stroke="#244873" stroke-width="5" stroke-linecap="round" />
+  </g>
+  <path d="M 533 1004 L 940 1004 L 940 989 L 977 1025 L 940 1061 L 940 1045 L 533 1045 Z" stroke="#c77d32" fill="#eee2ce" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <text x="530" y="1076" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="start">Run the agent</text>
+  <text x="530" y="1100" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="start">with tools.</text>
+  <g transform="translate(782 1050) scale(0.43)">
+    <rect x="9" y="23" width="82" height="50" rx="8" fill="#c4d7e1" stroke="#244873" stroke-width="3" />
+    <circle cx="50" cy="47" r="17" fill="#829cab" stroke="#244873" stroke-width="3" />
+    <circle cx="50" cy="47" r="7" fill="#c3e4b7" stroke="#244873" stroke-width="2" />
+    <line x1="50" y1="73" x2="50" y2="91" stroke="#244873" stroke-width="4" stroke-linecap="round" />
+    <line x1="27" y1="93" x2="74" y2="93" stroke="#244873" stroke-width="5" stroke-linecap="round" />
+  </g>
+  <g transform="translate(849 1050) scale(0.43)">
+    <rect x="9" y="23" width="82" height="50" rx="8" fill="#c4d7e1" stroke="#244873" stroke-width="3" />
+    <circle cx="50" cy="47" r="17" fill="#829cab" stroke="#244873" stroke-width="3" />
+    <circle cx="50" cy="47" r="7" fill="#c3e4b7" stroke="#244873" stroke-width="2" />
+    <line x1="50" y1="73" x2="50" y2="91" stroke="#244873" stroke-width="4" stroke-linecap="round" />
+    <line x1="27" y1="93" x2="74" y2="93" stroke="#244873" stroke-width="5" stroke-linecap="round" />
+  </g>
+  <text x="881" y="1098" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.000" font-weight="normal" text-anchor="middle">monitoring</text>
+  <path d="M 494 994 L 522 994" stroke="#244873" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="522,994 507.0,986.8 507.0,1001.2" fill="#244873" stroke="#244873" stroke-width="1" stroke-linejoin="round" />
+  <path d="M 992 994 L 1020 994" stroke="#244873" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1020,994 1005.0,986.8 1005.0,1001.2" fill="#244873" stroke="#244873" stroke-width="1" stroke-linejoin="round" />
+  <path d="M 1490 994 L 1518 994" stroke="#244873" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  <polygon points="1518,994 1503.0,986.8 1503.0,1001.2" fill="#244873" stroke="#244873" stroke-width="1" stroke-linejoin="round" />
+  <text x="1028" y="961" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="start">Additional tool evidence</text>
+  <text x="1028" y="988" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="22.000" font-weight="normal" text-anchor="start">from the same source</text>
+  <path d="M 1030 1013 L 1216 1013 L 1216 1001 L 1253 1026 L 1216 1051 L 1216 1039 L 1030 1039 Z" stroke="#713cc2" fill="#e0d4ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <g transform="translate(1280 1011) scale(0.62)">
+    <polygon points="93.0,50.0 92.47059864559093,56.72668199672993 82.33592155403522,60.50657780874821 80.29422182240451,65.43567699114459 84.78773075812273,75.27476584857635 80.40559159102155,80.40559159102153 69.98469857794409,77.5065778087482 65.43567699114459,80.29422182240451 63.28773075812274,90.8954302006916 56.72668199672993,92.47059864559093 50.0,84.0 44.68122818863216,83.58140358023468 36.712269241877266,90.8954302006916 30.478408511199493,88.31328054009981 30.015301422055916,77.5065778087482 25.958369439657385,74.04163056034261 15.212269241877266,75.27476584857635 11.686719459900182,69.52159148880051 17.664078445964783,60.50657780874822 16.418596419765322,55.31877181136785 7.0,50.00000000000001 7.5294013544090745,43.27331800327008 17.66407844596477,39.49342219125181 19.70577817759549,34.56432300885541 15.212269241877252,24.72523415142366 19.59440840897845,19.59440840897846 30.01530142205591,22.493422191251792 34.5643230088554,19.705778177595494 36.71226924187725,9.1045697993084 43.27331800327006,7.529401354409082 49.99999999999999,16.0 55.318771811367846,16.418596419765315 63.287730758122734,9.104569799308393 69.52159148880051,11.686719459900175 69.98469857794407,22.49342219125178 74.04163056034261,25.95836943965738 84.78773075812273,24.725234151423646 88.31328054009981,30.47840851119948 82.33592155403522,39.49342219125178 83.58140358023468,44.68122818863214" fill="#9cb5ca" stroke="#713cc2" stroke-width="3" stroke-linejoin="round" />
+    <circle cx="50" cy="50" r="17" fill="#f6f9fc" stroke="#713cc2" stroke-width="3" />
+  </g>
+  <g transform="translate(1393 1006) scale(0.69)">
+    <circle cx="39" cy="39" r="29" fill="#e4eff7" stroke="#244873" stroke-width="4" />
+    <path d="M 60 61 L 92 94" stroke="#244873" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="25" y1="32" x2="51" y2="32" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+    <line x1="25" y1="43" x2="51" y2="43" stroke="#244873" stroke-width="3" stroke-linecap="round" />
+  </g>
+  <text x="1028" y="1073" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="21.000" font-weight="normal" text-anchor="start">Returns a second</text>
+  <text x="1028" y="1097" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="21.000" font-weight="normal" text-anchor="start">answer</text>
+  <text x="1310" y="1093" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="17.000" font-weight="normal" text-anchor="middle">Recompute</text>
+  <text x="1427" y="1072" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="18.000" font-weight="normal" text-anchor="middle">Inspect</text>
+  <text x="1427" y="1093" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="18.000" font-weight="normal" text-anchor="middle">Metadata</text>
+  <text x="1524" y="965" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="normal" text-anchor="start">Select</text>
+  <text x="1690" y="965" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="23.000" font-weight="normal" text-anchor="middle">answer</text>
+  <g transform="translate(1526 1014) scale(0.69)">
+    <line x1="50" y1="5" x2="50" y2="17" stroke="#2b794b" stroke-width="3" stroke-linecap="round" />
+    <circle cx="50" cy="5" r="4" fill="#96c7b0" stroke="#2b794b" stroke-width="2" />
+    <rect x="18" y="18" width="64" height="43" rx="10" fill="#bbcedb" stroke="#2b794b" stroke-width="3" />
+    <rect x="27" y="29" width="46" height="20" rx="7" fill="#213746" stroke="#2b794b" stroke-width="2" />
+    <circle cx="39" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <circle cx="61" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <rect x="29" y="63" width="42" height="32" rx="5" fill="#b8cbd7" stroke="#2b794b" stroke-width="3" />
+    <rect x="8" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#2b794b" stroke-width="3" />
+    <rect x="77" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#2b794b" stroke-width="3" />
+    <line x1="36" y1="96" x2="36" y2="100" stroke="#2b794b" stroke-width="6" stroke-linecap="round" />
+    <line x1="64" y1="96" x2="64" y2="100" stroke="#2b794b" stroke-width="6" stroke-linecap="round" />
+    <rect x="39" y="73" width="22" height="12" rx="2" fill="#83c296" stroke="#2b794b" stroke-width="2" />
+  </g>
+  <g transform="translate(1600 979) scale(1.24)">
+    <line x1="50" y1="5" x2="50" y2="17" stroke="#2b794b" stroke-width="3" stroke-linecap="round" />
+    <circle cx="50" cy="5" r="4" fill="#96c7b0" stroke="#2b794b" stroke-width="2" />
+    <rect x="18" y="18" width="64" height="43" rx="10" fill="#bbcedb" stroke="#2b794b" stroke-width="3" />
+    <rect x="27" y="29" width="46" height="20" rx="7" fill="#213746" stroke="#2b794b" stroke-width="2" />
+    <circle cx="39" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <circle cx="61" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <rect x="29" y="63" width="42" height="32" rx="5" fill="#b8cbd7" stroke="#2b794b" stroke-width="3" />
+    <rect x="8" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#2b794b" stroke-width="3" />
+    <rect x="77" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#2b794b" stroke-width="3" />
+    <line x1="36" y1="96" x2="36" y2="100" stroke="#2b794b" stroke-width="6" stroke-linecap="round" />
+    <line x1="64" y1="96" x2="64" y2="100" stroke="#2b794b" stroke-width="6" stroke-linecap="round" />
+    <rect x="39" y="73" width="22" height="12" rx="2" fill="#83c296" stroke="#2b794b" stroke-width="2" />
+  </g>
+  <g transform="translate(1730 1026) scale(0.58)">
+    <line x1="50" y1="5" x2="50" y2="17" stroke="#2b794b" stroke-width="3" stroke-linecap="round" />
+    <circle cx="50" cy="5" r="4" fill="#96c7b0" stroke="#2b794b" stroke-width="2" />
+    <rect x="18" y="18" width="64" height="43" rx="10" fill="#bbcedb" stroke="#2b794b" stroke-width="3" />
+    <rect x="27" y="29" width="46" height="20" rx="7" fill="#213746" stroke="#2b794b" stroke-width="2" />
+    <circle cx="39" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <circle cx="61" cy="39" r="5" fill="#9dd3b4" stroke="none" stroke-width="2" />
+    <rect x="29" y="63" width="42" height="32" rx="5" fill="#b8cbd7" stroke="#2b794b" stroke-width="3" />
+    <rect x="8" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#2b794b" stroke-width="3" />
+    <rect x="77" y="66" width="15" height="28" rx="4" fill="#c6d7df" stroke="#2b794b" stroke-width="3" />
+    <line x1="36" y1="96" x2="36" y2="100" stroke="#2b794b" stroke-width="6" stroke-linecap="round" />
+    <line x1="64" y1="96" x2="64" y2="100" stroke="#2b794b" stroke-width="6" stroke-linecap="round" />
+    <rect x="39" y="73" width="22" height="12" rx="2" fill="#83c296" stroke="#2b794b" stroke-width="2" />
+  </g>
+  <text x="1877" y="969" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="normal" text-anchor="middle">Use the</text>
+  <text x="1877" y="999" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="normal" text-anchor="middle">Route 2</text>
+  <text x="1877" y="1029" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="25.000" font-weight="normal" text-anchor="middle">answer</text>
+  <rect x="1800" y="1058" width="174" height="38" rx="8" fill="#b1262d" stroke="#b1262d" stroke-width="2" />
+  <text x="1887" y="1084" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="13.537" font-weight="bold" text-anchor="middle">Route 2 answer selected</text>
+</svg>

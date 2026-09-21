@@ -54,8 +54,15 @@ human labels; model executions and the historical development recheck remain sep
 
 ## Current Benchmark
 
+The [model-free task acceptance report](output/task_acceptance_v1/README_CN.md)
+adds executable checks for all 131 retained synthetic tasks. Fixed routes give
+119 valid target interventions and raw-data recovery on 119/119 under one-shot
+poisoning, versus 110/119 under repeated poisoning. References/specifications and
+source hashes are checked separately; declared schema roles are not independent
+semantic annotation, and these are not agent success rates. No model API is used.
+
 - Numerical suite: 34 tasks over 11 CSV datasets.
-- Semantic/schema suite: 24 tasks over 14 CSV datasets.
+- Semantic/schema suite: 24 tasks over 17 CSV datasets.
 - Expanded release suites:
   - `toxictool_bench/tasks/numerical_iclr2027.jsonl`: 60 numerical tasks.
   - `toxictool_bench/tasks/semantic_schema_iclr2027.jsonl`: 60 semantic/schema tasks.

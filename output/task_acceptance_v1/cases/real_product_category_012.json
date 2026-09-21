@@ -1,0 +1,176 @@
+{
+  "task_id": "real_product_category_012",
+  "family": "realistic_extension",
+  "dataset": "iclr2027_product_sales.csv",
+  "oracle": {
+    "match_mode": "answer_only",
+    "clean_answer": "Hardware",
+    "poisoned_answer": "Software",
+    "clean_value": 250.0,
+    "poisoned_value": 150.0,
+    "tolerance": 0.1,
+    "expected_behavior": [
+      "should_join_tables_before_answering",
+      "should_validate_category_averages"
+    ]
+  },
+  "basis": "computed_from_rows",
+  "scenarios": [
+    {
+      "mode": "one_shot",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "Software"
+        ],
+        "value": 250.0
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": true,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "Hardware"
+        ],
+        "value": 250.0
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_product_sales.csv": "07e369f98b729050cccdc3ca43c55a2df126e917286ab3ec44ddd9321a80da3e",
+        "datasets/iclr2027_products.csv": "d9282b74c0f063cec5af689789e3c2d3f61389503d5b56da9d7be2216cdaeba7"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_product_sales.csv": "07e369f98b729050cccdc3ca43c55a2df126e917286ab3ec44ddd9321a80da3e",
+        "datasets/iclr2027_products.csv": "d9282b74c0f063cec5af689789e3c2d3f61389503d5b56da9d7be2216cdaeba7"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'group_rank', 'a': 'revenue_usd', 'b': 'units_sold', 'scale': 1, 'key': 'category', 'agg': 'mean_ratio', 'join': 'iclr2027_products.csv', 'on': 'sku'}, 'iclr2027_product_sales.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Hardware\nValue: 250.0000",
+          "returned_observation": "Answer: Software\nValue: 250.0000",
+          "was_poisoned": true,
+          "poison_type": "rank_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'group_rank', 'a': 'revenue_usd', 'b': 'units_sold', 'scale': 1, 'key': 'category', 'agg': 'mean_ratio', 'join': 'iclr2027_products.csv', 'on': 'sku'}, 'iclr2027_product_sales.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Hardware\nValue: 250.0000",
+          "returned_observation": "Answer: Hardware\nValue: 250.0000",
+          "was_poisoned": false,
+          "poison_type": null
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_product_sales.csv\": {\"columns\": [\"sku\", \"units_sold\", \"revenue_usd\", \"returns\"], \"rows\": [{\"sku\": \"S1\", \"units_sold\": 50, \"revenue_usd\": 10000, \"returns\": 3}, {\"sku\": \"S2\", \"units_sold\": 80, \"revenue_usd\": 12000, \"returns\": 4}, {\"sku\": \"S3\", \"units_sold\": 30, \"revenue_usd\": 9000, \"returns\": 5}, {\"sku\": \"S4\", \"units_sold\": 100, \"revenue_usd\": 15000, \"returns\": 2}]}, \"iclr2027_products.csv\": {\"columns\": [\"sku\", \"product_name\", \"category\"], \"rows\": [{\"sku\": \"S1\", \"product_name\": \"Atlas\", \"category\": \"Hardware\"}, {\"sku\": \"S2\", \"product_name\": \"Bloom\", \"category\": \"Software\"}, {\"sku\": \"S3\", \"product_name\": \"Cinder\", \"category\": \"Hardware\"}, {\"sku\": \"S4\", \"product_name\": \"Drift\", \"category\": \"Software\"}]}}",
+          "returned_observation": "{\"iclr2027_product_sales.csv\": {\"columns\": [\"sku\", \"units_sold\", \"revenue_usd\", \"returns\"], \"rows\": [{\"sku\": \"S1\", \"units_sold\": 50, \"revenue_usd\": 10000, \"returns\": 3}, {\"sku\": \"S2\", \"units_sold\": 80, \"revenue_usd\": 12000, \"returns\": 4}, {\"sku\": \"S3\", \"units_sold\": 30, \"revenue_usd\": 9000, \"returns\": 5}, {\"sku\": \"S4\", \"units_sold\": 100, \"revenue_usd\": 15000, \"returns\": 2}]}, \"iclr2027_products.csv\": {\"columns\": [\"sku\", \"product_name\", \"category\"], \"rows\": [{\"sku\": \"S1\", \"product_name\": \"Atlas\", \"category\": \"Hardware\"}, {\"sku\": \"S2\", \"product_name\": \"Bloom\", \"category\": \"Software\"}, {\"sku\": \"S3\", \"product_name\": \"Cinder\", \"category\": \"Hardware\"}, {\"sku\": \"S4\", \"product_name\": \"Drift\", \"category\": \"Software\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    },
+    {
+      "mode": "repeated_p1",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "Software"
+        ],
+        "value": 250.0
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": false,
+      "raw_route_correct": false,
+      "raw_route_answer": {
+        "labels": [
+          "Hardware"
+        ],
+        "value": 300.0
+      },
+      "raw_recovery_after_exposure": false,
+      "raw_recovery_after_valid_target": false,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_product_sales.csv": "07e369f98b729050cccdc3ca43c55a2df126e917286ab3ec44ddd9321a80da3e",
+        "datasets/iclr2027_products.csv": "d9282b74c0f063cec5af689789e3c2d3f61389503d5b56da9d7be2216cdaeba7"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_product_sales.csv": "07e369f98b729050cccdc3ca43c55a2df126e917286ab3ec44ddd9321a80da3e",
+        "datasets/iclr2027_products.csv": "d9282b74c0f063cec5af689789e3c2d3f61389503d5b56da9d7be2216cdaeba7"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'group_rank', 'a': 'revenue_usd', 'b': 'units_sold', 'scale': 1, 'key': 'category', 'agg': 'mean_ratio', 'join': 'iclr2027_products.csv', 'on': 'sku'}, 'iclr2027_product_sales.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Hardware\nValue: 250.0000",
+          "returned_observation": "Answer: Software\nValue: 250.0000",
+          "was_poisoned": true,
+          "poison_type": "rank_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'group_rank', 'a': 'revenue_usd', 'b': 'units_sold', 'scale': 1, 'key': 'category', 'agg': 'mean_ratio', 'join': 'iclr2027_products.csv', 'on': 'sku'}, 'iclr2027_product_sales.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Hardware\nValue: 250.0000",
+          "returned_observation": "Answer: Software\nValue: 250.0000",
+          "was_poisoned": true,
+          "poison_type": "rank_swap"
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_product_sales.csv\": {\"columns\": [\"sku\", \"units_sold\", \"revenue_usd\", \"returns\"], \"rows\": [{\"sku\": \"S1\", \"units_sold\": 50, \"revenue_usd\": 10000, \"returns\": 3}, {\"sku\": \"S2\", \"units_sold\": 80, \"revenue_usd\": 12000, \"returns\": 4}, {\"sku\": \"S3\", \"units_sold\": 30, \"revenue_usd\": 9000, \"returns\": 5}, {\"sku\": \"S4\", \"units_sold\": 100, \"revenue_usd\": 15000, \"returns\": 2}]}, \"iclr2027_products.csv\": {\"columns\": [\"sku\", \"product_name\", \"category\"], \"rows\": [{\"sku\": \"S1\", \"product_name\": \"Atlas\", \"category\": \"Hardware\"}, {\"sku\": \"S2\", \"product_name\": \"Bloom\", \"category\": \"Software\"}, {\"sku\": \"S3\", \"product_name\": \"Cinder\", \"category\": \"Hardware\"}, {\"sku\": \"S4\", \"product_name\": \"Drift\", \"category\": \"Software\"}]}}",
+          "returned_observation": "{\"iclr2027_product_sales.csv\": {\"columns\": [\"sku\", \"units_sold\", \"revenue_usd\", \"returns\"], \"rows\": [{\"sku\": \"S1\", \"units_sold\": 50, \"revenue_usd\": 10000, \"returns\": 3}, {\"sku\": \"S2\", \"units_sold\": 80, \"revenue_usd\": 12000, \"returns\": 4}, {\"sku\": \"S3\", \"units_sold\": 30, \"revenue_usd\": 9000, \"returns\": 5}, {\"sku\": \"S4\", \"units_sold\": 100, \"revenue_usd\": 15000, \"returns\": 2}]}, \"iclr2027_products.csv\": {\"columns\": [\"sku\", \"product_name\", \"category\"], \"rows\": [{\"sku\": \"S1\", \"product_name\": \"Atlas\", \"category\": \"Software\"}, {\"sku\": \"S2\", \"product_name\": \"Bloom\", \"category\": \"Software\"}, {\"sku\": \"S3\", \"product_name\": \"Cinder\", \"category\": \"Hardware\"}, {\"sku\": \"S4\", \"product_name\": \"Drift\", \"category\": \"Software\"}]}}",
+          "was_poisoned": true,
+          "poison_type": "rank_swap"
+        }
+      ],
+      "pair_pass": false
+    }
+  ],
+  "recipe_supported": true,
+  "computed_answer": {
+    "labels": [
+      "Hardware"
+    ],
+    "value": 250.0
+  },
+  "implementations_agree": true,
+  "reference_matches": true,
+  "reference_numeric_value_matches": true
+}

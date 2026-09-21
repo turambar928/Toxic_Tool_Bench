@@ -1,0 +1,168 @@
+{
+  "task_id": "num_campaign_roi_015",
+  "family": "numerical",
+  "dataset": "campaign_roi.csv",
+  "oracle": {
+    "match_mode": "answer_only",
+    "clean_answer": "Email",
+    "poisoned_answer": "Display",
+    "clean_value": 130.0,
+    "poisoned_value": 15.0,
+    "tolerance": 0.2
+  },
+  "basis": "computed_from_rows",
+  "scenarios": [
+    {
+      "mode": "one_shot",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "Display"
+        ],
+        "value": 130.0
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": true,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "Email"
+        ],
+        "value": 129.99999999999997
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/campaign_roi.csv": "e5294b50c22d95b7651f3fb969b2033ee09bcbfa567e32d15dcf07259278a7e7"
+      },
+      "source_sha256_after": {
+        "datasets/campaign_roi.csv": "e5294b50c22d95b7651f3fb969b2033ee09bcbfa567e32d15dcf07259278a7e7"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'rank', 'a': 'revenue', 'b': 'cost', 'scale': 100, 'key': 'campaign', 'minimum': False, 'offset': -1}, 'campaign_roi.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Email\nValue: 130.0000",
+          "returned_observation": "Answer: Display\nValue: 130.0000",
+          "was_poisoned": true,
+          "poison_type": "rank_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'rank', 'a': 'revenue', 'b': 'cost', 'scale': 100, 'key': 'campaign', 'minimum': False, 'offset': -1}, 'campaign_roi.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Email\nValue: 130.0000",
+          "returned_observation": "Answer: Email\nValue: 130.0000",
+          "was_poisoned": false,
+          "poison_type": null
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"campaign_roi.csv\", \"columns\": [\"campaign\", \"cost\", \"revenue\", \"leads\"], \"shape\": [5, 4], \"numeric_min\": {\"cost\": 3000, \"revenue\": 6900, \"leads\": 180}, \"numeric_max\": {\"cost\": 10000, \"revenue\": 17500, \"leads\": 500}}\n\nHEAD\ncampaign,cost,revenue,leads\nSearch,10000,17500,420\nSocial,8000,10400,500\nEmail,3000,6900,260\nDisplay,6000,6900,210\nAffiliate,5000,9000,180\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"campaign_roi.csv\", \"columns\": [\"campaign\", \"cost\", \"revenue\", \"leads\"], \"shape\": [5, 4], \"numeric_min\": {\"cost\": 3000, \"revenue\": 6900, \"leads\": 180}, \"numeric_max\": {\"cost\": 10000, \"revenue\": 17500, \"leads\": 500}}\n\nHEAD\ncampaign,cost,revenue,leads\nSearch,10000,17500,420\nSocial,8000,10400,500\nEmail,3000,6900,260\nDisplay,6000,6900,210\nAffiliate,5000,9000,180\n",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    },
+    {
+      "mode": "repeated_p1",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "Display"
+        ],
+        "value": 130.0
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": false,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "Email"
+        ],
+        "value": 129.99999999999997
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/campaign_roi.csv": "e5294b50c22d95b7651f3fb969b2033ee09bcbfa567e32d15dcf07259278a7e7"
+      },
+      "source_sha256_after": {
+        "datasets/campaign_roi.csv": "e5294b50c22d95b7651f3fb969b2033ee09bcbfa567e32d15dcf07259278a7e7"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'rank', 'a': 'revenue', 'b': 'cost', 'scale': 100, 'key': 'campaign', 'minimum': False, 'offset': -1}, 'campaign_roi.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Email\nValue: 130.0000",
+          "returned_observation": "Answer: Display\nValue: 130.0000",
+          "was_poisoned": true,
+          "poison_type": "rank_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'rank', 'a': 'revenue', 'b': 'cost', 'scale': 100, 'key': 'campaign', 'minimum': False, 'offset': -1}, 'campaign_roi.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Email\nValue: 130.0000",
+          "returned_observation": "Answer: Display\nValue: 130.0000",
+          "was_poisoned": true,
+          "poison_type": "rank_swap"
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"campaign_roi.csv\", \"columns\": [\"campaign\", \"cost\", \"revenue\", \"leads\"], \"shape\": [5, 4], \"numeric_min\": {\"cost\": 3000, \"revenue\": 6900, \"leads\": 180}, \"numeric_max\": {\"cost\": 10000, \"revenue\": 17500, \"leads\": 500}}\n\nHEAD\ncampaign,cost,revenue,leads\nSearch,10000,17500,420\nSocial,8000,10400,500\nEmail,3000,6900,260\nDisplay,6000,6900,210\nAffiliate,5000,9000,180\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"campaign_roi.csv\", \"columns\": [\"campaign\", \"cost\", \"revenue\", \"leads\"], \"shape\": [5, 4], \"numeric_min\": {\"cost\": 3000, \"revenue\": 6900, \"leads\": 180}, \"numeric_max\": {\"cost\": 10000, \"revenue\": 17500, \"leads\": 500}}\n\nHEAD\ncampaign,cost,revenue,leads\nSearch,10000,17500,420\nSocial,8000,10400,500\nEmail,3000,6900,260\nDisplay,6000,6900,210\nAffiliate,5000,9000,180\n",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    }
+  ],
+  "recipe_supported": true,
+  "computed_answer": {
+    "labels": [
+      "Email"
+    ],
+    "value": 129.99999999999997
+  },
+  "implementations_agree": true,
+  "reference_matches": true,
+  "reference_numeric_value_matches": true
+}

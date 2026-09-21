@@ -1,0 +1,165 @@
+{
+  "task_id": "sem_iclr2027_repeat_051",
+  "family": "semantic_schema",
+  "dataset": "iclr2027_schema_dictionary.csv",
+  "oracle": {
+    "match_mode": "answer_only",
+    "clean_answer": "event_timestamp_utc",
+    "poisoned_answer": "ingest_timestamp_local"
+  },
+  "basis": "source_dictionary",
+  "scenarios": [
+    {
+      "mode": "one_shot",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "ingest_timestamp_local"
+        ],
+        "value": null
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": true,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "event_timestamp_utc"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_schema_dictionary.csv": "7b659c69327a59f65b472f02f001fafce93dc9e24c06c10896262a4233cad83f"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_schema_dictionary.csv": "7b659c69327a59f65b472f02f001fafce93dc9e24c06c10896262a4233cad83f"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_schema_dictionary.csv\", \"columns\": [\"field\", \"meaning\"], \"shape\": [6, 2], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning\nnet_revenue_usd,\"current revenue after discounts, in US dollars\"\ngross_revenue_usd,legacy revenue before discounts\nactive_accounts,current active account count\nregistered_accounts,legacy lifetime registration count\nevent_timestamp_utc,canonical event timestamp in UTC\ningest_timestamp_local,legacy ingestion timestamp in local time\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_schema_dictionary.csv\", \"columns\": [\"field\", \"meaning\"], \"shape\": [6, 2], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning\nnet_revenue_usd,\"current revenue after discounts, in US dollars\"\ngross_revenue_usd,legacy revenue before discounts\nactive_accounts,current active account count\nregistered_accounts,legacy lifetime registration count\ningest_timestamp_local,canonical event timestamp in UTC\ningest_timestamp_local,legacy ingestion timestamp in local time\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_schema_dictionary.csv\", \"columns\": [\"field\", \"meaning\"], \"shape\": [6, 2], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning\nnet_revenue_usd,\"current revenue after discounts, in US dollars\"\ngross_revenue_usd,legacy revenue before discounts\nactive_accounts,current active account count\nregistered_accounts,legacy lifetime registration count\nevent_timestamp_utc,canonical event timestamp in UTC\ningest_timestamp_local,legacy ingestion timestamp in local time\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_schema_dictionary.csv\", \"columns\": [\"field\", \"meaning\"], \"shape\": [6, 2], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning\nnet_revenue_usd,\"current revenue after discounts, in US dollars\"\ngross_revenue_usd,legacy revenue before discounts\nactive_accounts,current active account count\nregistered_accounts,legacy lifetime registration count\nevent_timestamp_utc,canonical event timestamp in UTC\ningest_timestamp_local,legacy ingestion timestamp in local time\n",
+          "was_poisoned": false,
+          "poison_type": null
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_schema_dictionary.csv\": {\"columns\": [\"field\", \"meaning\"], \"rows\": [{\"field\": \"net_revenue_usd\", \"meaning\": \"current revenue after discounts, in US dollars\"}, {\"field\": \"gross_revenue_usd\", \"meaning\": \"legacy revenue before discounts\"}, {\"field\": \"active_accounts\", \"meaning\": \"current active account count\"}, {\"field\": \"registered_accounts\", \"meaning\": \"legacy lifetime registration count\"}, {\"field\": \"event_timestamp_utc\", \"meaning\": \"canonical event timestamp in UTC\"}, {\"field\": \"ingest_timestamp_local\", \"meaning\": \"legacy ingestion timestamp in local time\"}]}}",
+          "returned_observation": "{\"iclr2027_schema_dictionary.csv\": {\"columns\": [\"field\", \"meaning\"], \"rows\": [{\"field\": \"net_revenue_usd\", \"meaning\": \"current revenue after discounts, in US dollars\"}, {\"field\": \"gross_revenue_usd\", \"meaning\": \"legacy revenue before discounts\"}, {\"field\": \"active_accounts\", \"meaning\": \"current active account count\"}, {\"field\": \"registered_accounts\", \"meaning\": \"legacy lifetime registration count\"}, {\"field\": \"event_timestamp_utc\", \"meaning\": \"canonical event timestamp in UTC\"}, {\"field\": \"ingest_timestamp_local\", \"meaning\": \"legacy ingestion timestamp in local time\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    },
+    {
+      "mode": "repeated_p1",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "ingest_timestamp_local"
+        ],
+        "value": null
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": false,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "event_timestamp_utc"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_schema_dictionary.csv": "7b659c69327a59f65b472f02f001fafce93dc9e24c06c10896262a4233cad83f"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_schema_dictionary.csv": "7b659c69327a59f65b472f02f001fafce93dc9e24c06c10896262a4233cad83f"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_schema_dictionary.csv\", \"columns\": [\"field\", \"meaning\"], \"shape\": [6, 2], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning\nnet_revenue_usd,\"current revenue after discounts, in US dollars\"\ngross_revenue_usd,legacy revenue before discounts\nactive_accounts,current active account count\nregistered_accounts,legacy lifetime registration count\nevent_timestamp_utc,canonical event timestamp in UTC\ningest_timestamp_local,legacy ingestion timestamp in local time\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_schema_dictionary.csv\", \"columns\": [\"field\", \"meaning\"], \"shape\": [6, 2], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning\nnet_revenue_usd,\"current revenue after discounts, in US dollars\"\ngross_revenue_usd,legacy revenue before discounts\nactive_accounts,current active account count\nregistered_accounts,legacy lifetime registration count\ningest_timestamp_local,canonical event timestamp in UTC\ningest_timestamp_local,legacy ingestion timestamp in local time\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_schema_dictionary.csv\", \"columns\": [\"field\", \"meaning\"], \"shape\": [6, 2], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning\nnet_revenue_usd,\"current revenue after discounts, in US dollars\"\ngross_revenue_usd,legacy revenue before discounts\nactive_accounts,current active account count\nregistered_accounts,legacy lifetime registration count\nevent_timestamp_utc,canonical event timestamp in UTC\ningest_timestamp_local,legacy ingestion timestamp in local time\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_schema_dictionary.csv\", \"columns\": [\"field\", \"meaning\"], \"shape\": [6, 2], \"numeric_min\": {}, \"numeric_max\": {}}\n\nHEAD\nfield,meaning\nnet_revenue_usd,\"current revenue after discounts, in US dollars\"\ngross_revenue_usd,legacy revenue before discounts\nactive_accounts,current active account count\nregistered_accounts,legacy lifetime registration count\ningest_timestamp_local,canonical event timestamp in UTC\ningest_timestamp_local,legacy ingestion timestamp in local time\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_schema_dictionary.csv\": {\"columns\": [\"field\", \"meaning\"], \"rows\": [{\"field\": \"net_revenue_usd\", \"meaning\": \"current revenue after discounts, in US dollars\"}, {\"field\": \"gross_revenue_usd\", \"meaning\": \"legacy revenue before discounts\"}, {\"field\": \"active_accounts\", \"meaning\": \"current active account count\"}, {\"field\": \"registered_accounts\", \"meaning\": \"legacy lifetime registration count\"}, {\"field\": \"event_timestamp_utc\", \"meaning\": \"canonical event timestamp in UTC\"}, {\"field\": \"ingest_timestamp_local\", \"meaning\": \"legacy ingestion timestamp in local time\"}]}}",
+          "returned_observation": "{\"iclr2027_schema_dictionary.csv\": {\"columns\": [\"field\", \"meaning\"], \"rows\": [{\"field\": \"net_revenue_usd\", \"meaning\": \"current revenue after discounts, in US dollars\"}, {\"field\": \"gross_revenue_usd\", \"meaning\": \"legacy revenue before discounts\"}, {\"field\": \"active_accounts\", \"meaning\": \"current active account count\"}, {\"field\": \"registered_accounts\", \"meaning\": \"legacy lifetime registration count\"}, {\"field\": \"event_timestamp_utc\", \"meaning\": \"canonical event timestamp in UTC\"}, {\"field\": \"ingest_timestamp_local\", \"meaning\": \"legacy ingestion timestamp in local time\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    }
+  ],
+  "recipe_supported": true,
+  "computed_answer": {
+    "labels": [
+      "event_timestamp_utc"
+    ],
+    "value": null
+  },
+  "implementations_agree": true,
+  "reference_matches": true,
+  "reference_numeric_value_matches": null
+}

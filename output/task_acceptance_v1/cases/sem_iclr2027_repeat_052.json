@@ -1,0 +1,165 @@
+{
+  "task_id": "sem_iclr2027_repeat_052",
+  "family": "semantic_schema",
+  "dataset": "iclr2027_ad_ops.csv",
+  "oracle": {
+    "match_mode": "answer_only",
+    "clean_answer": "spend_usd",
+    "poisoned_answer": "revenue_usd"
+  },
+  "basis": "declared_schema_role",
+  "scenarios": [
+    {
+      "mode": "one_shot",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "revenue_usd"
+        ],
+        "value": null
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": true,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "spend_usd"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_ad_ops.csv": "cc83c676339dc74718dc10f0d8057446758162105f997c84337a504bd7b282da"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_ad_ops.csv": "cc83c676339dc74718dc10f0d8057446758162105f997c84337a504bd7b282da"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_ad_ops.csv\", \"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"spend_usd\", \"revenue_usd\"], \"shape\": [6, 7], \"numeric_min\": {\"impressions\": 4000, \"clicks\": 400, \"conversions\": 75, \"spend_usd\": 800, \"revenue_usd\": 3000}, \"numeric_max\": {\"impressions\": 12000, \"clicks\": 1000, \"conversions\": 150, \"spend_usd\": 2000, \"revenue_usd\": 5000}}\n\nHEAD\nchannel,region,impressions,clicks,conversions,spend_usd,revenue_usd\nSearch,North,10000,500,100,2000,5000\nSearch,South,8000,400,80,1600,4000\nEmail,North,5000,1000,150,1000,4500\nEmail,South,4000,800,120,800,3600\nSocial,North,12000,600,90,1800,3600\nSocial,South,10000,500,75,1500,3000\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_ad_ops.csv\", \"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"revenue_usd\", \"spend_usd\"], \"shape\": [6, 7], \"numeric_min\": {\"impressions\": 4000, \"clicks\": 400, \"conversions\": 75, \"revenue_usd\": 800, \"spend_usd\": 3000}, \"numeric_max\": {\"impressions\": 12000, \"clicks\": 1000, \"conversions\": 150, \"revenue_usd\": 2000, \"spend_usd\": 5000}}\n\nHEAD\nchannel,region,impressions,clicks,conversions,revenue_usd,spend_usd\nSearch,North,10000,500,100,2000,5000\nSearch,South,8000,400,80,1600,4000\nEmail,North,5000,1000,150,1000,4500\nEmail,South,4000,800,120,800,3600\nSocial,North,12000,600,90,1800,3600\nSocial,South,10000,500,75,1500,3000\n",
+          "was_poisoned": true,
+          "poison_type": "column_semantic_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_ad_ops.csv\", \"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"spend_usd\", \"revenue_usd\"], \"shape\": [6, 7], \"numeric_min\": {\"impressions\": 4000, \"clicks\": 400, \"conversions\": 75, \"spend_usd\": 800, \"revenue_usd\": 3000}, \"numeric_max\": {\"impressions\": 12000, \"clicks\": 1000, \"conversions\": 150, \"spend_usd\": 2000, \"revenue_usd\": 5000}}\n\nHEAD\nchannel,region,impressions,clicks,conversions,spend_usd,revenue_usd\nSearch,North,10000,500,100,2000,5000\nSearch,South,8000,400,80,1600,4000\nEmail,North,5000,1000,150,1000,4500\nEmail,South,4000,800,120,800,3600\nSocial,North,12000,600,90,1800,3600\nSocial,South,10000,500,75,1500,3000\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_ad_ops.csv\", \"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"spend_usd\", \"revenue_usd\"], \"shape\": [6, 7], \"numeric_min\": {\"impressions\": 4000, \"clicks\": 400, \"conversions\": 75, \"spend_usd\": 800, \"revenue_usd\": 3000}, \"numeric_max\": {\"impressions\": 12000, \"clicks\": 1000, \"conversions\": 150, \"spend_usd\": 2000, \"revenue_usd\": 5000}}\n\nHEAD\nchannel,region,impressions,clicks,conversions,spend_usd,revenue_usd\nSearch,North,10000,500,100,2000,5000\nSearch,South,8000,400,80,1600,4000\nEmail,North,5000,1000,150,1000,4500\nEmail,South,4000,800,120,800,3600\nSocial,North,12000,600,90,1800,3600\nSocial,South,10000,500,75,1500,3000\n",
+          "was_poisoned": false,
+          "poison_type": null
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_ad_ops.csv\": {\"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"spend_usd\", \"revenue_usd\"], \"rows\": [{\"channel\": \"Search\", \"region\": \"North\", \"impressions\": 10000, \"clicks\": 500, \"conversions\": 100, \"spend_usd\": 2000, \"revenue_usd\": 5000}, {\"channel\": \"Search\", \"region\": \"South\", \"impressions\": 8000, \"clicks\": 400, \"conversions\": 80, \"spend_usd\": 1600, \"revenue_usd\": 4000}, {\"channel\": \"Email\", \"region\": \"North\", \"impressions\": 5000, \"clicks\": 1000, \"conversions\": 150, \"spend_usd\": 1000, \"revenue_usd\": 4500}, {\"channel\": \"Email\", \"region\": \"South\", \"impressions\": 4000, \"clicks\": 800, \"conversions\": 120, \"spend_usd\": 800, \"revenue_usd\": 3600}, {\"channel\": \"Social\", \"region\": \"North\", \"impressions\": 12000, \"clicks\": 600, \"conversions\": 90, \"spend_usd\": 1800, \"revenue_usd\": 3600}, {\"channel\": \"Social\", \"region\": \"South\", \"impressions\": 10000, \"clicks\": 500, \"conversions\": 75, \"spend_usd\": 1500, \"revenue_usd\": 3000}]}}",
+          "returned_observation": "{\"iclr2027_ad_ops.csv\": {\"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"spend_usd\", \"revenue_usd\"], \"rows\": [{\"channel\": \"Search\", \"region\": \"North\", \"impressions\": 10000, \"clicks\": 500, \"conversions\": 100, \"spend_usd\": 2000, \"revenue_usd\": 5000}, {\"channel\": \"Search\", \"region\": \"South\", \"impressions\": 8000, \"clicks\": 400, \"conversions\": 80, \"spend_usd\": 1600, \"revenue_usd\": 4000}, {\"channel\": \"Email\", \"region\": \"North\", \"impressions\": 5000, \"clicks\": 1000, \"conversions\": 150, \"spend_usd\": 1000, \"revenue_usd\": 4500}, {\"channel\": \"Email\", \"region\": \"South\", \"impressions\": 4000, \"clicks\": 800, \"conversions\": 120, \"spend_usd\": 800, \"revenue_usd\": 3600}, {\"channel\": \"Social\", \"region\": \"North\", \"impressions\": 12000, \"clicks\": 600, \"conversions\": 90, \"spend_usd\": 1800, \"revenue_usd\": 3600}, {\"channel\": \"Social\", \"region\": \"South\", \"impressions\": 10000, \"clicks\": 500, \"conversions\": 75, \"spend_usd\": 1500, \"revenue_usd\": 3000}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    },
+    {
+      "mode": "repeated_p1",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "revenue_usd"
+        ],
+        "value": null
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": false,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "spend_usd"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_ad_ops.csv": "cc83c676339dc74718dc10f0d8057446758162105f997c84337a504bd7b282da"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_ad_ops.csv": "cc83c676339dc74718dc10f0d8057446758162105f997c84337a504bd7b282da"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_ad_ops.csv\", \"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"spend_usd\", \"revenue_usd\"], \"shape\": [6, 7], \"numeric_min\": {\"impressions\": 4000, \"clicks\": 400, \"conversions\": 75, \"spend_usd\": 800, \"revenue_usd\": 3000}, \"numeric_max\": {\"impressions\": 12000, \"clicks\": 1000, \"conversions\": 150, \"spend_usd\": 2000, \"revenue_usd\": 5000}}\n\nHEAD\nchannel,region,impressions,clicks,conversions,spend_usd,revenue_usd\nSearch,North,10000,500,100,2000,5000\nSearch,South,8000,400,80,1600,4000\nEmail,North,5000,1000,150,1000,4500\nEmail,South,4000,800,120,800,3600\nSocial,North,12000,600,90,1800,3600\nSocial,South,10000,500,75,1500,3000\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_ad_ops.csv\", \"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"revenue_usd\", \"spend_usd\"], \"shape\": [6, 7], \"numeric_min\": {\"impressions\": 4000, \"clicks\": 400, \"conversions\": 75, \"revenue_usd\": 800, \"spend_usd\": 3000}, \"numeric_max\": {\"impressions\": 12000, \"clicks\": 1000, \"conversions\": 150, \"revenue_usd\": 2000, \"spend_usd\": 5000}}\n\nHEAD\nchannel,region,impressions,clicks,conversions,revenue_usd,spend_usd\nSearch,North,10000,500,100,2000,5000\nSearch,South,8000,400,80,1600,4000\nEmail,North,5000,1000,150,1000,4500\nEmail,South,4000,800,120,800,3600\nSocial,North,12000,600,90,1800,3600\nSocial,South,10000,500,75,1500,3000\n",
+          "was_poisoned": true,
+          "poison_type": "column_semantic_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_ad_ops.csv\", \"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"spend_usd\", \"revenue_usd\"], \"shape\": [6, 7], \"numeric_min\": {\"impressions\": 4000, \"clicks\": 400, \"conversions\": 75, \"spend_usd\": 800, \"revenue_usd\": 3000}, \"numeric_max\": {\"impressions\": 12000, \"clicks\": 1000, \"conversions\": 150, \"spend_usd\": 2000, \"revenue_usd\": 5000}}\n\nHEAD\nchannel,region,impressions,clicks,conversions,spend_usd,revenue_usd\nSearch,North,10000,500,100,2000,5000\nSearch,South,8000,400,80,1600,4000\nEmail,North,5000,1000,150,1000,4500\nEmail,South,4000,800,120,800,3600\nSocial,North,12000,600,90,1800,3600\nSocial,South,10000,500,75,1500,3000\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_ad_ops.csv\", \"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"revenue_usd\", \"spend_usd\"], \"shape\": [6, 7], \"numeric_min\": {\"impressions\": 4000, \"clicks\": 400, \"conversions\": 75, \"revenue_usd\": 800, \"spend_usd\": 3000}, \"numeric_max\": {\"impressions\": 12000, \"clicks\": 1000, \"conversions\": 150, \"revenue_usd\": 2000, \"spend_usd\": 5000}}\n\nHEAD\nchannel,region,impressions,clicks,conversions,revenue_usd,spend_usd\nSearch,North,10000,500,100,2000,5000\nSearch,South,8000,400,80,1600,4000\nEmail,North,5000,1000,150,1000,4500\nEmail,South,4000,800,120,800,3600\nSocial,North,12000,600,90,1800,3600\nSocial,South,10000,500,75,1500,3000\n",
+          "was_poisoned": true,
+          "poison_type": "column_semantic_swap"
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_ad_ops.csv\": {\"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"spend_usd\", \"revenue_usd\"], \"rows\": [{\"channel\": \"Search\", \"region\": \"North\", \"impressions\": 10000, \"clicks\": 500, \"conversions\": 100, \"spend_usd\": 2000, \"revenue_usd\": 5000}, {\"channel\": \"Search\", \"region\": \"South\", \"impressions\": 8000, \"clicks\": 400, \"conversions\": 80, \"spend_usd\": 1600, \"revenue_usd\": 4000}, {\"channel\": \"Email\", \"region\": \"North\", \"impressions\": 5000, \"clicks\": 1000, \"conversions\": 150, \"spend_usd\": 1000, \"revenue_usd\": 4500}, {\"channel\": \"Email\", \"region\": \"South\", \"impressions\": 4000, \"clicks\": 800, \"conversions\": 120, \"spend_usd\": 800, \"revenue_usd\": 3600}, {\"channel\": \"Social\", \"region\": \"North\", \"impressions\": 12000, \"clicks\": 600, \"conversions\": 90, \"spend_usd\": 1800, \"revenue_usd\": 3600}, {\"channel\": \"Social\", \"region\": \"South\", \"impressions\": 10000, \"clicks\": 500, \"conversions\": 75, \"spend_usd\": 1500, \"revenue_usd\": 3000}]}}",
+          "returned_observation": "{\"iclr2027_ad_ops.csv\": {\"columns\": [\"channel\", \"region\", \"impressions\", \"clicks\", \"conversions\", \"spend_usd\", \"revenue_usd\"], \"rows\": [{\"channel\": \"Search\", \"region\": \"North\", \"impressions\": 10000, \"clicks\": 500, \"conversions\": 100, \"spend_usd\": 2000, \"revenue_usd\": 5000}, {\"channel\": \"Search\", \"region\": \"South\", \"impressions\": 8000, \"clicks\": 400, \"conversions\": 80, \"spend_usd\": 1600, \"revenue_usd\": 4000}, {\"channel\": \"Email\", \"region\": \"North\", \"impressions\": 5000, \"clicks\": 1000, \"conversions\": 150, \"spend_usd\": 1000, \"revenue_usd\": 4500}, {\"channel\": \"Email\", \"region\": \"South\", \"impressions\": 4000, \"clicks\": 800, \"conversions\": 120, \"spend_usd\": 800, \"revenue_usd\": 3600}, {\"channel\": \"Social\", \"region\": \"North\", \"impressions\": 12000, \"clicks\": 600, \"conversions\": 90, \"spend_usd\": 1800, \"revenue_usd\": 3600}, {\"channel\": \"Social\", \"region\": \"South\", \"impressions\": 10000, \"clicks\": 500, \"conversions\": 75, \"spend_usd\": 1500, \"revenue_usd\": 3000}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    }
+  ],
+  "recipe_supported": true,
+  "computed_answer": {
+    "labels": [
+      "spend_usd"
+    ],
+    "value": null
+  },
+  "implementations_agree": true,
+  "reference_matches": true,
+  "reference_numeric_value_matches": null
+}

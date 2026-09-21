@@ -1,0 +1,165 @@
+{
+  "task_id": "real_multi_preview_support_002",
+  "family": "realistic_extension",
+  "dataset": "iclr2027_support_tickets.csv",
+  "oracle": {
+    "match_mode": "answer_only",
+    "clean_answer": "iclr2027_support_teams",
+    "poisoned_answer": "iclr2027_support_tickets",
+    "expected_behavior": [
+      "should_not_trust_a_single_table_preview",
+      "should_identify_the_dimension_table"
+    ]
+  },
+  "basis": "table_schema_discovery",
+  "scenarios": [
+    {
+      "mode": "one_shot",
+      "primary_exposed": true,
+      "errors": [
+        "poisoned: duplicate JSON key: iclr2027_support_tickets"
+      ],
+      "clean_execution_matches": true,
+      "primary_interface_valid": false,
+      "target_changed": null,
+      "poison_reference_match": null,
+      "scripted_retry_correct": true,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "iclr2027_support_teams"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": null,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_support_tickets.csv": "44c15d2ffed945ae4063794469e0adc048404b5dbbb576105a36baa875e3ece6",
+        "datasets/iclr2027_support_teams.csv": "8ecac5d16f65eb13c386e49c88b1b31fb5c9f26543257b4c11376c573c7f0ea7"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_support_tickets.csv": "44c15d2ffed945ae4063794469e0adc048404b5dbbb576105a36baa875e3ece6",
+        "datasets/iclr2027_support_teams.csv": "8ecac5d16f65eb13c386e49c88b1b31fb5c9f26543257b4c11376c573c7f0ea7"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_support_tickets.csv\", \"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4], \"numeric_min\": {\"minutes_to_first_response\": 18, \"resolved\": 0}, \"numeric_max\": {\"minutes_to_first_response\": 55, \"resolved\": 1}, \"tables\": {\"iclr2027_support_tickets\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4]}, \"iclr2027_support_teams\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"shape\": [3, 3]}}}\n\nHEAD\nticket_id,team_id,minutes_to_first_response,resolved\nK1,T1,24,1\nK2,T1,30,1\nK3,T1,28,1\nK4,T2,18,1\nK5,T2,22,1\nK6,T2,20,0\nK7,T3,45,1\nK8,T3,50,0\nK9,T3,55,1\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_support_tickets.csv\", \"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4], \"numeric_min\": {\"minutes_to_first_response\": 18, \"resolved\": 0}, \"numeric_max\": {\"minutes_to_first_response\": 55, \"resolved\": 1}, \"tables\": {\"iclr2027_support_tickets\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4]}, \"iclr2027_support_tickets\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"shape\": [3, 3]}}}\n\nHEAD\nticket_id,team_id,minutes_to_first_response,resolved\nK1,T1,24,1\nK2,T1,30,1\nK3,T1,28,1\nK4,T2,18,1\nK5,T2,22,1\nK6,T2,20,0\nK7,T3,45,1\nK8,T3,50,0\nK9,T3,55,1\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_support_tickets.csv\", \"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4], \"numeric_min\": {\"minutes_to_first_response\": 18, \"resolved\": 0}, \"numeric_max\": {\"minutes_to_first_response\": 55, \"resolved\": 1}, \"tables\": {\"iclr2027_support_tickets\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4]}, \"iclr2027_support_teams\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"shape\": [3, 3]}}}\n\nHEAD\nticket_id,team_id,minutes_to_first_response,resolved\nK1,T1,24,1\nK2,T1,30,1\nK3,T1,28,1\nK4,T2,18,1\nK5,T2,22,1\nK6,T2,20,0\nK7,T3,45,1\nK8,T3,50,0\nK9,T3,55,1\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_support_tickets.csv\", \"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4], \"numeric_min\": {\"minutes_to_first_response\": 18, \"resolved\": 0}, \"numeric_max\": {\"minutes_to_first_response\": 55, \"resolved\": 1}, \"tables\": {\"iclr2027_support_tickets\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4]}, \"iclr2027_support_teams\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"shape\": [3, 3]}}}\n\nHEAD\nticket_id,team_id,minutes_to_first_response,resolved\nK1,T1,24,1\nK2,T1,30,1\nK3,T1,28,1\nK4,T2,18,1\nK5,T2,22,1\nK6,T2,20,0\nK7,T3,45,1\nK8,T3,50,0\nK9,T3,55,1\n",
+          "was_poisoned": false,
+          "poison_type": null
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_support_tickets.csv\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"rows\": [{\"ticket_id\": \"K1\", \"team_id\": \"T1\", \"minutes_to_first_response\": 24, \"resolved\": 1}, {\"ticket_id\": \"K2\", \"team_id\": \"T1\", \"minutes_to_first_response\": 30, \"resolved\": 1}, {\"ticket_id\": \"K3\", \"team_id\": \"T1\", \"minutes_to_first_response\": 28, \"resolved\": 1}, {\"ticket_id\": \"K4\", \"team_id\": \"T2\", \"minutes_to_first_response\": 18, \"resolved\": 1}, {\"ticket_id\": \"K5\", \"team_id\": \"T2\", \"minutes_to_first_response\": 22, \"resolved\": 1}, {\"ticket_id\": \"K6\", \"team_id\": \"T2\", \"minutes_to_first_response\": 20, \"resolved\": 0}, {\"ticket_id\": \"K7\", \"team_id\": \"T3\", \"minutes_to_first_response\": 45, \"resolved\": 1}, {\"ticket_id\": \"K8\", \"team_id\": \"T3\", \"minutes_to_first_response\": 50, \"resolved\": 0}, {\"ticket_id\": \"K9\", \"team_id\": \"T3\", \"minutes_to_first_response\": 55, \"resolved\": 1}]}, \"iclr2027_support_teams.csv\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"rows\": [{\"team_id\": \"T1\", \"team_name\": \"Core\", \"manager\": \"Ana\"}, {\"team_id\": \"T2\", \"team_name\": \"Growth\", \"manager\": \"Bea\"}, {\"team_id\": \"T3\", \"team_name\": \"Risk\", \"manager\": \"Chen\"}]}}",
+          "returned_observation": "{\"iclr2027_support_tickets.csv\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"rows\": [{\"ticket_id\": \"K1\", \"team_id\": \"T1\", \"minutes_to_first_response\": 24, \"resolved\": 1}, {\"ticket_id\": \"K2\", \"team_id\": \"T1\", \"minutes_to_first_response\": 30, \"resolved\": 1}, {\"ticket_id\": \"K3\", \"team_id\": \"T1\", \"minutes_to_first_response\": 28, \"resolved\": 1}, {\"ticket_id\": \"K4\", \"team_id\": \"T2\", \"minutes_to_first_response\": 18, \"resolved\": 1}, {\"ticket_id\": \"K5\", \"team_id\": \"T2\", \"minutes_to_first_response\": 22, \"resolved\": 1}, {\"ticket_id\": \"K6\", \"team_id\": \"T2\", \"minutes_to_first_response\": 20, \"resolved\": 0}, {\"ticket_id\": \"K7\", \"team_id\": \"T3\", \"minutes_to_first_response\": 45, \"resolved\": 1}, {\"ticket_id\": \"K8\", \"team_id\": \"T3\", \"minutes_to_first_response\": 50, \"resolved\": 0}, {\"ticket_id\": \"K9\", \"team_id\": \"T3\", \"minutes_to_first_response\": 55, \"resolved\": 1}]}, \"iclr2027_support_teams.csv\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"rows\": [{\"team_id\": \"T1\", \"team_name\": \"Core\", \"manager\": \"Ana\"}, {\"team_id\": \"T2\", \"team_name\": \"Growth\", \"manager\": \"Bea\"}, {\"team_id\": \"T3\", \"team_name\": \"Risk\", \"manager\": \"Chen\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": false
+    },
+    {
+      "mode": "repeated_p1",
+      "primary_exposed": true,
+      "errors": [
+        "poisoned: duplicate JSON key: iclr2027_support_tickets"
+      ],
+      "clean_execution_matches": true,
+      "primary_interface_valid": false,
+      "target_changed": null,
+      "poison_reference_match": null,
+      "scripted_retry_correct": false,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "iclr2027_support_teams"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": null,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_support_tickets.csv": "44c15d2ffed945ae4063794469e0adc048404b5dbbb576105a36baa875e3ece6",
+        "datasets/iclr2027_support_teams.csv": "8ecac5d16f65eb13c386e49c88b1b31fb5c9f26543257b4c11376c573c7f0ea7"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_support_tickets.csv": "44c15d2ffed945ae4063794469e0adc048404b5dbbb576105a36baa875e3ece6",
+        "datasets/iclr2027_support_teams.csv": "8ecac5d16f65eb13c386e49c88b1b31fb5c9f26543257b4c11376c573c7f0ea7"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_support_tickets.csv\", \"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4], \"numeric_min\": {\"minutes_to_first_response\": 18, \"resolved\": 0}, \"numeric_max\": {\"minutes_to_first_response\": 55, \"resolved\": 1}, \"tables\": {\"iclr2027_support_tickets\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4]}, \"iclr2027_support_teams\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"shape\": [3, 3]}}}\n\nHEAD\nticket_id,team_id,minutes_to_first_response,resolved\nK1,T1,24,1\nK2,T1,30,1\nK3,T1,28,1\nK4,T2,18,1\nK5,T2,22,1\nK6,T2,20,0\nK7,T3,45,1\nK8,T3,50,0\nK9,T3,55,1\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_support_tickets.csv\", \"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4], \"numeric_min\": {\"minutes_to_first_response\": 18, \"resolved\": 0}, \"numeric_max\": {\"minutes_to_first_response\": 55, \"resolved\": 1}, \"tables\": {\"iclr2027_support_tickets\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4]}, \"iclr2027_support_tickets\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"shape\": [3, 3]}}}\n\nHEAD\nticket_id,team_id,minutes_to_first_response,resolved\nK1,T1,24,1\nK2,T1,30,1\nK3,T1,28,1\nK4,T2,18,1\nK5,T2,22,1\nK6,T2,20,0\nK7,T3,45,1\nK8,T3,50,0\nK9,T3,55,1\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_support_tickets.csv\", \"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4], \"numeric_min\": {\"minutes_to_first_response\": 18, \"resolved\": 0}, \"numeric_max\": {\"minutes_to_first_response\": 55, \"resolved\": 1}, \"tables\": {\"iclr2027_support_tickets\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4]}, \"iclr2027_support_teams\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"shape\": [3, 3]}}}\n\nHEAD\nticket_id,team_id,minutes_to_first_response,resolved\nK1,T1,24,1\nK2,T1,30,1\nK3,T1,28,1\nK4,T2,18,1\nK5,T2,22,1\nK6,T2,20,0\nK7,T3,45,1\nK8,T3,50,0\nK9,T3,55,1\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_support_tickets.csv\", \"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4], \"numeric_min\": {\"minutes_to_first_response\": 18, \"resolved\": 0}, \"numeric_max\": {\"minutes_to_first_response\": 55, \"resolved\": 1}, \"tables\": {\"iclr2027_support_tickets\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"shape\": [9, 4]}, \"iclr2027_support_tickets\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"shape\": [3, 3]}}}\n\nHEAD\nticket_id,team_id,minutes_to_first_response,resolved\nK1,T1,24,1\nK2,T1,30,1\nK3,T1,28,1\nK4,T2,18,1\nK5,T2,22,1\nK6,T2,20,0\nK7,T3,45,1\nK8,T3,50,0\nK9,T3,55,1\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_support_tickets.csv\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"rows\": [{\"ticket_id\": \"K1\", \"team_id\": \"T1\", \"minutes_to_first_response\": 24, \"resolved\": 1}, {\"ticket_id\": \"K2\", \"team_id\": \"T1\", \"minutes_to_first_response\": 30, \"resolved\": 1}, {\"ticket_id\": \"K3\", \"team_id\": \"T1\", \"minutes_to_first_response\": 28, \"resolved\": 1}, {\"ticket_id\": \"K4\", \"team_id\": \"T2\", \"minutes_to_first_response\": 18, \"resolved\": 1}, {\"ticket_id\": \"K5\", \"team_id\": \"T2\", \"minutes_to_first_response\": 22, \"resolved\": 1}, {\"ticket_id\": \"K6\", \"team_id\": \"T2\", \"minutes_to_first_response\": 20, \"resolved\": 0}, {\"ticket_id\": \"K7\", \"team_id\": \"T3\", \"minutes_to_first_response\": 45, \"resolved\": 1}, {\"ticket_id\": \"K8\", \"team_id\": \"T3\", \"minutes_to_first_response\": 50, \"resolved\": 0}, {\"ticket_id\": \"K9\", \"team_id\": \"T3\", \"minutes_to_first_response\": 55, \"resolved\": 1}]}, \"iclr2027_support_teams.csv\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"rows\": [{\"team_id\": \"T1\", \"team_name\": \"Core\", \"manager\": \"Ana\"}, {\"team_id\": \"T2\", \"team_name\": \"Growth\", \"manager\": \"Bea\"}, {\"team_id\": \"T3\", \"team_name\": \"Risk\", \"manager\": \"Chen\"}]}}",
+          "returned_observation": "{\"iclr2027_support_tickets.csv\": {\"columns\": [\"ticket_id\", \"team_id\", \"minutes_to_first_response\", \"resolved\"], \"rows\": [{\"ticket_id\": \"K1\", \"team_id\": \"T1\", \"minutes_to_first_response\": 24, \"resolved\": 1}, {\"ticket_id\": \"K2\", \"team_id\": \"T1\", \"minutes_to_first_response\": 30, \"resolved\": 1}, {\"ticket_id\": \"K3\", \"team_id\": \"T1\", \"minutes_to_first_response\": 28, \"resolved\": 1}, {\"ticket_id\": \"K4\", \"team_id\": \"T2\", \"minutes_to_first_response\": 18, \"resolved\": 1}, {\"ticket_id\": \"K5\", \"team_id\": \"T2\", \"minutes_to_first_response\": 22, \"resolved\": 1}, {\"ticket_id\": \"K6\", \"team_id\": \"T2\", \"minutes_to_first_response\": 20, \"resolved\": 0}, {\"ticket_id\": \"K7\", \"team_id\": \"T3\", \"minutes_to_first_response\": 45, \"resolved\": 1}, {\"ticket_id\": \"K8\", \"team_id\": \"T3\", \"minutes_to_first_response\": 50, \"resolved\": 0}, {\"ticket_id\": \"K9\", \"team_id\": \"T3\", \"minutes_to_first_response\": 55, \"resolved\": 1}]}, \"iclr2027_support_teams.csv\": {\"columns\": [\"team_id\", \"team_name\", \"manager\"], \"rows\": [{\"team_id\": \"T1\", \"team_name\": \"Core\", \"manager\": \"Ana\"}, {\"team_id\": \"T2\", \"team_name\": \"Growth\", \"manager\": \"Bea\"}, {\"team_id\": \"T3\", \"team_name\": \"Risk\", \"manager\": \"Chen\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": false
+    }
+  ],
+  "recipe_supported": true,
+  "computed_answer": {
+    "labels": [
+      "iclr2027_support_teams"
+    ],
+    "value": null
+  },
+  "implementations_agree": true,
+  "reference_matches": true,
+  "reference_numeric_value_matches": null
+}

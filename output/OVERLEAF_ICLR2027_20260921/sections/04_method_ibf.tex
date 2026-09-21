@@ -1,0 +1,58 @@
+\section{Guarded Verification}
+\label{sec:method}
+
+Guarded Verification is a mitigation wrapper for improving trust calibration in tool-augmented data agents. Its goal is not to make the base model broadly more cautious, but to change how tool observations are used in the final answer. A successful tool return is treated as evidence to check, rather than as a fact to copy.
+
+The method does not require retraining the underlying model or changing the benchmark tools. In the current implementation, we instantiate it for LangGraph ReAct as an adapter-level wrapper around the ReAct tool loop. The guarded adapter runs the original route, performs an independent verification route over the same task, and selects the final answer from the verified evidence. The key intervention is structural: the agent must obtain fresh evidence before adopting a potentially corrupted observation.
+
+\subsection{Guarded Agent Loop}
+
+For a user query $q$ and tool environment $\mathcal{T}$, Guarded Verification adds four steps around the base data-agent route.
+
+\begin{enumerate}
+    \item \textbf{Expectation generation.} Before relying on a tool result, the wrapper elicits coarse expectations or invariants for the requested analysis.
+    \item \textbf{Primary tool route.} The base agent executes its ordinary dataframe/tool route and produces a candidate observation and answer.
+    \item \textbf{Independent verification.} The wrapper runs a second verification route that recomputes or re-inspects the relevant evidence without treating the primary observation as authoritative.
+    \item \textbf{Final answer selection.} The wrapper finalizes from the verified evidence. If primary and verification evidence disagree, the final answer must use the verification result or explicitly qualify uncertainty rather than repeat the suspect observation.
+\end{enumerate}
+
+This loop targets the blind-compliance failure measured by BCR. It does not assume that the guard can identify the exact poisoning operator. Instead, it prevents unqualified reliance on a single unverified observation when independent evidence is available. The current implementation is therefore a defense against single-route silent corruption, not against a fully adaptive adversary that can corrupt every evidence path.
+
+\subsection{Expectation Generation}
+
+The expectation is intentionally coarse. It is not meant to predict the exact answer before computation. Instead, it records constraints that should hold for a plausible observation. Depending on the task, these constraints may include:
+\begin{itemize}
+    \item numerical invariants, such as non-negative counts, percentages within $[0, 100]$, or an average lying between the observed minimum and maximum;
+    \item entity-binding expectations, such as preserving the association between a group label and its statistic;
+    \item schema constraints, such as column meanings, units, or timestamps matching the dataset's documentation;
+    \item evidence constraints, such as a retrieved snippet supporting the claimed row, treatment arm, or recommendation;
+    \item instruction-hierarchy constraints, such as treating text found inside data rows as data rather than as agent instructions.
+\end{itemize}
+
+These expectations can be useful even when they are loose. A poisoned value may pass a broad numeric range check but still conflict with entity bindings, raw rows, or metadata inspected during verification.
+
+\subsection{Observation Gating and Verification}
+
+After the primary route returns an observation, the guard compares it with the expectation and with independently obtained evidence. A discrepancy flag is raised when the primary observation violates a hard invariant, conflicts with schema or retrieval evidence, or disagrees with a recomputation from raw data.
+
+Validation is counted only when the second route is operationally independent of the poisoned observation: it must execute after that observation and obtain fresh, task-relevant tool evidence rather than restating the returned summary. The evidence-producing action may itself be corrupted under repeated poisoning; this records a validation attempt, while VPA captures adoption of the poisoned answer after that check. Examples include recomputing aggregates from raw rows, re-reading the dataframe, checking treatment labels against table rows, or inspecting evidence rows behind a retrieved summary. This definition does not require source independence. In our current adapters, the primary and verification routes use separate agent passes but share the same tool implementation and released CSV source. Guarded Verification therefore tolerates corruption of one returned observation, not corruption of the shared source.
+
+In the benchmark implementation, poisoning is applied by a proxy with \texttt{poison\_once} enabled for the defense ablation: the primary matching observation can be corrupted, while later verification calls over raw data or source rows can return clean evidence. This is intentional. It isolates whether the agent loop uses a fresh check once one exists. The verification prompt includes the primary answer but marks it as an untrusted candidate; thus the pass is not protected from anchoring. It also does not model an attacker that controls the underlying data source, a shared cache, or all redundant routes.
+
+\subsection{Full and Light Guards}
+
+We evaluate two guarded variants.
+
+\paragraph{Full guard.}
+The full guarded adapter is the main defense configuration. It allocates enough budget for expectation generation, the ordinary LangGraph ReAct route, and an independent verification route. In the final answer, verified evidence has priority over the primary route when the two disagree. This variant measures whether structured verification can reduce blind compliance under additional tool-use cost.
+
+\paragraph{Light guard.}
+The light guarded adapter uses the same high-level policy but a tighter verification budget. It tests whether cheaper verification preserves robustness. In our expanded ablation, the light guard keeps observed BCR at zero and remains close to the full guard in poisoned TSR, but it is more sensitive to tasks that need extra turns to resolve row counts, labels, or averages. We therefore report light guarding as an appendix tradeoff rather than the main defense result.
+
+\subsection{Scope and Limitations}
+
+Guarded Verification is evaluated as an adapter-level wrapper for LangGraph ReAct, a public framework that exposes the tool-observation boundary needed for paired poisoning and independent recomputation. We do not claim that the current implementation is an optimal or universal defense for all data-agent frameworks. It is a controlled mitigation experiment: if blind compliance is driven by unverified trust in successful observations, then forcing independent verification should reduce BCR and improve recovery.
+
+The guard also has costs. It increases tool events and routing work because it asks for expectations and a second evidence path. It can under-recover when the verification budget is too small, and it may be unnecessary for low-risk observations. Future implementations should learn when to activate verification selectively, for example using confidence estimates, disagreement between tool routes, or poison-type risk priors. In this paper, we use the full guard as the main defense result and the light guard as an overhead/robustness tradeoff.
+
+We treat selective verification as a budget-control problem rather than as the core mitigation. The current selective baseline uses hand-written high-risk triggers for rankings, ratios, denominators, schema lookup, source-of-truth metadata, and retrieval evidence. It is useful for testing whether cheaper verification can preserve some robustness, but it is not a learned gate and it is not tuned to optimize a cost--robustness frontier. A stronger deployment policy would estimate risk from early trajectory signals, route disagreement, provenance uncertainty, or calibrated model confidence, and would trigger full verification only when the expected reduction in blind compliance justifies the added latency.

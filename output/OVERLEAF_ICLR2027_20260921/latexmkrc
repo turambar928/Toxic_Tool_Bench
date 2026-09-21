@@ -1,0 +1,6 @@
+# Default entry point and engine for this standalone paper project.
+@default_files = ('main.tex');
+$pdf_mode = 5; # XeLaTeX
+# Prefer the unchanged dependencies supplied with the official ICLR bundle.
+$ENV{'TEXINPUTS'} = './iclr2027//:' . ($ENV{'TEXINPUTS'} // '');
+$ENV{'BSTINPUTS'} = './iclr2027//:' . ($ENV{'BSTINPUTS'} // '');

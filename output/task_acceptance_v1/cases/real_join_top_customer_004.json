@@ -1,0 +1,173 @@
+{
+  "task_id": "real_join_top_customer_004",
+  "family": "realistic_extension",
+  "dataset": "iclr2027_orders.csv",
+  "oracle": {
+    "match_mode": "answer_only",
+    "clean_answer": "Fabrikam",
+    "poisoned_answer": "Contoso",
+    "expected_behavior": [
+      "should_join_tables_before_answering",
+      "should_validate_customer_totals"
+    ]
+  },
+  "basis": "computed_from_rows",
+  "scenarios": [
+    {
+      "mode": "one_shot",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "Contoso"
+        ],
+        "value": 3300.0
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": true,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "Fabrikam"
+        ],
+        "value": 3300.0
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": true,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_orders.csv": "5b09fdc66c85bf6e06816b6e56f8335a1c0c010871e2b57cb9dc961f91fa38cd",
+        "datasets/iclr2027_customers.csv": "3060e7c0e064b77ccd098f9f713e4b9295c61da11b7aa16e22f476ff61e459c3"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_orders.csv": "5b09fdc66c85bf6e06816b6e56f8335a1c0c010871e2b57cb9dc961f91fa38cd",
+        "datasets/iclr2027_customers.csv": "3060e7c0e064b77ccd098f9f713e4b9295c61da11b7aa16e22f476ff61e459c3"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'group_rank', 'a': 'order_value_usd', 'b': None, 'scale': 1, 'key': 'customer_name', 'agg': 'sum', 'join': 'iclr2027_customers.csv', 'on': 'customer_id'}, 'iclr2027_orders.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Fabrikam\nValue: 3300.0000",
+          "returned_observation": "Answer: Contoso\nValue: 3300.0000",
+          "was_poisoned": true,
+          "poison_type": "label_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'group_rank', 'a': 'order_value_usd', 'b': None, 'scale': 1, 'key': 'customer_name', 'agg': 'sum', 'join': 'iclr2027_customers.csv', 'on': 'customer_id'}, 'iclr2027_orders.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Fabrikam\nValue: 3300.0000",
+          "returned_observation": "Answer: Fabrikam\nValue: 3300.0000",
+          "was_poisoned": false,
+          "poison_type": null
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_orders.csv\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"rows\": [{\"order_id\": \"O001\", \"customer_id\": \"C01\", \"order_value_usd\": 1200, \"month\": \"Jan\"}, {\"order_id\": \"O002\", \"customer_id\": \"C01\", \"order_value_usd\": 900, \"month\": \"Feb\"}, {\"order_id\": \"O003\", \"customer_id\": \"C02\", \"order_value_usd\": 300, \"month\": \"Jan\"}, {\"order_id\": \"O004\", \"customer_id\": \"C02\", \"order_value_usd\": 500, \"month\": \"Feb\"}, {\"order_id\": \"O005\", \"customer_id\": \"C03\", \"order_value_usd\": 1800, \"month\": \"Jan\"}, {\"order_id\": \"O006\", \"customer_id\": \"C03\", \"order_value_usd\": 1500, \"month\": \"Feb\"}, {\"order_id\": \"O007\", \"customer_id\": \"C04\", \"order_value_usd\": 700, \"month\": \"Jan\"}, {\"order_id\": \"O008\", \"customer_id\": \"C04\", \"order_value_usd\": 600, \"month\": \"Feb\"}, {\"order_id\": \"O009\", \"customer_id\": \"C05\", \"order_value_usd\": 400, \"month\": \"Jan\"}, {\"order_id\": \"O010\", \"customer_id\": \"C05\", \"order_value_usd\": 500, \"month\": \"Feb\"}]}, \"iclr2027_customers.csv\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"rows\": [{\"customer_id\": \"C01\", \"customer_name\": \"Northwind\", \"segment\": \"Enterprise\", \"region\": \"West\"}, {\"customer_id\": \"C02\", \"customer_name\": \"Contoso\", \"segment\": \"SMB\", \"region\": \"East\"}, {\"customer_id\": \"C03\", \"customer_name\": \"Fabrikam\", \"segment\": \"Enterprise\", \"region\": \"East\"}, {\"customer_id\": \"C04\", \"customer_name\": \"AdventureWorks\", \"segment\": \"SMB\", \"region\": \"West\"}, {\"customer_id\": \"C05\", \"customer_name\": \"Globex\", \"segment\": \"Midmarket\", \"region\": \"North\"}]}}",
+          "returned_observation": "{\"iclr2027_orders.csv\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"rows\": [{\"order_id\": \"O001\", \"customer_id\": \"C01\", \"order_value_usd\": 1200, \"month\": \"Jan\"}, {\"order_id\": \"O002\", \"customer_id\": \"C01\", \"order_value_usd\": 900, \"month\": \"Feb\"}, {\"order_id\": \"O003\", \"customer_id\": \"C02\", \"order_value_usd\": 300, \"month\": \"Jan\"}, {\"order_id\": \"O004\", \"customer_id\": \"C02\", \"order_value_usd\": 500, \"month\": \"Feb\"}, {\"order_id\": \"O005\", \"customer_id\": \"C03\", \"order_value_usd\": 1800, \"month\": \"Jan\"}, {\"order_id\": \"O006\", \"customer_id\": \"C03\", \"order_value_usd\": 1500, \"month\": \"Feb\"}, {\"order_id\": \"O007\", \"customer_id\": \"C04\", \"order_value_usd\": 700, \"month\": \"Jan\"}, {\"order_id\": \"O008\", \"customer_id\": \"C04\", \"order_value_usd\": 600, \"month\": \"Feb\"}, {\"order_id\": \"O009\", \"customer_id\": \"C05\", \"order_value_usd\": 400, \"month\": \"Jan\"}, {\"order_id\": \"O010\", \"customer_id\": \"C05\", \"order_value_usd\": 500, \"month\": \"Feb\"}]}, \"iclr2027_customers.csv\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"rows\": [{\"customer_id\": \"C01\", \"customer_name\": \"Northwind\", \"segment\": \"Enterprise\", \"region\": \"West\"}, {\"customer_id\": \"C02\", \"customer_name\": \"Contoso\", \"segment\": \"SMB\", \"region\": \"East\"}, {\"customer_id\": \"C03\", \"customer_name\": \"Fabrikam\", \"segment\": \"Enterprise\", \"region\": \"East\"}, {\"customer_id\": \"C04\", \"customer_name\": \"AdventureWorks\", \"segment\": \"SMB\", \"region\": \"West\"}, {\"customer_id\": \"C05\", \"customer_name\": \"Globex\", \"segment\": \"Midmarket\", \"region\": \"North\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": true
+    },
+    {
+      "mode": "repeated_p1",
+      "primary_exposed": true,
+      "errors": [],
+      "clean_execution_matches": true,
+      "primary_interface_valid": true,
+      "primary_selected": {
+        "labels": [
+          "Contoso"
+        ],
+        "value": 3300.0
+      },
+      "target_changed": true,
+      "poison_reference_match": true,
+      "scripted_retry_correct": false,
+      "raw_route_correct": false,
+      "raw_route_answer": {
+        "labels": [
+          "Contoso"
+        ],
+        "value": 3300.0
+      },
+      "raw_recovery_after_exposure": false,
+      "raw_recovery_after_valid_target": false,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_orders.csv": "5b09fdc66c85bf6e06816b6e56f8335a1c0c010871e2b57cb9dc961f91fa38cd",
+        "datasets/iclr2027_customers.csv": "3060e7c0e064b77ccd098f9f713e4b9295c61da11b7aa16e22f476ff61e459c3"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_orders.csv": "5b09fdc66c85bf6e06816b6e56f8335a1c0c010871e2b57cb9dc961f91fa38cd",
+        "datasets/iclr2027_customers.csv": "3060e7c0e064b77ccd098f9f713e4b9295c61da11b7aa16e22f476ff61e459c3"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'group_rank', 'a': 'order_value_usd', 'b': None, 'scale': 1, 'key': 'customer_name', 'agg': 'sum', 'join': 'iclr2027_customers.csv', 'on': 'customer_id'}, 'iclr2027_orders.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Fabrikam\nValue: 3300.0000",
+          "returned_observation": "Answer: Contoso\nValue: 3300.0000",
+          "was_poisoned": true,
+          "poison_type": "label_swap"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "def pandas_answer(spec, dataset, tables):\n    \"\"\"Second implementation, also embedded verbatim inside actual python_exec.\"\"\"\n    from pathlib import Path\n    import pandas as pd\n    op = spec['op']\n    if op == 'discover':\n        names = sorted(Path(n).stem for n, f in tables.items() if set(spec['required']) <= set(f.columns))\n        if len(names) != 1: raise ValueError('table discovery not unique')\n        return dict(labels=names, value=None)\n    f = tables[dataset].copy()\n    if op == 'schema':\n        if spec['field'] not in f.columns: raise ValueError('declared schema role missing')\n        return dict(labels=[spec['field']], value=None)\n    if op == 'lookup':\n        labels = f.loc[f.meaning.str.lower().str.contains(spec['meaning'].lower(), regex=False), 'field'].tolist()\n        if len(labels) != 1: raise ValueError('dictionary selection not unique')\n        return dict(labels=labels, value=None)\n    if op == 'evidence':\n        mask = f.evidence.str.startswith('Evidence: ')\n        if spec['topic'] is not None: mask &= f.topic.eq(spec['topic'])\n        found = f.loc[mask, 'evidence'].str.extract(r'^Evidence: (\\S+) ', expand=False).tolist()\n        if len(found) != 1 or pd.isna(found[0]): raise ValueError('evidence selection not unique')\n        return dict(labels=found, value=None)\n    if 'join' in spec:\n        f = f.merge(tables[spec['join']], on=spec['on'], validate='many_to_one', how='left', indicator=True)\n        if not f['_merge'].eq('both').all(): raise ValueError('unmatched join key')\n    if 'where' in spec:\n        k, v = spec['where']; f = f.loc[f[k].astype(str).eq(v)]\n    if f.empty: raise ValueError('empty analytical selection')\n    a, b, scale = spec['a'], spec['b'], spec['scale']\n    offset = spec.get('offset', 0)\n    f[a] = pd.to_numeric(f[a])\n    if b: f[b] = pd.to_numeric(f[b])\n    if op in {'rank', 'group_rank'}:\n        if op == 'rank':\n            v = ((f[a]/f[b] if b else f[a])+offset)*scale\n            values = pd.Series(v.to_numpy(), index=f[spec['key']].astype(str))\n        else:\n            g = f.groupby(spec['key'])\n            if spec['agg'] == 'ratio': values = g[a].sum()/g[b].sum()*scale\n            elif spec['agg'] == 'mean_ratio':\n                f['_value'] = ((f[a]/f[b])+offset)*scale\n                values = f.groupby(spec['key'])['_value'].mean()\n            else: values = g[a].agg(spec['agg'])\n        best = float(values.min() if spec.get('minimum') else values.max())\n        return dict(labels=sorted(set(values.index[(values-best).abs() < 1e-9].astype(str))), value=best)\n    if op == 'mean': value = f[a].mean()\n    elif op == 'sum': value = f[a].sum()\n    elif op == 'ratio': value = (f[a].sum()/f[b].sum()+offset)*scale\n    elif op == 'difference_sum': value = f[a].sum()-f[b].sum()\n    elif op == 'growth': value = (f[a].iloc[-1]/f[a].iloc[0]-1)*scale\n    elif op == 'difference_ratio':\n        v = f.set_index(spec['key'])\n        value = (v.loc[spec['left'], a]/v.loc[spec['left'], b]-v.loc[spec['right'], a]/v.loc[spec['right'], b])*scale\n    else: raise ValueError('unsupported operation')\n    return dict(labels=[], value=float(value))\n\n_answer = pandas_answer({'op': 'group_rank', 'a': 'order_value_usd', 'b': None, 'scale': 1, 'key': 'customer_name', 'agg': 'sum', 'join': 'iclr2027_customers.csv', 'on': 'customer_id'}, 'iclr2027_orders.csv', tables)\nif _answer['labels']:\n    print('Answer: ' + _answer['labels'][0])\nif _answer['value'] is not None:\n    print('Value: ' + '{:.4f}'.format(_answer['value']))\n"
+          },
+          "clean_observation": "Answer: Fabrikam\nValue: 3300.0000",
+          "returned_observation": "Answer: Contoso\nValue: 3300.0000",
+          "was_poisoned": true,
+          "poison_type": "label_swap"
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_orders.csv\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"rows\": [{\"order_id\": \"O001\", \"customer_id\": \"C01\", \"order_value_usd\": 1200, \"month\": \"Jan\"}, {\"order_id\": \"O002\", \"customer_id\": \"C01\", \"order_value_usd\": 900, \"month\": \"Feb\"}, {\"order_id\": \"O003\", \"customer_id\": \"C02\", \"order_value_usd\": 300, \"month\": \"Jan\"}, {\"order_id\": \"O004\", \"customer_id\": \"C02\", \"order_value_usd\": 500, \"month\": \"Feb\"}, {\"order_id\": \"O005\", \"customer_id\": \"C03\", \"order_value_usd\": 1800, \"month\": \"Jan\"}, {\"order_id\": \"O006\", \"customer_id\": \"C03\", \"order_value_usd\": 1500, \"month\": \"Feb\"}, {\"order_id\": \"O007\", \"customer_id\": \"C04\", \"order_value_usd\": 700, \"month\": \"Jan\"}, {\"order_id\": \"O008\", \"customer_id\": \"C04\", \"order_value_usd\": 600, \"month\": \"Feb\"}, {\"order_id\": \"O009\", \"customer_id\": \"C05\", \"order_value_usd\": 400, \"month\": \"Jan\"}, {\"order_id\": \"O010\", \"customer_id\": \"C05\", \"order_value_usd\": 500, \"month\": \"Feb\"}]}, \"iclr2027_customers.csv\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"rows\": [{\"customer_id\": \"C01\", \"customer_name\": \"Northwind\", \"segment\": \"Enterprise\", \"region\": \"West\"}, {\"customer_id\": \"C02\", \"customer_name\": \"Contoso\", \"segment\": \"SMB\", \"region\": \"East\"}, {\"customer_id\": \"C03\", \"customer_name\": \"Fabrikam\", \"segment\": \"Enterprise\", \"region\": \"East\"}, {\"customer_id\": \"C04\", \"customer_name\": \"AdventureWorks\", \"segment\": \"SMB\", \"region\": \"West\"}, {\"customer_id\": \"C05\", \"customer_name\": \"Globex\", \"segment\": \"Midmarket\", \"region\": \"North\"}]}}",
+          "returned_observation": "{\"iclr2027_orders.csv\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"rows\": [{\"order_id\": \"O001\", \"customer_id\": \"C01\", \"order_value_usd\": 1200, \"month\": \"Jan\"}, {\"order_id\": \"O002\", \"customer_id\": \"C01\", \"order_value_usd\": 900, \"month\": \"Feb\"}, {\"order_id\": \"O003\", \"customer_id\": \"C02\", \"order_value_usd\": 300, \"month\": \"Jan\"}, {\"order_id\": \"O004\", \"customer_id\": \"C02\", \"order_value_usd\": 500, \"month\": \"Feb\"}, {\"order_id\": \"O005\", \"customer_id\": \"C03\", \"order_value_usd\": 1800, \"month\": \"Jan\"}, {\"order_id\": \"O006\", \"customer_id\": \"C03\", \"order_value_usd\": 1500, \"month\": \"Feb\"}, {\"order_id\": \"O007\", \"customer_id\": \"C04\", \"order_value_usd\": 700, \"month\": \"Jan\"}, {\"order_id\": \"O008\", \"customer_id\": \"C04\", \"order_value_usd\": 600, \"month\": \"Feb\"}, {\"order_id\": \"O009\", \"customer_id\": \"C05\", \"order_value_usd\": 400, \"month\": \"Jan\"}, {\"order_id\": \"O010\", \"customer_id\": \"C05\", \"order_value_usd\": 500, \"month\": \"Feb\"}]}, \"iclr2027_customers.csv\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"rows\": [{\"customer_id\": \"C01\", \"customer_name\": \"Northwind\", \"segment\": \"Enterprise\", \"region\": \"West\"}, {\"customer_id\": \"C02\", \"customer_name\": \"Fabrikam\", \"segment\": \"SMB\", \"region\": \"East\"}, {\"customer_id\": \"C03\", \"customer_name\": \"Contoso\", \"segment\": \"Enterprise\", \"region\": \"East\"}, {\"customer_id\": \"C04\", \"customer_name\": \"AdventureWorks\", \"segment\": \"SMB\", \"region\": \"West\"}, {\"customer_id\": \"C05\", \"customer_name\": \"Globex\", \"segment\": \"Midmarket\", \"region\": \"North\"}]}}",
+          "was_poisoned": true,
+          "poison_type": "label_swap"
+        }
+      ],
+      "pair_pass": false
+    }
+  ],
+  "recipe_supported": true,
+  "computed_answer": {
+    "labels": [
+      "Fabrikam"
+    ],
+    "value": 3300.0
+  },
+  "implementations_agree": true,
+  "reference_matches": true,
+  "reference_numeric_value_matches": null
+}

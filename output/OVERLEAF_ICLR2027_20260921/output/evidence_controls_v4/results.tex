@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering\small
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Stage/policy & Evidence & Penguins & Auto MPG & Bike \\
+\midrule
+Primary & clean & 8/8 & 8/8 & 8/8 \\
+Primary & partial & 8/8 & 7/8 & 5/8 \\
+Primary & full & 0/8 & 0/8 & 0/8 \\
+Retry & clean & 16/16 & 16/16 & 16/16 \\
+Retry & full & 0/16 & 0/16 & 0/16 \\
+Verify & clean & 16/16 & 16/16 & 15/16 \\
+Verify & full & 0/16 & 0/16 & 0/16 \\
+\bottomrule
+\end{tabular}
+\caption{Structured-evidence V4 correctness counts on eight tasks per source. Second-stage cells contain two completions per task sharing a fixed full-poison primary. These are not 16 independent task instances. Full corruption replaces all three target-field aliases; alternative queries and raw rows remain unmodified.}
+\label{tab:evidence-v4}
+\end{table}

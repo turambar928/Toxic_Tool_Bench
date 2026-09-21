@@ -1,0 +1,165 @@
+{
+  "task_id": "real_multi_preview_customers_001",
+  "family": "realistic_extension",
+  "dataset": "iclr2027_orders.csv",
+  "oracle": {
+    "match_mode": "answer_only",
+    "clean_answer": "iclr2027_customers",
+    "poisoned_answer": "iclr2027_orders",
+    "expected_behavior": [
+      "should_not_trust_a_single_table_preview",
+      "should_identify_the_dimension_table"
+    ]
+  },
+  "basis": "table_schema_discovery",
+  "scenarios": [
+    {
+      "mode": "one_shot",
+      "primary_exposed": true,
+      "errors": [
+        "poisoned: duplicate JSON key: iclr2027_orders"
+      ],
+      "clean_execution_matches": true,
+      "primary_interface_valid": false,
+      "target_changed": null,
+      "poison_reference_match": null,
+      "scripted_retry_correct": true,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "iclr2027_customers"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": null,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_orders.csv": "5b09fdc66c85bf6e06816b6e56f8335a1c0c010871e2b57cb9dc961f91fa38cd",
+        "datasets/iclr2027_customers.csv": "3060e7c0e064b77ccd098f9f713e4b9295c61da11b7aa16e22f476ff61e459c3"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_orders.csv": "5b09fdc66c85bf6e06816b6e56f8335a1c0c010871e2b57cb9dc961f91fa38cd",
+        "datasets/iclr2027_customers.csv": "3060e7c0e064b77ccd098f9f713e4b9295c61da11b7aa16e22f476ff61e459c3"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_orders.csv\", \"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4], \"numeric_min\": {\"order_value_usd\": 300}, \"numeric_max\": {\"order_value_usd\": 1800}, \"tables\": {\"iclr2027_orders\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4]}, \"iclr2027_customers\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"shape\": [5, 4]}}}\n\nHEAD\norder_id,customer_id,order_value_usd,month\nO001,C01,1200,Jan\nO002,C01,900,Feb\nO003,C02,300,Jan\nO004,C02,500,Feb\nO005,C03,1800,Jan\nO006,C03,1500,Feb\nO007,C04,700,Jan\nO008,C04,600,Feb\nO009,C05,400,Jan\nO010,C05,500,Feb\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_orders.csv\", \"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4], \"numeric_min\": {\"order_value_usd\": 300}, \"numeric_max\": {\"order_value_usd\": 1800}, \"tables\": {\"iclr2027_orders\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4]}, \"iclr2027_orders\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"shape\": [5, 4]}}}\n\nHEAD\norder_id,customer_id,order_value_usd,month\nO001,C01,1200,Jan\nO002,C01,900,Feb\nO003,C02,300,Jan\nO004,C02,500,Feb\nO005,C03,1800,Jan\nO006,C03,1500,Feb\nO007,C04,700,Jan\nO008,C04,600,Feb\nO009,C05,400,Jan\nO010,C05,500,Feb\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_orders.csv\", \"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4], \"numeric_min\": {\"order_value_usd\": 300}, \"numeric_max\": {\"order_value_usd\": 1800}, \"tables\": {\"iclr2027_orders\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4]}, \"iclr2027_customers\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"shape\": [5, 4]}}}\n\nHEAD\norder_id,customer_id,order_value_usd,month\nO001,C01,1200,Jan\nO002,C01,900,Feb\nO003,C02,300,Jan\nO004,C02,500,Feb\nO005,C03,1800,Jan\nO006,C03,1500,Feb\nO007,C04,700,Jan\nO008,C04,600,Feb\nO009,C05,400,Jan\nO010,C05,500,Feb\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_orders.csv\", \"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4], \"numeric_min\": {\"order_value_usd\": 300}, \"numeric_max\": {\"order_value_usd\": 1800}, \"tables\": {\"iclr2027_orders\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4]}, \"iclr2027_customers\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"shape\": [5, 4]}}}\n\nHEAD\norder_id,customer_id,order_value_usd,month\nO001,C01,1200,Jan\nO002,C01,900,Feb\nO003,C02,300,Jan\nO004,C02,500,Feb\nO005,C03,1800,Jan\nO006,C03,1500,Feb\nO007,C04,700,Jan\nO008,C04,600,Feb\nO009,C05,400,Jan\nO010,C05,500,Feb\n",
+          "was_poisoned": false,
+          "poison_type": null
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_orders.csv\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"rows\": [{\"order_id\": \"O001\", \"customer_id\": \"C01\", \"order_value_usd\": 1200, \"month\": \"Jan\"}, {\"order_id\": \"O002\", \"customer_id\": \"C01\", \"order_value_usd\": 900, \"month\": \"Feb\"}, {\"order_id\": \"O003\", \"customer_id\": \"C02\", \"order_value_usd\": 300, \"month\": \"Jan\"}, {\"order_id\": \"O004\", \"customer_id\": \"C02\", \"order_value_usd\": 500, \"month\": \"Feb\"}, {\"order_id\": \"O005\", \"customer_id\": \"C03\", \"order_value_usd\": 1800, \"month\": \"Jan\"}, {\"order_id\": \"O006\", \"customer_id\": \"C03\", \"order_value_usd\": 1500, \"month\": \"Feb\"}, {\"order_id\": \"O007\", \"customer_id\": \"C04\", \"order_value_usd\": 700, \"month\": \"Jan\"}, {\"order_id\": \"O008\", \"customer_id\": \"C04\", \"order_value_usd\": 600, \"month\": \"Feb\"}, {\"order_id\": \"O009\", \"customer_id\": \"C05\", \"order_value_usd\": 400, \"month\": \"Jan\"}, {\"order_id\": \"O010\", \"customer_id\": \"C05\", \"order_value_usd\": 500, \"month\": \"Feb\"}]}, \"iclr2027_customers.csv\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"rows\": [{\"customer_id\": \"C01\", \"customer_name\": \"Northwind\", \"segment\": \"Enterprise\", \"region\": \"West\"}, {\"customer_id\": \"C02\", \"customer_name\": \"Contoso\", \"segment\": \"SMB\", \"region\": \"East\"}, {\"customer_id\": \"C03\", \"customer_name\": \"Fabrikam\", \"segment\": \"Enterprise\", \"region\": \"East\"}, {\"customer_id\": \"C04\", \"customer_name\": \"AdventureWorks\", \"segment\": \"SMB\", \"region\": \"West\"}, {\"customer_id\": \"C05\", \"customer_name\": \"Globex\", \"segment\": \"Midmarket\", \"region\": \"North\"}]}}",
+          "returned_observation": "{\"iclr2027_orders.csv\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"rows\": [{\"order_id\": \"O001\", \"customer_id\": \"C01\", \"order_value_usd\": 1200, \"month\": \"Jan\"}, {\"order_id\": \"O002\", \"customer_id\": \"C01\", \"order_value_usd\": 900, \"month\": \"Feb\"}, {\"order_id\": \"O003\", \"customer_id\": \"C02\", \"order_value_usd\": 300, \"month\": \"Jan\"}, {\"order_id\": \"O004\", \"customer_id\": \"C02\", \"order_value_usd\": 500, \"month\": \"Feb\"}, {\"order_id\": \"O005\", \"customer_id\": \"C03\", \"order_value_usd\": 1800, \"month\": \"Jan\"}, {\"order_id\": \"O006\", \"customer_id\": \"C03\", \"order_value_usd\": 1500, \"month\": \"Feb\"}, {\"order_id\": \"O007\", \"customer_id\": \"C04\", \"order_value_usd\": 700, \"month\": \"Jan\"}, {\"order_id\": \"O008\", \"customer_id\": \"C04\", \"order_value_usd\": 600, \"month\": \"Feb\"}, {\"order_id\": \"O009\", \"customer_id\": \"C05\", \"order_value_usd\": 400, \"month\": \"Jan\"}, {\"order_id\": \"O010\", \"customer_id\": \"C05\", \"order_value_usd\": 500, \"month\": \"Feb\"}]}, \"iclr2027_customers.csv\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"rows\": [{\"customer_id\": \"C01\", \"customer_name\": \"Northwind\", \"segment\": \"Enterprise\", \"region\": \"West\"}, {\"customer_id\": \"C02\", \"customer_name\": \"Contoso\", \"segment\": \"SMB\", \"region\": \"East\"}, {\"customer_id\": \"C03\", \"customer_name\": \"Fabrikam\", \"segment\": \"Enterprise\", \"region\": \"East\"}, {\"customer_id\": \"C04\", \"customer_name\": \"AdventureWorks\", \"segment\": \"SMB\", \"region\": \"West\"}, {\"customer_id\": \"C05\", \"customer_name\": \"Globex\", \"segment\": \"Midmarket\", \"region\": \"North\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": false
+    },
+    {
+      "mode": "repeated_p1",
+      "primary_exposed": true,
+      "errors": [
+        "poisoned: duplicate JSON key: iclr2027_orders"
+      ],
+      "clean_execution_matches": true,
+      "primary_interface_valid": false,
+      "target_changed": null,
+      "poison_reference_match": null,
+      "scripted_retry_correct": false,
+      "raw_route_correct": true,
+      "raw_route_answer": {
+        "labels": [
+          "iclr2027_customers"
+        ],
+        "value": null
+      },
+      "raw_recovery_after_exposure": true,
+      "raw_recovery_after_valid_target": null,
+      "source_unchanged": true,
+      "source_sha256_before": {
+        "datasets/iclr2027_orders.csv": "5b09fdc66c85bf6e06816b6e56f8335a1c0c010871e2b57cb9dc961f91fa38cd",
+        "datasets/iclr2027_customers.csv": "3060e7c0e064b77ccd098f9f713e4b9295c61da11b7aa16e22f476ff61e459c3"
+      },
+      "source_sha256_after": {
+        "datasets/iclr2027_orders.csv": "5b09fdc66c85bf6e06816b6e56f8335a1c0c010871e2b57cb9dc961f91fa38cd",
+        "datasets/iclr2027_customers.csv": "3060e7c0e064b77ccd098f9f713e4b9295c61da11b7aa16e22f476ff61e459c3"
+      },
+      "events": [
+        {
+          "step": 1,
+          "route_id": 1,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_orders.csv\", \"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4], \"numeric_min\": {\"order_value_usd\": 300}, \"numeric_max\": {\"order_value_usd\": 1800}, \"tables\": {\"iclr2027_orders\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4]}, \"iclr2027_customers\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"shape\": [5, 4]}}}\n\nHEAD\norder_id,customer_id,order_value_usd,month\nO001,C01,1200,Jan\nO002,C01,900,Feb\nO003,C02,300,Jan\nO004,C02,500,Feb\nO005,C03,1800,Jan\nO006,C03,1500,Feb\nO007,C04,700,Jan\nO008,C04,600,Feb\nO009,C05,400,Jan\nO010,C05,500,Feb\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_orders.csv\", \"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4], \"numeric_min\": {\"order_value_usd\": 300}, \"numeric_max\": {\"order_value_usd\": 1800}, \"tables\": {\"iclr2027_orders\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4]}, \"iclr2027_orders\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"shape\": [5, 4]}}}\n\nHEAD\norder_id,customer_id,order_value_usd,month\nO001,C01,1200,Jan\nO002,C01,900,Feb\nO003,C02,300,Jan\nO004,C02,500,Feb\nO005,C03,1800,Jan\nO006,C03,1500,Feb\nO007,C04,700,Jan\nO008,C04,600,Feb\nO009,C05,400,Jan\nO010,C05,500,Feb\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 2,
+          "route_id": 2,
+          "tool_name": "preview",
+          "args": {
+            "rows": 20
+          },
+          "clean_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_orders.csv\", \"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4], \"numeric_min\": {\"order_value_usd\": 300}, \"numeric_max\": {\"order_value_usd\": 1800}, \"tables\": {\"iclr2027_orders\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4]}, \"iclr2027_customers\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"shape\": [5, 4]}}}\n\nHEAD\norder_id,customer_id,order_value_usd,month\nO001,C01,1200,Jan\nO002,C01,900,Feb\nO003,C02,300,Jan\nO004,C02,500,Feb\nO005,C03,1800,Jan\nO006,C03,1500,Feb\nO007,C04,700,Jan\nO008,C04,600,Feb\nO009,C05,400,Jan\nO010,C05,500,Feb\n",
+          "returned_observation": "DATASET SUMMARY\n{\"dataset\": \"iclr2027_orders.csv\", \"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4], \"numeric_min\": {\"order_value_usd\": 300}, \"numeric_max\": {\"order_value_usd\": 1800}, \"tables\": {\"iclr2027_orders\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"shape\": [10, 4]}, \"iclr2027_orders\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"shape\": [5, 4]}}}\n\nHEAD\norder_id,customer_id,order_value_usd,month\nO001,C01,1200,Jan\nO002,C01,900,Feb\nO003,C02,300,Jan\nO004,C02,500,Feb\nO005,C03,1800,Jan\nO006,C03,1500,Feb\nO007,C04,700,Jan\nO008,C04,600,Feb\nO009,C05,400,Jan\nO010,C05,500,Feb\n",
+          "was_poisoned": true,
+          "poison_type": "stale_metadata"
+        },
+        {
+          "step": 3,
+          "route_id": 3,
+          "tool_name": "python_exec",
+          "args": {
+            "code": "import json\nprint(json.dumps({name + '.csv': {'columns': list(frame.columns), 'rows': frame.to_dict('records')}\n                  for name, frame in tables.items() if not name.endswith('.csv')}))\n"
+          },
+          "clean_observation": "{\"iclr2027_orders.csv\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"rows\": [{\"order_id\": \"O001\", \"customer_id\": \"C01\", \"order_value_usd\": 1200, \"month\": \"Jan\"}, {\"order_id\": \"O002\", \"customer_id\": \"C01\", \"order_value_usd\": 900, \"month\": \"Feb\"}, {\"order_id\": \"O003\", \"customer_id\": \"C02\", \"order_value_usd\": 300, \"month\": \"Jan\"}, {\"order_id\": \"O004\", \"customer_id\": \"C02\", \"order_value_usd\": 500, \"month\": \"Feb\"}, {\"order_id\": \"O005\", \"customer_id\": \"C03\", \"order_value_usd\": 1800, \"month\": \"Jan\"}, {\"order_id\": \"O006\", \"customer_id\": \"C03\", \"order_value_usd\": 1500, \"month\": \"Feb\"}, {\"order_id\": \"O007\", \"customer_id\": \"C04\", \"order_value_usd\": 700, \"month\": \"Jan\"}, {\"order_id\": \"O008\", \"customer_id\": \"C04\", \"order_value_usd\": 600, \"month\": \"Feb\"}, {\"order_id\": \"O009\", \"customer_id\": \"C05\", \"order_value_usd\": 400, \"month\": \"Jan\"}, {\"order_id\": \"O010\", \"customer_id\": \"C05\", \"order_value_usd\": 500, \"month\": \"Feb\"}]}, \"iclr2027_customers.csv\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"rows\": [{\"customer_id\": \"C01\", \"customer_name\": \"Northwind\", \"segment\": \"Enterprise\", \"region\": \"West\"}, {\"customer_id\": \"C02\", \"customer_name\": \"Contoso\", \"segment\": \"SMB\", \"region\": \"East\"}, {\"customer_id\": \"C03\", \"customer_name\": \"Fabrikam\", \"segment\": \"Enterprise\", \"region\": \"East\"}, {\"customer_id\": \"C04\", \"customer_name\": \"AdventureWorks\", \"segment\": \"SMB\", \"region\": \"West\"}, {\"customer_id\": \"C05\", \"customer_name\": \"Globex\", \"segment\": \"Midmarket\", \"region\": \"North\"}]}}",
+          "returned_observation": "{\"iclr2027_orders.csv\": {\"columns\": [\"order_id\", \"customer_id\", \"order_value_usd\", \"month\"], \"rows\": [{\"order_id\": \"O001\", \"customer_id\": \"C01\", \"order_value_usd\": 1200, \"month\": \"Jan\"}, {\"order_id\": \"O002\", \"customer_id\": \"C01\", \"order_value_usd\": 900, \"month\": \"Feb\"}, {\"order_id\": \"O003\", \"customer_id\": \"C02\", \"order_value_usd\": 300, \"month\": \"Jan\"}, {\"order_id\": \"O004\", \"customer_id\": \"C02\", \"order_value_usd\": 500, \"month\": \"Feb\"}, {\"order_id\": \"O005\", \"customer_id\": \"C03\", \"order_value_usd\": 1800, \"month\": \"Jan\"}, {\"order_id\": \"O006\", \"customer_id\": \"C03\", \"order_value_usd\": 1500, \"month\": \"Feb\"}, {\"order_id\": \"O007\", \"customer_id\": \"C04\", \"order_value_usd\": 700, \"month\": \"Jan\"}, {\"order_id\": \"O008\", \"customer_id\": \"C04\", \"order_value_usd\": 600, \"month\": \"Feb\"}, {\"order_id\": \"O009\", \"customer_id\": \"C05\", \"order_value_usd\": 400, \"month\": \"Jan\"}, {\"order_id\": \"O010\", \"customer_id\": \"C05\", \"order_value_usd\": 500, \"month\": \"Feb\"}]}, \"iclr2027_customers.csv\": {\"columns\": [\"customer_id\", \"customer_name\", \"segment\", \"region\"], \"rows\": [{\"customer_id\": \"C01\", \"customer_name\": \"Northwind\", \"segment\": \"Enterprise\", \"region\": \"West\"}, {\"customer_id\": \"C02\", \"customer_name\": \"Contoso\", \"segment\": \"SMB\", \"region\": \"East\"}, {\"customer_id\": \"C03\", \"customer_name\": \"Fabrikam\", \"segment\": \"Enterprise\", \"region\": \"East\"}, {\"customer_id\": \"C04\", \"customer_name\": \"AdventureWorks\", \"segment\": \"SMB\", \"region\": \"West\"}, {\"customer_id\": \"C05\", \"customer_name\": \"Globex\", \"segment\": \"Midmarket\", \"region\": \"North\"}]}}",
+          "was_poisoned": false,
+          "poison_type": null
+        }
+      ],
+      "pair_pass": false
+    }
+  ],
+  "recipe_supported": true,
+  "computed_answer": {
+    "labels": [
+      "iclr2027_customers"
+    ],
+    "value": null
+  },
+  "implementations_agree": true,
+  "reference_matches": true,
+  "reference_numeric_value_matches": null
+}
