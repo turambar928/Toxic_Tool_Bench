@@ -41,15 +41,14 @@ Table~\ref{tab:postfreeze-scorer} reports 96.0\% TSR agreement, with 176 true po
 \label{tab:postfreeze-scorer}
 \end{table}
 
-\begin{table}[t]
-\centering\small
-\setlength{\tabcolsep}{4pt}
-\input{output/human_validation_20260920/method_comparison}
-\caption{Automatic and human task-success counts on the same post-freeze evaluation trajectories. Core conditions use 20 tasks; repeated-poison and cross-model conditions each use ten. Dashes denote conditions absent from the packet.}
-\label{tab:postfreeze-methods}
-\end{table}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_human_method_comparison.pdf}
+\caption{Automatic and human task success on the same post-freeze trajectories. Labels show correct/total counts. Core conditions use 20 tasks and axes starting at 0.75; repeated-poison and cross-model conditions use ten tasks and zero-based axes. Only executed conditions are shown.}
+\label{fig:postfreeze-methods}
+\end{figure}
 
-Table~\ref{tab:postfreeze-methods} shows a human Double-pass--Base poisoned-TSR difference of $+0.20$ [0.05, 0.35], matching the automatic contrast. Human clean TSR is 1.00 for all four core methods, so its clean-adjusted contrast is also $+0.20$. Human Verification-only ties Double-pass at 1.00, compared with automatic TSR 0.80; Guard reaches 0.95 under both ratings. Repeated-poison TSR agrees across rating sources at 0.80 for Double-pass and 0.70 for Guard; their Guard--Double-pass contrast is $-0.10$ [$-0.30$, 0.00]. Intervals use 5,000 task-paired resamples within suites (seed 20260915) and describe the selected tasks, not population-wide method rankings.
+Figure~\ref{fig:postfreeze-methods} shows a human Double-pass--Base poisoned-TSR difference of $+0.20$ [0.05, 0.35], matching the automatic contrast. Human clean TSR is 1.00 for all four core methods, so its clean-adjusted contrast is also $+0.20$. Human Verification-only ties Double-pass at 1.00, compared with automatic TSR 0.80; Guard reaches 0.95 under both ratings. Repeated-poison TSR agrees across rating sources at 0.80 for Double-pass and 0.70 for Guard; their Guard--Double-pass contrast is $-0.10$ [$-0.30$, 0.00]. Intervals use 5,000 task-paired resamples within suites (seed 20260915) and describe the selected tasks, not population-wide method rankings.
 
 The remaining TSR disagreements comprise six Verification-only cases, one Base case, and one AutoGen case; four of the Verification-only misses occur in poisoned runs. The seven-metric comparison contains 14 distinct disagreement trajectories, retained in the released error inventory. RR recall is 0.867 and BCR recall 0.800; ADR has only one human-positive exposed case and VPA four. These counts characterize metric-specific coverage alongside the overall agreement. The scorer remains frozen at \texttt{98c2ed8}; none of these labels is used to tune the reported parser. The historical audits below use different samples and references and are reported separately.
 

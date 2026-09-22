@@ -13,6 +13,13 @@ Claude Haiku 4.5 runs at temperature zero with at most six model requests per st
 
 Pre-specified contrasts are full-minus-clean and full-minus-partial primary correctness, and clean-minus-full second-stage correctness for each policy, with poisoned-answer adoption reported separately. The two completions are averaged within task before 5,000 paired bootstrap resamples stratified within the three fixed datasets. We report source-specific effects, actual delivery, unchanged alternative calls, and unresolved outcomes. Intervals condition on the selected sources, fixed parents, and limited completions; they do not quantify dataset-population generalization or comprehensive model-sampling uncertainty. Related queries share data, and no multiplicity-adjusted significance claim is made. Even a strong local evidence-condition effect would not identify what fraction of the historical retry gain it explains.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\linewidth]{figures/fig_evidence_control.pdf}
+\caption{Second-stage correctness under clean versus fully corrupted target evidence. Counts aggregate 24 tasks with two completions per policy--condition, not 48 independent tasks. Review branches inherit the fixed poisoned parent; retries restart without its history. The full 0--100\% color scale includes zero outcomes. Table~\ref{tab:evidence-v4} retains source-specific and first-stage counts.}
+\label{fig:evidence-control}
+\end{figure}
+
 \input{output/evidence_controls_v4/results}
 
 All 264 scheduled trajectories are retained, including one review that exhausts its budget without a final answer. One exhausted API failure is successfully resumed; 311 logical requests complete. The delivery audit finds 120 full-target and 24 partial-target corruptions. Every full-target event changes all three result aliases, with no unchanged clean alias in that field. First-stage correctness is $24/24$ clean, $20/24$ partial, and $0/24$ full; all 24 full-poison primary answers adopt the incorrect scalar. Full-minus-partial TSR is $-0.833$ (task-paired 95\% interval [$-0.958$, $-0.708$]). Thus partial corruption can substantially overstate resistance in this interface; it does not measure the magnitude of bias in the historical matrix.

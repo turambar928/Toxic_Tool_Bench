@@ -1,6 +1,7 @@
 """Asset regression checks; rendering dependencies are not needed to run these."""
 import hashlib
 import json
+import re
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -70,3 +71,20 @@ def test_manifest_matches_delivered_assets():
     for figure in manifest["figures"]:
         for kind in ("svg", "pdf"):
             assert hashlib.sha256((FIG / figure[kind]).read_bytes()).hexdigest() == figure[kind + "_sha256"]
+
+
+def test_figure2_matching_route_arrows_and_phoenix():
+    root = ET.parse(FIG / "figure2_vector.svg").getroot()
+    arrows = [p for p in root.iter(NS + "path") if p.get("class") == "route-process-arrow"]
+    assert len(arrows) == 2
+    outlines = []
+    for arrow in arrows:
+        coords = list(map(float, re.findall(r"-?\d+(?:\.\d+)?", arrow.get("d"))))
+        points = list(zip(coords[::2], coords[1::2]))
+        x0, y0 = points[0]
+        outlines.append([(x - x0, y - y0) for x, y in points])
+    assert outlines[0] == outlines[1]
+    assert arrows[0].get("stroke-width") == arrows[1].get("stroke-width")
+    phoenix = root.find(f".//{NS}g[@id='recovery-phoenix']")
+    assert phoenix is not None
+    assert len(list(phoenix.iter(NS + "path"))) >= 7

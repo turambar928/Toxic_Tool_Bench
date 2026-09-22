@@ -3,7 +3,9 @@
 
 ToxicBench makes evidence use explicit in data-agent evaluation by pairing clean and corrupted tool observations over fixed source data. The experiments show substantial clean-to-poisoned degradation, a benefit from ordinary retries under one-shot poisoning, and continued poison adoption after checking under repeated poisoning. Human judgments corroborate the retry benefit over Base on the audited tasks and adoption after checking; controlled public-table experiments identify a local effect of supplied evidence on recovery. Together, these findings motivate evaluating what evidence a check returns and which answer the agent selects, alongside whether it checks at all.
 
+Future work will extend ToxicBench to longer, multi-source workflows and naturally occurring tool errors. Another direction is to develop budget-aware verification policies that seek independent evidence and resolve conflicting observations, testing whether improved evidence selection leads to more reliable final decisions.
+
 \section{Limitations}
 \label{sec:limitations}
 
-The core tasks use small synthetic tables; public-table controls broaden the data setting but retain seeded calls and structured answers. Scorer recall varies across metrics and answer styles, so fine-grained method rankings should be read alongside the human comparisons. Historical delivery exceptions and their sensitivity analyses are documented separately. Intervals condition on the selected tasks and sources. Production workflows, naturally occurring error frequencies, and source-diverse verification are directions for future evaluation.
+The core tasks use small synthetic tables; public-table controls broaden the data setting but retain seeded calls and structured answers. Scorer recall varies across metrics and answer styles, so fine-grained method rankings should be read alongside the human comparisons. Historical delivery exceptions and their sensitivity analyses are documented separately. Intervals condition on the selected tasks and sources. Generalization to production workflows and naturally occurring errors remains untested.

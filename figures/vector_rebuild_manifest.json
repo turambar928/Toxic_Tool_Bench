@@ -570,8 +570,8 @@
     {
       "svg": "figure2_vector.svg",
       "pdf": "figure2_vector.pdf",
-      "svg_sha256": "d87787a37b66ecbd070a56e11379f8e855765d9aef878ae9973e4550477baa05",
-      "pdf_sha256": "751c9d1fd55780621c9136d22425661b4b6bb0bb94ccf9d0ce4f57db1da18fdf",
+      "svg_sha256": "27cce714b35cf94e9d35d8e8c3e05d4a253a4a9ed32340dc6eef38344967cd2c",
+      "pdf_sha256": "ed0814aecbae660749fbf5ec96e0c1101aba0ace9fc6bc7c33d0729acd4d07d7",
       "embedded_raster_images": 0,
       "text_selectable": true,
       "text_elements": [
@@ -1628,7 +1628,7 @@
         {
           "text": "Run the agent",
           "x": 530,
-          "baseline": 1076,
+          "baseline": 1073,
           "font_size": 22,
           "font": "Arial",
           "bold": false,
@@ -1638,7 +1638,7 @@
         {
           "text": "with tools.",
           "x": 530,
-          "baseline": 1100,
+          "baseline": 1097,
           "font_size": 22,
           "font": "Arial",
           "bold": false,
@@ -1647,13 +1647,13 @@
         },
         {
           "text": "monitoring",
-          "x": 881,
-          "baseline": 1098,
-          "font_size": 17,
+          "x": 867,
+          "baseline": 1093,
+          "font_size": 18,
           "font": "Arial",
           "bold": false,
-          "left": 841.3140625,
-          "right": 920.6859375
+          "left": 824.9796875,
+          "right": 909.0203124999999
         },
         {
           "text": "Additional tool evidence",

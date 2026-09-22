@@ -13,7 +13,7 @@ Ten numeric targets are not exposed and two table-discovery previews have
 duplicate table-name keys; neither is counted as a valid target intervention.
 The 21 declared schema-role checks are not independent semantic annotation.
 See [the report](output/task_acceptance_v1/README_CN.md), §3.1 and Appendix A.
-The regression suite now has 201 passing tests. Historical tasks, model outcomes,
+The regression suite now has 207 passing tests. Historical tasks, model outcomes,
 injector, frozen scorer, and human labels are unchanged.
 
 ## Submission revision
@@ -94,7 +94,11 @@ The protocol contains 200 trajectories: 90 reused semantic trajectories and 110 
 - The manuscript distinguishes historical development recheck, completed reference review, and post-freeze human evaluation.
 - It no longer claims Generic Guard superiority or that every VPA case ignored sufficient correct evidence.
 - V2 checkpoint test suite: 116 passed; current test count is reported above.
-- September 21 regression suite: 201 passed; static references and both official-template PDF builds checked. The acceptance table is Table 5, on page 15. Main text remains nine pages.
+- September 22 regression suite: 207 passed; static references and both official-template PDF builds checked. The acceptance table is Table 4, on page 14. Main text remains nine pages.
+- The complete defense comparison is Figure 4 (page 8), the human method comparison Figure 5 (page 16), and the evidence control Figure 8 (page 26). The latter retains the source-specific count table. Future Work and the author's current AI disclosure are included.
+- Introduction now ends around three-quarters down page 2; Related Work has three paragraphs, and the manuscript cites 35 works. Chapter 3 uses connected paragraphs without micro-headings. Main-text model names use ordinary type, with exact API identifiers retained in Appendix C.
+- Figure 2 has matching route arrows and a redrawn phoenix; Figure 4 uses horizontal, non-overlapping numerical labels. Original raster PNG/PDF assets remain unchanged.
+- The Overleaf snapshot is no longer maintained at the author's request. Sync the active `sections/` sources and required `figures/` PDFs; see `figures/TABLE_CONVERSION_NOTES_CN.md` for this update's six-file list.
 
 The annotation collection is no longer the blocking task. The manuscript now leads
 with the supported phenomena and reports the full human/automatic comparison in

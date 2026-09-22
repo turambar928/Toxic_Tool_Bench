@@ -1,0 +1,325 @@
+{
+  "defense": [
+    {
+      "method": "Base",
+      "clean_tsr": 0.99,
+      "poisoned_tsr": 0.89,
+      "bcr": 0.09,
+      "par": 0.09,
+      "vpa": 0.0,
+      "vr": 0.46,
+      "rr": 0.44,
+      "exposed": 99
+    },
+    {
+      "method": "Double-pass",
+      "clean_tsr": 0.99,
+      "poisoned_tsr": 1.0,
+      "bcr": 0.0,
+      "par": 0.0,
+      "vpa": 0.0,
+      "vr": 0.98,
+      "rr": 0.98,
+      "exposed": 101
+    },
+    {
+      "method": "Verification-only",
+      "clean_tsr": 0.92,
+      "poisoned_tsr": 0.9,
+      "bcr": 0.0,
+      "par": 0.01,
+      "vpa": 0.01,
+      "vr": 0.97,
+      "rr": 0.86,
+      "exposed": 101
+    },
+    {
+      "method": "Generic Guard",
+      "clean_tsr": 0.98,
+      "poisoned_tsr": 0.97,
+      "bcr": 0.0,
+      "par": 0.0,
+      "vpa": 0.0,
+      "vr": 0.97,
+      "rr": 0.94,
+      "exposed": 104
+    }
+  ],
+  "evidence": [
+    {
+      "policy": "Primary",
+      "evidence": "clean",
+      "source_counts": [
+        [
+          8,
+          8
+        ],
+        [
+          8,
+          8
+        ],
+        [
+          8,
+          8
+        ]
+      ],
+      "correct": 24,
+      "total": 24
+    },
+    {
+      "policy": "Primary",
+      "evidence": "partial",
+      "source_counts": [
+        [
+          8,
+          8
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          5,
+          8
+        ]
+      ],
+      "correct": 20,
+      "total": 24
+    },
+    {
+      "policy": "Primary",
+      "evidence": "full",
+      "source_counts": [
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          8
+        ]
+      ],
+      "correct": 0,
+      "total": 24
+    },
+    {
+      "policy": "Retry",
+      "evidence": "clean",
+      "source_counts": [
+        [
+          16,
+          16
+        ],
+        [
+          16,
+          16
+        ],
+        [
+          16,
+          16
+        ]
+      ],
+      "correct": 48,
+      "total": 48
+    },
+    {
+      "policy": "Retry",
+      "evidence": "full",
+      "source_counts": [
+        [
+          0,
+          16
+        ],
+        [
+          0,
+          16
+        ],
+        [
+          0,
+          16
+        ]
+      ],
+      "correct": 0,
+      "total": 48
+    },
+    {
+      "policy": "Verify",
+      "evidence": "clean",
+      "source_counts": [
+        [
+          16,
+          16
+        ],
+        [
+          16,
+          16
+        ],
+        [
+          15,
+          16
+        ]
+      ],
+      "correct": 47,
+      "total": 48
+    },
+    {
+      "policy": "Verify",
+      "evidence": "full",
+      "source_counts": [
+        [
+          0,
+          16
+        ],
+        [
+          0,
+          16
+        ],
+        [
+          0,
+          16
+        ]
+      ],
+      "correct": 0,
+      "total": 48
+    }
+  ],
+  "human": [
+    {
+      "setting": "Core",
+      "method": "Base",
+      "clean_auto": [
+        19,
+        20
+      ],
+      "clean_human": [
+        20,
+        20
+      ],
+      "poison_auto": [
+        16,
+        20
+      ],
+      "poison_human": [
+        16,
+        20
+      ]
+    },
+    {
+      "setting": "Core",
+      "method": "Double-pass",
+      "clean_auto": [
+        20,
+        20
+      ],
+      "clean_human": [
+        20,
+        20
+      ],
+      "poison_auto": [
+        20,
+        20
+      ],
+      "poison_human": [
+        20,
+        20
+      ]
+    },
+    {
+      "setting": "Core",
+      "method": "Verification-only",
+      "clean_auto": [
+        18,
+        20
+      ],
+      "clean_human": [
+        20,
+        20
+      ],
+      "poison_auto": [
+        16,
+        20
+      ],
+      "poison_human": [
+        20,
+        20
+      ]
+    },
+    {
+      "setting": "Core",
+      "method": "Generic Guard",
+      "clean_auto": [
+        20,
+        20
+      ],
+      "clean_human": [
+        20,
+        20
+      ],
+      "poison_auto": [
+        19,
+        20
+      ],
+      "poison_human": [
+        19,
+        20
+      ]
+    },
+    {
+      "setting": "Repeated, $p=1$",
+      "method": "Double-pass",
+      "clean_auto": null,
+      "clean_human": null,
+      "poison_auto": [
+        8,
+        10
+      ],
+      "poison_human": [
+        8,
+        10
+      ]
+    },
+    {
+      "setting": "Repeated, $p=1$",
+      "method": "Generic Guard",
+      "clean_auto": null,
+      "clean_human": null,
+      "poison_auto": [
+        7,
+        10
+      ],
+      "poison_human": [
+        7,
+        10
+      ]
+    },
+    {
+      "setting": "Cross-model",
+      "method": "AutoGen",
+      "clean_auto": [
+        8,
+        10
+      ],
+      "clean_human": [
+        9,
+        10
+      ],
+      "poison_auto": [
+        5,
+        10
+      ],
+      "poison_human": [
+        5,
+        10
+      ]
+    }
+  ],
+  "sources": {
+    "figures/defense_comparison_data.tex": "5299c1bdbeb0a64cf0b04b04892447c745b46cac4245f3e48367e02d2902ea0e",
+    "output/evidence_controls_v4/results.tex": "addc4ec259df1e86a3b554912911e2d946af2952793d68e8b56117570803725f",
+    "output/human_validation_20260920/method_comparison.tex": "cc9190de1163e5c195b26a3518a53ab1ce9783f763fb7c6aa9243196fd3c4447"
+  }
+}

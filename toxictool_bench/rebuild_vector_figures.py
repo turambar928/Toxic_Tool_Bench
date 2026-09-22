@@ -5,6 +5,7 @@ editable in SVG and is embedded/subset as fonts by the native SVG/PDF renderer.
 Decorative icons are newly drawn paths, not exact copies of raster artwork.
 """
 from __future__ import annotations
+import argparse
 import hashlib
 import json
 import math
@@ -62,6 +63,14 @@ class SVG:
         x,y=points[-1];px,py=points[-2];a=math.atan2(y-py,x-px)
         self.polygon([(x,y),(x-head*math.cos(a)+head*.48*math.sin(a),y-head*math.sin(a)-head*.48*math.cos(a)),
                       (x-head*math.cos(a)-head*.48*math.sin(a),y-head*math.sin(a)+head*.48*math.cos(a))],color,color,1)
+
+    def process_arrow(self,x,y,color,fill):
+        """Matching route arrows: same shaft, head, and overall dimensions."""
+        arrow=self.path(
+            f"M {x} {y-13} L {x+186} {y-13} L {x+186} {y-25} "
+            f"L {x+223} {y} L {x+186} {y+25} L {x+186} {y+13} L {x} {y+13} Z",
+            color,fill,2.5)
+        arrow.set("class","route-process-arrow")
 
     def font(self,size,bold=False,mono=False):
         key=(round(size*10),bold,mono)
@@ -214,8 +223,34 @@ class SVG:
         elif kind=="alert":
             self.circle(50,50,44,"#d897b8",color,3);self.rect(44,20,12,40,WHITE,color,5,2);self.circle(50,77,7,WHITE,color,2)
         elif kind=="recovery":
-            self.path("M 49 70 Q 14 61 4 14 L 35 39 L 24 6 L 51 30 L 76 7 L 65 42 L 97 16 Q 85 57 57 69 L 72 91 L 50 83 L 28 92 Z",color,"#e6a451",3)
-            self.line(51,65,51,91,color,3)
+            self.parent.set("id","recovery-phoenix")
+            # A rising bird with feathered flame wings, head/beak, and a tail
+            # emerging from ash. Keep its silhouette legible at paper scale.
+            self.path("M 17 96 Q 16 89 25 88 Q 24 80 34 83 Q 41 76 48 82 "
+                      "Q 56 76 63 83 Q 75 79 77 88 Q 88 87 88 96 Z",
+                      color,"#cbd0d9",2)
+            self.path("M 47 62 C 25 60 10 48 4 25 Q 15 38 26 40 "
+                      "C 13 29 13 14 16 4 C 21 24 35 29 42 40 "
+                      "Q 41 27 36 21 C 50 29 56 47 51 62 Z",
+                      color,"#ed9251",2.4)
+            self.path("M 53 62 C 75 60 90 48 96 25 Q 85 38 74 40 "
+                      "C 87 29 87 14 84 4 C 79 24 65 29 58 40 "
+                      "Q 59 27 64 21 C 50 29 44 47 49 62 Z",
+                      color,"#ed9251",2.4)
+            self.path("M 11 40 Q 30 49 42 51 L 47 61 Q 24 57 11 40 Z",
+                      "#ba4e40","#dc6547",1.2)
+            self.path("M 89 40 Q 70 49 58 51 L 53 61 Q 76 57 89 40 Z",
+                      "#ba4e40","#dc6547",1.2)
+            self.path("M 44 54 Q 44 40 48 32 Q 45 23 52 20 "
+                      "L 66 23 L 57 28 Q 61 41 58 55 Q 57 64 52 70 "
+                      "Q 58 85 66 93 Q 52 88 49 79 Q 44 88 35 92 "
+                      "Q 42 78 44 68 Q 39 63 44 54 Z",
+                      color,"#f5bd5b",2.2)
+            self.path("M 49 59 Q 54 70 50 91 Q 45 82 49 59 Z",
+                      "#cf6341","#e77d46",1.2)
+            self.circle(53,24,1.8,color)
+            for xx,yy in [(20,76),(79,77),(12,85),(88,84)]:
+                self.circle(xx,yy,1.5,"#dc6547")
         elif kind in {"camera","sensor"}:
             self.rect(9,23,82,50,"#c4d7e1",color,8,3);self.circle(50,47,17,"#829cab",color,3);self.circle(50,47,7,"#c3e4b7",color,2)
             self.line(50,73,50,91,color,4);self.line(27,93,74,93,color,5)
@@ -402,7 +437,7 @@ def figure2():
         x=9+i*332;w=320
         s.panel(x,643,w,123,color,fill)
         s.rect(x,643,w,48,color,color,12)
-        s.icon(icon,x+15,661,66,NAVY)
+        s.icon(icon,x+12,657 if icon=="recovery" else 661,78 if icon=="recovery" else 66,NAVY)
         s.text(x+197,677,label,27,WHITE,True,"middle",224)
         s.lines(x+197,732 if len(desc)==1 else 719,desc,20,25,anchor="middle",width=232)
         if i:
@@ -432,21 +467,20 @@ def figure2():
         s.icon(kind,x-17,y,31)
         s.lines(x,y+48,label,17.5,20,anchor="middle",width=103)
     s.text(530,962,"Primary pathway",23)
-    s.icon("camera",753,952,45);s.icon("sensor",851,952,45)
-    s.path("M 533 1004 L 940 1004 L 940 989 L 977 1025 L 940 1061 L 940 1045 L 533 1045 Z",ORANGE,"#eee2ce",2.5)
-    s.lines(530,1076,["Run the agent","with tools."],22,24)
-    s.icon("sensor",782,1050,43);s.icon("camera",849,1050,43)
-    s.text(881,1098,"monitoring",17,anchor="middle")
+    s.process_arrow(533,1026,ORANGE,"#eee2ce")
+    s.lines(530,1073,["Run the agent","with tools."],22,24)
+    s.icon("camera",782,1006,69,BLUE);s.icon("sensor",895,1011,62,BLUE)
+    s.text(867,1093,"monitoring",18,anchor="middle")
     for left in [494,992,1490]:
-        s.arrow([(left,994),(left+28,994)],BLUE,5,15)
+        s.arrow([(left,1026),(left+13,1026)],BLUE,3,10)
     s.lines(1028,961,["Additional tool evidence","from the same source"],22,27,width=403)
-    s.path("M 1030 1013 L 1216 1013 L 1216 1001 L 1253 1026 L 1216 1051 L 1216 1039 L 1030 1039 Z",PURPLE,"#e0d4ee",2.5)
+    s.process_arrow(1031,1026,PURPLE,"#e0d4ee")
     s.icon("gear",1280,1011,62,PURPLE);s.icon("magnify",1393,1006,69,BLUE)
     s.lines(1028,1073,["Returns a second","answer"],21,24,width=222)
     s.text(1310,1093,"Recompute",17,anchor="middle",width=105)
     s.lines(1427,1072,["Inspect","Metadata"],18,21,anchor="middle",width=115)
     s.text(1524,965,"Select",23);s.text(1690,965,"answer",23,anchor="middle")
-    s.icon("robot",1526,1014,69,GREEN);s.icon("robot",1600,979,124,GREEN);s.icon("robot",1730,1026,58,GREEN)
+    s.icon("robot",1526,1023,69,GREEN);s.icon("robot",1600,989,104,GREEN);s.icon("robot",1730,1034,58,GREEN)
     s.lines(1877,969,["Use the","Route 2","answer"],25,30,anchor="middle",width=183)
     s.rect(1800,1058,174,38,RED,RED,8)
     s.text(1887,1084,"Route 2 answer selected",17,WHITE,True,"middle",158)
@@ -465,9 +499,16 @@ def render(svg,pdf):
 
 
 def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--figure",type=int,choices=[1,2],help="Rebuild only one figure, preserving the other assets")
+    args=parser.parse_args()
     preserved={str(p.relative_to(ROOT)):digest(p) for p in [FIG/"figure1.png",FIG/"figure2.png",FIG/"figure1.pdf",FIG/"figure2.pdf"]}
     report={"preserved_original_sha256":preserved,"font":"Arial; Courier New for code", "figures":[]}
+    previous=json.loads((FIG/"vector_rebuild_manifest.json").read_text()) if args.figure else None
     for n,make in [(1,figure1),(2,figure2)]:
+        if args.figure and n!=args.figure:
+            report["figures"].append(next(f for f in previous["figures"] if f["svg"]==f"figure{n}_vector.svg"))
+            continue
         s=make();svg=FIG/f"figure{n}_vector.svg";pdf=svg.with_suffix(".pdf")
         s.write(svg);render(svg,pdf)
         reader=PdfReader(pdf)

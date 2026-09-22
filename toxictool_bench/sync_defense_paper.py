@@ -168,7 +168,9 @@ def main() -> None:
     agreement = json.loads(agreement_path.read_text())["labels"]
     # Main results, suite breakdown, counts, audit, paired inference and CIs all
     # come from the objects above, not independently typed manuscript values.
-    table_rows(SECTIONS / "05_experiments.tex", "tab:langgraph-guarded", [
+    # Numeric source retained separately now that the main paper uses a figure.
+    # Re-render with plot_table_conversion_previews.py --paper after syncing.
+    table_rows(ROOT / "figures/defense_comparison_data.tex", "tab:langgraph-guarded", [
         line(NAMES[a], *[summaries['combined'][a][k] for k in ('clean_tsr','poisoned_tsr','toxic_bcr','toxic_par','toxic_vpa','toxic_vr','toxic_rr')], summaries['combined'][a]['n_exposed']) for a in NAMES])
     table_rows(appendix, "tab:appendix-guard-suite-breakdown",
                suite_table_lines(summaries, exposure))
