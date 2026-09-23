@@ -106,16 +106,16 @@ Table~\ref{tab:holdout-scorer} places the original scorer and post-repair develo
 & & & \multicolumn{2}{c}{Original scorer} & \multicolumn{2}{c}{Repair recheck} \\
 Metric & $n$ & Human $+$ & Precision & Recall & Precision & Recall \\
 \midrule
-TSR & 240 & 193 & 0.977 & 0.668 & 1.000 & 0.990 \\
-PAR & 94 & 7 & 1.000 & 0.714 & 1.000 & 1.000 \\
-BCR & 94 & 3 & 1.000 & 0.333 & 1.000 & 1.000 \\
+TSR & 240 & 193 & 0.977 & 0.668 & \best{1.000} & \best{0.990} \\
+PAR & 94 & 7 & \best{1.000} & 0.714 & \best{1.000} & \best{1.000} \\
+BCR & 94 & 3 & \best{1.000} & 0.333 & \best{1.000} & \best{1.000} \\
 ADR & 94 & 4 & 0.667 & 0.500 & -- & -- \\
-VR & 94 & 81 & 1.000 & 0.988 & 1.000 & 0.988 \\
-VPA & 94 & 4 & 1.000 & 1.000 & 1.000 & 1.000 \\
-RR & 94 & 72 & 1.000 & 0.500 & 1.000 & 0.972 \\
+VR & 94 & 81 & \best{1.000} & \best{0.988} & \best{1.000} & \best{0.988} \\
+VPA & 94 & 4 & \best{1.000} & \best{1.000} & \best{1.000} & \best{1.000} \\
+RR & 94 & 72 & \best{1.000} & 0.500 & \best{1.000} & \best{0.972} \\
 \bottomrule
 \end{tabular}
-\caption{Historical audit and development recheck using the same labels. Original scorer: \texttt{4ae42cd}; repaired parser: \texttt{98c2ed8}. The recheck report does not separately report ADR. Full F1 values remain in the released analyses. These are not independent estimates of revised-parser accuracy.}
+\caption{Historical audit and development recheck using the same labels. Blue compares precision or recall between versions within each row, including ties. Original scorer: \texttt{4ae42cd}; repaired parser: \texttt{98c2ed8}. The recheck does not report ADR; full F1 values remain in released analyses. These are not independent estimates of revised-parser accuracy.}
 \label{tab:holdout-scorer}\label{tab:development-recheck-v2}
 \end{table}
 
@@ -126,16 +126,16 @@ RR & 94 & 72 & 1.000 & 0.500 & 1.000 & 0.972 \\
 \toprule
 Setting & Method & Tasks & Automatic & Human \\
 \midrule
-\texttt{poison\_once} & Base & 20 & 0.60 & 0.85 \\
- & Double-pass & 20 & 0.60 & 0.85 \\
- & Verification-only & 20 & 0.55 & 0.85 \\
- & Generic Guard & 20 & 0.50 & 0.85 \\
+\texttt{poison\_once} & Base & 20 & \best{0.60} & \best{0.85} \\
+ & Double-pass & 20 & \best{0.60} & \best{0.85} \\
+ & Verification-only & 20 & 0.55 & \best{0.85} \\
+ & Generic Guard & 20 & 0.50 & \best{0.85} \\
 \midrule
-Repeated, $p=1$ & Double-pass & 20 & 0.45 & 0.80 \\
+Repeated, $p=1$ & Double-pass & 20 & \best{0.45} & \best{0.80} \\
  & Generic Guard & 20 & 0.25 & 0.70 \\
 \bottomrule
 \end{tabular}
-\caption{Archived pre-repair automatic and human TSR on 20 shared audit tasks, with original references. The revised full analysis uses 118 retained instances and is reported separately.}
+\caption{Archived pre-repair automatic and human TSR on 20 shared audit tasks, with original references. Blue marks the highest TSR within each setting and rating source, including ties. The revised full analysis uses 118 retained instances and is reported separately.}
 \label{tab:holdout-methods}
 \end{table}
 

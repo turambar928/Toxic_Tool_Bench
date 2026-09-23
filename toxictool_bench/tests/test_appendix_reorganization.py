@@ -7,6 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from check_paper_static import collect_tex_files
+from paper_table_highlights import strip_highlights
 from sync_defense_paper import (
     ROOT, RESULTS, SUITES, read_csv, suite_table_lines, audit_table_lines,
     table_rows,
@@ -31,7 +32,7 @@ def test_combined_suite_table_matches_frozen_results():
     exposure = read_csv(RESULTS / 'leakage_free_defense_exposure_denominators.csv')
     lines = suite_table_lines(summaries, exposure)
     assert len(lines) == 8
-    paper = (ROOT / 'sections/08_appendix_guard_details.tex').read_text()
+    paper = strip_highlights((ROOT / 'sections/08_appendix_guard_details.tex').read_text())
     assert all(row in paper for row in lines)
     assert all(len(row.split(' & ')) == 9 for row in lines)
 
@@ -63,8 +64,8 @@ def test_table_sync_preserves_merged_label_aliases(tmp_path):
 def test_moved_numeric_tables_preserve_archived_rows():
     archive = ROOT / 'docs/appendix_archive_20260918'
     old = (archive / '08_appendix_guard_details.tex').read_text()
-    active = '\n'.join((ROOT / 'sections' / name).read_text() for name in
-                       ('08_appendix_guard_details.tex', '09_revision_validation.tex'))
+    active = strip_highlights('\n'.join((ROOT / 'sections' / name).read_text() for name in
+                       ('08_appendix_guard_details.tex', '09_revision_validation.tex')))
     for label in ('tab:appendix-scorer-revision-impact', 'tab:appendix-paired-defense-ci',
                   'tab:appendix-latency-distribution', 'tab:appendix-multiroute-stress'):
         pos = old.index(r'\label{' + label + '}')

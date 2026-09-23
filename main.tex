@@ -14,6 +14,15 @@
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{xcolor}
+% Highlight only the number, not the whole cell; keep the normal font weight.
+% A tight box avoids changing table spacing substantially.
+\definecolor{bestSky}{RGB}{184,225,250}
+\newcommand{\best}[1]{%
+  \begingroup\setlength{\fboxsep}{1pt}%
+  \colorbox{bestSky}{#1}%
+  \endgroup%
+}
 \usepackage{microtype}
 \usepackage{natbib}
 \usepackage{url}

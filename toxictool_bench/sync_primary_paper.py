@@ -10,10 +10,12 @@ from pathlib import Path
 from rebuild_paper_results import ROOT, RESULTS, DEFAULT_MANIFEST, load_manifest, rescore, write_bootstrap_table
 from summarize_results import write_overall, write_poison, write_severity
 from evaluator import aggregate
+from paper_table_highlights import highlight_rows
 from build_public_paper_summaries import PAPER_ADAPTERS, read_rows, write_cross_model, write_poison_type
 
 
 def table(path, label, rows):
+    rows = highlight_rows(rows, label)
     text = path.read_text()
     matches = list(re.finditer(r"\\begin\{table\*?\}.*?\\end\{table\*?\}", text, re.S))
     block = next(m for m in matches if r"\label{" + label + "}" in m.group())

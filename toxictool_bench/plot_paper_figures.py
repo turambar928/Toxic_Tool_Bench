@@ -11,6 +11,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
+from paper_table_highlights import highlight_rows
 
 
 PUBLIC_ADAPTERS = {
@@ -257,7 +258,8 @@ def write_profile_tables(results_dir: Path, output_dir: Path) -> None:
                                 ["clean_tsr", "poisoned_tsr", "toxic_bcr", "poison_delivery_rate"]) + r" \\")
         family = group
     lines.extend([r"\bottomrule", r"\end{tabular}"])
-    (output_dir / "cross_model_rates_table.tex").write_text("\n".join(lines) + "\n")
+    (output_dir / "cross_model_rates_table.tex").write_text(
+        "\n".join(highlight_rows(lines, "tab:cross-model-rates")) + "\n")
 
 
 def plot_operator_dots(results_dir: Path, output_dir: Path, preview_dir: Path | None) -> None:

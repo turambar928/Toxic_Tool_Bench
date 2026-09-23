@@ -21,6 +21,7 @@ from build_defense_paired_analysis import (
     paired_success, read_csv, read_jsonl, write_csv,
 )
 from evaluator import aggregate
+from paper_table_highlights import highlight_rows
 from summarize_results import write_overall
 import random
 
@@ -41,6 +42,7 @@ BEHAVIOR = {"BCR": "blind_compliance", "PAR": "poison_adoption", "VPA": "validat
 
 def table_rows(path: Path, label: str, lines: list[str]) -> None:
     """Replace only the body of the uniquely labelled table, preserving prose."""
+    lines = highlight_rows(lines, label)
     text = path.read_text()
     token = "\\label{" + label + "}"
     if text.count(token) != 1:

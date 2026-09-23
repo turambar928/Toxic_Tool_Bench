@@ -13,6 +13,7 @@ from plot_paper_figures import (
     plot_operator_heatmap, write_profile_tables,
 )
 import plot_paper_figures as plotting
+from paper_table_highlights import strip_highlights
 
 ROOT = Path(__file__).resolve().parents[2]
 RESULTS = ROOT / "toxictool_bench/results"
@@ -44,7 +45,7 @@ def test_native_tables_preserve_all_displayed_rates(tmp_path):
     _, _, values = operator_profile_data(RESULTS)
     for row in values:
         assert " & ".join(format_rate(v) for v in row) in operator
-    cross = (tmp_path / "cross_model_rates_table.tex").read_text()
+    cross = strip_highlights((tmp_path / "cross_model_rates_table.tex").read_text())
     for row in cross_model_rows(RESULTS):
         assert " & ".join(format_rate(float(row[k])) for k in
                            ["clean_tsr", "poisoned_tsr", "toxic_bcr", "poison_delivery_rate"]) in cross
