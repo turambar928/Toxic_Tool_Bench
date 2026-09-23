@@ -32,6 +32,13 @@ main.pdf
 *~
 figures/preview/
 
+# Retired Overleaf snapshot and local table-to-figure design previews.
+# Keep active manuscript sources, final figures, and experimental results tracked.
+/output/OVERLEAF_ICLR2027_20260921/
+/output/OVERLEAF_ICLR2027_20260921.zip
+/output/table_figure_previews_20260921/
+/output/table_figure_previews_20260921_v*/
+
 # Local scoring-revision archive and generated review/build duplicates.
 output/scorer_revision_v2/baseline/
 output/scorer_revision_v2/pdf/
