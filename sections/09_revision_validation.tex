@@ -50,7 +50,7 @@ Table~\ref{tab:postfreeze-scorer} reports 96.0\% TSR agreement, with 176 true po
 
 Figure~\ref{fig:postfreeze-methods} shows a human Double-pass--Base poisoned-TSR difference of $+0.20$ [0.05, 0.35], matching the automatic contrast. Human clean TSR is 1.00 for all four core methods, so its clean-adjusted contrast is also $+0.20$. Human Verification-only ties Double-pass at 1.00, compared with automatic TSR 0.80; Guard reaches 0.95 under both ratings. Repeated-poison TSR agrees across rating sources at 0.80 for Double-pass and 0.70 for Guard; their Guard--Double-pass contrast is $-0.10$ [$-0.30$, 0.00]. Intervals use 5,000 task-paired resamples within suites (seed 20260915) and describe the selected tasks, not population-wide method rankings.
 
-The remaining TSR disagreements comprise six Verification-only cases, one Base case, and one AutoGen case; four of the Verification-only misses occur in poisoned runs. The seven-metric comparison contains 14 distinct disagreement trajectories, retained in the released error inventory. RR recall is 0.867 and BCR recall 0.800; ADR has only one human-positive exposed case and VPA four. These counts characterize metric-specific coverage alongside the overall agreement. The scorer remains frozen at \texttt{98c2ed8}; none of these labels is used to tune the reported parser. The historical audits below use different samples and references and are reported separately.
+The remaining TSR disagreements comprise six Verification-only cases, one Base case, and one AutoGen case; four of the Verification-only misses occur in poisoned runs. The seven-metric comparison contains 14 distinct disagreement trajectories, retained in the released error inventory. RR recall is 0.867 and BCR recall 0.800; ADR has only one human-positive exposed case and VPA four. These counts characterize metric-specific coverage alongside the overall agreement. The scorer remains fixed at the pre-annotation version (98c2ed8); none of these labels is used to tune the reported parser. The historical audits below use different samples and references and are reported separately.
 
 The development packet contains 120 exposed trajectories, stratified equally across numerical, semantic/schema, and multi-table tasks. Two independent annotators saw queries, oracles, answers, and ordered events, but not scorer labels, model/adapter names, source paths, or each other's decisions. Twelve trajectories had disagreements in 16 label cells, resolved by separate blind adjudication. Table~\ref{tab:appendix-scorer-precision} distinguishes scorer accuracy from annotator agreement (macro agreement 0.967, $\kappa=0.913$). This packet did not separately label TSR, PAR, or VPA. A targeted review of 18 non-disputed VR-positive cases found all 18 relevant, but is not an independent accuracy estimate. The earlier 80-run author repeat-pass sheet is diagnostic only.
 
@@ -115,7 +115,7 @@ VPA & 94 & 4 & \best{1.000} & \best{1.000} & \best{1.000} & \best{1.000} \\
 RR & 94 & 72 & \best{1.000} & 0.500 & \best{1.000} & \best{0.972} \\
 \bottomrule
 \end{tabular}
-\caption{Historical audit and development recheck using the same labels. Blue compares precision or recall between versions within each row, including ties. Original scorer: \texttt{4ae42cd}; repaired parser: \texttt{98c2ed8}. The recheck does not report ADR; full F1 values remain in released analyses. These are not independent estimates of revised-parser accuracy.}
+\caption{Historical audit and development recheck using the same labels. Blue compares precision or recall between versions within each row, including ties. Original scorer: 4ae42cd; repaired parser: 98c2ed8. The recheck does not report ADR; full F1 values remain in released analyses. These are not independent estimates of revised-parser accuracy.}
 \label{tab:holdout-scorer}\label{tab:development-recheck-v2}
 \end{table}
 
@@ -126,7 +126,7 @@ RR & 94 & 72 & \best{1.000} & 0.500 & \best{1.000} & \best{0.972} \\
 \toprule
 Setting & Method & Tasks & Automatic & Human \\
 \midrule
-\texttt{poison\_once} & Base & 20 & \best{0.60} & \best{0.85} \\
+One-shot & Base & 20 & \best{0.60} & \best{0.85} \\
  & Double-pass & 20 & \best{0.60} & \best{0.85} \\
  & Verification-only & 20 & 0.55 & \best{0.85} \\
  & Generic Guard & 20 & 0.50 & \best{0.85} \\
@@ -145,7 +145,7 @@ On the 20 core tasks, Guard minus Double-pass poisoned TSR is $-0.10$ [$-0.25$, 
 \label{sec:revision-v2}
 \label{sec:scorer-sensitivity}
 
-The versioned comparison covers 5,396 archived trajectories. For each it stores the baseline decision (\texttt{4ae42cd}), frozen-parser decision (\texttt{98c2ed8}) with original references, and revised decision with corrected references. Raw answers, events, original task files, and human labels remain intact. Input hashes and selected claim spans are archived in \path{output/scorer_revision_v2/}. Table~\ref{tab:appendix-scorer-revision-impact} uses a different legacy baseline, \texttt{f0aa054}, and combines parser and reference changes on the same 944 retained defense trajectories; it must not be read as a parser-only effect.
+The versioned comparison covers 5,396 archived trajectories. For each it stores the baseline decision (4ae42cd), frozen-parser decision (98c2ed8) with original references, and revised decision with corrected references. Raw answers, events, original task files, and human labels remain intact. Input hashes and selected claim spans accompany the versioned scoring analysis in the anonymized supplementary material. Table~\ref{tab:appendix-scorer-revision-impact} uses a different legacy baseline, f0aa054, and combines parser and reference changes on the same 944 retained defense trajectories; it must not be read as a parser-only effect.
 
 \begin{table}[t]
 \centering
