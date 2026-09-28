@@ -1,16 +1,5 @@
 <h1 align="center">ToxicBench</h1>
 
-<h3 align="center">
-  When Tools Silently Lie:<br>
-  Evaluating and Mitigating Blind Compliance<br>
-  in Tool-Augmented Data Agents
-</h3>
-
-<p align="center">
-  Zifu Tao &nbsp;·&nbsp; Changqing Yin<br>
-  <sub>Tongji University</sub>
-</p>
-
 <p align="center">
   <a href="https://openreview.net/forum?id=JJDQY33lKk"><img src="https://img.shields.io/badge/Paper-OpenReview-5667A0?style=flat-square&amp;logo=readthedocs&amp;logoColor=white" alt="Paper on OpenReview"></a>
   <a href="docs/README.md"><img src="https://img.shields.io/badge/Docs-Getting_Started-82709A?style=flat-square&amp;logo=readthedocs&amp;logoColor=white" alt="Documentation"></a>
