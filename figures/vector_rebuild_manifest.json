@@ -10,21 +10,11 @@
     {
       "svg": "figure1_vector.svg",
       "pdf": "figure1_vector.pdf",
-      "svg_sha256": "bbc19e6f2d21d991124f5f24dc22a2ccfb74a4d42e8674cfaacfadf0b85d37a6",
-      "pdf_sha256": "3101d88b4c24309f25fb77ed2506ecbc78bf8a5c61566c54c3c6c6242259c6d6",
+      "svg_sha256": "85692b1e76deb47bb4151d4449d9c8978d6b9f0da1b9bbc27d649cb2726d94ab",
+      "pdf_sha256": "83f986f8835c71429d5525b89ac1b9cfed41a997dee8d61488fe97fa493e8c60",
       "embedded_raster_images": 0,
       "text_selectable": true,
       "text_elements": [
-        {
-          "text": "Figure 1 | Silent Tool Poisoning: An Example",
-          "x": 1000,
-          "baseline": 58,
-          "font_size": 37,
-          "font": "Arial",
-          "bold": true,
-          "left": 608.34375,
-          "right": 1391.65625
-        },
         {
           "text": "USER QUERY",
           "x": 985.0,
@@ -570,41 +560,11 @@
     {
       "svg": "figure2_vector.svg",
       "pdf": "figure2_vector.pdf",
-      "svg_sha256": "27cce714b35cf94e9d35d8e8c3e05d4a253a4a9ed32340dc6eef38344967cd2c",
-      "pdf_sha256": "ed0814aecbae660749fbf5ec96e0c1101aba0ace9fc6bc7c33d0729acd4d07d7",
+      "svg_sha256": "8bada60edcf5c15a94f8d53a108702cd4b8101cc2d017f0d19f73bb0f5c7b5eb",
+      "pdf_sha256": "b741708362cbb56d5205a948da8dc3f6a1cc55506b8de38f4209bb731777815f",
       "embedded_raster_images": 0,
       "text_selectable": true,
       "text_elements": [
-        {
-          "text": "Data Agents",
-          "x": 84,
-          "baseline": 51,
-          "font_size": 26,
-          "font": "Arial",
-          "bold": true,
-          "left": 84,
-          "right": 234.728125
-        },
-        {
-          "text": "Figure 2 | ToxicBench and Evidence Verification",
-          "x": 1000,
-          "baseline": 51,
-          "font_size": 32,
-          "font": "Arial",
-          "bold": true,
-          "left": 636.609375,
-          "right": 1363.390625
-        },
-        {
-          "text": "Poisoning",
-          "x": 1790,
-          "baseline": 51,
-          "font_size": 26,
-          "font": "Arial",
-          "bold": true,
-          "left": 1790,
-          "right": 1915.6546875
-        },
         {
           "text": "A  Task Suites",
           "x": 17,

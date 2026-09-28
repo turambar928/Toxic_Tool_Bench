@@ -2,17 +2,27 @@ from __future__ import annotations
 
 import csv
 import json
+import re
+import sys
 import tempfile
 import unittest
 import zipfile
 from pathlib import Path
 from unittest.mock import patch
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from analyze_human_holdout import (
     FIELDS, PACKET, ROOT, agreement_tables, bootstrap, confusion, human_metrics,
     keyed, labels_by_id, load_cases, method_rates, paired_comparisons, write_csv,
 )
 from prepare_holdout_adjudication import make_html, import_completed
+
+
+def paper_table_source():
+    paper = (ROOT / "sections/09_revision_validation.tex").read_text()
+    # Compare values, independently of the manuscript's sky-blue highlighter.
+    return re.sub(r"\\best\{([0-9.]+)\}", r"\1", paper)
 
 
 class HoldoutUnitTests(unittest.TestCase):
@@ -156,7 +166,7 @@ class ReturnedHoldoutTests(unittest.TestCase):
             self.assertGreaterEqual(r["ci95_hi"], 0)
 
     def test_paper_holdout_table_matches_derived_method_rates(self):
-        paper = (ROOT / "sections/09_revision_validation.tex").read_text()
+        paper = paper_table_source()
         rates = method_rates(self.cases)
         for split, method in (("core", "Base"), ("core", "Double-pass"),
                               ("core", "Verification-only"), ("core", "Generic Guard"),
@@ -193,7 +203,7 @@ class ReturnedHoldoutTests(unittest.TestCase):
 
     def test_adjudicated_paper_precision_recall_and_counts(self):
         _, accuracy = agreement_tables(self.cases)
-        paper = (ROOT / "sections/09_revision_validation.tex").read_text()
+        paper = paper_table_source()
         final = [r for r in accuracy if r["rater"] == "consensus" and r["split"] == "all"]
         self.assertEqual(len(final), 7)
         for r in final:

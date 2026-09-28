@@ -12,7 +12,7 @@ raw-data recovery is 119/119 for one-shot and 110/119 for repeated poisoning.
 Ten numeric targets are not exposed and two table-discovery previews have
 duplicate table-name keys; neither is counted as a valid target intervention.
 The 21 declared schema-role checks are not independent semantic annotation.
-See [the report](output/task_acceptance_v1/README_CN.md), §3.1 and Appendix A.
+See [the report](../../output/task_acceptance_v1/README_CN.md), §3.1 and Appendix A.
 The regression suite now has 207 passing tests. Historical tasks, model outcomes,
 injector, frozen scorer, and human labels are unchanged.
 
@@ -36,7 +36,7 @@ standardization without changing labels. TSR agreement is 192/200 (96.0%).
 Human core poisoned TSR is Base 0.80, Double-pass 1.00, Verification-only 1.00,
 and Guard 0.95; the Double-pass--Base contrast is +0.20 [0.05, 0.35].
 The 40-case review excludes 12 ambiguous references and agrees on 28/28 eligible
-cases. See the [full report](output/human_validation_20260920/README_CN.md)
+cases. See the [full report](../../output/human_validation_20260920/README_CN.md)
 for all metric counts, source attestations, and the unchanged frozen scorer.
 
 Previous non-human submission revision V3 is documented in

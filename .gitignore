@@ -58,6 +58,14 @@ toxictool_bench/cache/
 # Generated anonymous submission bundles; rebuild with scripts/submission_release/.
 /output/SUBMISSION_RELEASE_*/
 
+# Standalone preprint/Overleaf export snapshots.
+/output/ARXIV_OVERLEAF_*/
+/output/ARXIV_OVERLEAF_*.zip
+/output/figure2_redesign_*/
+/output/figure2_polish_*/
+/output/paper_build/
+/output/local_build_archive_*/
+
 # Local benchmark run logs. Paper-facing summaries and selected raw logs can be
 # added explicitly with `git add -f` when they are release artifacts.
 toxictool_bench/results/20*.jsonl

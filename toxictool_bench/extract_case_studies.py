@@ -134,7 +134,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(__file__).resolve().parents[1] / "CASE_STUDIES.md",
+        default=Path(__file__).resolve().parents[1] / "docs/archive/CASE_STUDIES.md",
     )
     parser.add_argument("--per-category", type=int, default=2)
     args = parser.parse_args()

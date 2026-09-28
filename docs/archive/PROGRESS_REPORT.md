@@ -12,7 +12,7 @@ Last updated: 2026-07-19
 - 指标漏洞已经审计并修复，当前表格使用 `.rescored.jsonl` 结果。
 - 论文的 benchmark section、experiment section、结果说明和运行命令已经更新。
 - 论文 qualitative analysis 已经压缩为主文版本，额外 light-guard / overhead / framework-boundary 内容已移动到 appendix section。
-- `EXPERIMENT_RESULTS.md` 已经改成正式 expanded/cross-model 结果入口，旧 4-task pilot 已归档到 `PILOT_RESULTS.md`。
+- `docs/archive/EXPERIMENT_RESULTS.md` 已经改成正式 expanded/cross-model 结果入口，旧 4-task pilot 已归档到 `docs/archive/PILOT_RESULTS.md`。
 - semantic/schema poisoning 已扩展到 24 个任务、14 个 CSV、5 类 poisoner，并完成 `gpt-5.4-mini`、`claude-sonnet-4-6`、`Qwen3.6-35B-A3B-no-thinking` 三模型 practical-speed adapter 实验。
 - `dataframe_router_guarded` 和 `dataframe_router_guarded_light` 已经完成 semantic/schema 与 numerical ablation。
 - guarded overhead/case-study artifacts 和 bootstrap confidence intervals 已经生成。
@@ -313,9 +313,9 @@ compileall passed
 
 ### 论文实验层面
 
-- 已经把 `CASE_STUDIES.md` 中的代表性样例整理为 `sections/06_qualitative_analysis.tex` 初稿。
-- 已经把旧 pilot 结果从 `EXPERIMENT_RESULTS.md` 拆出到 `PILOT_RESULTS.md`。
-- 已经把 semantic/schema 跨模型结果和 guarded `DataFrame Router` ablation 写入 `EXPERIMENT_RESULTS.md` 和 `sections/05_experiments.tex`。
+- 已经把 `docs/archive/CASE_STUDIES.md` 中的代表性样例整理为 `sections/06_qualitative_analysis.tex` 初稿。
+- 已经把旧 pilot 结果从 `docs/archive/EXPERIMENT_RESULTS.md` 拆出到 `docs/archive/PILOT_RESULTS.md`。
+- 已经把 semantic/schema 跨模型结果和 guarded `DataFrame Router` ablation 写入 `docs/archive/EXPERIMENT_RESULTS.md` 和 `sections/05_experiments.tex`。
 - 已经实现 `dataframe_router_guarded`，并完成 `gpt-5.4-mini` semantic/schema 24-task ablation：BCR 0.62 -> 0.00，poisoned TSR 0.29 -> 0.83，clean TSR 0.92 -> 0.83。
 - 已经完成 `gpt-5.4-mini` numerical 34-task guarded ablation：BCR 0.24 -> 0.00，clean TSR 0.65 -> 0.79，poisoned TSR 0.47 -> 0.74。
 - 已经实现并跑完整 `dataframe_router_guarded_light`：
@@ -323,7 +323,7 @@ compileall passed
   - numerical: clean 0.68, toxic 0.65, BCR 0.00, RR 0.65
 - 已经生成 guarded overhead 统计和 case studies：
   - `toxictool_bench/results/dataframe_router_guarded_overhead_summary.csv`
-  - `GUARDED_CASE_STUDIES.md`
+  - `docs/archive/GUARDED_CASE_STUDIES.md`
 - 已经生成 bootstrap CI：
   - `toxictool_bench/results/numerical_gpt_bootstrap_ci.csv`
   - `toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`

@@ -42,8 +42,10 @@ def test_pdf_is_vector_with_embedded_selectable_text(number):
     page = reader.pages[0]
     assert not list(page.images)
     assert float(page.mediabox.width) == pytest.approx(396)
-    assert float(page.mediabox.height) == pytest.approx(396 * 3072 / 5504, abs=0.001)
+    top_crop = {1: 96, 2: 88}[number]
+    assert float(page.mediabox.height) == pytest.approx(396 * (3072 / 5504 - top_crop / 2000), abs=0.001)
     text = " ".join(page.extract_text().split())
+    assert f"Figure {number} |" not in text
     required = (
         ["Store A", "Store B", "$450,000", "$230,000", "$310,000",
          "csv_tool(query)", "No Modification", "Swap Store Labels"]
@@ -62,6 +64,19 @@ def test_pdf_is_vector_with_embedded_selectable_text(number):
         for descendant in descendants:
             descriptor = descendant.get_object()["/FontDescriptor"].get_object()
             assert any(key in descriptor for key in ("/FontFile", "/FontFile2", "/FontFile3"))
+
+
+@pytest.mark.parametrize("number", [1, 2])
+def test_visible_title_banner_removed_and_top_whitespace_cropped(number):
+    root = ET.parse(FIG / f"figure{number}_vector.svg").getroot()
+    assert root.find(NS + "title") is not None  # Accessibility metadata is retained.
+    _, top, _, height = map(float, root.get("viewBox").split())
+    assert top == {1: 96, 2: 88}[number]
+    assert height == pytest.approx(2000 * 3072 / 5504 - top)
+    texts = list(root.iter(NS + "text"))
+    assert not any(f"Figure {number} |" in (element.text or "") for element in texts)
+    # Icon labels use local coordinates inside translated/scaled groups.
+    assert min(float(element.get("y")) for element in root.findall(NS + "text")) > top
 
 
 def test_manifest_matches_delivered_assets():

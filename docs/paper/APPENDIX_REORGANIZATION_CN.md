@@ -1,6 +1,6 @@
 # 附录整理说明（2026-09-18）
 
-后续更新（2026-09-20）：已加入完成的 200 条人工评价与 40 条参考复核，全文现为 26 页、附录 13 页；五个大节和六个小节的结构不变。结果见[人工评价报告](../output/human_validation_20260920/README_CN.md)。下文保留 9 月 18 日整理记录。
+后续更新（2026-09-20）：已加入完成的 200 条人工评价与 40 条参考复核，全文现为 26 页、附录 13 页；五个大节和六个小节的结构不变。结果见[人工评价报告](../../output/human_validation_20260920/README_CN.md)。下文保留 9 月 18 日整理记录。
 
 这次只整理论文及其表格同步逻辑，没有重跑模型、修改评分器、覆盖人工标签或改变实验结论。使用官方 ICLR 2027 模板，保持字号、页边距和正文不变。
 
@@ -31,13 +31,13 @@
 
 ## 完整材料入口
 
-- [旧附录完整 TeX 快照](appendix_archive_20260918/)：四个文件逐字保留整理前版本；不参与当前论文编译，不作为当前结果的另一套来源，也不由同步脚本更新。
-- [运行命令](../RUN_COMMANDS.md)：已有实验、重复投毒及防御结果重建入口。复制运行模型命令会产生 API 请求，不是本次排版整理所必需。
+- [旧附录完整 TeX 快照](../appendix_archive_20260918/)：四个文件逐字保留整理前版本；不参与当前论文编译，不作为当前结果的另一套来源，也不由同步脚本更新。
+- [运行命令](../reproducibility/RUN_COMMANDS.md)：已有实验、重复投毒及防御结果重建入口。复制运行模型命令会产生 API 请求，不是本次排版整理所必需。
 - `toxictool_bench/results/`：`public_cross_model_*`、`public_poison_type_summary.csv`、`iclr2027_gpt_expanded_cross_agent_*`、`leakage_free_defense_*`、`verification_stress_*`、`langgraph_multitable_extension_summary.csv`。
 - `toxictool_bench/human_audit_v2/`、`human_review_v3/`、`human_holdout_v1/`：原始人工材料与分析，未修改。
 - `output/scorer_revision_v2/`：冻结版本、三版本重评分、reference 审计、claim span 和 provenance。
 - `output/submission_revision_v3/`、`output/evidence_controls_v4/`：新实验的冻结协议、执行记录、结果、amendments 和审计。
-- [CASE_STUDIES.md](../CASE_STUDIES.md)、[GUARDED_CASE_STUDIES.md](../GUARDED_CASE_STUDIES.md)：完整案例。
+- [CASE_STUDIES.md](../archive/CASE_STUDIES.md)、[GUARDED_CASE_STUDIES.md](../archive/GUARDED_CASE_STUDIES.md)：完整案例。
 
 `sync_defense_paper.py` 已适配合并后的表格和新的 scorer 源文件位置。完整边际区间仍输出 CSV；下次执行该脚本还会输出 `leakage_free_defense_paper_intervals.csv`，区分零 BCR 的单侧 exact 上界与普通 bootstrap 区间。本次未重跑完整重评分流水线。
 

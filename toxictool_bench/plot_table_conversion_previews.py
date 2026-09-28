@@ -159,8 +159,8 @@ def evidence_figure(data):
     lookup = {(r["policy"], r["evidence"]): r for r in data["evidence"]}
     counts = [[lookup[(p, e)] for p in ("Retry", "Verify")] for e in ("clean", "full")]
     assert all(r["total"] == 48 for row in counts for r in row)
-    fig = plt.figure(figsize=(7, 4.1))
-    ax = fig.add_axes([.30, .27, .58, .43])
+    fig = plt.figure(figsize=(5.5, 2.0))
+    ax = fig.add_axes([.29, .36, .65, .50])
     values = np.array([[r["correct"] / r["total"] for r in row] for row in counts])
     ax.set_xlim(-.5, 1.5)
     ax.set_ylim(1.5, -.5)
@@ -170,31 +170,29 @@ def evidence_figure(data):
     ax.set_xticks([0, 1], ["Retry", "Review"])
     ax.xaxis.tick_top()
     ax.set_yticks([0, 1], ["Clean evidence", "Fully corrupted\nevidence"])
-    ax.tick_params(length=0, pad=12, labelsize=11)
+    ax.tick_params(length=0, pad=6, labelsize=10)
     for spine in ax.spines.values():
         spine.set_visible(False)
-    ax.axhline(.5, color="white", linewidth=6)
-    ax.axvline(.5, color="white", linewidth=6)
+    ax.axhline(.5, color="white", linewidth=3)
+    ax.axvline(.5, color="white", linewidth=3)
     for i in range(2):
         for j in range(2):
             row = counts[i][j]
             color = "#392923"
-            ax.text(j, i - .09, f"{row['correct']}/{row['total']}", ha="center", va="center", fontsize=20, color=color)
-            ax.text(j, i + .22, f"{100 * values[i, j]:.1f}% correct", ha="center", va="center", fontsize=10, color=color)
-    fig.text(.59, .94, "Same fully corrupted primary trajectories", ha="center", fontsize=13, color=INK)
-    fig.text(.59, .88, "24 tasks across three public datasets", ha="center", fontsize=10, color=MUTED)
-    ax.annotate("", xy=(.59, .775), xytext=(.59, .855), xycoords=fig.transFigure,
-                arrowprops={"arrowstyle": "->", "color": MUTED, "lw": 1.1})
-    cax = fig.add_axes([.43, .155, .32, .028])
+            ax.text(j, i - .15, f"{row['correct']}/{row['total']}", ha="center", va="center", fontsize=11, color=color)
+            ax.text(j, i + .22, f"{100 * values[i, j]:.1f}% correct", ha="center", va="center", fontsize=8.5, color=color)
+    # Experimental setup belongs in the caption, not an oversized title/arrow.
+    cax = fig.add_axes([.455, .20, .32, .035])
     cb = fig.colorbar(plt.cm.ScalarMappable(norm=Normalize(0, 1), cmap=CMAP), cax=cax,
                       orientation="horizontal", ticks=[0, .5, 1])
     cb.outline.set_visible(False)
     cb.solids.set_rasterized(False)
+    cb.solids.set_edgecolor("face")  # Avoid hairline seams in vector viewers.
     cb.ax.set_xticklabels(["0%", "50%", "100%"])
-    cb.ax.tick_params(length=0, labelsize=9)
-    cb.set_label("Correctness rate", fontsize=9, color=MUTED, labelpad=2)
+    cb.ax.tick_params(length=0, labelsize=8, pad=2)
+    cb.set_label("Correctness rate", fontsize=8, color=MUTED, labelpad=1)
     fig.text(.5, .025, "Two completions per task and condition; 48 completions are not 48 independent tasks.",
-             ha="center", fontsize=9, color=MUTED)
+             ha="center", fontsize=8, color=MUTED)
     return fig
 
 
@@ -253,7 +251,7 @@ def style_paper_figure(fig, builder):
         for text in fig.findobj(Text):
             text.set_fontsize(text.get_fontsize() * 1.1)
     else:
-        # Retain the parent/evidence heading, move the sample-size note to caption.
+        # The manuscript caption already explains the setup and sample size.
         for note in list(fig.texts):
             if "Two completions" in note.get_text():
                 note.remove()

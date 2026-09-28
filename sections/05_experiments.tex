@@ -1,5 +1,6 @@
 \section{Experiments}
 \label{sec:experiments}
+\suppressfloats[t] % Keep experiment floats below this section's opening heading.
 
 Our experiments address three questions: how much corrupted observations degrade task success, what explicit verification adds beyond an ordinary retry, and how the evidence returned by later checks affects recovery. Human evaluation tests both scoring agreement and the resulting method comparisons.
 
@@ -13,7 +14,7 @@ Clean and poisoned runs are paired by task and evaluated with the same frozen sc
 
 High clean performance does not protect agents from corrupted observations. In the 118-instance GPT evaluation (Table~\ref{tab:gpt-expanded-cross-agent-120}), clean TSR is 0.92--0.99, while poisoned TSR falls by 0.26--0.39. Nonzero BCR in all three adapters identifies adoption of poisoned conclusions without detection or checking. Agents differ in whether they call poison-eligible tools, so conditional rates describe observed behavior, not rankings on a common exposed set.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering
 \small
 \setlength{\tabcolsep}{4pt}
@@ -88,7 +89,7 @@ Explicit verification does not show a clear advantage over the ordinary retry in
 
 The evidence available to the second route offers one explanation for why an ordinary retry can succeed. With one-shot poisoning state shared across routes, later calls can receive unmodified observations after the first corruption, whether or not the prompt requests verification. Double-pass therefore combines another attempt with access to later evidence; its gain does not isolate verification reasoning. Our trace analysis records these opportunities without equating an unmodified observation with evidence sufficient to resolve the task. To test the role of supplied evidence directly, we next vary the second-stage evidence while holding the starting context fixed within each policy.
 
-This field-bound control uses 24 tasks across three public tables. First-stage correctness is $24/24$ with clean evidence, $20/24$ with partial alias corruption, and $0/24$ with all target aliases corrupted. Reviews inherit fixed poisoned parents, whereas retries restart without that history. Two second-stage repetitions per task yield $48/48$ correct retries and $47/48$ correct reviews with fresh clean evidence, versus $0/48$ for either method under full-target corruption. Recovery thus changes sharply with the supplied evidence in this controlled setting, while both retry and review succeed when given clean evidence. Seeded calls and a structured endpoint isolate this local evidence effect, rather than establish verification superiority or explain the historical gain (Appendix~\ref{sec:evidence-v4}); earlier partial-corruption controls with unmatched first routes are reported separately in Appendix~\ref{sec:delivery-v3}.
+This field-bound control uses 24 tasks across three public tables. First-stage correctness is $24/24$ with clean evidence, $20/24$ with partial alias corruption, and $0/24$ with all target aliases corrupted. For each task, review runs start from the same saved first-stage transcript containing poisoned evidence, whereas retries restart without that history. Two second-stage repetitions per task yield $48/48$ correct retries and $47/48$ correct reviews with fresh clean evidence, versus $0/48$ for either method under full-target corruption. Recovery thus changes sharply with the supplied evidence in this controlled setting, while both retry and review succeed when given clean evidence. Fixing the initial tool call and requiring a numerical answer in a specified format isolates this local evidence effect, but does not establish verification superiority or explain the historical gain (Appendix~\ref{sec:evidence-v4}); earlier partial-corruption controls with unmatched first routes are reported separately in Appendix~\ref{sec:delivery-v3}.
 
 Repeated poisoning tests the complementary setting, where fresh checks may themselves return corrupted evidence. Across 1,572 retained trajectories---58 numerical, 60 semantic, and 13 join tasks, three two-route protocols, and four poisoning probabilities---the scorer identifies 101 VPA cases, all retained after excluding flagged delivery events (Table~\ref{tab:appendix-multiroute-stress}; Figure~\ref{fig:guard-tradeoff}). Of these, 78 have only corrupted qualifying follow-up checks and 23 include an unmodified check; only one of the latter has an automatically identifiable clean-reference match, still requiring evidence-level review. The result establishes continued adoption after checking, not that all 101 agents ignored sufficient correct evidence. Because routes share sources and backends, another check need not provide independent or corrective evidence; this matrix measures behavior within the two-route protocols and has no single-route Base control.
 

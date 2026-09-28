@@ -9,12 +9,12 @@ This manifest lists the paper-facing artifacts needed to inspect and reproduce t
 | Artifact | Purpose |
 |---|---|
 | `main.tex` | Main paper entry point. |
-| `REPRODUCIBILITY.md` | Environment, seeds, stress matrix, and release checks. |
+| `docs/reproducibility/REPRODUCIBILITY.md` | Environment, seeds, stress matrix, and release checks. |
 | `LICENSE` / `DATA_LICENSE.md` | Code and synthetic benchmark-data licensing. |
 | `sections/*.tex` | Paper sections and appendix. |
 | `references.bib` | Bibliography database. |
-| `SUBMISSION_CHECKLIST.md` | Reviewer-issue coverage and final PDF checklist. |
-| `PAPER_CONSISTENCY_CHECK.md` | Earlier consistency audit notes. |
+| `docs/paper/SUBMISSION_CHECKLIST.md` | Reviewer-issue coverage and final PDF checklist. |
+| `docs/paper/PAPER_CONSISTENCY_CHECK.md` | Earlier consistency audit notes. |
 
 ## Task Suites
 
@@ -76,8 +76,8 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 | `toxictool_bench/results/20260829-*_langgraph_react_*_claude-haiku-4-5-20251001_*.jsonl` | Selected raw logs for the leakage-free defense ablation. |
 | `toxictool_bench/results/20260819-*_langgraph_react_{abstain,randomized,selective}_gpt-5.4-mini_both.jsonl` | LangGraph alternative-policy logs on fixed numerical and semantic subsets. |
 | `toxictool_bench/results/verification_stress/**/*.jsonl` | Complete chunked repeated-poison logs selected by the stress manifest. |
-| `CASE_STUDIES.md` | Qualitative blind-compliance cases. |
-| `GUARDED_CASE_STUDIES.md` | Guarded-verification recovery cases. |
+| `docs/archive/CASE_STUDIES.md` | Qualitative blind-compliance cases. |
+| `docs/archive/GUARDED_CASE_STUDIES.md` | Guarded-verification recovery cases. |
 
 ## Audit and Scoring
 
@@ -110,7 +110,7 @@ All CSV datasets are stored under `toxictool_bench/datasets/`.
 
 ## Reproduction Commands
 
-The canonical command list is `RUN_COMMANDS.md`. The most important entry points are:
+The canonical command list is `docs/reproducibility/RUN_COMMANDS.md`. The most important entry points are:
 
 ```bash
 python3 toxictool_bench/check_adapter_readiness.py

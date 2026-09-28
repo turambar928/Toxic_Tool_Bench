@@ -3,7 +3,7 @@
 ## 范围和不可替代的部分
 
 本轮不修改冻结评分器、旧轨迹、V3 输入或人工标签。
-人工验证仍需真实标注者完成；操作说明见 `HUMAN_VALIDATION_HANDOFF_CN.md`。
+人工验证仍需真实标注者完成；操作说明见 `docs/human_evaluation/HUMAN_VALIDATION_HANDOFF_CN.md`。
 新实验不是把旧结果“修成显著”，也不把公开数据上的受控任务称作部署验证。
 
 ## 1. 独立人工验证

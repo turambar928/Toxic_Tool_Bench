@@ -85,7 +85,7 @@ def main():
     write_jsonl(BENCH/'tasks/scorer_validation_numerical_repeat_v2.jsonl',repeated)
     excluded={r['task_id'] for name in ['human_audit_v2/adjudicated_labels.csv','human_holdout_v1/admin_key.csv'] for r in read_csv(BENCH/name)}
     for name in ['CASE_STUDIES.md','GUARDED_CASE_STUDIES.md']:
-        excluded.update(re.findall(r'\b(?:num|sem)_[a-zA-Z0-9_]+', (ROOT/name).read_text()))
+        excluded.update(re.findall(r'\b(?:num|sem)_[a-zA-Z0-9_]+', (ROOT/'docs/archive'/name).read_text()))
     semantic=[json.loads(s) for s in (BENCH/'tasks/semantic_schema_iclr2027.jsonl').read_text().splitlines()]
     strata=defaultdict(list)
     for task in semantic:

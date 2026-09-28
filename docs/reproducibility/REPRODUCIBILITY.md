@@ -139,7 +139,7 @@ python3 toxictool_bench/check_paper_static.py --main main.tex
 python3 -m pytest toxictool_bench/tests -q
 ```
 
-Adapters using external source checkouts accept `TOXICTOOL_BASELINE_DIR`; expected imports are documented in `RUN_COMMANDS.md`. Code and synthetic benchmark data are covered by `LICENSE` and `DATA_LICENSE.md`.
+Adapters using external source checkouts accept `TOXICTOOL_BASELINE_DIR`; expected imports are documented in `docs/reproducibility/RUN_COMMANDS.md`. Code and synthetic benchmark data are covered by `LICENSE` and `DATA_LICENSE.md`.
 
 ## Updated defense figures
 

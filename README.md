@@ -5,16 +5,16 @@ ToxicBench evaluates whether data-analysis agents blindly trust tool outputs tha
 The main behavioral metric is blind compliance: whether an agent copies or relies on poisoned tool evidence in its final answer without validation.
 
 For the current submission revision, see the
-[repair plan](SCORER_REPAIR_PLAN_CN.md), the
-[execution report](SCORER_REPAIR_EXECUTION_CN.md), and
-[current status](CURRENT_STATUS.md). The September 20
+[repair plan](docs/experiments/SCORER_REPAIR_PLAN_CN.md), the
+[execution report](docs/experiments/SCORER_REPAIR_EXECUTION_CN.md), and
+[current status](docs/experiments/CURRENT_STATUS.md). The September 20
 [human-evaluation report](output/human_validation_20260920/README_CN.md)
 archives the returned 200-case evaluation and separate 40-case reference review,
 including frozen-scorer comparisons, source documentation, and paired method results.
 
-The [V4 evidence-control report](EVIDENCE_CONTROLS_V4_CN.md) documents a separate
+The [V4 evidence-control report](docs/experiments/EVIDENCE_CONTROLS_V4_CN.md) documents a separate
 field-bound intervention and matched-parent experiment across three public
-datasets. The [human validation handoff](HUMAN_VALIDATION_HANDOFF_CN.md) explains
+datasets. The [human validation handoff](docs/human_evaluation/HUMAN_VALIDATION_HANDOFF_CN.md) explains
 the original distribution and return workflow. The new report uses the received
 human labels; model executions and the historical development recheck remain separate.
 
@@ -22,35 +22,29 @@ human labels; model executions and the historical development recheck remain sep
 
 ```text
 .
-├── main.tex
-├── sections/
-│   ├── 00_abstract.tex
-│   ├── 01_introduction.tex
-│   ├── 02_problem_setup.tex
-│   ├── 03_toxictool_bench.tex
-│   ├── 04_method_ibf.tex
-│   ├── 05_experiments.tex
-│   ├── 06_qualitative_analysis.tex
-│   ├── 06_related_work.tex
-│   ├── 07_discussion_limitations.tex
-│   ├── 08_appendix_guard_details.tex
-│   └── 09_revision_validation.tex
-├── toxictool_bench/
-│   ├── tasks/
-│   ├── datasets/
-│   ├── results/
-│   ├── tests/
-│   ├── full_adapters.py
-│   ├── poisoners.py
-│   ├── evaluator.py
-│   └── run_full_bench.py
-├── EXPERIMENT_RESULTS.md
-├── ARTIFACT_MANIFEST.md
-├── CASE_STUDIES.md
-├── GUARDED_CASE_STUDIES.md
-├── RUN_COMMANDS.md
-└── PAPER_CONSISTENCY_CHECK.md
+├── README.md / LICENSE / DATA_LICENSE.md
+├── main.tex / references.bib       # Manuscript entry point and bibliography
+├── sections/                      # Main text and appendices
+├── figures/                       # Integrated paper figures and tables
+├── iclr2027/                      # Active official template bundle
+├── docs/
+│   ├── README.md                  # Documentation index and relocation map
+│   ├── reproducibility/           # Commands, environment, artifact manifest
+│   ├── experiments/               # Status, scorer repair, acceptance/control audits
+│   ├── human_evaluation/          # Annotation distribution and return workflow
+│   ├── paper/                     # Citation checks, submission and layout notes
+│   └── archive/                   # Historical plans, results and cases
+├── toxictool_bench/                # Benchmark code, tasks, datasets, tests and logs
+├── scripts/submission_release/    # Anonymous supplementary release builder
+└── output/                        # Versioned analyses and local generated exports
 ```
+
+Start with the [documentation index](docs/README.md). Historical reports retain
+their original dates and results; moving them does not make them current evidence.
+Commands and inline code paths in the documentation are relative to the repository
+root unless stated otherwise. The manuscript's input paths and frozen evaluation
+packets have not moved. Local PDFs, Overleaf ZIPs, figure previews, and API settings
+are not included in Git commits.
 
 ## Current Benchmark
 
@@ -106,7 +100,7 @@ differences whose paired intervals include zero. The six public-data tasks show
 ceiling performance with residual clean answers still available, not evidence
 of deployment robustness.
 Matched caps mean route count, steps per route, and output tokens **per request**,
-not equal total token cost. See [SUBMISSION_REVISION_V3_CN.md](SUBMISSION_REVISION_V3_CN.md).
+not equal total token cost. See [SUBMISSION_REVISION_V3_CN.md](docs/experiments/SUBMISSION_REVISION_V3_CN.md).
 
 The revised scorer reaches 238/240 TSR agreement on the audit-informed
 development set. The completed post-freeze human evaluation is reported
@@ -119,7 +113,7 @@ Verification-only, and 0.95 for Guard; see the
 
 ## Important Artifacts
 
-For a complete artifact map, see `ARTIFACT_MANIFEST.md`. The core paper-facing result files are:
+For a complete artifact map, see `docs/reproducibility/ARTIFACT_MANIFEST.md`. The core paper-facing result files are:
 
 - Cross-model numerical summary: `toxictool_bench/results/cross_model_summary.csv`
 - Cross-model semantic/schema summary: `toxictool_bench/results/semantic_schema_cross_model_summary.csv`
@@ -151,10 +145,12 @@ page 10.
 
 ```bash
 python3 toxictool_bench/check_paper_static.py --main main.tex
-tectonic -Z search-path=iclr2027 main.tex --outdir output/scorer_revision_v2/pdf --keep-logs --keep-intermediates
+mkdir -p output/paper_build
+tectonic -Z search-path=iclr2027 main.tex --outdir output/paper_build --keep-logs --keep-intermediates
 ```
 
-Open `output/scorer_revision_v2/pdf/main.pdf`, not an older root-level PDF.
+Open `output/paper_build/main.pdf` from this build. A root-level `main.pdf` may
+also be compiled separately, but is a local preview, not a tracked source file.
 Compile the complete `main.tex` entry point, including the appendix inputs;
 individual files in `sections/` are not standalone documents. Tectonic runs
 the reference/bibliography passes automatically. With a traditional LaTeX
@@ -165,7 +161,7 @@ for undefined references/citations and rebuild the complete document.
 
 ## Reproduction
 
-See `RUN_COMMANDS.md` for the exact experiment commands and `ARTIFACT_MANIFEST.md` for expected outputs. The main scripts are:
+See `docs/reproducibility/RUN_COMMANDS.md` for the exact experiment commands and `docs/reproducibility/ARTIFACT_MANIFEST.md` for expected outputs. The main scripts are:
 
 ```bash
 python3 toxictool_bench/check_adapter_readiness.py
@@ -212,5 +208,5 @@ API keys and local endpoint configuration should not be committed. This reposito
 
 The compact appendix groups construction, scoring/human validation, agent protocols,
 supplementary results, and controlled evidence experiments into five sections.
-See [the appendix reorganization guide](docs/APPENDIX_REORGANIZATION_CN.md) for the
+See [the appendix reorganization guide](docs/paper/APPENDIX_REORGANIZATION_CN.md) for the
 full-material index, preserved pre-reorganization sources, and official-template build commands.

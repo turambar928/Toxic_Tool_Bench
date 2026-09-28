@@ -1,9 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" width="2000.0" height="1116.2790697674418" viewBox="0 0 2000.0 1116.2790697674418" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" width="2000.0" height="1020.2790697674418" viewBox="0 96 2000.0 1020.2790697674418" role="img">
   <title>Figure 1 | Silent Tool Poisoning: An Example</title>
   <rect x="0" y="0" width="2000.0" height="1116.2790697674418" rx="0" fill="#ffffff" stroke="none" stroke-width="2" />
-  <rect x="10" y="7" width="1980" height="76" rx="14" fill="#263650" stroke="#263650" stroke-width="2" />
-  <text x="1000" y="58" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="37.000" font-weight="bold" text-anchor="middle">Figure 1 | Silent Tool Poisoning: An Example</text>
   <rect x="432" y="112" width="1110" height="117" rx="14" fill="#dbe1e8" stroke="none" stroke-width="2" />
   <rect x="430" y="108" width="1110" height="117" rx="18" fill="#eef3fa" stroke="#244873" stroke-width="2.7" />
   <rect x="430" y="108" width="1110" height="44" rx="17" fill="#244873" stroke="#244873" stroke-width="2" />

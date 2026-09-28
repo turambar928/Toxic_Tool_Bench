@@ -3,7 +3,12 @@ import sys
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from check_paper_static import collect_tex_files, referenced_inputs
+from check_paper_static import BIB_RE, collect_tex_files, referenced_inputs
+
+
+def test_official_bibtex_exports_allow_key_on_next_line():
+    bibliography = "@inproceedings{\nlei2025dacomp,\n title={DAComp}\n}\n@article{compact2026,title={Example}}"
+    assert BIB_RE.findall(bibliography) == ["lei2025dacomp", "compact2026"]
 
 
 def test_nested_generated_tables_and_missing_dependencies(tmp_path):

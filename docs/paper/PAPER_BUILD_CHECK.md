@@ -22,4 +22,3 @@ Results:
 - Output PDF: `/tmp/toxicbench_pdf_build/main.pdf`.
 - PDF pages: 22.
 - Remaining TeX warning: one minor overfull hbox in the appendix artifact list, 4.98 pt too wide. No missing citation, missing reference, or missing input errors were reported.
-

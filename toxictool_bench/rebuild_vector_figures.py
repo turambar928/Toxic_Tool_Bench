@@ -34,8 +34,8 @@ def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
 class SVG:
-    def __init__(self,title):
-        self.root=ET.Element(f"{{{NS}}}svg",{"width":str(W),"height":str(H),"viewBox":f"0 0 {W} {H}","role":"img"})
+    def __init__(self,title,top_crop=0):
+        self.root=ET.Element(f"{{{NS}}}svg",{"width":str(W),"height":str(H-top_crop),"viewBox":f"0 {top_crop} {W} {H-top_crop}","role":"img"})
         ET.SubElement(self.root,f"{{{NS}}}title").text=title
         self.parent=self.root;self.texts=[];self.font_cache={}
         self.rect(0,0,W,H,WHITE,stroke="none",r=0)
@@ -265,9 +265,8 @@ class SVG:
 
 
 def figure1():
-    s=SVG("Figure 1 | Silent Tool Poisoning: An Example")
-    s.rect(10,7,1980,76,NAVY,NAVY,14)
-    s.text(1000,58,"Figure 1 | Silent Tool Poisoning: An Example",37,WHITE,True,"middle",1900)
+    # Keep an accessible SVG title; the manuscript caption supplies the visible title.
+    s=SVG("Figure 1 | Silent Tool Poisoning: An Example",top_crop=96)
     s.panel(430,108,1110,117,BLUE,"#eef3fa","USER QUERY",44,28)
     s.icon("user",449,163,45)
     s.text(510,198,'“Which store had the highest revenue last quarter, and what was it?”',25,width=1000)
@@ -359,11 +358,7 @@ def slider(s,x,y,color):
 
 
 def figure2():
-    s=SVG("Figure 2 | ToxicBench and Evidence Verification")
-    s.rect(8,5,1980,73,NAVY,NAVY,14)
-    s.icon("tools",22,17,44,"#b8cbdc");s.text(84,51,"Data Agents",26,WHITE,True)
-    s.text(1000,51,"Figure 2 | ToxicBench and Evidence Verification",32,WHITE,True,"middle",1290)
-    s.text(1790,51,"Poisoning",26,WHITE,True,width=144);s.icon("warning",1928,11,58,NAVY)
+    s=SVG("Figure 2 | ToxicBench and Evidence Verification",top_crop=88)
     s.text(17,117,"A  Task Suites",26,bold=True)
     s.text(995,117,"Cross-model Tasks",29,bold=True,anchor="middle")
     s.text(1980,117,"Expanded: 120 tasks  |  Multi-table: 13 tasks",24,bold=True,anchor="end",width=620)
@@ -488,11 +483,13 @@ def figure2():
 
 
 def render(svg,pdf):
-    surface=cairo.PDFSurface(str(pdf),396,396*H/W)
+    _,_,width,height=map(float,ET.parse(svg).getroot().get("viewBox").split())
+    pdf_height=396*height/width
+    surface=cairo.PDFSurface(str(pdf),396,pdf_height)
     surface.set_metadata(cairo.PDF_METADATA_TITLE,svg.stem+" — native vector reconstruction")
     surface.set_metadata(cairo.PDF_METADATA_SUBJECT,"Native vector shapes and embedded text; no raster image elements.")
     context=cairo.Context(surface)
-    viewport=Rsvg.Rectangle();viewport.x=0;viewport.y=0;viewport.width=396;viewport.height=396*H/W
+    viewport=Rsvg.Rectangle();viewport.x=0;viewport.y=0;viewport.width=396;viewport.height=pdf_height
     handle=Rsvg.Handle.new_from_file(str(svg))
     handle.render_document(context,viewport)
     surface.finish()

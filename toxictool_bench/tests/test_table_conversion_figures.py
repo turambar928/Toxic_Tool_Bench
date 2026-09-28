@@ -77,6 +77,22 @@ def test_evidence_keeps_zero_outcomes_and_48_completion_denominator():
     assert fig.axes[1].get_xlim() == (0, 1)
 
 
+def test_paper_evidence_is_compact_with_legible_nonoverlapping_labels():
+    fig = plots.evidence_figure(plots.load_data())
+    plots.style_paper_figure(fig, plots.evidence_figure)
+    assert fig.get_figheight() <= 2.0
+    assert not fig.texts  # Setup and sample-size notes are in the caption.
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    ax = fig.axes[0]
+    assert max(text.get_fontsize() for text in ax.texts) <= 11
+    boxes = [text.get_window_extent(renderer).padded(1) for text in ax.texts]
+    for i, box in enumerate(boxes):
+        assert not any(box.overlaps(other) for other in boxes[i + 1:])
+        assert ax.get_window_extent(renderer).contains(*box.get_points()[0])
+        assert ax.get_window_extent(renderer).contains(*box.get_points()[1])
+
+
 def test_manuscript_uses_three_pdf_figures_and_retains_detailed_evidence_table():
     for name, filename in [("05_experiments.tex", "fig_defense_comparison.pdf"),
                            ("09_revision_validation.tex", "fig_human_method_comparison.pdf"),

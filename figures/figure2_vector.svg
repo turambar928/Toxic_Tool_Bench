@@ -1,24 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" width="2000.0" height="1116.2790697674418" viewBox="0 0 2000.0 1116.2790697674418" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" width="2000.0" height="1028.2790697674418" viewBox="0 88 2000.0 1028.2790697674418" role="img">
   <title>Figure 2 | ToxicBench and Evidence Verification</title>
   <rect x="0" y="0" width="2000.0" height="1116.2790697674418" rx="0" fill="#ffffff" stroke="none" stroke-width="2" />
-  <rect x="8" y="5" width="1980" height="73" rx="14" fill="#263650" stroke="#263650" stroke-width="2" />
-  <g transform="translate(22 17) scale(0.44)">
-    <polygon points="93.0,50.0 92.47059864559093,56.72668199672993 82.33592155403522,60.50657780874821 80.29422182240451,65.43567699114459 84.78773075812273,75.27476584857635 80.40559159102155,80.40559159102153 69.98469857794409,77.5065778087482 65.43567699114459,80.29422182240451 63.28773075812274,90.8954302006916 56.72668199672993,92.47059864559093 50.0,84.0 44.68122818863216,83.58140358023468 36.712269241877266,90.8954302006916 30.478408511199493,88.31328054009981 30.015301422055916,77.5065778087482 25.958369439657385,74.04163056034261 15.212269241877266,75.27476584857635 11.686719459900182,69.52159148880051 17.664078445964783,60.50657780874822 16.418596419765322,55.31877181136785 7.0,50.00000000000001 7.5294013544090745,43.27331800327008 17.66407844596477,39.49342219125181 19.70577817759549,34.56432300885541 15.212269241877252,24.72523415142366 19.59440840897845,19.59440840897846 30.01530142205591,22.493422191251792 34.5643230088554,19.705778177595494 36.71226924187725,9.1045697993084 43.27331800327006,7.529401354409082 49.99999999999999,16.0 55.318771811367846,16.418596419765315 63.287730758122734,9.104569799308393 69.52159148880051,11.686719459900175 69.98469857794407,22.49342219125178 74.04163056034261,25.95836943965738 84.78773075812273,24.725234151423646 88.31328054009981,30.47840851119948 82.33592155403522,39.49342219125178 83.58140358023468,44.68122818863214" fill="#9cb5ca" stroke="#b8cbdc" stroke-width="3" stroke-linejoin="round" />
-    <circle cx="50" cy="50" r="17" fill="#f6f9fc" stroke="#b8cbdc" stroke-width="3" />
-    <path d="M 8 90 L 61 35 Q 52 14 77 8 L 71 24 L 82 31 L 95 22 Q 99 43 77 49 L 26 99 Z" stroke="#b8cbdc" fill="#dce5eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  </g>
-  <text x="84" y="51" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Data Agents</text>
-  <text x="1000" y="51" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="32.000" font-weight="bold" text-anchor="middle">Figure 2 | ToxicBench and Evidence Verification</text>
-  <text x="1790" y="51" fill="#ffffff" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">Poisoning</text>
-  <g transform="translate(1928 11) scale(0.58)">
-    <polygon points="50,4 97,94 3,94" fill="#f1ce56" stroke="#263650" stroke-width="3" stroke-linejoin="round" />
-    <circle cx="50" cy="47" r="17" fill="#fff2ba" stroke="#263650" stroke-width="2" />
-    <circle cx="44" cy="45" r="4" fill="#263650" stroke="none" stroke-width="2" />
-    <circle cx="57" cy="45" r="4" fill="#263650" stroke="none" stroke-width="2" />
-    <line x1="31" y1="69" x2="70" y2="83" stroke="#263650" stroke-width="5" stroke-linecap="round" />
-    <line x1="70" y1="69" x2="31" y2="83" stroke="#263650" stroke-width="5" stroke-linecap="round" />
-  </g>
   <text x="17" y="117" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="26.000" font-weight="bold" text-anchor="start">A  Task Suites</text>
   <text x="995" y="117" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="29.000" font-weight="bold" text-anchor="middle">Cross-model Tasks</text>
   <text x="1980" y="117" fill="#162331" font-family="Arial, Helvetica, Liberation Sans, sans-serif" font-size="24.000" font-weight="bold" text-anchor="end">Expanded: 120 tasks  |  Multi-table: 13 tasks</text>
