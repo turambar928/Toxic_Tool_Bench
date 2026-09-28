@@ -4,8 +4,8 @@ User explicitly authorized local programmatic PNG edits.
 """
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont
-ROOT=Path.cwd()
-p=ROOT/'figures/figure2.png'
+ROOT=Path(__file__).resolve().parents[4]
+p=ROOT/'paper/figures/figure2.png'
 im=Image.open(p).convert('RGB');src=im.copy();s=im.width/2048;d=ImageDraw.Draw(im)
 regular='/System/Library/Fonts/Supplemental/Arial Narrow.ttf'
 bold='/System/Library/Fonts/Supplemental/Arial Narrow Bold.ttf'
@@ -91,6 +91,6 @@ replace((1822,1087,2012,1118),'Route 2 answer selected',1830,22,True,'white')
 # The badge fill is solid red; restore it independently of original text pixels.
 d.rounded_rectangle(rect((1820,1083,2017,1122)),radius=round(7*s),fill='#c83639')
 text((1825,1086,2012,1118),'Route 2 answer selected',22,True,'white')
-out=ROOT/'figures/figure2_revised_v2.png';im.save(out,optimize=True,dpi=(300,300))
-(ROOT/'output/imagegen/figure_revision_20260916/figure2_v2_changes.txt').write_text('\n'.join(f'{b}: {t}' for b,t in edits)+'\n')
+out=ROOT/'paper/figures/figure2_revised_v2.png';im.save(out,optimize=True,dpi=(300,300))
+(ROOT/'paper/archive/imagegen/figure_revision_20260916/figure2_v2_changes.txt').write_text('\n'.join(f'{b}: {t}' for b,t in edits)+'\n')
 print(out)

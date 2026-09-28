@@ -168,7 +168,7 @@ python3 toxictool_bench/bootstrap_ci.py \
 Static paper check:
 
 ```bash
-python3 toxictool_bench/check_paper_static.py --main main.tex
+python3 toxictool_bench/check_paper_static.py --main paper/main.tex
 ```
 
 Regenerate vector PDF figures and optional high-resolution previews:

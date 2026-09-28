@@ -1,9 +1,9 @@
 {
   "preserved_original_sha256": {
-    "figures/figure1.png": "038c3a40d10a2e4937ba34865fa9bece0c304c449eb7b5e716cf7ae17e568b67",
-    "figures/figure2.png": "59df196e8dfdb386a6fddb641f958b80d29e21956cd2d1111e9ea3a2176801c9",
-    "figures/figure1.pdf": "e9247c32841f7c0e917c674e020f58d39ef4d98b5624b7a52643695fc92b2528",
-    "figures/figure2.pdf": "e642898b08a9693cf8d80067572dfd578dea888f46a28d25cd521cc73569078a"
+    "paper/figures/figure1.png": "038c3a40d10a2e4937ba34865fa9bece0c304c449eb7b5e716cf7ae17e568b67",
+    "paper/figures/figure2.png": "59df196e8dfdb386a6fddb641f958b80d29e21956cd2d1111e9ea3a2176801c9",
+    "paper/figures/figure1.pdf": "e9247c32841f7c0e917c674e020f58d39ef4d98b5624b7a52643695fc92b2528",
+    "paper/figures/figure2.pdf": "e642898b08a9693cf8d80067572dfd578dea888f46a28d25cd521cc73569078a"
   },
   "font": "Arial; Courier New for code",
   "figures": [

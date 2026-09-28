@@ -5,7 +5,7 @@ Run from the repository root with Pillow installed.
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
-ROOT=Path.cwd()
+ROOT=Path(__file__).resolve().parents[4]
 FONT='/System/Library/Fonts/Supplemental/Arial.ttf'
 BOLD='/System/Library/Fonts/Supplemental/Arial Bold.ttf'
 NAVY='#223650'; INK='#142536'; BLUE='#365ad4'; PURPLE='#7536d0'; GREEN='#378b50'; RED='#ae2828'
@@ -42,7 +42,7 @@ class Canvas:
   self.text((x+8,y+4,x2-8,y+head-2),title,title_size,True,'white')
  def save(self,path):self.im.save(path,optimize=True,dpi=(300,300))
 
-c=Canvas(ROOT/'figures/figure1.png',869)
+c=Canvas(ROOT/'paper/figures/figure1.png',869)
 # Original top banner, central agent, table, source arrow and surrounding design retained.
 c.box((385,16,1720,79),NAVY,r=5);c.text((410,17,1700,77),'Figure 1 | Silent Tool Poisoning: An Example',35,True,'white')
 c.box((710,212,1340,252),'#203c61');c.text((710,212,1340,252),'DATA AGENT WITH TOOL ACCESS',25,True,'white')
@@ -75,9 +75,9 @@ for b,t in [((1106,656,1400,732),'Original Tool Output\nStore B — $450,000'),(
 c.arrow(1404,695,1446,695,RED);c.arrow(1684,695,1723,695,RED)
 c.box((1290,762,1880,819),RED,r=10);c.text((1300,766,1870,814),'WRONG STORE–VALUE PAIR',28,True,'white')
 c.box((355,823,1870,867),'white');c.text((363,824,1863,866),'A Successful Tool Call Can Return a Plausible but Wrong Observation',29)
-c.save(ROOT/'figures/figure1_revised.png')
+c.save(ROOT/'paper/figures/figure1_revised.png')
 
-c=Canvas(ROOT/'figures/figure2.png',1143)
+c=Canvas(ROOT/'paper/figures/figure2.png',1143)
 # Retain original navy top bar and corner illustrations.
 c.box((400,9,1690,74),NAVY);c.text((405,10,1685,73),'Figure 2 | ToxicBench: Benchmark and Verification Protocols',31,True,'white')
 c.box((1740,18,1960,62),NAVY);c.text((1740,18,1952,62),'Tool-output Poisoning',23,True,'white')
@@ -126,5 +126,5 @@ for i,(title,color,sub,body,answer) in enumerate(cards):
  c.text((x+15,988,x+483,1058),body,23)
  c.box((x+22,1071,x+476,1121),'#ffffff',color,r=8,w=1)
  c.text((x+28,1075,x+470,1117),'Final answer: '+answer,24,True)
-c.save(ROOT/'figures/figure2_revised.png')
-print('Saved figures/figure1_revised.png and figures/figure2_revised.png at original resolution.')
+c.save(ROOT/'paper/figures/figure2_revised.png')
+print('Saved paper/figures/figure1_revised.png and paper/figures/figure2_revised.png at original resolution.')

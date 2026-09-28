@@ -26,7 +26,7 @@ from summarize_results import write_overall
 import random
 
 RESULTS = ROOT / "toxictool_bench/results"
-SECTIONS = ROOT / "sections"
+SECTIONS = ROOT / "paper/sections"
 PREFIX = "leakage_free_defense"
 LEGACY_COMMIT = "f0aa054dccc9437dcf89f0b22a01825e2772be66"
 NAMES = {
@@ -172,7 +172,7 @@ def main() -> None:
     # come from the objects above, not independently typed manuscript values.
     # Numeric source retained separately now that the main paper uses a figure.
     # Re-render with plot_table_conversion_previews.py --paper after syncing.
-    table_rows(ROOT / "figures/defense_comparison_data.tex", "tab:langgraph-guarded", [
+    table_rows(ROOT / "paper/figures/defense_comparison_data.tex", "tab:langgraph-guarded", [
         line(NAMES[a], *[summaries['combined'][a][k] for k in ('clean_tsr','poisoned_tsr','toxic_bcr','toxic_par','toxic_vpa','toxic_vr','toxic_rr')], summaries['combined'][a]['n_exposed']) for a in NAMES])
     table_rows(appendix, "tab:appendix-guard-suite-breakdown",
                suite_table_lines(summaries, exposure))

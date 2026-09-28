@@ -1,5 +1,7 @@
 # Paper Consistency Check
 
+Historical record: the layout and template behavior below describe the audit date. Current sources and the official template are under `paper/`; see [the current build instructions](../README.md).
+
 Date: 2026-08-19
 
 ## Entry Point

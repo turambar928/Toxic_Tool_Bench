@@ -30,7 +30,13 @@ main.pdf
 # Local OS/editor files
 .DS_Store
 *~
-figures/preview/
+paper/figures/preview/
+
+# Local manuscript builds, independent export snapshots, and design candidates.
+/paper/build/
+/paper/exports/
+/paper/previews/
+/paper/archive/local_build_archive_*/
 
 # Retired Overleaf snapshot and local table-to-figure design previews.
 # Keep active manuscript sources, final figures, and experimental results tracked.

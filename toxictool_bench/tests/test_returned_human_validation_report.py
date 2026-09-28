@@ -98,7 +98,7 @@ def test_paper_tables_are_generated_from_report():
     metrics, comparison = latex_tables({'scorer_comparison': accuracy, 'method_rates': rows('method_rates')})
     assert metrics == (DEFAULT_OUTPUT / 'scorer_metrics.tex').read_text()
     assert comparison == (DEFAULT_OUTPUT / 'method_comparison.tex').read_text()
-    paper = (ROOT / 'sections/05_experiments.tex').read_text()
+    paper = (ROOT / 'paper/sections/05_experiments.tex').read_text()
     assert 'Verification-only rises from automatic TSR 0.80 to human TSR 1.00' in paper
     assert 'completed new human validation is not claimed' not in paper
 

@@ -20,7 +20,7 @@ Pre-specified contrasts are full-minus-clean and full-minus-partial primary corr
 \label{fig:evidence-control}
 \end{figure}
 
-\input{output/evidence_controls_v4/results}
+\input{../output/evidence_controls_v4/results}
 
 All 264 scheduled trajectories are retained, including one review that exhausts its budget without a final answer. One exhausted API failure is successfully resumed; 311 logical requests complete. The delivery audit finds 120 full-target and 24 partial-target corruptions. Every full-target event changes all three result aliases, with no unchanged clean alias in that field. First-stage correctness is $24/24$ clean, $20/24$ partial, and $0/24$ full; all 24 full-poison primary answers adopt the incorrect scalar. Full-minus-partial TSR is $-0.833$ (task-paired 95\% interval [$-0.958$, $-0.708$]). Thus partial corruption can substantially overstate resistance in this interface; it does not measure the magnitude of bias in the historical matrix.
 

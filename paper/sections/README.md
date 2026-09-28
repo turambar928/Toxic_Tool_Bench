@@ -1,6 +1,7 @@
 # ICLR section draft map
 
-These files are written as modular LaTeX sections included by the project-level `main.tex`:
+These files are modular LaTeX sections for `paper/main.tex` (compile from `paper/`).
+This is a historical draft inventory; only files included by the current entry point are compiled:
 
 - `00_abstract.tex`: abstract draft.
 - `01_introduction.tex`: motivation, threat model intuition, and contributions.

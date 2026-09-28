@@ -97,10 +97,10 @@ def test_manuscript_uses_three_pdf_figures_and_retains_detailed_evidence_table()
     for name, filename in [("05_experiments.tex", "fig_defense_comparison.pdf"),
                            ("09_revision_validation.tex", "fig_human_method_comparison.pdf"),
                            ("11_matched_evidence_controls.tex", "fig_evidence_control.pdf")]:
-        text = (plots.ROOT / "sections" / name).read_text()
+        text = (plots.ROOT / "paper/sections" / name).read_text()
         assert f"figures/{filename}" in text
-        assert (plots.ROOT / "figures" / filename).is_file()
-    evidence = (plots.ROOT / "sections/11_matched_evidence_controls.tex").read_text()
-    assert r"\input{output/evidence_controls_v4/results}" in evidence
+        assert (plots.ROOT / "paper/figures" / filename).is_file()
+    evidence = (plots.ROOT / "paper/sections/11_matched_evidence_controls.tex").read_text()
+    assert r"\input{../output/evidence_controls_v4/results}" in evidence
     assert not any(r"\ref{tab:langgraph-guarded}" in p.read_text()
-                   for p in (plots.ROOT / "sections").glob("*.tex"))
+                   for p in (plots.ROOT / "paper/sections").glob("*.tex"))

@@ -37,8 +37,8 @@ The matched Double-pass adapter executes two ordinary routes with the same per-r
 The rebuild now reads the committed `leakage_free_defense_manifest.csv` directly;
 it does not choose logs by filesystem modification time. It rescales no answers
 and makes no model calls. It re-evaluates the fixed 960 trajectories and writes
-the defense tables directly into `sections/05_experiments.tex` and
-`sections/08_appendix_guard_details.tex`, together with paired CSVs, marginal
+the defense tables directly into `paper/sections/05_experiments.tex` and
+`paper/sections/08_appendix_guard_details.tex`, together with paired CSVs, marginal
 intervals, exact BCR counts, answer-selection counts, and the existing 120-row
 consensus audit. The wrapper also refreshes the repeated-poison, AutoGen, and
 alternative-policy appendix tables with the same evaluator. Human labels are unchanged. The evaluator now removes known adapter display prefixes uniformly before scoring the underlying answer.
@@ -135,7 +135,7 @@ trajectory-level accuracy estimate.
 ```bash
 python3 toxictool_bench/build_artifact_checksums.py
 python3 toxictool_bench/release_audit.py
-python3 toxictool_bench/check_paper_static.py --main main.tex
+python3 toxictool_bench/check_paper_static.py --main paper/main.tex
 python3 -m pytest toxictool_bench/tests -q
 ```
 

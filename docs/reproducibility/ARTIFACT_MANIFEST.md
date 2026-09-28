@@ -8,13 +8,13 @@ This manifest lists the paper-facing artifacts needed to inspect and reproduce t
 
 | Artifact | Purpose |
 |---|---|
-| `main.tex` | Main paper entry point. |
+| `paper/main.tex` | Main paper entry point. |
 | `docs/reproducibility/REPRODUCIBILITY.md` | Environment, seeds, stress matrix, and release checks. |
 | `LICENSE` / `DATA_LICENSE.md` | Code and synthetic benchmark-data licensing. |
-| `sections/*.tex` | Paper sections and appendix. |
-| `references.bib` | Bibliography database. |
-| `docs/paper/SUBMISSION_CHECKLIST.md` | Reviewer-issue coverage and final PDF checklist. |
-| `docs/paper/PAPER_CONSISTENCY_CHECK.md` | Earlier consistency audit notes. |
+| `paper/sections/*.tex` | Paper sections and appendix. |
+| `paper/references.bib` | Bibliography database. |
+| `paper/docs/SUBMISSION_CHECKLIST.md` | Reviewer-issue coverage and final PDF checklist. |
+| `paper/docs/PAPER_CONSISTENCY_CHECK.md` | Earlier consistency audit notes. |
 
 ## Task Suites
 
@@ -124,7 +124,7 @@ python3 toxictool_bench/plot_paper_figures.py --preview-dir /tmp/toxicbench-figu
 python3 toxictool_bench/run_full_bench.py --tasks toxictool_bench/tasks/semantic_schema_iclr2027.jsonl --adapter langgraph_react_full --model gpt-5.4-mini --env both --limit 1
 MODEL=claude-haiku-4-5-20251001 bash toxictool_bench/run_full_verification_stress.sh
 python3 toxictool_bench/bootstrap_ci.py toxictool_bench/results/RESULT_1.jsonl --output toxictool_bench/results/bootstrap_ci.csv
-python3 toxictool_bench/check_paper_static.py --main main.tex
+python3 toxictool_bench/check_paper_static.py --main paper/main.tex
 python3 -m pytest toxictool_bench/tests -q
 ```
 

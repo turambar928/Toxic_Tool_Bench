@@ -17,7 +17,7 @@ PLACEHOLDER_RE = re.compile(r"(?:\?\?|\bTODO\b|\bTBD\b|PLACEHOLDER|\\cite\{\})",
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Static paper checks for missing TeX inputs, refs, and citations.")
-    parser.add_argument("--main", type=Path, default=Path("main.tex"))
+    parser.add_argument("--main", type=Path, default=Path("paper/main.tex"))
     return parser.parse_args()
 
 

@@ -9,7 +9,7 @@ import pytest
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[2]
-FIG = ROOT / "figures"
+FIG = ROOT / "paper/figures"
 NS = "{http://www.w3.org/2000/svg}"
 ORIGINALS = {
     "figure1.png": "038c3a40d10a2e4937ba34865fa9bece0c304c449eb7b5e716cf7ae17e568b67",

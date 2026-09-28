@@ -20,7 +20,7 @@ from PIL import ImageFont
 from pypdf import PdfReader
 
 ROOT=Path(__file__).resolve().parents[1]
-FIG=ROOT/"figures"
+FIG=ROOT/"paper/figures"
 W,H=2000.,2000.*3072/5504
 NAVY="#263650"; BLUE="#244873"; GREEN="#2b794b"; RED="#b1262d"
 INK="#162331"; GRAY="#758397"; PURPLE="#713cc2"; ORANGE="#c77d32"

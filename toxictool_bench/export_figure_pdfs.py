@@ -133,9 +133,9 @@ if __name__ == "__main__":
     args=p.parse_args()
     records=[]
     for name in ["figure1","figure2"]:
-        source=ROOT/"figures"/(name+".png")
-        target=ROOT/"figures"/(name+".pdf")
+        source=ROOT/"paper/figures"/(name+".png")
+        target=ROOT/"paper/figures"/(name+".pdf")
         records.append(validate(source,target) if args.verify_only else export(source,target,replace=args.replace))
     if not args.verify_only:
-        (ROOT/"figures/figure_pdf_export.json").write_text(json.dumps(records,indent=2)+"\n")
+        (ROOT/"paper/figures/figure_pdf_export.json").write_text(json.dumps(records,indent=2)+"\n")
     print(json.dumps(records,indent=2))

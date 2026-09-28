@@ -14,7 +14,7 @@ from matplotlib.patches import Patch, Rectangle
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output/table_figure_previews_20260921_v6"
+OUT = ROOT / "paper/previews/table_figure_previews_20260921_v6"
 PRIMARY = "#54A88D"
 SECONDARY = "#ADD5A2"
 DEFENSE_PRIMARY = "#9785D3"
@@ -34,7 +34,7 @@ def read_rows(path):
 
 
 def load_data():
-    defense_path = ROOT / "figures/defense_comparison_data.tex"
+    defense_path = ROOT / "paper/figures/defense_comparison_data.tex"
     text = defense_path.read_text()
     table = next(t for t in re.findall(r"\\begin\{table\}(.*?)\\end\{table\}", text, re.S)
                  if r"\label{tab:langgraph-guarded}" in t)
@@ -269,9 +269,9 @@ def export_paper_figures(only=None):
         fig = builder(data)
         style_paper_figure(fig, builder)
         for ext in ("pdf", "svg"):
-            fig.savefig(ROOT / "figures" / f"{name}.{ext}", bbox_inches="tight", pad_inches=.035)
+            fig.savefig(ROOT / "paper/figures" / f"{name}.{ext}", bbox_inches="tight", pad_inches=.035)
         plt.close(fig)
-    (ROOT / "figures/table_conversion_data.json").write_text(json.dumps(data, indent=2) + "\n")
+    (ROOT / "paper/figures/table_conversion_data.json").write_text(json.dumps(data, indent=2) + "\n")
 
 
 def main():
@@ -284,7 +284,7 @@ def main():
         parser.error("--only requires --paper")
     if args.paper:
         export_paper_figures(args.only)
-        print(ROOT / "figures")
+        print(ROOT / "paper/figures")
         return
     OUT.mkdir(parents=True, exist_ok=True)
     configure_style()

@@ -661,7 +661,7 @@ def plot_defense_frontier(results_dir: Path, output_dir: Path, preview_dir: Path
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results-dir", type=Path, default=Path("toxictool_bench/results"))
-    parser.add_argument("--output-dir", type=Path, default=Path("figures"))
+    parser.add_argument("--output-dir", type=Path, default=Path("paper/figures"))
     parser.add_argument("--preview-dir", type=Path)
     parser.add_argument("--defense-only", action="store_true")
     parser.add_argument("--operator-bars-only", action="store_true",

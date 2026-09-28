@@ -69,7 +69,7 @@ def main() -> None:
     fig.legend(handles, labels, loc="upper center", ncol=3, frameon=False,
                bbox_to_anchor=(0.5, 1.02), handlelength=1.8, columnspacing=1.2)
     fig.subplots_adjust(left=0.08, right=0.995, top=0.76, bottom=0.26, wspace=0.18)
-    output = Path("figures/verification_stress_curves")
+    output = Path("paper/figures/verification_stress_curves")
     fig.savefig(output.with_suffix(".pdf"))
     fig.savefig(output.with_suffix(".png"), dpi=300)
     plt.close(fig)

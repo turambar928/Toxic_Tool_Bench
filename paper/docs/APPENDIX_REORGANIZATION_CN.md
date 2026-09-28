@@ -31,13 +31,13 @@
 
 ## 完整材料入口
 
-- [旧附录完整 TeX 快照](../appendix_archive_20260918/)：四个文件逐字保留整理前版本；不参与当前论文编译，不作为当前结果的另一套来源，也不由同步脚本更新。
-- [运行命令](../reproducibility/RUN_COMMANDS.md)：已有实验、重复投毒及防御结果重建入口。复制运行模型命令会产生 API 请求，不是本次排版整理所必需。
+- [旧附录完整 TeX 快照](../archive/appendix_archive_20260918/)：四个文件逐字保留整理前版本；不参与当前论文编译，不作为当前结果的另一套来源，也不由同步脚本更新。
+- [运行命令](../../docs/reproducibility/RUN_COMMANDS.md)：已有实验、重复投毒及防御结果重建入口。复制运行模型命令会产生 API 请求，不是本次排版整理所必需。
 - `toxictool_bench/results/`：`public_cross_model_*`、`public_poison_type_summary.csv`、`iclr2027_gpt_expanded_cross_agent_*`、`leakage_free_defense_*`、`verification_stress_*`、`langgraph_multitable_extension_summary.csv`。
 - `toxictool_bench/human_audit_v2/`、`human_review_v3/`、`human_holdout_v1/`：原始人工材料与分析，未修改。
 - `output/scorer_revision_v2/`：冻结版本、三版本重评分、reference 审计、claim span 和 provenance。
 - `output/submission_revision_v3/`、`output/evidence_controls_v4/`：新实验的冻结协议、执行记录、结果、amendments 和审计。
-- [CASE_STUDIES.md](../archive/CASE_STUDIES.md)、[GUARDED_CASE_STUDIES.md](../archive/GUARDED_CASE_STUDIES.md)：完整案例。
+- [CASE_STUDIES.md](../../docs/archive/CASE_STUDIES.md)、[GUARDED_CASE_STUDIES.md](../../docs/archive/GUARDED_CASE_STUDIES.md)：完整案例。
 
 `sync_defense_paper.py` 已适配合并后的表格和新的 scorer 源文件位置。完整边际区间仍输出 CSV；下次执行该脚本还会输出 `leakage_free_defense_paper_intervals.csv`，区分零 BCR 的单侧 exact 上界与普通 bootstrap 区间。本次未重跑完整重评分流水线。
 
@@ -46,10 +46,11 @@
 在仓库根目录执行：
 
 ```bash
-python3 toxictool_bench/check_paper_static.py --main main.tex
+python3 toxictool_bench/check_paper_static.py --main paper/main.tex
 python3 -m pytest toxictool_bench/tests -q
-tectonic -Z search-path=iclr2027 main.tex --keep-logs --keep-intermediates
-tectonic -Z search-path=iclr2027 main.tex --outdir output/scorer_revision_v2/pdf --keep-logs --keep-intermediates
+cd paper
+mkdir -p build
+tectonic -Z search-path=iclr2027 main.tex --outdir build --keep-logs --keep-intermediates
 ```
 
 保留官方模板的字体、匿名审稿页眉和行号。编译器已有 bibliography 重复遍历警告需要与真正的 undefined reference 区分；交付前检查最终 PDF 页数、引用及表格分页。

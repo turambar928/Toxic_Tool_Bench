@@ -66,7 +66,7 @@ def test_unselected_diagnostics_stay_unchanged():
 
 
 def test_active_paper_formatting_is_current_and_idempotent():
-    for path in collect_tex_files(ROOT / "main.tex", ROOT):
+    for path in collect_tex_files(ROOT / "paper/main.tex", ROOT / "paper"):
         text = path.read_text()
         expected = ("\n".join(highlight_rows(text.split("\n"), "tab:cross-model-rates"))
                     if path.name == "cross_model_rates_table.tex" else format_tables(text))

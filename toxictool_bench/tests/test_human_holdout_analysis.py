@@ -20,7 +20,7 @@ from prepare_holdout_adjudication import make_html, import_completed
 
 
 def paper_table_source():
-    paper = (ROOT / "sections/09_revision_validation.tex").read_text()
+    paper = (ROOT / "paper/sections/09_revision_validation.tex").read_text()
     # Compare values, independently of the manuscript's sky-blue highlighter.
     return re.sub(r"\\best\{([0-9.]+)\}", r"\1", paper)
 

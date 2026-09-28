@@ -5,8 +5,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from pypdf import PdfReader
 
-ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "output" / "pdf" / "flowchart_revision_20260912"
+ROOT = Path(__file__).resolve().parents[3]
+OUT = ROOT / "paper/archive/pdf/flowchart_revision_20260912"
 
 for stem, title in [
     ("figure1_silent_tool_poisoning_v2", "Silent tool poisoning: observation-boundary example"),

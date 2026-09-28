@@ -15,7 +15,7 @@ from sync_defense_paper import (
 
 
 def test_appendix_has_five_sections_and_no_paragraph_headings():
-    active = collect_tex_files(ROOT / 'main.tex', ROOT)
+    active = collect_tex_files(ROOT / 'paper/main.tex', ROOT / 'paper')
     sources = [p for p in active if p.parent.name == 'sections'
                and p.name[:2] in {'08', '09', '10', '11'}]
     assert len(sources) == 4
@@ -32,7 +32,7 @@ def test_combined_suite_table_matches_frozen_results():
     exposure = read_csv(RESULTS / 'leakage_free_defense_exposure_denominators.csv')
     lines = suite_table_lines(summaries, exposure)
     assert len(lines) == 8
-    paper = strip_highlights((ROOT / 'sections/08_appendix_guard_details.tex').read_text())
+    paper = strip_highlights((ROOT / 'paper/sections/08_appendix_guard_details.tex').read_text())
     assert all(row in paper for row in lines)
     assert all(len(row.split(' & ')) == 9 for row in lines)
 
@@ -42,13 +42,13 @@ def test_combined_development_audit_matches_independent_sources():
     agreement = json.loads((ROOT / 'toxictool_bench/human_audit_v2/agreement.json').read_text())['labels']
     lines = audit_table_lines(consensus, agreement)
     assert len(lines) == 4
-    paper = (ROOT / 'sections/09_revision_validation.tex').read_text()
+    paper = (ROOT / 'paper/sections/09_revision_validation.tex').read_text()
     assert all(row in paper for row in lines)
     assert all(len(row.split(' & ')) == 7 for row in lines)
 
 
 def test_table_sync_preserves_merged_label_aliases(tmp_path):
-    source = ROOT / 'sections/08_appendix_guard_details.tex'
+    source = ROOT / 'paper/sections/08_appendix_guard_details.tex'
     copy = tmp_path / source.name
     original = source.read_text()
     copy.write_text(original)
@@ -62,9 +62,9 @@ def test_table_sync_preserves_merged_label_aliases(tmp_path):
 
 
 def test_moved_numeric_tables_preserve_archived_rows():
-    archive = ROOT / 'docs/appendix_archive_20260918'
+    archive = ROOT / 'paper/archive/appendix_archive_20260918'
     old = (archive / '08_appendix_guard_details.tex').read_text()
-    active = strip_highlights('\n'.join((ROOT / 'sections' / name).read_text() for name in
+    active = strip_highlights('\n'.join((ROOT / 'paper/sections' / name).read_text() for name in
                        ('08_appendix_guard_details.tex', '09_revision_validation.tex')))
     for label in ('tab:appendix-scorer-revision-impact', 'tab:appendix-paired-defense-ci',
                   'tab:appendix-latency-distribution', 'tab:appendix-multiroute-stress'):

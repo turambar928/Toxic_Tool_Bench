@@ -8,7 +8,7 @@ from pypdf import PdfReader
 from rebuild_vector_figures import ROOT, NS, cairo, Rsvg, digest, figure2, render
 
 
-OUT = ROOT / "output/figure2_polish_20260926"
+OUT = ROOT / "paper/previews/figure2_polish_20260926"
 PALETTE = {
     "#4264ce": "#5974BC", "#4162cf": "#5974BC",
     "#713cc2": "#805DAE", "#c73532": "#BC5B57",
@@ -166,11 +166,11 @@ def polished_figure():
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    originals = [ROOT / "figures/figure1_vector.pdf", ROOT / "figures/figure2_vector.pdf",
-                 ROOT / "figures/figure2_vector.svg"]
+    originals = [ROOT / "paper/figures/figure1_vector.pdf", ROOT / "paper/figures/figure2_vector.pdf",
+                 ROOT / "paper/figures/figure2_vector.svg"]
     # Local preview PDFs/exports are intentionally absent from a fresh checkout.
-    for path in [ROOT / "main.pdf", ROOT / "output/ARXIV_OVERLEAF_20260925/main.pdf",
-                 ROOT / "output/ARXIV_OVERLEAF_20260925/figures/figure2_vector.pdf"]:
+    for path in [ROOT / "paper/main.pdf", ROOT / "paper/exports/ARXIV_OVERLEAF_20260925/main.pdf",
+                 ROOT / "paper/exports/ARXIV_OVERLEAF_20260925/figures/figure2_vector.pdf"]:
         if path.is_file():
             originals.append(path)
     before = {str(p): digest(p) for p in originals}
@@ -201,10 +201,10 @@ def main():
     surface.write_to_png(str(svg.with_suffix(".png")))
     page = PdfReader(pdf).pages[0]
     assert not list(page.images)
-    original = PdfReader(ROOT / "figures/figure2_vector.pdf").pages[0]
+    original = PdfReader(ROOT / "paper/figures/figure2_vector.pdf").pages[0]
     # PDF layout extraction may join words differently; verify the SVG text
     # stream exactly instead, and retain the exact original physical size.
-    old_root = ET.parse(ROOT / "figures/figure2_vector.svg").getroot()
+    old_root = ET.parse(ROOT / "paper/figures/figure2_vector.svg").getroot()
     assert [e.text for e in old_root.iter(f"{{{NS}}}text")] == [
         e.text for e in s.root.iter(f"{{{NS}}}text")]
     assert list(page.mediabox) == list(original.mediabox)

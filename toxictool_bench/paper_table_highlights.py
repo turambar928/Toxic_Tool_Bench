@@ -109,9 +109,9 @@ def main() -> None:
     parser.add_argument("--check", action="store_true", help="Check without writing files")
     args = parser.parse_args()
     stale = []
-    for path in collect_tex_files(ROOT / "main.tex", ROOT):
+    for path in collect_tex_files(ROOT / "paper/main.tex", ROOT / "paper"):
         old = path.read_text()
-        if path == ROOT / "figures/cross_model_rates_table.tex":
+        if path == ROOT / "paper/figures/cross_model_rates_table.tex":
             new = "\n".join(highlight_rows(old.split("\n"), "tab:cross-model-rates"))
         else:
             new = format_tables(old)

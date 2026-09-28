@@ -67,7 +67,7 @@ def main():
         return c, t
     names = {'langgraph_react_full': 'LangGraph ReAct', 'smolagents_toolcalling': 'smolagents',
              'autogen_tool_agent': 'AutoGen', 'da_agent_full': 'DA-Agent'}
-    path = ROOT / 'sections/05_experiments.tex'
+    path = ROOT / 'paper/sections/05_experiments.tex'
     rows = []
     for model, name in [('gpt-5.4-mini', 'GPT-5.4-mini'), ('claude-sonnet-4-6', 'Claude Sonnet 4.6'),
                         ('Qwen3.6-35B-A3B-no-thinking', 'Qwen3.6-35B')]:
@@ -93,7 +93,7 @@ def main():
         rows.append(line(names[adapter], *(f'{v:.2f}' for v in values)))
     table(path, 'tab:gpt-expanded-cross-agent-120', rows)
     ranges = [f'{min(v[i] for v in summary):.2f}--{max(v[i] for v in summary):.2f}' for i in range(3)]
-    abstract = ROOT / 'sections/00_abstract.tex'
+    abstract = ROOT / 'paper/sections/00_abstract.tex'
     abstract.write_text(re.sub(r'clean task success of [\d.]+--[\d.]+ falls to [\d.]+--[\d.]+',
                               f'clean task success of {ranges[0]} falls to {ranges[1]}', abstract.read_text()))
     text = re.sub(r'poisoned TSR falls by [\d.]+--[\d.]+', f'poisoned TSR falls by {ranges[2]}', path.read_text())

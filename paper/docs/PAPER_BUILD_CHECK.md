@@ -1,5 +1,7 @@
 # Paper Build Check
 
+Historical record: paths and commands below describe the original build. For the current layout and build instructions, see [paper/README.md](../README.md).
+
 Last checked: 2026-07-23 Asia/Shanghai.
 
 Commands:

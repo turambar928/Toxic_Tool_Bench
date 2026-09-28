@@ -23,16 +23,17 @@ human labels; model executions and the historical development recheck remain sep
 ```text
 .
 ├── README.md / LICENSE / DATA_LICENSE.md
-├── main.tex / references.bib       # Manuscript entry point and bibliography
-├── sections/                      # Main text and appendices
-├── figures/                       # Integrated paper figures and tables
-├── iclr2027/                      # Active official template bundle
+├── paper/                         # All manuscript files; see paper/README.md
+│   ├── main.tex / references.bib   # Anonymous manuscript and bibliography
+│   ├── sections/ / figures/       # Main text, appendices, and integrated figures
+│   ├── iclr2027/                  # Unmodified official template bundle
+│   ├── docs/ / archive/           # Paper documentation and historical drafts
+│   └── build/ / exports/ / previews/ # Local generated files (Git-ignored)
 ├── docs/
 │   ├── README.md                  # Documentation index and relocation map
 │   ├── reproducibility/           # Commands, environment, artifact manifest
 │   ├── experiments/               # Status, scorer repair, acceptance/control audits
 │   ├── human_evaluation/          # Annotation distribution and return workflow
-│   ├── paper/                     # Citation checks, submission and layout notes
 │   └── archive/                   # Historical plans, results and cases
 ├── toxictool_bench/                # Benchmark code, tasks, datasets, tests and logs
 ├── scripts/submission_release/    # Anonymous supplementary release builder
@@ -42,7 +43,7 @@ human labels; model executions and the historical development recheck remain sep
 Start with the [documentation index](docs/README.md). Historical reports retain
 their original dates and results; moving them does not make them current evidence.
 Commands and inline code paths in the documentation are relative to the repository
-root unless stated otherwise. The manuscript's input paths and frozen evaluation
+root unless stated otherwise. The manuscript is now under `paper/`; frozen evaluation
 packets have not moved. Local PDFs, Overleaf ZIPs, figure previews, and API settings
 are not included in Git commits.
 
@@ -137,27 +138,32 @@ For a complete artifact map, see `docs/reproducibility/ARTIFACT_MANIFEST.md`. Th
 
 ## Paper
 
-The paper entry point is `main.tex`. It uses the official bundle in `iclr2027/`,
+The paper entry point is [`paper/main.tex`](paper/main.tex). It uses the official bundle in `paper/iclr2027/`,
 including its supplied `fancyhdr.sty` and `natbib.sty`, in anonymous review mode.
 Do not edit the official style files or enable `\iclrfinalcopy` for submission. The
 current compiled version ends the main text on page 9 and starts references on
 page 10.
 
 ```bash
-python3 toxictool_bench/check_paper_static.py --main main.tex
-mkdir -p output/paper_build
-tectonic -Z search-path=iclr2027 main.tex --outdir output/paper_build --keep-logs --keep-intermediates
+python3 toxictool_bench/check_paper_static.py --main paper/main.tex
+cd paper
+mkdir -p build
+tectonic -Z search-path=iclr2027 main.tex --outdir build --keep-logs --keep-intermediates
 ```
 
-Open `output/paper_build/main.pdf` from this build. A root-level `main.pdf` may
-also be compiled separately, but is a local preview, not a tracked source file.
-Compile the complete `main.tex` entry point, including the appendix inputs;
-individual files in `sections/` are not standalone documents. Tectonic runs
+Open `paper/build/main.pdf` from this build (path relative to the repository root).
+`paper/main.pdf` is a separately refreshed local preview, not a tracked source file.
+Compile the complete `paper/main.tex` entry point, including the appendix inputs;
+individual files in `paper/sections/` are not standalone documents. Tectonic runs
 the reference/bibliography passes automatically. With a traditional LaTeX
-toolchain, use `TEXINPUTS=./iclr2027//: latexmk -pdf main.tex`
+toolchain, run `TEXINPUTS=./iclr2027//: latexmk -pdf main.tex` from `paper/`
 (or LaTeX, BibTeX, then LaTeX twice with the same search path),
 not a single LaTeX pass. If references show `??`, check the final build log
 for undefined references/citations and rebuild the complete document.
+
+See [paper/README.md](paper/README.md) for the layout and independent arXiv export.
+Three generated appendix tables are read from `../output/`; keep the repository
+layout intact for local builds. Frozen experiment results are not duplicated.
 
 ## Reproduction
 
@@ -183,7 +189,7 @@ START_INDEX=10 LIMIT=10 bash toxictool_bench/run_iclr2027_experiments.sh
 Run static and unit checks:
 
 ```bash
-python3 toxictool_bench/check_paper_static.py --main main.tex
+python3 toxictool_bench/check_paper_static.py --main paper/main.tex
 python3 -m pytest toxictool_bench/tests -q
 ```
 
@@ -208,5 +214,5 @@ API keys and local endpoint configuration should not be committed. This reposito
 
 The compact appendix groups construction, scoring/human validation, agent protocols,
 supplementary results, and controlled evidence experiments into five sections.
-See [the appendix reorganization guide](docs/paper/APPENDIX_REORGANIZATION_CN.md) for the
+See [the appendix reorganization guide](paper/docs/APPENDIX_REORGANIZATION_CN.md) for the
 full-material index, preserved pre-reorganization sources, and official-template build commands.

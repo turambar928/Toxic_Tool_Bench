@@ -6,7 +6,7 @@ from pypdf import PdfReader
 from rebuild_vector_figures import SVG, NS, ROOT, cairo, Rsvg, digest, render
 
 
-OUT = ROOT / "output/figure2_redesign_20260926"
+OUT = ROOT / "paper/previews/figure2_redesign_20260926"
 INK = "#293141"
 MUTED = "#646B79"
 ACCENT = "#6462A3"
@@ -132,8 +132,8 @@ def diagram():
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    originals = [ROOT / "figures/figure2_vector.pdf", ROOT / "figures/figure2_vector.svg"]
-    arxiv_figure = ROOT / "output/ARXIV_OVERLEAF_20260925/figures/figure2_vector.pdf"
+    originals = [ROOT / "paper/figures/figure2_vector.pdf", ROOT / "paper/figures/figure2_vector.svg"]
+    arxiv_figure = ROOT / "paper/exports/ARXIV_OVERLEAF_20260925/figures/figure2_vector.pdf"
     if arxiv_figure.is_file():
         originals.append(arxiv_figure)
     before = {str(path): digest(path) for path in originals}
