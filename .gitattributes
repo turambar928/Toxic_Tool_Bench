@@ -5,3 +5,10 @@ toxictool_bench/datasets/public_bike_v4.csv -text whitespace=cr-at-eol
 output/HUMAN_REVIEW_KIT_20260917/** -text
 output/HUMAN_REVIEW_KIT_20260917/*/cases.html -whitespace
 output/HUMAN_REVIEW_KIT_20260917/*/evidence.csv -whitespace
+
+# Human-review HTML is annotation material, not benchmark implementation code.
+# Keep these files tracked and readable, but exclude them from language statistics.
+output/HUMAN_REVIEW_KIT_20260917/**/*.html linguist-detectable=false
+toxictool_bench/HUMAN_REVIEW_KIT_20260917/**/*.html linguist-detectable=false
+output/human_holdout_adjudication_v2/*.html linguist-detectable=false
+output/human_holdout_adjudication_remaining_10/*.html linguist-detectable=false
