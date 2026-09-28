@@ -1,218 +1,138 @@
 # ToxicBench
 
-ToxicBench evaluates whether data-analysis agents blindly trust tool outputs that look successful but are silently poisoned. The benchmark focuses on a practical failure mode for tool-augmented agents: the tool call succeeds, the return format is normal, but the returned content is numerically corrupted, semantically misleading, or stale.
+Official repository for **When Tools Silently Lie: Evaluating and Mitigating Blind Compliance in Tool-Augmented Data Agents**.
 
-The main behavioral metric is blind compliance: whether an agent copies or relies on poisoned tool evidence in its final answer without validation.
+Zifu Tao and Changqing Yin · Tongji University
 
-For the current submission revision, see the
-[repair plan](docs/experiments/SCORER_REPAIR_PLAN_CN.md), the
-[execution report](docs/experiments/SCORER_REPAIR_EXECUTION_CN.md), and
-[current status](docs/experiments/CURRENT_STATUS.md). The September 20
-[human-evaluation report](output/human_validation_20260920/README_CN.md)
-archives the returned 200-case evaluation and separate 40-case reference review,
-including frozen-scorer comparisons, source documentation, and paired method results.
+[Paper (OpenReview)](https://openreview.net/forum?id=JJDQY33lKk) · [Quick Start](#quick-start) · [Reproducing the Paper](#reproducing-the-paper) · [Manuscript Source](paper/main.tex)
 
-The [V4 evidence-control report](docs/experiments/EVIDENCE_CONTROLS_V4_CN.md) documents a separate
-field-bound intervention and matched-parent experiment across three public
-datasets. The [human validation handoff](docs/human_evaluation/HUMAN_VALIDATION_HANDOFF_CN.md) explains
-the original distribution and return workflow. The new report uses the received
-human labels; model executions and the historical development recheck remain separate.
+![Figure 1: A tool call succeeds, but a proxy swaps the store label in its returned revenue result while leaving the source data unchanged.](paper/figures/figure1_vector.svg)
 
-## Repository Layout
+*Successful execution does not guarantee trustworthy evidence. A silently corrupted tool response can lead an agent to a plausible but wrong conclusion.*
 
-```text
-.
-├── README.md / LICENSE / DATA_LICENSE.md
-├── paper/                         # All manuscript files; see paper/README.md
-│   ├── main.tex / references.bib   # Anonymous manuscript and bibliography
-│   ├── sections/ / figures/       # Main text, appendices, and integrated figures
-│   ├── iclr2027/                  # Unmodified official template bundle
-│   ├── docs/ / archive/           # Paper documentation and historical drafts
-│   └── build/ / exports/ / previews/ # Local generated files (Git-ignored)
-├── docs/
-│   ├── README.md                  # Documentation index and relocation map
-│   ├── reproducibility/           # Commands, environment, artifact manifest
-│   ├── experiments/               # Status, scorer repair, acceptance/control audits
-│   ├── human_evaluation/          # Annotation distribution and return workflow
-│   └── archive/                   # Historical plans, results and cases
-├── toxictool_bench/                # Benchmark code, tasks, datasets, tests and logs
-├── scripts/submission_release/    # Anonymous supplementary release builder
-└── output/                        # Versioned analyses and local generated exports
-```
+## Overview
 
-Start with the [documentation index](docs/README.md). Historical reports retain
-their original dates and results; moving them does not make them current evidence.
-Commands and inline code paths in the documentation are relative to the repository
-root unless stated otherwise. The manuscript is now under `paper/`; frozen evaluation
-packets have not moved. Local PDFs, Overleaf ZIPs, figure previews, and API settings
-are not included in Git commits.
+ToxicBench evaluates how data-analysis agents respond when tools return plausible but incorrect evidence. It pairs clean and poisoned runs over the same source data, modifying tool responses without changing the underlying tables. The benchmark covers numerical, label, schema, and retrieval errors, and follows both the checks an agent performs and the answer it ultimately adopts.
 
-## Current Benchmark
+The central question is not only whether an agent checks its evidence, but whether that check leads to a correct answer. ToxicBench distinguishes blind adoption of poisoned evidence, successful recovery, and poison adoption **after** checking. We compare ordinary retries with explicit verification protocols under one-shot and repeated poisoning.
 
-The [model-free task acceptance report](output/task_acceptance_v1/README_CN.md)
-adds executable checks for all 131 retained synthetic tasks. Fixed routes give
-119 valid target interventions and raw-data recovery on 119/119 under one-shot
-poisoning, versus 110/119 under repeated poisoning. References/specifications and
-source hashes are checked separately; declared schema roles are not independent
-semantic annotation, and these are not agent success rates. No model API is used.
+This repository provides task definitions, data fixtures, agent adapters, selected execution trajectories, scoring code, reference and delivery audits, human-evaluation results, and the paper source.
 
-- Numerical suite: 34 tasks over 11 CSV datasets.
-- Semantic/schema suite: 24 tasks over 17 CSV datasets.
-- Expanded release suites:
-  - `toxictool_bench/tasks/numerical_iclr2027.jsonl`: 60 numerical tasks.
-  - `toxictool_bench/tasks/semantic_schema_iclr2027.jsonl`: 60 semantic/schema tasks.
-  - These add severity labels and additional poison taxonomy coverage such as ratio inversion, denominator swap, unit conversion, and missing-filter poisoning.
-- Poisoning families: aggregate scaling, sign flips, rank/label swaps, treatment/control flips, column semantic swaps, stale metadata, and biased retrieval evidence.
-- Agent adapters: LangGraph ReAct, smolagents, PandasAI, DA-Agent, and AutoGen.
-- Models used where practical: `gpt-5.4-mini`, `claude-sonnet-4-6`, and `Qwen3.6-35B-A3B-no-thinking`.
+## Highlights
 
-## Metrics
+- **Silent errors matter.** In the 118-task GPT evaluation across three adapters, poisoning reduces task success by 26–39 percentage points.
+- **Checking and recovery are different.** Another evidence pass helps under one-shot poisoning; repeated poisoning exposes cases where agents check but still adopt the poisoned answer.
+- **Human evaluation supports the main phenomena.** After freezing the scorer, evaluation against human labels on 200 trajectories gives 96% task-success agreement. Human judgments support retry gains over Base and confirm adoption after checking on audited tasks.
 
-- Clean TSR: task success rate in the clean environment.
-- Poisoned TSR: task success rate under silent poisoning.
-- Delta TSR: clean-to-poisoned degradation.
-- BCR: blind compliance rate.
-- ADR: anomaly detection rate.
-- VR: validation rate.
-- RR: recovery rate.
+See the [paper](https://openreview.net/forum?id=JJDQY33lKk) for the experimental settings and comparisons, and the [human-evaluation report](output/human_validation_20260920/README_CN.md) for the annotation results.
 
-## Key Results
+## Quick Start
 
-After reference auditing, the revised expanded comparisons retain 58 numerical
-and 60 semantic/schema tasks. GPT poisoned TSR falls from 0.99 to 0.67 for
-LangGraph, from 0.98 to 0.59 for smolagents, and from 0.92 to 0.66 for AutoGen.
-These are adapter-level diagnostic results, not deployment-frequency estimates.
-
-In the historical-injector, matched-cap Claude Haiku matrix, Double-pass reaches 1.00
-poisoned TSR versus 0.89 for Base over the 118 retained tasks. The paired
-difference is +0.110, with template-cluster 95% interval [0.056, 0.171] and
-dataset-cluster interval [0.060, 0.172]. Generic Guard reaches 0.97 and does not
-outperform Double-pass. This supports the value of another evidence pass, not a
-claim that a specialized guard is uniquely effective.
-
-The delivery audit flags 204 off-target sign-flip events among 3,319 recorded
-corruptions (157 trajectories), including 20 numeric no-ops. Historical delivery
-rates are not certified valid exposure. Removing all eight sign-flip tasks
-preserves the direction of the defense comparison on the remaining 110 tasks.
-All 152 fresh repaired-injector trajectories are complete; their results and
-historical exposure sensitivity are versioned separately under
-`output/submission_revision_v3/`. The selected 16-task control has small TSR
-differences whose paired intervals include zero. The six public-data tasks show
-ceiling performance with residual clean answers still available, not evidence
-of deployment robustness.
-Matched caps mean route count, steps per route, and output tokens **per request**,
-not equal total token cost. See [SUBMISSION_REVISION_V3_CN.md](docs/experiments/SUBMISSION_REVISION_V3_CN.md).
-
-The revised scorer reaches 238/240 TSR agreement on the audit-informed
-development set. The completed post-freeze human evaluation is reported
-separately: 192/200 TSR agreement (96.0%) on 90 reused semantic trajectories,
-90 new Haiku core/repeated trajectories, and 20 new AutoGen trajectories run
-with Claude Sonnet 4.6 after a documented pre-run model-availability amendment.
-Human core poisoned TSR is 0.80 for Base, 1.00 for Double-pass and
-Verification-only, and 0.95 for Guard; see the
-[full report](output/human_validation_20260920/README_CN.md) for paired comparisons.
-
-## Important Artifacts
-
-For a complete artifact map, see `docs/reproducibility/ARTIFACT_MANIFEST.md`. The core paper-facing result files are:
-
-- Cross-model numerical summary: `toxictool_bench/results/cross_model_summary.csv`
-- Cross-model semantic/schema summary: `toxictool_bench/results/semantic_schema_cross_model_summary.csv`
-- Expanded GPT cross-agent summary: `toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_summary.csv`
-- Expanded GPT poison breakdown: `toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_poison_summary.csv`
-- Expanded GPT severity breakdown: `toxictool_bench/results/iclr2027_gpt_expanded_cross_agent_combined_severity_summary.csv`
-- Guarded ablation: `toxictool_bench/results/langgraph_guarded_ablation_summary.csv`
-- Guarded suite breakdown: `toxictool_bench/results/langgraph_guarded_ablation_suite_summary.csv`
-- Guarded overhead: `toxictool_bench/results/langgraph_guarded_overhead_summary.csv`
-- Guard cost/latency distribution: `toxictool_bench/results/guard_cost_latency_distribution.csv`
-- Multi-table extension: `toxictool_bench/results/langgraph_multitable_extension_summary.csv`
-- AutoGen replication: `toxictool_bench/results/autogen_guarded_replication_summary.csv`
-- AutoGen replication CIs: `toxictool_bench/results/autogen_guarded_replication_bootstrap_ci.csv`
-- Versioned scorer analysis: `output/scorer_revision_v2/analysis_manifest.json`
-- Reference audit: `toxictool_bench/results/reference_answer_audit.json`
-- AutoGen combined logs: `toxictool_bench/results/autogen_*_expanded120_combined.jsonl`
-- Bootstrap CIs:
-  - `toxictool_bench/results/numerical_cross_model_bootstrap_ci.csv`
-  - `toxictool_bench/results/semantic_schema_cross_model_bootstrap_ci.csv`
-  - `toxictool_bench/results/langgraph_guarded_bootstrap_ci.csv`
-
-## Paper
-
-The paper entry point is [`paper/main.tex`](paper/main.tex). It uses the official bundle in `paper/iclr2027/`,
-including its supplied `fancyhdr.sty` and `natbib.sty`, in anonymous review mode.
-Do not edit the official style files or enable `\iclrfinalcopy` for submission. The
-current compiled version ends the main text on page 9 and starts references on
-page 10.
+Clone the repository and install the pinned benchmark dependencies:
 
 ```bash
-python3 toxictool_bench/check_paper_static.py --main paper/main.tex
-cd paper
-mkdir -p build
-tectonic -Z search-path=iclr2027 main.tex --outdir build --keep-logs --keep-intermediates
+git clone https://github.com/turambar928/Toxic_Tool_Bench.git
+cd Toxic_Tool_Bench
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
 ```
 
-Open `paper/build/main.pdf` from this build (path relative to the repository root).
-`paper/main.pdf` is a separately refreshed local preview, not a tracked source file.
-Compile the complete `paper/main.tex` entry point, including the appendix inputs;
-individual files in `paper/sections/` are not standalone documents. Tectonic runs
-the reference/bibliography passes automatically. With a traditional LaTeX
-toolchain, run `TEXINPUTS=./iclr2027//: latexmk -pdf main.tex` from `paper/`
-(or LaTeX, BibTeX, then LaTeX twice with the same search path),
-not a single LaTeX pass. If references show `??`, check the final build log
-for undefined references/citations and rebuild the complete document.
-
-See [paper/README.md](paper/README.md) for the layout and independent arXiv export.
-Three generated appendix tables are read from `../output/`; keep the repository
-layout intact for local builds. Frozen experiment results are not duplicated.
-
-## Reproduction
-
-See `docs/reproducibility/RUN_COMMANDS.md` for the exact experiment commands and `docs/reproducibility/ARTIFACT_MANIFEST.md` for expected outputs. The main scripts are:
+Run a small clean/poisoned example **without a model API**:
 
 ```bash
-python3 toxictool_bench/check_adapter_readiness.py
-ADAPTERS="langgraph_react_full smolagents_toolcalling autogen_tool_agent" \
-  bash toxictool_bench/run_expanded_full_adapters.sh gpt-5.4-mini
-ADAPTERS="langgraph_react_full langgraph_react_caution langgraph_react_expectation_only langgraph_react_verification_only langgraph_react_guarded langgraph_react_guarded_light" \
-  bash toxictool_bench/run_langgraph_guard_ablation.sh gpt-5.4-mini toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
-ADAPTERS="autogen_verification_only autogen_guarded" \
-  bash toxictool_bench/run_autogen_guard_replication.sh gpt-5.4-mini toxictool_bench/tasks/semantic_schema_iclr2027.jsonl
+python3 toxictool_bench/run_bench.py \
+  --agent-profile heuristic_naive \
+  --env both \
+  --limit 2
 ```
 
-Long expanded runs can be chunked:
+This runs a heuristic agent to demonstrate the benchmark pipeline; it is not a reproduction of the paper's LLM results. Trajectories and summaries are saved under `toxictool_bench/results/`.
 
-```bash
-START_INDEX=0 LIMIT=10 bash toxictool_bench/run_iclr2027_experiments.sh
-START_INDEX=10 LIMIT=10 bash toxictool_bench/run_iclr2027_experiments.sh
-```
+For model-backed runs, follow the [environment setup](docs/reproducibility/REPRODUCIBILITY.md) and [adapter-specific commands](docs/reproducibility/RUN_COMMANDS.md). Model runs require local endpoint configuration and the dependencies for the selected adapter. Credentials are not distributed: keep the local `api` file and `.env` files out of version control.
 
-Run static and unit checks:
+## Benchmark and Evaluation
+
+The expanded candidate suites contain 60 numerical and 60 semantic/schema tasks. After reference auditing, the primary expanded comparisons retain **118 tasks**: 58 numerical and 60 semantic/schema. The release also includes smaller cross-model suites and a 13-task multi-table extension; these suites overlap and should not be added together as independent tasks. See the [task construction audit](docs/experiments/TASK_CONSTRUCTION_AUDIT_CN.md) and [executable acceptance report](output/task_acceptance_v1/README_CN.md).
+
+Agent integrations include LangGraph ReAct, smolagents, AutoGen, PandasAI, and DA-Agent, with experiment-specific coverage documented in the paper. The verification comparison uses Base, Double-pass, Verification-only, and Generic Guard.
+
+| Metric | What it measures |
+| --- | --- |
+| TSR / ΔTSR | Task success in clean and poisoned environments, and the clean-to-poisoned drop |
+| PDR | Fraction of poisoned-environment runs with an actual tool-response modification |
+| ADR / VR | Explicit anomaly detection / a fresh, task-relevant evidence-producing tool event after exposure |
+| PAR | Final-answer adoption of the poisoned reference, regardless of checking |
+| BCR | Poison adoption without anomaly detection or validation |
+| VPA | Poison adoption despite a qualifying validation event |
+| RR | Recovery to an accepted clean answer after anomaly detection or validation |
+
+TSR uses all retained runs. The six behavioral rates (ADR, VR, PAR, BCR, VPA, and RR) use exposed runs as their denominator; VPA is not conditional on validation. Full scoring rules are in the paper and [`evaluator.py`](toxictool_bench/evaluator.py).
+
+## Reproducing the Paper
+
+Start with the [reproducibility guide](docs/reproducibility/REPRODUCIBILITY.md), [run commands](docs/reproducibility/RUN_COMMANDS.md), and [artifact manifest](docs/reproducibility/ARTIFACT_MANIFEST.md). They document the environments, task selections, recorded runs, and analysis pipelines.
+
+Key evidence and analysis entry points:
+
+- [Versioned scoring results](output/scorer_revision_v2/version_summary.csv) and [analysis provenance](output/scorer_revision_v2/analysis_manifest.json).
+- [Post-freeze human evaluation](output/human_validation_20260920/README_CN.md), including agreement and paired method comparisons.
+- [Task-level executable acceptance](output/task_acceptance_v1/README_CN.md), which checks benchmark tasks without model calls.
+- [Delivery audit and repaired-injector controls](docs/experiments/SUBMISSION_REVISION_V3_CN.md).
+- [Matched-evidence controls on public tables](docs/experiments/EVIDENCE_CONTROLS_V4_CN.md).
+
+Historical-injector results, repaired-injector controls, and human-evaluation subsets are recorded separately. Use the corresponding manifests when reproducing a comparison; older development summaries are not interchangeable with the current paper results. The reproducibility guide also identifies historical logs that are not included in this checkout.
+
+Run the static manuscript checks and unit tests:
 
 ```bash
 python3 toxictool_bench/check_paper_static.py --main paper/main.tex
 python3 -m pytest toxictool_bench/tests -q
 ```
 
-Large third-party adapter checkouts do not need to be committed into this repo.
-Use external paths when they already exist locally:
+## Repository Structure
 
-```bash
-export TOXICTOOL_BASELINE_DIR=/path/to/baseline_agent
+```text
+paper/                       Manuscript, bibliography, figures, and ICLR template
+toxictool_bench/              Benchmark implementation and agent adapters
+  tasks/                     Task definitions
+  datasets/                  Data fixtures
+  results/                   Selected trajectories, summaries, and manifests
+  tests/                     Regression tests
+output/                      Versioned scoring, human evaluation, and control analyses
+docs/                        Reproduction guides, experiment reports, and historical notes
+scripts/submission_release/  Supplementary artifact packaging and offline reproduction
 ```
 
-To regenerate the ICLR 2027 expanded candidate task files:
+The [documentation index](docs/README.md) provides a fuller map. Historical reports retain their original dates and describe the state at that time.
+
+## Manuscript
+
+The LaTeX entry point is [`paper/main.tex`](paper/main.tex). Figures, sections, bibliography, and the official ICLR template are all under `paper/`.
+
+To compile with Tectonic, starting from the repository root:
 
 ```bash
-python3 toxictool_bench/generate_iclr2027_tasks.py
+cd paper
+mkdir -p build
+tectonic -Z search-path=iclr2027 main.tex --outdir build --keep-logs --keep-intermediates
 ```
 
-## Security Note
+The compiled PDF is written to `paper/build/main.pdf` (relative to the repository root). Keep the repository layout intact: three generated appendix tables are read from `output/`. See the [paper directory guide](paper/README.md) for further build instructions. Local PDFs and export snapshots are not tracked in Git.
 
-API keys and local endpoint configuration should not be committed. This repository ignores the local `api` file and `.env` files.
+## Citation
 
-## Paper Appendix
+If you use ToxicBench, please cite the paper:
 
-The compact appendix groups construction, scoring/human validation, agent protocols,
-supplementary results, and controlled evidence experiments into five sections.
-See [the appendix reorganization guide](paper/docs/APPENDIX_REORGANIZATION_CN.md) for the
-full-material index, preserved pre-reorganization sources, and official-template build commands.
+```bibtex
+@misc{tao2026toxicbench,
+  title = {When Tools Silently Lie: Evaluating and Mitigating Blind Compliance in Tool-Augmented Data Agents},
+  author = {Tao, Zifu and Yin, Changqing},
+  year = {2026},
+  url = {https://openreview.net/forum?id=JJDQY33lKk}
+}
+```
+
+## License
+
+Code is released under the [MIT License](LICENSE). Repository-authored task definitions and synthetic CSV fixtures are covered by the [data license](DATA_LICENSE.md) (CC BY 4.0). Third-party datasets, frameworks, and model services remain subject to their respective licenses and terms.
