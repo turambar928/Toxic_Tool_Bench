@@ -30,7 +30,7 @@
 
 <a id="overview"></a>
 
-## 🔎 Overview
+## Overview
 
 ToxicBench evaluates how data-analysis agents respond when tools return plausible but incorrect evidence. It pairs clean and poisoned runs over the same source data, modifying tool responses without changing the underlying tables. The benchmark covers numerical, label, schema, and retrieval errors, and follows both the checks an agent performs and the answer it ultimately adopts.
 
@@ -48,9 +48,9 @@ See the [paper](https://openreview.net/forum?id=JJDQY33lKk) for the experimental
 
 <a id="quick-start"></a>
 
-## 🚀 Quick Start
+## Quick Start
 
-**1. Install**
+**1. Install dependencies**
 
 ```bash
 git clone https://github.com/turambar928/Toxic_Tool_Bench.git
@@ -60,7 +60,7 @@ source .venv/bin/activate
 python3 -m pip install -r requirements.txt
 ```
 
-**2. Try a clean/poisoned example — no API key required**
+**2. Run a demo without an API key**
 
 ```bash
 python3 toxictool_bench/run_bench.py \
@@ -75,7 +75,7 @@ For model-backed runs, follow the [environment setup](docs/reproducibility/REPRO
 
 <a id="evaluation"></a>
 
-## 📊 Benchmark and Evaluation
+## Benchmark and Evaluation
 
 The expanded candidate suites contain 60 numerical and 60 semantic/schema tasks. After reference auditing, the primary expanded comparisons retain **118 tasks**: 58 numerical and 60 semantic/schema. The release also includes smaller cross-model suites and a 13-task multi-table extension; these suites overlap and should not be added together as independent tasks. See the [task construction audit](docs/experiments/TASK_CONSTRUCTION_AUDIT_CN.md) and [executable acceptance report](output/task_acceptance_v1/README_CN.md).
 
@@ -100,7 +100,7 @@ TSR uses all retained runs. The six behavioral rates (ADR, VR, PAR, BCR, VPA, an
 
 <a id="reproduce"></a>
 
-## 🔬 Reproducing the Paper
+## Reproducing the Paper
 
 Start with the [reproducibility guide](docs/reproducibility/REPRODUCIBILITY.md), [run commands](docs/reproducibility/RUN_COMMANDS.md), and [artifact manifest](docs/reproducibility/ARTIFACT_MANIFEST.md). They document the environments, task selections, recorded runs, and analysis pipelines.
 
@@ -158,7 +158,7 @@ The compiled PDF is written to `paper/build/main.pdf` (relative to the repositor
 
 <a id="citation"></a>
 
-## 📝 Citation
+## Citation
 
 If you use ToxicBench, please cite the paper:
 
@@ -171,6 +171,6 @@ If you use ToxicBench, please cite the paper:
 }
 ```
 
-## 📄 License
+## License
 
 Code is released under the [MIT License](LICENSE). Repository-authored task definitions and synthetic CSV fixtures are covered by the [data license](DATA_LICENSE.md) (CC BY 4.0). Third-party datasets, frameworks, and model services remain subject to their respective licenses and terms.
