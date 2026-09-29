@@ -1,7 +1,7 @@
 % Preprint authors only. Keep the anonymous ICLR manuscript unchanged.
-% Title footnotes: * corresponding author; dagger research origin.
+% Title footnotes: * research origin; dagger corresponding author.
 \author{%
-  Zifu Tao\footnotemark[2]\\
+  Zifu Tao\thanks{This work was initiated while Zifu Tao was an undergraduate student at Tongji University.}\\
   Tongji University\\
   \href{mailto:zifutao@nyu.edu}{zifutao@nyu.edu}
   \And
@@ -10,10 +10,5 @@
   \href{mailto:yinchangqing@tongji.edu.cn}{yinchangqing@tongji.edu.cn}
 }
 
-% Call immediately after \maketitle, whose symbol-footnote group has ended.
-\newcommand{\researchoriginfootnote}{%
-  \begingroup
-  \renewcommand{\thefootnote}{\fnsymbol{footnote}}%
-  \footnotetext[2]{This work was initiated while Zifu Tao was an undergraduate student at Tongji University.}%
-  \endgroup
-}
+% Compatibility with earlier Overleaf copies: both notes now come from \thanks.
+\newcommand{\researchoriginfootnote}{}
