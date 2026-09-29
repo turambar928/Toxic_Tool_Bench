@@ -44,6 +44,6 @@ tectonic -Z search-path=iclr2027 main.tex --outdir build --keep-logs --keep-inte
 
 arXiv 作者信息的 Git 跟踪源文件为 [arxiv/authors.tex](arxiv/authors.tex)，Overleaf 修改方式见 [arxiv/README.md](arxiv/README.md)。2026-09-29 更新：两位作者单位均为 Tongji University；第一条星号脚注说明研究始于一作的同济本科期间，第二条剑号脚注标注导师为通讯作者。
 
-最近的 Figure 2 微调候选在 `paper/previews/figure2_polish_20260926/`，生成脚本仍是 `toxictool_bench/preview_figure2_polish.py`；此次没有将它替换进正文。
+2026-09-29 已将 `paper/previews/figure2_polish_20260926/` 中最后微调的 Figure 2 用于 arXiv 编译包；Git 跟踪版本为 [arxiv/figures/figure2_vector.pdf](arxiv/figures/figure2_vector.pdf)，同目录保留可编辑 SVG。匿名 ICLR 主稿仍使用 `paper/figures/figure2_vector.pdf` 中的旧版，未被覆盖。生成脚本仍是 `toxictool_bench/preview_figure2_polish.py`。
 
 代码、实验与复现入口见 [项目说明](../README.md) 和 [文档导航](../docs/README.md)。
