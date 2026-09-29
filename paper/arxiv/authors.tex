@@ -1,0 +1,19 @@
+% Preprint authors only. Keep the anonymous ICLR manuscript unchanged.
+% Title footnotes: * corresponding author; dagger research origin.
+\author{%
+  Zifu Tao\footnotemark[2]\\
+  Independent Researcher\\
+  \href{mailto:zifutao@nyu.edu}{zifutao@nyu.edu}
+  \And
+  Changqing Yin\thanks{Corresponding author.}\\
+  Tongji University\\
+  \href{mailto:yinchangqing@tongji.edu.cn}{yinchangqing@tongji.edu.cn}
+}
+
+% Call immediately after \maketitle, whose symbol-footnote group has ended.
+\newcommand{\researchoriginfootnote}{%
+  \begingroup
+  \renewcommand{\thefootnote}{\fnsymbol{footnote}}%
+  \footnotetext[2]{This work was initiated while Zifu Tao was an undergraduate student at Tongji University.}%
+  \endgroup
+}
