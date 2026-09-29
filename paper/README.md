@@ -42,7 +42,7 @@ tectonic -Z search-path=iclr2027 main.tex --outdir build --keep-logs --keep-inte
 
 已填写作者的独立 arXiv 包现位于 `paper/exports/ARXIV_OVERLEAF_20260925/`，同名 ZIP 也保留在 `paper/exports/`。它内部仍以 `main.tex` 编译，保留作者、Preprint 页眉及预印本设置，不覆盖匿名主稿。导出快照不会随主稿自动更新。
 
-arXiv 作者信息的 Git 跟踪源文件为 [arxiv/authors.tex](arxiv/authors.tex)，Overleaf 修改方式见 [arxiv/README.md](arxiv/README.md)。2026-09-29 更新：一作单位改为 Independent Researcher，并添加研究始于同济本科期间的第二条标题脚注；导师的同济单位及第一条通讯作者脚注不变。
+arXiv 作者信息的 Git 跟踪源文件为 [arxiv/authors.tex](arxiv/authors.tex)，Overleaf 修改方式见 [arxiv/README.md](arxiv/README.md)。2026-09-29 更新：一作单位保留 Tongji University，并添加研究始于同济本科期间的第二条标题脚注；导师的同济单位及第一条通讯作者脚注不变。
 
 最近的 Figure 2 微调候选在 `paper/previews/figure2_polish_20260926/`，生成脚本仍是 `toxictool_bench/preview_figure2_polish.py`；此次没有将它替换进正文。
 

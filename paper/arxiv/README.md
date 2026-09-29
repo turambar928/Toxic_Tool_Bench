@@ -9,7 +9,7 @@ For the standalone arXiv/Overleaf project, replace its `authors.tex` with this f
 \researchoriginfootnote
 ```
 
-- Zifu Tao: Independent Researcher; zifutao@nyu.edu.
+- Zifu Tao: Tongji University; zifutao@nyu.edu.
 - Changqing Yin: Tongji University; yinchangqing@tongji.edu.cn.
 - First title footnote (`*`): Corresponding author, attached to Changqing Yin.
 - Second title footnote (dagger): “This work was initiated while Zifu Tao was an undergraduate student at Tongji University.”
