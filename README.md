@@ -1,7 +1,7 @@
 <h1 align="center">ToxicBench</h1>
 
 <p align="center">
-  <a href="https://openreview.net/forum?id=JJDQY33lKk"><img src="https://img.shields.io/badge/Paper-OpenReview-5667A0?style=flat-square&amp;logo=readthedocs&amp;logoColor=white" alt="Paper on OpenReview"></a>
+  <a href="https://arxiv.org/abs/2609.37153"><img src="https://img.shields.io/badge/arXiv-2609.37153-B31B1B?style=flat-square&amp;logo=arxiv&amp;logoColor=white" alt="Paper on arXiv: 2609.37153"></a>
   <a href="docs/README.md"><img src="https://img.shields.io/badge/Docs-Getting_Started-82709A?style=flat-square&amp;logo=readthedocs&amp;logoColor=white" alt="Documentation"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/Code-MIT-65758B?style=flat-square&amp;logo=github&amp;logoColor=white" alt="Code license: MIT"></a>
 </p>
@@ -44,7 +44,7 @@ This repository provides task definitions, data fixtures, agent adapters, select
 - **Checking and recovery are different.** Another evidence pass helps under one-shot poisoning; repeated poisoning exposes cases where agents check but still adopt the poisoned answer.
 - **Human evaluation supports the main phenomena.** After freezing the scorer, evaluation against human labels on 200 trajectories gives 96% task-success agreement. Human judgments support retry gains over Base and confirm adoption after checking on audited tasks.
 
-See the [paper](https://openreview.net/forum?id=JJDQY33lKk) for the experimental settings and comparisons, and the [human-evaluation report](output/human_validation_20260920/README_CN.md) for the annotation results.
+See the [paper](https://arxiv.org/abs/2609.37153) for the experimental settings and comparisons, and the [human-evaluation report](output/human_validation_20260920/README_CN.md) for the annotation results.
 
 <a id="quick-start"></a>
 
@@ -167,7 +167,10 @@ If you use ToxicBench, please cite the paper:
   title = {When Tools Silently Lie: Evaluating and Mitigating Blind Compliance in Tool-Augmented Data Agents},
   author = {Tao, Zifu and Yin, Changqing},
   year = {2026},
-  url = {https://openreview.net/forum?id=JJDQY33lKk}
+  eprint = {2609.37153},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AI},
+  url = {https://arxiv.org/abs/2609.37153}
 }
 ```
 
